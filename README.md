@@ -51,7 +51,7 @@ By using our [cloudformation temlate](https://github.com/Quantumics-AI/quantumic
 ```
 You have to manually configure security groups as below
 ```text
-Secrity Grpous configuration 
+Security Grpous configuration 
    - EMR-Master Security group : open below port on 0.0.0.0/0.
         - 8080 To allowing trafic from Quantumics gateway service 
         - 8998 To allowing trafic from EMR Livy traffic  
