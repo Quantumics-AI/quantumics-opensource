@@ -1,0 +1,54 @@
+<app-loader [loading]="loading">
+    <div class="main-div-pgsql">
+        <p class="pgsql-content">
+            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pgsql-img.svg" alt="">
+            PgSQL 
+        </p>
+        <ng-container>
+            <p class="generic-content">
+                Generic ODBC requires additional configuration for publishing to succeed. Select DSN (data source name) for cross platform portability. A DSN with the same name must be configured on Quantumics server.
+            </p>
+
+            <div class="pipeline-input-div">
+                <form [formGroup]="fg">
+                    <div class="form-group">
+                        <label for="pipelineName" class="pipeLable">
+                            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pipeline.svg" alt="">
+                            Pipeline Name
+                        </label>
+                        <input type="text" formControlName="insertPipelineName" class="form-control pipeInput" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Enter Pipeline Name*">
+                    </div>
+                </form>
+                
+            </div>
+
+            <p class="start-text">Start a new connection</p>
+            
+            <p style="text-align: center;">
+                <ng-container>
+                    <div class="card newConnection" style="width: 13rem;">
+                        <div class="card-body" style="cursor: pointer;" (click)="openDatabaseConnection()">
+                            <p style="text-align: center;">
+                                <img class="img-fluid" alt="Responsive image" src="assets/img/db-connectors/newdbconnection.svg" alt="">
+                            </p>
+                            <p class="new-c">New</p>
+                        </div>
+                    </div>
+                </ng-container>
+                
+
+                <ng-container *ngIf="pipelineData.length > 0;">
+                    <div class="card newConnection" style="width: 13rem;">
+                        <div class="card-body" style="cursor: pointer;" (click)="openExistingConnection()">
+                            <p style="text-align: center;">
+                                <img class="img-fluid" alt="Responsive image" src="assets/img/db-connectors/existing.svg" alt="">
+                            </p>
+                            <p class="new-c">Existing</p>
+                        </div>
+                    </div>
+                </ng-container>
+            </p>
+        </ng-container>
+        
+    </div>
+</app-loader>

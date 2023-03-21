@@ -1,0 +1,63 @@
+<div class="main-container">
+    <div class="row page-header mb-4 mr-0">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active">Sankey</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <div class="pull-right">
+                <button type="button" id="download" class="btn" (click)="download()">
+                    <em class="fa fa-download fa-2x"></em>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="row col-12 d-flex align-items-start">
+            <div class="col-10" style="overflow: hidden;">
+                <div class="d3-chart" id="d3-chart" #chart></div>
+            </div>
+            <div class="col-2 pl-4 pt-2 pb-2 bg-light text-capitalize">
+                <div *ngFor="let l of legends" class="p-1 row d-flex align-items-center">
+                    <div class="mr-2" [style.background]="l.color" style="height: 20px; width: 20px;"></div>
+                    {{l.name}}
+                </div>
+            </div>
+        </div>
+        <div style="position: fixed; bottom: 24px;" class="d-flex flex-column">
+            <em id="zoom_in" class="fa fa-search-plus fa-2x mb-4"></em>
+            <em id="zoom_out" class="fa fa-search-minus fa-2x"></em>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showPanel" class="info-panel">
+    <div class="col-12 d-flex justify-content-between align-items-center border-bottom">
+        <h6 class="mt-3">More Information</h6>
+        <a (click)="closePanel()"><em class="fa fa-times-circle text-danger"></em></a>
+    </div>
+    <div class="col-12 mt-2 text-capitalize">
+        {{nodeInfo.category}} node
+        <br>
+        <br>
+        <table *ngIf="nodeInfo.metadata" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Column Name</th>
+                    <th scope="col" style="border-left: 1px solid #dee2e6;">Data Type</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let coll of nodeInfo.metadata">
+                    <td>{{coll.column_name}}</td>
+                    <td>{{coll.data_type}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<app-loader [loading]="loading">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="count-eng-flows">
+                Total count of UDF ({{(udfList | filterBy:searchTerm)?.length}})
+            </div>
+            <div class="custom-search txt-search">
+                <input type="text" id="searchTerm" [(ngModel)]="searchTerm.udfName" class="search-query mr-3"
+                    placeholder="Search...">
+                <button type="button" id="btnCreateFlow" class="btn btn-outline-success createBtn" (click)="openCreateUDFModal();"
+                    style="margin-top: -8px;">
+                    Create UDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gutters">
+        <div class="col-xl-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col">UDF Name</th>
+                            <th scope="col">Created By </th>
+                            <th scope="col">Created Date </th>
+                            <th scope="col">Modified Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let udf of udfList | filterBy:searchTerm" class="td-color">
+                            <td class="text-left">{{udf.udfName}} </td>
+                            <td>{{udf.createdBy}}</td>
+                            <td>{{udf.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>{{udf.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>
+                                <a id="lnkEdit" (click)="edit(udf)" placement="top" ngbTooltip="Edit">
+                                    <em><img src="assets/img/edit.svg" width="18" alt=""></em>
+                                </a> &nbsp;
+
+                                <a id="lnkDeleteFlow" (click)="delete(udf)" placement="top" ngbTooltip="Delete">
+                                    <em><img src="assets/img/delete.svg" width="18" alt=""></em>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

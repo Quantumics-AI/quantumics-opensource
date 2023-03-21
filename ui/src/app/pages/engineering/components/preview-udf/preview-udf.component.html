@@ -1,0 +1,176 @@
+<div class="preview">
+    <div class="header">
+        Details
+        <button id="btnClose" type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="closePanel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeTab">
+        <li ngbNavItem="lnkUdf">
+            <a id="lnkUdf" ngbNavLink>UDF</a>
+            <ng-template ngbNavContent>
+                <div class="contents" [ngClass]="{'disabled': selectedUdf?.content?.viewOnly}">
+                    <form [formGroup]="fg">
+                        <div class="form-group">
+                            <label for="formJoinType">UDF Name</label>
+                            <input type="text" class="form-control" id="udfName" formControlName="udfName" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="formJoinType">UDF Syntax</label>
+                            <input type="text" class="form-control" id="udfsyntax" formControlName="udfsyntax" disabled>
+                        </div>
+
+                        <ng-container *ngIf="files?.length">
+                            <form [formGroup]="fgParameter">
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        UDF Parameter Builder
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Select DataFrame</label>
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <select class="form-control form-control-sm" formControlName="dataFrame"
+                                                (change)="onSelectFile($event.target.value)">
+                                                <option value="">Select DataFrame</option>
+                                                <option *ngFor="let item of files" [value]="item.eventId">
+                                                    {{item.file}}
+                                                </option>
+                                            </select>
+                                            <span class="text-danger"
+                                                *ngIf="fgParameter.get('dataFrame').touched && fgParameter.get('dataFrame').hasError('required')">
+                                                required
+                                            </span>
+                                        </div>
+                                        <div class="col-2">
+                                            <input type="button" class="btn btn-primary btn-sm pull-right" value="Add"
+                                                (click)="addParameter('dataFrame')">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Select Parameter*</label>
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <select class="form-control form-control-sm" formControlName="parameter">
+                                                <option value="">Select Parameter</option>
+                                                <option *ngFor="let item of columns" [value]="item.key">
+                                                    {{item.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <input type="button" class="btn btn-primary btn-sm pull-right" value="Add"
+                                                (click)="addParameter('parameter')">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="formJoinType">Enter Variable Value</label>
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <input type="text" class="form-control" formControlName="variable">
+                                        </div>
+                                        <div class="col-2">
+                                            <input type="button" class="btn btn-primary btn-sm pull-right" value="Add"
+                                                (click)="addParameter('variable')">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="formJoinType">UDF Builder</label>
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <textarea class="form-control" formControlName="udfParameterBuilder"
+                                                disabled></textarea>
+                                        </div>
+                                        <div class="col-2 mt-2">
+                                            <input type="button" class="btn btn-primary btn-sm pull-right" value="Clear"
+                                                (click)="clearParameter()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </ng-container>
+
+                        <div class="form-group pull-right">
+                            <input type="button" tabindex="-1" id="btnApply" class="btn btn-primary" value="Apply"
+                                [disabled]="!fg.valid || selectedUdf?.content?.isDisabledApply" (click)="save();">
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </li>
+        <li ngbNavItem ngbNavItem="lnkPreview" [disabled]="!selectedUdf?.content?.disabledPreview">
+            <a id="lnkPreview" ngbNavLink>Preview</a>
+            <ng-template ngbNavContent>
+                <div class="contents">
+                    <div class="color-bright-grey font-12px mb-1">
+                        Data Preview
+                    </div>
+                    <div class="preview-content" [class.bg-blue]="previewHover" (click)="viewFullPreviewData()"
+                        (mouseover)="previewHover=true" (mouseout)="previewHover=false">
+                        <div *ngIf="selectedUdf?.content.eventProgress >= 100 else inProgress">
+                            <div *ngIf="selectedUdf?.content?.rowData?.length else noRecords">
+                                <div *ngIf="selectedUdf?.content?.rowColumns?.length else errorMsg">
+                                    <div class="preview-text text-center color-white" *ngIf="previewHover">
+                                        Preview
+                                    </div>
+                                    <div [ngClass]="previewHover ? 'opacity-10' : 'opacity-100'">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th *ngFor="let column of selectedUdf?.content?.rowColumns">
+                                                        {{column | format}}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let d of selectedUdf.content.rowData">
+                                                    <td *ngFor="let column of selectedUdf.content.rowColumns">
+                                                        <a>{{d[column]}}</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <ng-template #errorMsg>
+                                    <div class="preview-text text-center text-danger">
+                                        <h6>{{selectedUdf.content.rowData}}</h6>
+                                    </div>
+                                </ng-template>
+
+
+                            </div>
+                            <ng-template #noRecords>
+                                <div class="preview-text text-center text-danger">
+                                    <h6>No Records</h6>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <ng-template #inProgress>
+                            <div class="preview-text progress">
+                                <div class="progress-bar"
+                                    [ngStyle]="{'width': selectedUdf?.content?.eventProgress + '%'}">
+                                    Loading ({{selectedUdf?.content?.eventProgress}} %)
+                                </div>
+                            </div>
+                            <div class="dot-loading preview-text text-center">
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+</div>

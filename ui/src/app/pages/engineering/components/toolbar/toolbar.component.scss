@@ -1,0 +1,21 @@
+.btn-udfname {
+    // background: #F6F6F6;
+    // border-color: black;
+    background: #ffffff;
+    margin-top: 2px;
+}
+
+.btn-cancel {
+    background: #C82333;
+    color: #FFF;
+    pointer-events: all;
+}
+
+.disabledDiv {
+    background: #e9e8e8;
+}
+
+.disabledLi {
+    pointer-events: none;
+    opacity: 0.5;
+}

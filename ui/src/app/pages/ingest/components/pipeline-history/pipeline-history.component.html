@@ -1,0 +1,67 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title pipe-history"><img src="assets/img/pipeline.svg"
+            class="icon-space">Pipeline History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body modal-height">
+
+        <div class="col-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th>Sr. No</th>
+                            <th>Run Date</th>
+                            <!-- <th>Log</th> -->
+                            <th>
+                                Status
+                                <em>
+                                    <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
+                                        <img src="assets/img/refresh.svg" width="18" alt="refresh" (click)="refresh()">
+                                    </a>
+                                </em>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container>
+                            <ng-container *ngIf="pipelineData?.length > 0; else noRecords">
+
+                                <tr *ngFor="let h of pipelineData ;let i = index" class="td-color">
+                                    <td>{{i + 1}}</td>
+
+                                    <td>{{h.executionDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    
+                                    <!-- <td class="log-data" *ngIf="h.transcationStatus.toLowerCase() === 'failed'" title="{{h.pipelineLog}}">
+                                        {{h.pipelineLog}}
+                                    </td>
+                                    <td class="log-data" *ngIf="h.transcationStatus.toLowerCase() !== 'failed'" title="{{h.pipelineLog}}">
+                                        No Log
+                                    </td> -->
+
+                                    <td [class.bg-success]="h.transcationStatus.toLowerCase() === 'success'"
+                                        [class.bg-danger]="h.transcationStatus.toLowerCase() === 'failed'" [class.bg-warning]="h.transcationStatus.toLowerCase() === 'running' || 
+                                        h.transcationStatus.toLowerCase() === 'starting' ">
+                                        {{h.transcationStatus}}
+                                        <span class="cursor-pointer" (click)="viewLogs(h)" *ngIf="h.transcationStatus.toLowerCase() === 'failed'">
+                                            <em class="fa fa-info-circle"></em>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecords>
+                                <h6> No result found</h6>
+                            </ng-template>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

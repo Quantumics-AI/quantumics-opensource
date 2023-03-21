@@ -1,0 +1,29 @@
+<div class="main-container">
+    <div class="page-header1">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Jobs</li>
+        </ol>
+    </div>
+
+    <div class="page-content main-menu">
+        <ul>
+            <li><a [routerLink]="['cleansing']" routerLinkActive="is-active" class="disabled-tab">
+                    <img class="active-cleanse" src="assets/img/cleanse-active.svg" width="28" alt="add">
+                    <!-- <img class="inactive-cleanse" src="assets/img/cleanse-disable.svg" width="28" alt="add"> -->
+                    &nbsp;Cleansing Jobs
+                </a>
+            </li>
+            <li><a [routerLink]="['engineering']" routerLinkActive="is-active" class="disabled-tab">
+                    <img class="active-eng" src="assets/img/eng-active.svg" width="28" alt="add">
+                    <!-- <img class="inactive-eng" src="assets/img/eng-disable.svg" width="28" alt="add"> -->
+                    &nbsp;Engineering Jobs
+                </a>
+            </li>
+        </ul>
+
+        <div class="mt-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

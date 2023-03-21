@@ -1,0 +1,125 @@
+<div class="page-content">
+    <div class="card card-r">
+        <div class="card-header bg-w card-pd">
+            <h5 class="p2">Personal information</h5>
+            <p class="p1 mr-b-0">Edit your personal information. Changes to account settings will be applied to all of
+                your workspace.</p>
+        </div>
+        <div class="card-body card-pd">
+            <form [formGroup]="fg" (ngSubmit)="save(file)">
+                <div class="form-row">
+                    <div class="col-md-2 mb-3">
+                        <p for="profilePhoto" class="pic-lable">Photo</p>
+                        <ng-container *ngIf="imageUrl else defaultProfileImage">
+                            <img [src]="imageUrl" class="rounded-circle user-img" alt="User Profile">
+                        </ng-container>
+                        <ng-template #defaultProfileImage>
+                            <span class="circle">
+                                {{f.firstName.value.substring(0,1)}}
+                            </span>
+                        </ng-template>
+
+                        <label for="userLogo" class="qs-color" role="button">{{imageUrl ? 'Change photo' : 'Upload photo'}}</label>
+                        <input type="file" class="custom-file-input" (change)="validate($event)"
+                            enctype="multipart/form-data" id="userLogo" accept=".png, .jpg, .jpeg" #file>
+                        
+                    </div>
+                </div>
+
+                <div class="form-row mr-t-36">
+                    <div class="col-md-12 mb-3">
+                        <label for="email" class="p1">Email</label>
+                        <div class="p2">{{f.email.value}}</div>
+                        <a class="qs-color width-f">Change email</a>
+                    </div>
+                </div>
+
+                <div class="form-row mr-b-16">
+                    <div class="col-md-6 pd-r-12">
+                        <label for="firstName" class="lable-text">First name*</label>
+                        <input type="text" class="form-control input-design in-text" id="firstName" placeholder="First Name" maxlength="50"
+                            formControlName="firstName">
+
+                        <div class="error"
+                            *ngIf="fg.get('firstName').hasError('required') && fg.get('firstName').touched">
+                            First name is required
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-l-12">
+                        <label for="lastName" class="lable-text">Last name*</label>
+                        <input type="text" class="form-control input-design in-text" id="lastName" placeholder="Last Name" maxlength="50"
+                            formControlName="lastName">
+                        <div class="error"
+                            *ngIf="fg.get('lastName').hasError('required') && fg.get('lastName').touched">
+                            Last name is required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row mr-b-16">
+                    <div class="col-md-6 pd-r-12">
+                        <label for="companyRole" class="lable-text">Company name</label>
+                        <input type="text" class="form-control input-design in-text" formControlName="company" id="companyName"
+                            placeholder="Company Name" maxlength="50">
+
+                        <div class="error" *ngIf="fg.get('company').hasError('required') && fg.get('company').touched">
+                            Company name is required
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('company').hasError('maxlength') && fg.get('company').touched">
+                            Company validation failed
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-l-12">
+                        <label for="companyRole" class="lable-text">Role</label>
+                        <input type="text" class="form-control input-design in-text" formControlName="companyRole" id="companyRole"
+                            placeholder="Enter role at current company" maxlength="50">
+
+                        <div class="error"
+                            *ngIf="fg.get('companyRole').hasError('required') && fg.get('companyRole').touched">
+                            Company role is required
+                        </div>
+
+                        <div class="error"
+                            *ngIf="fg.get('companyRole').hasError('maxlength') && fg.get('companyRole').touched">
+                            Role validation failed
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row mr-b-24">
+                    <div class="col-md-6 pd-r-12">
+                        <label for="phoneNumber" class="lable-text">Phone number</label>
+                        <input type="text" class="form-control input-design in-text" id="phoneNumber" placeholder="Phone Number"
+                            maxlength="15" formControlName="phone">
+
+                        <div class="error" *ngIf="fg.get('phone').hasError('required') && fg.get('phone').touched">
+                            Phone number is required
+                        </div>
+                        <div class="error" *ngIf="fg.get('phone').hasError('pattern') && fg.get('phone').touched">
+                            Enter valid phone number
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-l-12">
+                        <label for="country" class="lable-text">Select country</label>
+
+                        <select id="country" class="form-control input-design in-text" formControlName="country" [(ngModel)]="selectedCountry" placeholder="Enter role at current company">
+                            <option [value]="undefined" disabled selected> Enter role at current company </option>
+                            <option *ngFor="let country of countryList" [value]="country.name">
+                                {{country.name}}
+                            </option>
+                        </select>
+
+                        <div class="error" *ngIf="fg.get('country').hasError('required') && fg.get('country').touched">
+                            Country is required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" [disabled]="fg.invalid" class="btn btn-design">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<ng-container *ngIf="hideNavigation else loggedIn">
+    <router-outlet></router-outlet>
+</ng-container>
+<ng-template #loggedIn>
+    <div class="wrapper">
+        <!-- <app-side-nav></app-side-nav> -->
+        <div class="row mr-0">
+            <div class="col mx-w">
+                <app-vertical-menu></app-vertical-menu>
+            </div>
+            <div class="col mx-rw pd-0">
+                <app-horizontal-menu></app-horizontal-menu>
+                <div class="content">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,21 @@
+<div class="main-container bg-color">
+    <div class="page-header1">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item" aria-current="page"> <a>Account Settings</a></li>
+        </ol>
+    </div>
+    <div class="workspace-content main-menu">
+        <ul>
+            <li>
+                <a [routerLink]="['profile']" routerLinkActive="is-active">Profile</a>
+            </li>
+            <li>
+                <a [routerLink]="['ref']" routerLinkActive="is-active">Referral</a>
+            </li>
+        </ul>
+
+        <div class="mt-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

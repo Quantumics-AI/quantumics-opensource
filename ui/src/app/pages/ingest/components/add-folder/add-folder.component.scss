@@ -1,0 +1,14 @@
+::ng-deep {
+    .popover .arrow {
+        display: none;
+    }
+
+    .folder-pophover {
+        max-width: 550px !important;
+        width: 510px !important;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+}

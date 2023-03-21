@@ -1,0 +1,85 @@
+<app-loader [loading]="loading">
+    <div class="localDiv">
+        <p class="local-file">
+            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/local-file.svg" alt="">
+            Local File
+        </p>
+        <div class="row gutters justify-content-center mt-5 rounded ">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 ">
+                <div class="card shadow-lg">
+                    <div class="card-body ">
+                        <div class="row gutters">
+                            <div class="col-xl-12 col-lglg-12 col-md-12 col-sm-12 col-12 show file-upload">
+                                <input id="file" #fileDropRef tabindex="-1" name="file" type="file" class="custom-file-input file-upload-input"
+                                    id="customFile" (change)="validate($event)" enctype="multipart/form-data"
+                                    multiple #file title="" accept=".csv, text/plain, .xls, .xlsx" />
+                                <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/upload-file.svg" alt="">
+                                <p class="file-name" *ngIf="!file.files.length">{{fileName}}</p>
+                                <h3 class="drag-drop-text">Drag & Drop your file here</h3>
+                                <div *ngIf="!file.files.length">
+                                    <h3 class="or-text">OR</h3>
+                                    <label class="browse-lable">BROWSE</label>
+                                </div>
+                                <div *ngIf="file.files.length" class="file-lable-div">
+                                    <p class="selectd-file-text">Selected Files:</p>
+                                    <label class="custom-file-label upload-file" for="customFile">{{fileName}}</label>
+                                </div>
+                                
+                            </div>
+                            <div class="list-categories" *ngIf="!file.files.length">
+                                <ol class="list">
+                                    <li>Spaces and special characters in column headers  will be replaced with underscore.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="row continue-btn" *ngIf="file.files.length">
+                            <div class="col-12 text-center">
+                                <button type="button" class="btn btn-primary mt-2 btn-continue"
+                                    [disabled]="!file.files.length" [ngClass]="{'validBtn': file.files.length}"
+                                    (click)="import(file)">Continue</button>
+                            </div>
+                        </div>
+    
+                        <div *ngIf="error" style="margin-top: 8px;">
+                            <div class="alert alert-danger" role="alert">
+                                {{error}}
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 text-center" *ngIf="originalFileColumns.length">
+                                    <table class="table1">
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Original Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of originalFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xl-6 text-center" *ngIf="currentFileColumns?.length">
+                                    <table class="table1">
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Current File Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of currentFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xl-6 text-center" *ngIf="duplicateFileColumns?.length">
+                                    <table class="table1">
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of duplicateFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

@@ -1,0 +1,100 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <p class="pgsql-content">
+            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pgsql-img.svg" alt="">
+            PgSQL (ODBC)
+        </p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body modal-height">
+        <div class="container">
+            <form [formGroup]="fg">
+                <div class="form-group">
+                    <label for="pipelineName" class="pipeLable">
+                        <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pipeline.svg" alt="">
+                        Pipeline Name
+                    </label>
+                    <input type="text" class="form-control pipeInput" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Pipeline Name"
+                    >
+                </div>
+    
+                <!-- <div class="form-group" *ngIf="!connector_type">
+                    <label for="pipelineName" class="pipeLable">
+                        <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pipeline.svg" alt="">
+                        Pipeline Name
+                    </label>
+                    <select class="form-control" formControlName="pipelineName" #pipelineName
+                        (change)="onSelectPipeline(pipelineName.value)" [(ngModel)]="selectedPipelineName">
+                        <option value="" [value]="undefined" disabled selected > --Select Pipeline-- </option>
+                        <option *ngFor="let item of pipelineData" [value]="item.connectorId">
+                            {{item.pipelineName}}
+                        </option>
+                    </select>
+                </div> -->
+        
+                <div class="form-group">
+                    <label for="pipelineName" class="pipeLable">
+                        Existing Connection
+                    </label>
+                    <input type="text" class="form-control pipeInput" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Enter Connection Name"
+                    >
+                </div>
+        
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4" class="pipeLable">Connection Attributes</label>
+                        <input type="text" class="form-control pipeInput" id="inputEmail4" placeholder="Server"
+                        >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4" class="pipeLable"></label>
+                        <input type="text" class="form-control pipeInput marginTop" id="inputPassword4" placeholder="Database Port"
+                        >
+                    </div>
+                    <div class="form-group col-md-12">
+                        <input type="text" class="form-control pipeInput" id="inputPassword4" placeholder="Enter Database Name"
+                        >
+                    </div>
+                </div>
+        
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4" class="pipeLable">Authentication</label>
+                        <input type="text" class="form-control pipeInput" id="inputEmail4" placeholder="Username"
+                        >
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4" class="pipeLable"></label>
+                        <input type="password" class="form-control pipeInput marginTop" id="inputPassword4" placeholder="Password"
+                        >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <select id="inputState" class="form-control pipeInput">
+                      <option selected>Additional Settings</option>
+                      <option>...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-check checkDiv">
+                        <input class="form-check-input" type="checkbox" id="gridCheck" >
+                        <label class="form-check-label" for="gridCheck">
+                            Save DB connection details
+                        </label>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="btns">
+                <button type="button" class="btn btn-outline-success connectionBtns"
+                >TEST CONNECTION</button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-outline-success connectionBtns">Update</button>
+            </div>
+        </div>
+    </div>
+
+</app-loader>

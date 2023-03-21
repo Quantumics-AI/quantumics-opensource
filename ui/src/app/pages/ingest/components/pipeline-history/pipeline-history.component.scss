@@ -1,0 +1,56 @@
+.log-data {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 250px;
+    max-width: 250px;
+}
+
+.bg-success {
+    background-color: #D9FFF9 !important;
+}
+
+.bg-danger {
+    background: #F9D4D4 !important;
+}
+
+.bg-warning {
+    background: #E9EAFF !important;
+}
+
+.pipe-history {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.table .thead-light th {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    /* identical to box height */
+    
+    letter-spacing: 0.05em;
+    
+    color: #000000;
+}
+
+.table td {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 17px;
+    /* identical to box height */
+    
+    letter-spacing: 0.01em;
+    
+    color: #000000;
+}

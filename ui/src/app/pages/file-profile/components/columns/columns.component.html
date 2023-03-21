@@ -1,0 +1,53 @@
+<div class="clm-div">
+    <p class="select-c-text">Select column</p>
+    <div class="card cs-c mr-b-16">
+        <div class="card-body pd-l-r-16 cp" (click)="myDrop.open();" placement="bottom-left" ngbDropdown #myDrop="ngbDropdown">
+            <p class="selected-c mr-b-0">
+                <!-- <span class="circle-logo" [ngClass]="{'grLogo': item.role == 'Admin'}"></span> -->
+                <span *ngIf="analysis?.selectedDataType !== 'string'" class="circle-logo">#</span>
+                <span *ngIf="analysis?.selectedDataType == 'string'" class="circle-logo">A</span>
+                <span>{{analysis?.selectedDataType}}</span>
+                <span class="float-right selected-c">{{analysis?.selectedColumn}} 
+                    &nbsp;&nbsp;&nbsp;<img src="/assets/img/data-profile/down-arrow.svg" class="cp"></span>
+            </p>
+            <!-- <div class="d-inline-block lh-1" > -->
+                <!-- <button type="button"  ngbDropdownAnchor class="btn sort-btn" >
+                    Sort
+                </button> -->
+                <div ngbDropdownMenu aria-labelledby="dropdownManual" class="sort-options">
+                    <ng-container *ngIf="columns?.length else noColumns">
+                        <div class="col-md-12">
+                            <div class="br-b mr-b-16">
+                                <span class="ib"><input type="text" id="searchTerm" [(ngModel)]="searchTerm" class=" p1 form-control br-n"
+                                    placeholder="Search Column"></span>
+                                <span class="float-right p1 pd-t-10">Data type <img src="/assets/img/data-profile/sort.svg" class="cp" (click)="sortDataTypes();" ></span>
+                            </div>
+                            
+                            <div class="table-responsive re-table-height" >
+                                <table class="table m-0 table-fixed">
+                                    <tbody>
+                                        <tr ngbDropdownItem *ngFor="let item of columns | filterColumn:searchTerm"  class="border-column" 
+                                        [class.active-col]="selectedColumnValue === item.column" (click)="selectColumn(item)">
+                                            <td class="file-mar-l">
+                                                <span [class.active-dt]="selectedColumnValue === item.column" *ngIf="item.dataType =='string'" class="circle-dt">A</span>
+                                                <span *ngIf="item.dataType !== 'string'" class="circle-dt">#</span>
+                                                {{item.dataType}}</td>
+                                            <td class="column-item">{{item.column}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noColumns>
+                        <h6 class="p-3">No columns found</h6>
+                    </ng-template>
+                </div>
+            <!-- </div> -->
+            
+            
+            
+        </div>
+        
+    </div>
+</div>

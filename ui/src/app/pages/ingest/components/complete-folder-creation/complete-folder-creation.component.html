@@ -1,0 +1,52 @@
+<app-loader [loading]="loading">
+    <div class="localDiv">
+        <ng-container *ngFor="let item of piiData">
+
+            <div class="row gutters">
+                <div class="col-12">
+                    <div class="text-center">
+                        Folder Name : <strong> {{item.folder?.folderName}} </strong> |
+                        File Name : <strong> {{item.CSV_FILE_PATH?.split('/')?.pop()}} </strong>
+                    </div>
+                </div>
+            </div>
+            <app-pii-info *ngIf="isVisiablePii" (close)="isVisiablePii=false"></app-pii-info>
+            <div class="card-body">
+                <div class="table-responsive table-height">
+                    <table class="table m-0 table-fixed pii-table">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th>Column</th>
+                                <th class="th-pii">Personal Identifiable Information &nbsp;
+                                    <i (click)="isVisiablePii=true" class="cursor-pointer fa fa-info-circle"></i>
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-color" *ngFor="let item of item.pii">
+                                <td class="text-left">
+                                    <span>{{item?.column}}</span>
+                                </td>
+                                <td><input type="checkbox" [checked]="item?.isPII" disabled></td>
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control ingest-input" [value]="item?.piiMaskActionType"
+                                            disabled>
+                                            <option value="Don't Ingest">Don't Ingest</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-container>
+        <div>
+            <p class="pii-c-btn">
+                <button type="button" class="btn btn-primary pii-btn" (click)="upload()">Completed</button>
+            </p>
+        </div>
+    </div>
+</app-loader>

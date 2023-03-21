@@ -1,0 +1,1 @@
+appConfiguration = {"apiUrl":"", "redashUrl":""}

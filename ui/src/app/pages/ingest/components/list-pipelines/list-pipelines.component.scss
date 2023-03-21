@@ -1,0 +1,30 @@
+.table-height {
+    height: calc(100vh - 230px);
+}
+
+.sort-icon {
+    float: right;
+    width: 14px;
+}
+
+.folder-name {
+    cursor: pointer;
+}
+
+.floder-count {
+    display: inline-flex;
+    margin-top: 2px;
+}
+.page-content {
+    padding: 0;
+}
+
+.nested-row {
+    background: #e2fffa;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.mr-l-10 {
+    margin-left: 10px;
+}

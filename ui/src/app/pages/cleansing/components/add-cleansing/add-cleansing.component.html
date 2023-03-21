@@ -1,0 +1,102 @@
+<app-loader [loading]="loading">
+    <div class="main-container">
+        <div class="page-header1">
+            <ol class="breadcrumb breadcrumb-top">
+                <li class="breadcrumb-item"><a
+                    [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Preparation</li>
+            </ol>
+        </div>
+
+        <!-- <div class="row page-header mr-0">
+            <div class="col pd-l-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a
+                                [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Data Cleansing</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <div *ngIf="hasData" class="pull-right">
+                    <button type="button" class="btn btn-primary" (click)="open()">Raw Data</button>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="page-content">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="cleanse-count">
+                        Total Cleansed ({{total_folders}})
+                    </div>
+                    <div class="custom-search pull-right">
+                        <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderDisplayName"
+                            class="search-query" placeholder="Search...">
+                        <div *ngIf="hasData" class="pull-right">
+                            <button type="button" class="btn btn-design mr-l-10" (click)="open()">Raw Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="cleansingJobs$ | async as cleansingJobs">
+                <ng-container *ngIf="!loading">
+                    <ng-container *ngIf="cleansingJobs?.length > 0; else noRecords">
+                        <div class="row gutters">
+                            <div class="col-xl-12">
+                                <div class="table-responsive table-height">
+                                    <table class="table m-0 table-fixed">
+                                        <thead class="thead-light">
+                                            <tr class="fixed-th">
+                                                <th>Folder Name</th>
+                                                <th>Recent File Name </th>
+                                                <th>Created By </th>
+                                                <th>Created Date </th>
+                                                <th>Modified Date</th>
+                                                <th>Files</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="td-color"
+                                                *ngFor="let job of cleansingJobs | filterBy:searchTerm">
+                                                <td class="text-left"> {{job.folderDisplayName}} </td>
+                                                <td> {{job.latest}} </td>
+                                                <td>{{job.createdBy}}</td>
+                                                <td>{{job.createDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                                <td>{{job.createDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                                <td>
+                                                    <a placement="top" ngbTooltip="Files"
+                                                        (click)="openRuleAddedFiles(job.folderId, job.latest, job.folderDisplayName)">
+                                                        <i><img src="assets/img/edit-updated.svg" width="24" alt=""></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </ng-container>
+                    <ng-template #noRecords>
+                        <div class="row gutters justify-content-center mt-6 rounded ">
+                            <div class="col-xl-6">
+                                <div class="card shadow-lg">
+                                    <div class="card-body plus-add">
+                                        <a (click)="open()" data-toggle="modal" data-target="#myModal">
+                                            <img src="assets/img/data-cleansing-add.svg" width="55" class="mb-3" alt="">
+                                        </a>
+                                        <p class="plus-add-text"> Click here to start cleansing your data. </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ng-container>
+            </ng-container>
+
+            <app-list-raw-data [projectId]="projectId" [selectionChange]="selectionChange"></app-list-raw-data>
+        </div>
+    </div>
+</app-loader>

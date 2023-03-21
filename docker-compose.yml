@@ -1,0 +1,225 @@
+# This configuration file is for the **development** setup.
+version: '3.2'
+# For a production example please refer to getredash/setup repository on GitHub.
+#
+services:
+  server:
+    image: qs/server
+    build:
+      context: qsrt
+      dockerfile: ../qsrt/Dockerfile
+    command:
+      - bash
+      - '-c'
+      - /app/bin/docker-entrypoint server
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      REDASH_RATELIMIT_ENABLED: "false"
+      REDASH_WEB_WORKERS: "4"
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "curl http://server:5000"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      redis:
+        condition: service_healthy
+  scheduler:
+    image: qs/scheduler
+    build:
+      context: qsrt
+      dockerfile: ../qsrt/Dockerfile
+    command:
+      - bash
+      - '-c'
+      - /app/bin/docker-entrypoint scheduler  
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      REDASH_RATELIMIT_ENABLED: "false"
+      WORKERS_COUNT: "2"
+      QUEUES: "celery"  
+  scheduled-worker:
+    image: qs/scheduled-worker
+    build:
+      context: qsrt
+      dockerfile: ../qsrt/Dockerfile
+    command:
+      - bash
+      - '-c'
+      - /app/bin/docker-entrypoint worker
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      REDASH_RATELIMIT_ENABLED: "false"
+      WORKERS_COUNT: "2"
+      QUEUES: "scheduled_queries,schemas"
+  adhoc-worker:
+    image: qs/adhoc-worker
+    build:
+      context: qsrt
+      dockerfile: ../qsrt/Dockerfile
+    command:
+      - bash
+      - '-c'
+      - /app/bin/docker-entrypoint worker
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      REDASH_RATELIMIT_ENABLED: "false"
+      WORKERS_COUNT: "2"
+      QUEUES: "queries"
+  redis:
+    image: redis:3-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  postgres:
+    image: postgres:14.1-alpine
+    ports:
+      - "5432:5432"
+    command: "postgres -c fsync=off -c full_page_writes=off -c synchronous_commit=OFF"
+    restart: unless-stopped
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "devqsai"
+    volumes:
+      - pgdb:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  frontend:
+    image: qsai/ui
+    build:
+      context: ui
+      dockerfile: ../ui/Dockerfile
+      args:
+        - API_URL=${API_URL}
+        - DASHBOARD_URL=${DASHBOARD_URL}
+    ports:
+      - "7000:80"
+    depends_on:
+      server:
+        condition: service_healthy
+  userservice:
+    image: qsai/userservice
+    build:
+      context: .
+      dockerfile: ../quantumics/services/qs-us/Dockerfile
+    environment:
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      LIVY_URL: ${LIVY_URL}
+      S3_IMAGES_PROJECT_BUCKET: ${S3_IMAGES_PROJECT_BUCKET}
+      S3_IMAGES_USER_BUCKET: ${S3_IMAGES_USER_BUCKET}
+      S3_UDF_BUCKET: ${S3_UDF_BUCKET}
+      S3_ATHENA_QUERY_LOCATION: ${S3_ATHENA_QUERY_LOCATION}
+      S3_CLEANSING_ETL_LOCATION: ${S3_CLEANSING_ETL_LOCATION}
+      S3_ENG_ETL_LOCATION: ${S3_ENG_ETL_LOCATION}
+      S3_ENG_RESULT_LOCATION: ${S3_ENG_RESULT_LOCATION}
+      SERVICE_HOST_URL: ${SERVICE_HOST_URL}
+      PROJECT_NAME: ${PROJECT_NAME}
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "curl http://userservice:8081/QSUserService/actuator/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      server:
+        condition: service_healthy
+  apiservice:
+    image: qsai/apiservice
+    build:
+      context: services
+      dockerfile: ../services/qs-spark-service/Dockerfile
+    environment:
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      LIVY_URL : ${LIVY_URL}
+      S3_IMAGES_PROJECT_BUCKET : ${S3_IMAGES_PROJECT_BUCKET}
+      S3_IMAGES_USER_BUCKET : ${S3_IMAGES_USER_BUCKET}
+      S3_UDF_BUCKET : ${S3_UDF_BUCKET}
+      S3_ATHENA_QUERY_LOCATION : ${S3_ATHENA_QUERY_LOCATION}
+      S3_CLEANSING_ETL_LOCATION : ${S3_CLEANSING_ETL_LOCATION}
+      S3_ENG_ETL_LOCATION : ${S3_ENG_ETL_LOCATION}
+      S3_ENG_RESULT_LOCATION : ${S3_ENG_RESULT_LOCATION}
+      SERVICE_HOST_URL : ${SERVICE_HOST_URL}
+      PROJECT_NAME : ${PROJECT_NAME}
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "curl http://apiservice:8082/QuantumSparkServiceAPI/actuator/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      userservice:
+        condition: service_healthy
+  commonservice:
+    image: qsai/commonservice
+    build:
+      context: services
+      dockerfile: ../services/qs-common-service/Dockerfile
+    environment:
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      LIVY_URL: ${LIVY_URL}
+      S3_IMAGES_PROJECT_BUCKET: ${S3_IMAGES_PROJECT_BUCKET}
+      S3_IMAGES_USER_BUCKET: ${S3_IMAGES_USER_BUCKET}
+      S3_UDF_BUCKET: ${S3_UDF_BUCKET}
+      S3_ATHENA_QUERY_LOCATION: ${S3_ATHENA_QUERY_LOCATION}
+      S3_CLEANSING_ETL_LOCATION: ${S3_CLEANSING_ETL_LOCATION}
+      S3_ENG_ETL_LOCATION: ${S3_ENG_ETL_LOCATION}
+      S3_ENG_RESULT_LOCATION: ${S3_ENG_RESULT_LOCATION}
+      SERVICE_HOST_URL: ${SERVICE_HOST_URL}
+      PROJECT_NAME: ${PROJECT_NAME}
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "curl http://commonservice:8083/QSCommonService/actuator/health"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      apiservice:
+        condition: service_healthy
+  gateway:
+    image: qsai/gateway
+    build:
+      context: services
+      dockerfile: ../services/qa-ag/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      commonservice:
+        condition: service_healthy
+volumes:
+  pgdb:

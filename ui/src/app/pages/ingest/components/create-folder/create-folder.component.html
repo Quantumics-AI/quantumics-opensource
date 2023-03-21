@@ -1,0 +1,71 @@
+<app-loader [loading]="loading">
+    <div class="localDiv">
+        <p class="local-file">
+            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/local-file.svg" alt="">
+            Local File
+        </p>
+
+        <form [formGroup]="fg">
+            <div class="row gutters justify-content-center mt-5 rounded-lg ">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 ">
+                    <div class="card file-card">
+                        <div class="card-body pii-card-body">
+                            <div class="row gutters">
+                                <div class="col-xl-12 col-lglg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="pii-lable">
+                                            <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/folder-name.svg" alt="">
+                                            Folder Name
+                                        </label>
+                                        <input type="text" class="form-control pii-input" id="folderName" #folder
+                                            [pattern]="'^([0-9]?)(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'" minlength="3"
+                                            maxlength="30" formControlName="folderName" autocomplete="off"
+                                            placeholder="Folder Name" [autoClose]="false" (focus)="f.open()"
+                                            (input)="folder.value.length > 0 ? f.close() : f.open()" (blur)="f.close()"
+                                            triggers="manual" #f="ngbPopover" [ngbPopover]="popFolderContent"
+                                            popoverClass="folder-pophover" placement="bottom">
+                                    </div>
+    
+                                    <ng-template #popFolderContent>
+                                        <div class="col-12">
+                                            <ul>
+                                                <li>Folder name must be between 3 and 30 characters long.</li>
+                                                <li>Folder name should not contain special characters and spaces.
+                                                </li>
+                                                <li>Folder name should be alphanumeric or should contain only alphabets.</li>
+                                                <li>Folder name should be unique.</li>
+                                            </ul>
+                                        </div>
+                                    </ng-template>
+                                </div>
+    
+                                <div class="col-xl-12 col-lglg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1" class="pii-lable">Description</label>
+                                        <textarea class="form-control pii-input" id="folderDesc" #description rows="3" formControlName="folderDesc"
+                                            placeholder="Folder Description" maxlength="255" (ngModelChange)="modelChangeDesc($event)"
+                                            [autoClose]="false" (focus)="d.open()"
+                                            (input)="description.value.length > 0 ? d.close() : d.open()" (blur)="d.close()"
+                                            triggers="manual" #d="ngbPopover" [ngbPopover]="popDescContent"  popoverClass="description-pophover" placement="bottom"></textarea>
+                                            <p class="term-length" *ngIf="lengthErrorMsg" > Folder description must be less than or equal to 255 characters</p>
+                                    </div>
+                                    <ng-template #popDescContent>
+                                        <div class="col-12">
+                                            <ul>
+                                                <li>Folder description must be less than 255 characters</li>
+                                            </ul>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                                <div class="col-12 text-center mt-2">
+                                    <button type="button" class="btn btn-primary" [disabled]="fg.invalid || lengthErrorMsg"
+                                    [ngClass]="{'validBtn': !fg.invalid}"  (click)="create();">CONTINUE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</app-loader>

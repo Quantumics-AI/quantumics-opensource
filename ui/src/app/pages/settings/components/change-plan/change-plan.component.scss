@@ -1,0 +1,48 @@
+.pricing-plan {
+    margin: 0 0 1rem 0;
+    width: 100%;
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #ebebeb;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.pricing-plan .pricing-header {
+    padding: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+    background: #f4f0eb;
+    -webkit-border-radius: 4px 4px 0px 0px;
+    -moz-border-radius: 4px 4px 0px 0px;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.pricing-plan .pricing-features {
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.pricing-plan .pricing-features li {
+    padding: 10px 15px 5px 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+    font-size: 15px;
+    line-height: 100%;
+}
+.pricing-plan {
+    font-size: 18px;
+}
+
+.pricing-span {
+    color: #999;
+    font-size: 13px;
+    padding: 0px 0px 10px 0px;
+}
+.h4-sub-heading {
+    padding: 12px 0px 5px 0px;
+}

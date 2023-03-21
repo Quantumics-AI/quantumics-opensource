@@ -1,0 +1,46 @@
+<div class="dynamic-height">
+    <div class="drag-container">
+        <div cdkDropList #pendingList="cdkDropList" [cdkDropListData]="rules" class="item-list"
+            (cdkDropListDropped)="drop($event)">
+
+            <div id="ruleList" *ngFor="let item of rules | sortBy: 'asc' : 'ruleSequence': updateView;let i = index;"
+                cdkDrag [attr.aria-label]="item.cleansingParamId">
+                <div class="col-12 mt-2">
+                    <div class="d-flex flex-row " style="cursor: move;">
+                        <div
+                            [ngClass]="item.flag ? 'p-1 rounded-left rule-border-error' : 'p-1 rounded-left rule-border-success '">
+                        </div>
+                        <div [ngClass]="item.flag ? 'p-2 col-2 rule-bg-error' : 'p-2 col-2 rule-bg-success'"
+                            d="ruleItem" placement="right" [ngbTooltip]="item.flag ? item.errorMsg : ''"
+                            (click)="goToRules(item)">
+                            <h3 class="mt-2 ml-1 text-dark">{{item.ruleSequence}}
+                            </h3>
+                        </div>
+                        <div class="p-2 bg-primary col-10 rounded-right text-break"
+                            style="background:#F5F7F8 !important;">
+                            <a id="deleteicon" class="pull-right clickable" (click)="deleteRule(item)"
+                                data-effect="fadeOut"><i style="cursor: pointer;"
+                                    class="fa fa-times-circle text-secondary pull-right" ngbTooltip="Delete"
+                                    placement="bottom"></i></a>
+                            {{item.statement}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="rules?.length === 0" class="px-2 pt-2 row">
+            <div class="col-6">No saved rules</div>
+            <div class="col-6">
+                <button class="btn btn-light pull-right border" (click)="close()" id="btn-cancel">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <ng-container *ngIf="dragged">
+            <button type="submit" class="btn btn-success pull-right mt-4 mr-2" (click)="updateSequence()"
+                id="show-hide">Update sequence</button>
+        </ng-container>
+
+    </div>
+</div>

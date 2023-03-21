@@ -1,0 +1,16 @@
+<div class="modal-header border-bottom-0 pd-b-0">
+    <h4 class="modal-title modal-header-text">{{ title }}</h4>
+    <!-- <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button> -->
+</div>
+<div class="modal-body pd-b-0">
+    <p class="body-text-muted">
+        {{ message }}
+    </p>
+</div>
+<div class="modal-footer justify-content-start">
+    <button *ngIf="btnCancelText" type="button" class="btn cnt-us" (click)="modal.close(false);">{{ btnCancelText }}</button>
+    <button *ngIf="btnOkText" type="button" class="btn btn-design" (click)="modal.close(true);">{{ btnOkText }}</button>
+    <!-- <button *ngIf="btnConactUsText" type="button" class="btn btn-contact-us" (click)="accept()">{{ btnConactUsText }}</button> -->
+</div>

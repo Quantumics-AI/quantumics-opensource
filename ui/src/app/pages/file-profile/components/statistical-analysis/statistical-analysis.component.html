@@ -1,0 +1,77 @@
+<div class="card card-shadow h-232 mr-b-16">
+    <div class="card-body cbp-16">
+        <ng-template #list>
+            <p class="c-t mr-b-0">
+                This provides the numerical statistics about the rows value of selected column.
+            </p>
+        </ng-template>
+        <p class="p2 br">Numerical statistics  <span><img src="/assets/img/data-profile/info.svg" class="cp" 
+            placement="right" [ngbTooltip]="list"  container="body" tooltipClass="my-custom-class"></span></p>
+        <div class="row">
+            <ng-container *ngIf="statisticsParams else noRecords">
+                <div class="col-md-4 pd-t-b-16">
+                    <p class="mr-0 p1">Minimum</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.min.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-t-b-16">
+                    <p class="mr-0 p1">Maximum</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.max?.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-t-b-16">
+                    <p class="mr-0 p1">Median</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.median?.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-b-16">
+                    <p class="mr-0 p1">Mean</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.mean?.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-b-16">
+                    <p class="mr-0 p1">Variance</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.variance?.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-b-16">
+                    <p class="mr-0 p1">S.Darivation</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.std?.toFixed(2)}}</p>
+                </div>
+                <div class="col-md-4 pd-b-0">
+                    <p class="mr-0 p1">Sum</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.sum?.toFixed(2)}}</p>
+                </div>
+            </ng-container>
+
+            <ng-template #noRecords>
+                <h6 class="p-3">No data found for Statistical Analysis</h6>
+            </ng-template>
+            
+        </div>
+        <p class="float-right textNumerical mr-0">This analysis is only for numerical values.</p>
+    </div>
+    
+    <!-- <div class="row pl-3 pt">
+        <ng-container *ngIf="statisticsParams else noRecords">
+            <div class="statistical-widget">
+                <label>Minimum <br> <span>{{dataType === 'string' ? 'NA' : statisticsParams?.min.toFixed(2)}}</span></label>
+            </div>
+
+            <div class="statistical-widget">
+                <label>Median<br><span>{{dataType === 'string' ? 'NA' : statisticsParams?.median?.toFixed(2)}}</span></label>
+            </div>
+
+            <div class="statistical-widget">
+                <label>Variance<br><span>{{dataType === 'string' ? 'NA' : statisticsParams?.variance?.toFixed(2)}}</span></label>
+            </div>
+
+            <div class="statistical-widget">
+                <label>Maximum <br><span>{{dataType === 'string' ? 'NA' : statisticsParams?.max?.toFixed(2)}}</span></label>
+            </div>
+
+            <div class="statistical-widget">
+                <label>Average <br><span>{{dataType === 'string' ? 'NA' : statisticsParams?.mean?.toFixed(2)}}</span></label>
+            </div>
+        </ng-container>
+
+        <ng-template #noRecords>
+            <h6 class="p-3">No data found for Statistical Analysis</h6>
+        </ng-template>
+    </div> -->
+</div>

@@ -1,0 +1,127 @@
+<ng-container *ngIf="data.length else inProgress">
+    <div class="sidenav">
+        <ol>
+            <li *ngFor="let a of data; let i = index" [ngStyle]="{'background': colors[i % colors.length]}">
+                <label [ngClass]="{white : a.name === 'Engineered'}" (click)="onClickPanel(a.name, a)">
+                    {{a.name}}
+                </label>
+                <span *ngIf="a.isExpanded" (click)="onClickPanel(a.name, a)"
+                    class="cursor-pointer pull-right margin-right-10px">
+                    <img src="assets/img/white-up-icon.svg" width="11" alt="">
+                </span>
+                <span *ngIf="!a.isExpanded" (click)="onClickPanel(a.name, a)"
+                    class="cursor-pointer pull-right margin-right-10px">
+                    <img src="assets/img/white-down-icon.svg" width="11" alt="">
+                </span>
+
+                <ul *ngIf="a.isExpanded" class="ul-scroll">
+                    <ng-container [ngSwitch]="a.name">
+                        <ng-container *ngSwitchCase="'Engineered'" cdkDropList id="todoList" [cdkDropListData]="a.files"
+                            [cdkDropListConnectedTo]="'doneList'">
+                            <li *ngFor="let file of a.files"
+                                style="border-bottom: 1px solid #C9C9C9; line-height: 20px;" class="pt-2">
+                                <p title="{{file.fileName}}" class="item-name ellips-text cursor-pointer">
+                                    <label [draggable]="true" (dragstart)="drag($event, file)"
+                                        class="item-name ellips-text cursor-pointer">
+                                        <img src="assets/img/csv-icon.svg" width="16" class="margin" alt="">
+                                        <span [draggable]="true" id="file.fileId"
+                                            (dragstart)="drag($event, file)" (click)="dragClick(file)">{{file.fileName}}</span>
+                                    </label>
+                                </p>
+                            </li>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'PipeLines'">
+                            <li *ngFor="let pipeline of a.pipelines" style="border-bottom: 1px solid #C9C9C9">
+                                <ng-container *ngIf="pipeline.isExpanded; else normalFolder">
+                                    <span class="pull-right cursor-pointer" (click)="onPipeLineClick(a.name, pipeline)">
+                                        <img src="assets/img/black-up-icon.svg" width="11">
+                                    </span>
+                                </ng-container>
+                                <ng-template #normalFolder>
+                                    <span class="pull-right cursor-pointer" (click)="onPipeLineClick(a.name, pipeline)">
+                                        <img src="assets/img/black-down-icon.svg" width="11">
+                                    </span>
+                                </ng-template>
+                                <label class="cursor-pointer"
+                                    (click)="onPipeLineClick(a.name, pipeline)">{{pipeline.pipelineName}}
+                                </label>
+                                <ul *ngIf="pipeline.isExpanded">
+                                    <li *ngFor="let folder of pipeline.folders"
+                                        style="border-bottom: 1px solid #C9C9C9">
+                                        <ng-container *ngIf="folder.isExpanded; else normalFolder">
+                                            <img src="assets/img/active-folder.svg" width="22">
+                                            <span class="pull-right cursor-pointer"
+                                                (click)="onFolderClick(a.name, folder)">
+                                                <img src="assets/img/black-up-icon.svg" width="11">
+                                            </span>
+                                        </ng-container>
+                                        <ng-template #normalFolder>
+                                            <span class="pull-right cursor-pointer"
+                                                (click)="onFolderClick(a.name, folder)">
+                                                <img src="assets/img/black-down-icon.svg" width="11">
+                                            </span>
+                                            <img src="assets/img/close-folder.svg" width="20">
+                                        </ng-template>
+                                        <label class="item-name cursor-pointer"
+                                            (click)="onFolderClick(a.name, folder)">
+                                            {{folder.qsFolders.folderName}}
+                                        </label>
+                                        <ul *ngIf="folder.isExpanded" cdkDropList id="todoList"
+                                            [cdkDropListData]="folder.files" [cdkDropListConnectedTo]="'doneList'">
+                                            <li *ngFor="let file of folder.files"
+                                                style="margin-left: 10px; line-height: 20px;">
+                                                <p title="{{file.fileName}}" [draggable]="true" (dragstart)="drag($event, file)"
+                                                    class="item-name ellips-text cursor-pointer">
+                                                    <img src="assets/img/csv-icon.svg" width="16" class="margin">
+                                                    <span [draggable]="true" id="file.fileId"
+                                                        (dragstart)="drag($event, file)" (click)="dragClick(file)">{{file.fileName}}
+                                                    </span>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <li *ngFor="let folder of a.folders" style="border-bottom: 1px solid #C9C9C9">
+                                <ng-container *ngIf="folder.isExpanded; else normalFolder">
+                                    <img src="assets/img/active-folder.svg" width="22">
+                                    <span class="pull-right cursor-pointer" (click)="onFolderClick(a.name, folder)">
+                                        <img src="assets/img/black-up-icon.svg" width="11">
+                                    </span>
+                                </ng-container>
+                                <ng-template #normalFolder>
+                                    <span class="pull-right cursor-pointer" (click)="onFolderClick(a.name, folder)">
+                                        <img src="assets/img/black-down-icon.svg" width="11">
+                                    </span>
+                                    <img src="assets/img/close-folder.svg" width="20">
+                                </ng-template>
+                                <label class="item-name cursor-pointer"
+                                    (click)="onFolderClick(a.name, folder)">
+                                    {{folder.folderName}}
+                                </label>
+                                <ul *ngIf="folder.isExpanded" cdkDropList id="todoList" [cdkDropListData]="folder.files"
+                                    [cdkDropListConnectedTo]="'doneList'">
+                                    <li *ngFor="let file of folder.files" style="margin-left: 10px; line-height: 20px;">
+                                        <p title="{{file.fileName}}" class="item-name ellips-text cursor-pointer">
+                                            <img src="assets/img/csv-icon.svg" width="16" class="margin">
+                                            <span [draggable]="true" id="file.fileId" (click)="dragClick(file)" (dragstart)="drag($event, file)">
+                                                {{file.fileName}}
+                                            </span>
+                                        </p>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ng-container>
+                    </ng-container>
+                </ul>
+            </li>
+        </ol>
+    </div>
+</ng-container>
+<ng-template #inProgress>
+    <div class="spinner-center spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</ng-template>

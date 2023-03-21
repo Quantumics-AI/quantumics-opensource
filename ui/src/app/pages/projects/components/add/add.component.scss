@@ -1,0 +1,114 @@
+::ng-deep {
+    .popover .arrow {
+        display: none;
+    }
+
+    .project-pophover {
+        max-width: 450px !important;
+        width: 420px !important;
+    }
+
+    ul {
+        list-style-type: disc;
+        padding-left: 0;
+    }
+}
+
+.upload-logo {
+    // width: 437px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-create {
+    // background: linear-gradient(89.78deg, #00dfba 0.19%, rgba(0, 223, 186, 0.2) 99.82%);
+    background: #00DFBA;
+    // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    margin-right: 20px;
+}
+
+.create-project-header {
+    border-bottom: none;
+}
+
+.create-project-footer {
+    border-top: none;
+}
+
+.create-project-form {
+    padding-left: 7%;
+    padding-right: 7%;
+    padding-top: 3%;
+    padding-bottom: 2%;
+}
+
+.project-name-input {
+    // height: 6vh;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.project-desc {
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+// .custom-file-label::after{
+//     width: 120px;
+//     text-align: center;
+//     background-color: #ffffff;
+//     border: 1px solid #121542;
+//     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+//     border-radius: 4px;
+//     top: 5px;
+//     right: 5px;
+// }
+
+.custom-file-label {
+    height: 6vh;
+    font-size: 16px;
+}
+
+.fileinput {
+    opacity: 0;
+}
+
+.filelabel {
+    // position: absolute;
+    // top: -5px;
+    // width: 100%;
+    // border: 1px solid;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.fileimg {
+    width: 30px;
+}
+
+.imgspan {
+    float: right;
+    padding: 3px;
+    margin-top: -2px;
+    border: 1px solid #9F9F9F;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.15));
+    border-radius: 4px;
+}
+
+.custom-file-label::after {
+    opacity: 0;
+}

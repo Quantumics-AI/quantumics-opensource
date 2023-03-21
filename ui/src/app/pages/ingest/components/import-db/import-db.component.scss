@@ -1,0 +1,108 @@
+.pgsql-content {
+    width: 100%;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.modal-header {
+    border: none;
+    padding-top: 30px;
+    padding-bottom: 0;
+}
+
+
+.pipeLable {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    /* identical to box height, or 188% */
+
+    // text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1E1F3E;
+}
+
+.pipeline-input-connection-div {
+    margin: 4vh auto;
+    max-width: 710px;
+}
+
+.pipeInput {
+    background: #FCFCFE;
+    border: 1px solid #CCCCCC;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 156.02%;
+    /* identical to box height, or 25px */
+
+    // text-align: center;
+    letter-spacing: 0.035em;
+
+    // color: #999999;
+}
+
+.checkDiv {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #00705D;
+}
+
+.btns {
+    float: right;
+}
+
+.connectionBtns {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    // background-color: #01B798;
+    // color: white;
+    color: #009C82;
+}
+
+.marginTop {
+    margin-top: 10px;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+::placeholder {
+    color: #999999;
+    opacity: 1; /* Firefox */
+}
+
+.modal-height {
+    height: auto;
+    padding-bottom: 40px;
+}
+
+.container {
+    padding-left: 60px;
+    padding-right: 60px;
+}

@@ -1,0 +1,15 @@
+::ng-deep {
+    .popover .arrow {
+      display: none;
+    }
+  
+    .edit-pophover {
+      max-width: 400px !important;
+      width: 350px !important;
+    }
+  
+    ul {
+      list-style-type: disc;
+      padding-left: 0;
+    }
+}

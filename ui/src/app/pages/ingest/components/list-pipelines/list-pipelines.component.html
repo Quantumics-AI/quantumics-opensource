@@ -1,0 +1,125 @@
+<app-loader [loading]="loading">
+    <div class="page-content">
+        <ng-container *ngIf="!loading && !showCard">
+            <div>
+                <div class="floder-count">
+                    Total Pipelines ({{total_pipeline_length}})
+                </div>
+                <div class="row pull-right">
+                    <div class="col-12">
+                        <div class="custom-search">
+                            <input type="text" id="searchTerm" class="search-query"
+                                placeholder="Search Pipeline Name" [(ngModel)]="searchTerm.pipelineName">
+                        
+                            <button type="button" id="btnConnectToSource" class="btn btn-design mr-l-10"
+                                (click)="selectSourceType()">
+                                Connect to a source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col" class="folder-name" >Pipeline Name
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col">Connection Name</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Created By</th>
+                            <th scope="col" class="folder-name">Created Date
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col" class="folder-name" >Modified Date
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let pipe of pipelines | filterBy:searchTerm">
+                            <tr class="td-color">
+                                <td class="text-left" (click)="getPipeLineFolderDetails(pipe)">
+                                    <a>
+                                        <img *ngIf="pipe.isExpanded" src="assets/img/pipline/down-arrow.svg">
+                                        <img *ngIf="!pipe.isExpanded" src="assets/img/pipline/right-arrow.svg">    
+                                        <!-- <img src="assets/img/pipeline.svg" width="18" class="icon-space"> -->
+                                        {{pipe.pipelineName}}
+                                    </a>
+                                </td>
+                                <td> {{pipe.connectorDetails.connectorName}} </td>
+                                <td> {{pipe.pipelineType}} </td>
+                                <td> {{pipe.createdBy}} </td>
+                                <td>
+                                   {{pipe.createdDate | date: 'dd-MM-yy, hh:mm a'}}
+                                </td>
+                                <td>{{pipe.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                
+                                <td>
+                                    <a *ngIf="pipe.published" placement="top" id="lnkUpload" ngbTooltip="Execute" (click)="executePipeline(pipe.pipelineId)" >
+                                        <i><img src="assets/img/execute.svg" width="18"></i>
+                                    </a>
+                                    <a *ngIf="!pipe.published" placement="top" id="lnkUpload" ngbTooltip="Not Published" class="disabled" >
+                                        <i><img src="assets/img/disable-execute.svg" width="18"></i>
+                                    </a> &nbsp;
+                                    <a placement="top" id="lnkUpload" ngbTooltip="History" (click)="openHistoryPipeline(pipe.pipelineId)">
+                                        <i><img src="assets/img/history-icon.svg" width="18"></i>
+                                    </a> &nbsp;
+                                    <a placement="top" id="lnkEdit" ngbTooltip="Edit" (click)="openEditPipeline(pipe)" >
+                                        <i><img src="assets/img/edit.svg" width="18"></i>
+                                    </a> &nbsp;
+                                    <a placement="top" id="lnkDelete" ngbTooltip="Delete" (click)="deletePipeline(pipe.pipelineId)">
+                                        <i><img src="assets/img/delete.svg" width="18"></i>
+                                    </a> 
+                                </td>
+                            </tr>
+                            <ng-container *ngIf="pipe.isExpanded">
+                                <tr *ngFor="let item of pipeLineFolders" class="nested-row">
+                                    <td> <img class="ml-3" src="assets/img/pipline/source-icon.svg"> 
+                                        <a (click)="redirectToFolder(item)">
+                                            {{item.qsFolders.folderDisplayName}}
+                                        </a>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">{{item.qsFolders.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td class="text-center">{{item.qsFolders.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td width=""></td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    
+        <ng-container *ngIf="showCard">
+            <div *ngIf="!loading" class="row gutters justify-content-center mt-6 rounded m-0">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="card shadow-lg">
+                        <div class="card-body plus-add">
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'db-connector']">
+                                <img src="assets/img/cleansing-add.svg" width="55" alt="add" class="mb-3"></a>
+                            <p class="plus-add-text">
+                                You do not have any Pipelines. <br>
+                                Why don't you create one by clicking "Plus" button.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        
+    </div>
+</app-loader>
+

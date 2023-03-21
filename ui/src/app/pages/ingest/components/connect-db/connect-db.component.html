@@ -1,0 +1,148 @@
+<div class="modal-header">
+    <h4 class="modal-title">Other Databases (ODBC)</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-loader [loading]="loading">
+        <form [formGroup]="fg">
+            <div class="row">
+                <div class="col-xl-12">
+                    <p>Generic ODBC requires additional configuration for publishing to succeed. Select DSN (data source
+                        name)
+                        for cross platform portability. A DSN with the same name must be configured on QS server.</p>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col-xl-3">
+                    <div class="form-group">
+                        <input class="mr-1" type="radio" id="radioNewConnection" [(ngModel)]="connectionType"
+                            name="connectionTypeRadios" [value]="1" formControlName="connectionTypeRadios"
+                            (change)="handleChange($event)">
+                        <label class="form-check-label" for="radioNewConnection">
+                            New Connection
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <input class="mr-1" type="radio" name="connectionTypeRadios" id="radioExistingConnection"
+                        [value]="2" [attr.disabled]="dbConnections.length == 0 ? true : null"
+                        [(ngModel)]="connectionType" formControlName="connectionTypeRadios"
+                        (change)="handleChange($event)" [value]="2">
+                    <label class="form-check-label" for="radioExistingConnection">
+                        Existing Connection
+                    </label>
+                </div>
+            </div> -->
+
+            <div class="row">
+                <div class="col-xl-12" *ngIf="connectionType == 1">
+                    <h5>Connection Attributes</h5>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="connectionName" formControlName="connectionName"
+                            placeholder="Connection Name" [value]="fg.get('connectionName').value">
+                        <div *ngIf="fg.get('connectionName').touched && fg.get('connectionName').hasError('required')"
+                            class="error">
+                            Required
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12" *ngIf="connectionType == 2 && dbConnections?.length">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Connection Names</label>
+                        <select class="form-control" id="drpConnectionName" formControlName="connectionName"
+                            (change)="selectedConnectionType()">
+                            <option *ngFor="let connection of dbConnections" [value]="connection?.dataSourceId">
+                                {{connection?.connectionName}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="server" id="server"
+                            placeholder="Server" [value]="fg.get('server').value">
+                        <div *ngIf="fg.get('server').touched && fg.get('server').hasError('required')" class="error">
+                            Required</div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="port" id="port" placeholder="Port"
+                            [value]="fg.get('port').value">
+                        <div *ngIf="fg.get('port').touched && fg.get('port').hasError('required')" class="error">
+                            Required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="database" id="database"
+                            placeholder="Database" [value]="fg.get('database').value">
+                        <div *ngIf="fg.get('database').touched && fg.get('database').hasError('required')"
+                            class="error">
+                            Required
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="username" placeholder="Username"
+                            id="username" [value]="fg.get('username').value" required>
+                        <div *ngIf="fg.get('username').touched && fg.get('username').hasError('required')"
+                            class="error">
+                            Required
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <input type="password" class="form-control" formControlName="password" placeholder="Password"
+                            id="password" required>
+                        <div *ngIf="fg.get('password').touched && fg.get('password').hasError('required')"
+                            class="error">
+                            Required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" cols="30" formControlName="extra" placeholder="Extras"
+                            id="extra"> </textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <input type="checkbox" class="mr-1" id="chkSaveDbInfo" formControlName="saveDbInfo"
+                            [checked]="connectionType == 2" [attr.disabled]="connectionType == 1 ? null : true" />
+                        <label class="form-label">Save DB Details</label>
+                    </div>
+                </div>
+            </div> -->
+        </form>
+    </app-loader>
+</div>
+<div class="modal-footer">
+    <button type="button" id="btnTestConnection" class="btn btn-primary" [disabled]=connectionStatus
+        (click)="testConnection()">Test
+        Connection</button>
+    <button type="button" id="btnConnect" class="btn btn-secondary" [disabled]=!connectionStatus
+        (click)="connect()">Connect</button>
+</div>

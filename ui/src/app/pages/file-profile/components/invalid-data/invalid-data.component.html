@@ -1,0 +1,36 @@
+<app-loader [loading]="loading">
+    <div class="modal-header text-center">
+        <h6 class="modal-title">View</h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="table-responsive table-height">
+                    <table class="table m-0 table-fixed">
+                        <ng-container *ngIf="data; else noData">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th *ngFor="let column of columns" class="th-new">{{column}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let d of data" class="td-color">
+                                    <td>{{d}}</td>
+                                </tr>
+                            </tbody>
+                        </ng-container>
+
+                        <ng-template #noData>
+                            <h6 *ngIf="!loading">No Records Found</h6>
+                        </ng-template>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

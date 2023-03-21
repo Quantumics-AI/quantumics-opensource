@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="341" height="331" viewBox="0 0 341 331">
+  <g id="Group_1402" data-name="Group 1402" transform="translate(13095 -5486)">
+    <rect id="Rectangle_2362" data-name="Rectangle 2362" width="77" height="291" transform="translate(-12797 5596) rotate(90)" fill="#87cbff"/>
+    <g id="Group_1399" data-name="Group 1399" transform="translate(13 295)">
+      <g id="Group_1396" data-name="Group 1396" transform="translate(570 24)">
+        <g id="Rectangle_2360" data-name="Rectangle 2360" transform="translate(-13678 5167)" fill="none" stroke="#000" stroke-width="8">
+          <rect width="306" height="306" rx="19" stroke="none"/>
+          <rect x="4" y="4" width="298" height="298" rx="15" fill="none"/>
+        </g>
+        <g id="Rectangle_2361" data-name="Rectangle 2361" transform="translate(-13678 5167)" stroke="#000" stroke-width="8">
+          <rect width="306" height="72" stroke="none"/>
+          <rect x="4" y="4" width="298" height="64" fill="none"/>
+        </g>
+        <line id="Line_1553" data-name="Line 1553" x2="301" transform="translate(-13674.5 5279.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1554" data-name="Line 1554" x2="301" transform="translate(-13674.5 5351.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1555" data-name="Line 1555" x2="301" transform="translate(-13674.5 5412.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1556" data-name="Line 1556" y1="228" transform="translate(-13582.5 5239.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1557" data-name="Line 1557" y1="228" transform="translate(-13469.5 5239.5)" fill="none" stroke="#000" stroke-width="10"/>
+      </g>
+      <g id="Ellipse_542" data-name="Ellipse 542" transform="translate(-12925 5364)" fill="#fff" stroke="#000" stroke-width="10">
+        <circle cx="79" cy="79" r="79" stroke="none"/>
+        <circle cx="79" cy="79" r="74" fill="none"/>
+      </g>
+      <g id="criss-cross" transform="translate(-12910.932 5378.068)">
+        <path id="Path_8382" data-name="Path 8382" d="M225.755,214.87a7.7,7.7,0,1,1-10.884,10.884l-23.129-23.13-23.129,23.13a7.7,7.7,0,0,1-10.884-10.884l23.13-23.129-23.13-23.129a7.7,7.7,0,0,1,10.884-10.884l23.129,23.13,23.129-23.13a7.7,7.7,0,0,1,10.884,10.884l-23.13,23.129Zm0,0" transform="translate(-127.079 -127.079)" fill="#f44336"/>
+      </g>
+    </g>
+  </g>
+</svg>

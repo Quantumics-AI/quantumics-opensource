@@ -1,0 +1,44 @@
+<div class="main-container">
+    <ng-container *ngIf="!hasFolders; else stats">
+        <div class="text-center">
+            <div class="row d-flex justify-content-center">
+                <div class="connect-to-source">
+                    <img src="/assets/img/side-bar/user-summary.svg" class="img-fluid">
+
+                    <h5 class="summary-p1">This is where you'll see the summary of your workspace.</h5>
+                    <p class="summary-p2">KPI like dataset size, no of prepared dataset, eng flows created etc.</p>
+
+                    <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design">Connect to a source</a>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #stats>
+        <div class="page-header1">
+            <ol class="breadcrumb breadcrumb-top">
+                <li class="breadcrumb-item"> <a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>&nbsp; </li>
+                <li class="breadcrumb-item active" aria-current="page"> <a>Project Stats</a></li>
+            </ol>
+        </div>
+
+        <div class="page-content mt-3">
+            <div class="row">
+                <div class="col-xl-10">
+                    <app-top-bar (selectedType)="selectedOption($event)" [totalfile]="totalFileData"></app-top-bar>
+                    <app-bar-chart [type]="selectedTopbarOption" [stats]="totalFileData"></app-bar-chart>
+                </div>
+                <div class="col-xl-2">
+                    <app-right-side (selectedEValue)="selectedEffort($event)"
+                        (selectedFData)="selectedFileData($event)"></app-right-side>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 30px;">
+                <div class="col-xl-12">
+                    <app-bottom-side [efforts]="selectedMannual"></app-bottom-side>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+</div>

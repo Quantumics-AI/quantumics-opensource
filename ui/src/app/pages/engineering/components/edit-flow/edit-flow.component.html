@@ -1,0 +1,38 @@
+<form [formGroup]="fg">
+    <div class="modal-header">
+        <h5 class="modal-title">Edit Flow</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <div class="col-12">
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="flowName" minlength="3" maxlength="30"
+                    placeholder="Flow Name" formControlName="flowName" autocomplete="off" 
+                    #f="ngbPopover" [ngbPopover]="popFolder" popoverClass="folder-pophover"
+                    placement="bottom">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="description" rows="3" maxlength="255" placeholder="Flow Description"
+                    formControlName="description"></textarea>
+            </div>
+        </div>
+        <ng-template #popFolder>
+            <div class="col-12">
+                <ul>
+                    <li>Flow name should not contain special characters.</li>
+                    <li>Flow name should be unique.</li>
+                </ul>
+            </div>
+        </ng-template>
+    </div>
+
+    <div class="modal-footer">
+        <button [disabled]="fg.invalid" id="btnSave" type="button" class="btn btn-primary"
+            (click)="edit()">Save</button>
+    </div>
+</form>

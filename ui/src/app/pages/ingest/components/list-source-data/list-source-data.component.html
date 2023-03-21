@@ -1,0 +1,37 @@
+<app-loader [loading]="loading">
+    <div class="table-responsive table-height">
+        <table class="table m-0 table-fixed table-striped">
+            <thead class="thead-light">
+                <tr class="fixed-th">
+                    <th scope="col">File Name </th>
+                    <th scope="col">Created By </th>
+                    <th scope="col">Created Date </th>
+                    <th scope="col">Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="files.length else noRecord">
+                    <tr class="td-b" *ngFor="let file of files">
+                        <ng-template #dateContent>
+                            {{ file.createdDate | date: 'dd-MM-yy, hh:mm a' }}
+                        </ng-template>
+                        <td class="text-left"><a [ngbTooltip]="dateContent"
+                                (click)="cleansing(file.fileName, file.fileId)">{{file.fileName}}</a>
+                        </td>
+                        <td>{{file.ruleCreatedFrom }}</td>
+                        <td>{{file.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                        <td>
+                            <a placement="top" ngbTooltip="Delete" (click)="delete(file.fileId, file.fileName)">
+                                <i><img src="assets/img/delete.svg" width="18"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </ng-container>
+                <ng-template #noRecord>
+                    <h6>No files found...</h6>
+                </ng-template>
+            </tbody>
+        </table>
+    </div>
+</app-loader>

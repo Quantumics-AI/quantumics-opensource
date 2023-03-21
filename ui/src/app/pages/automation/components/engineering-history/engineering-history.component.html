@@ -1,0 +1,80 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title">Engineering Flow History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th>Flow name</th>
+                            <th>Job Run Date</th>
+                            <th>
+                                Status
+                                <em>
+                                    <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
+                                        <img src="assets/img/refresh.svg" width="18" (click)="refresh()" alt="refresh">
+                                    </a>
+                                </em>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="history$ | async as history">
+                            <ng-container *ngIf="history?.length > 0; else noRecords">
+                                <tr class="td-color" *ngFor="let h of history">
+                                    <td>{{h.engFlowName}}</td>
+                                    <td>{{h.runDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td class="text-white" [class.bg-success]="h.status.toLowerCase() === 'succeeded'"
+                                        [class.bg-danger]="h.status.toLowerCase() === 'failed'"
+                                        [class.bg-warning]="h.status.toLowerCase() === 'running' || h.status.toLowerCase() === 'started' ">
+                                        {{h.status}}
+                                        <span (click)="viewLogs(h)" class="cursor-pointer">
+                                            <em class="fa fa-info-circle"></em>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <em>
+                                            <a id="lnkReRun" placement="top" ngbTooltip="Re-Run" (click)="reRun(h)">
+                                                <img src="assets/img/Re-Run.svg" width="18" alt="re-run">
+                                            </a>
+                                        </em> &nbsp;
+                                        <em>
+                                            <a id="lnkDownload"
+                                                [class.disabled]="h.status.toLowerCase() === 'started' || h.status.toLowerCase() === 'failed'"
+                                                (click)="getEngDownloadFile(h)" placement="top" ngbTooltip="Download">
+                                                <img src="assets/img/download.svg" width="18" alt="download">
+                                            </a>
+                                        </em>
+                                        &nbsp;
+                                        <em>
+                                            <a id="lnkViewEngFlow" placement="top" ngbTooltip="View Flow"
+                                                (click)="view(h.engFlowId, h.engFlowName)">
+                                                <img src="assets/img/view.svg" width="18" alt="view">
+                                            </a>
+                                        </em>
+                                        <!-- &nbsp;
+                                        <em>
+                                        <a *ngIf="h.status.toLowerCase() === 'succeeded'" id="lnkSankey" [routerLink]="['/projects', projectId, 'automation', h.engFlowId, 's-autorun' ]" target="_blank">
+                                            <img src="assets/img/new-pro-img.png" width="18" alt="">
+                                        </a>
+                                    </em> -->
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecords>
+                                <h6>No result found</h6>
+                            </ng-template>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

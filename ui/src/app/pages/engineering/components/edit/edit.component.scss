@@ -1,0 +1,79 @@
+::ng-deep .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #ccc;
+
+    .card {
+        background-color: #ccc;
+    }
+}
+
+.loading {
+    pointer-events: none;
+}
+
+.ellipsis-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#graphContainer {
+    min-height: 100%;
+}
+
+.w-100-p {
+    width: 100%;
+}
+
+.w-69-p {
+    width: 69%;
+}
+
+.w-29-p {
+    width: 29%;
+}
+
+.right-penal {
+    margin-top: 0px !important;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.preview-panel {
+    position: relative;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+.watermark-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: gray;
+    font-size: 17px;
+}
+
+::ng-deep .modal-size .modal-dialog {
+    max-width: 1100px;
+}
+
+
+.eng-progressbar {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    pointer-events: none;
+    left: 45%;
+    width: 35%;
+    margin: 0px 5px;
+    color: #ffffff;
+  }
+
+.box-s {
+    box-shadow: 1px 0 5px -2px #7d7d7d;
+}

@@ -1,0 +1,46 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title">Files</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <ng-container *ngIf="files$ | async as files">
+            <ng-container *ngIf="files?.length > 0; else noRecords">
+                <div class="table-responsive table-height">
+                    <table class="table m-0 table-fixed">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th>File Name</th>
+                                <th>Created By</th>
+                                <th>Created Date</th>
+                                <th>Run Job</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-color" *ngFor="let file of files">
+                                <td class="text-left">{{file?.fileName}}</td>
+                                <td>{{file?.ruleCreatedFrom}}</td>
+                                <td>{{file?.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                <td>
+                                    <input type="checkbox" [checked]="selectedFileId === file.fileId"
+                                        (change)="selectFile($event, file.fileId)" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+            <ng-template #noRecords>
+                <h6>no result found</h6>
+            </ng-template>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <button type="button" id="btnRunCleanseJob" [disabled]="!selectedFileId" class="btn btn-primary" (click)="runCleanseJob()">Run
+            job</button>
+    </div>
+</app-loader>

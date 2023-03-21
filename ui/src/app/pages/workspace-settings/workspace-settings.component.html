@@ -1,0 +1,25 @@
+<div class="main-container bg-color">
+    <div class="page-header1">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item" aria-current="page"> <a>Workspace Settings</a></li>
+        </ol>
+    </div>
+    <div class="workspace-content main-menu">
+        <ul>
+            <li>
+                <a [routerLink]="['details']" routerLinkActive="is-active">Workspace Details</a>
+            </li>
+            <!-- Hide for releas-1 -->
+            <!-- <li>
+                <a>Data Lineage</a>
+            </li>
+            <li>
+                <a>Roles</a>
+            </li> -->
+        </ul>
+
+        <div class="mt-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

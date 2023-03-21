@@ -1,0 +1,43 @@
+table,
+th,
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.first-child {
+    background-color: #212245;
+    color: #ffffff;
+}
+
+.upload-file {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.show:hover + .list-categories{
+    max-height: inherit;
+    opacity: 1;
+}
+  
+.list-categories{
+    // padding: 10px;
+    padding-top: 5px;
+    padding-right: 7px;
+    margin: 0 auto;
+    max-height: 0px;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 300ms ease;
+    font-size: 12px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    // background: #111;
+    background: rgba(0, 0, 0, .7);
+}
+
+ol {
+    list-style-type: none;
+    padding-left: 10px;
+}

@@ -1,0 +1,13 @@
+<div class="modal-header border-bottom-0 pd-b-0">
+    <h4 *ngIf="!showUpdatePassDiv && !showFailDiv" class="modal-title modal-header-text">{{ title }}</h4>
+    <h4 *ngIf="showUpdatePassDiv" class="modal-title modal-header-text gc">{{ title }}</h4>
+    <h4 *ngIf="showFailDiv" class="modal-title modal-header-text rc">{{ title }}</h4>
+</div>
+<div class="modal-body pd-b-0">
+    <p class="body-text-muted">
+        {{ message }}
+    </p>
+</div>
+<div class="modal-footer justify-content-start">
+    <button type="button" class="btn btn-design" (click)="modal.close(true);">Okay</button>
+</div>

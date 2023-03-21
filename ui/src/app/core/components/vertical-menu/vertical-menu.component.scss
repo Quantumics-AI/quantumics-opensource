@@ -1,0 +1,189 @@
+.active {
+  a {
+    background: #F0F8F4;
+    color: #00977C !important;
+  }
+}
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+.w-30px {
+  width: 30px;
+}
+.dot {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: -3px;
+  margin-right: 8px;
+}
+.main-side-nav {
+  ul {
+    margin: 24px 0px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    // padding-left: 25px;
+    margin-left: 0px;
+    padding-right: 12px;
+    li {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      // border-left: 4px solid #212245;
+      height: 40px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      /* identical to box height, or 143% */
+      display: flex;
+      align-items: center;
+      /* Dark Grey */
+      color: #888C92;
+      padding-left: 6px;
+      // &:hover {
+      //   background: #F6F6F7;
+      //   border-radius: 4px;
+      // }
+      span {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        padding: 10px 11px;
+        border-radius: 4px;
+        &:hover {
+          background: #F6F6F7;
+          border-radius: 4px;
+        }
+      }
+      &:last-child {
+        margin-bottom: 10px;
+      }
+      a {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        /* identical to box height, or 143% */
+        display: flex;
+        align-items: center;
+        /* Dark Grey */
+        color: #888C92;
+        &:hover {
+          background: #F6F6F7;
+          border-radius: 4px;
+        }
+        i {
+          margin-top: -4px;
+        }
+      }
+    }
+    .mr-t-90 {
+      margin-top: 90px;
+    }
+  }
+}
+.active-link {
+  position: absolute;
+  left: 0px;
+}
+.last-active-link {
+  position: absolute;
+  left: 0;
+}
+.position-a {
+  position: absolute;
+  bottom: 0;
+  width: 228px;
+  // pointer-events: none;
+}
+.noti-cont {
+  width: 20px;
+  height: 20px;
+  background: #f00;
+  border-radius: 100%;
+  padding: 2px;
+  margin: 0px 0px 10px -11px;
+  text-align: center;
+  font-size: 10px;
+  color: #ffff;
+}
+.user {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px 10px 5px;
+  .font {
+    font-size: 12px;
+    color: #00dfba;
+  }
+}
+::ng-deep {
+  .notification-width {
+    max-width: 500px !important;
+  }
+  .user-menu-width {
+    max-width: 400px !important;
+    width: 380px !important;
+    margin-left: 2%;
+  }
+}
+.data-menu {
+  margin-top: 24px;
+  margin-bottom: 14px;
+}
+.ng-select .ng-select-container {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F2 !important;
+  border-radius: 4px !important;
+}
+.pd-l-15 {
+  padding-left: 15px;
+}
+.cr-work {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  /* identical to box height, or 18px */
+  /* Green */
+  color: #00977C;
+}
+.wr-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  /* identical to box height, or 18px */
+  /* Dark Grey */
+  color: #888C92;
+}
+.se-work {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  /* identical to box height, or 15px */
+  /* Dark Grey */
+  color: #888C92;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option:nth-child(0) {
+  pointer-events: none !important;
+}
+
+.ml-15 {
+  margin-left: 15px;
+}
+
+.mr-r-5 {
+  margin-right: 5px;
+}

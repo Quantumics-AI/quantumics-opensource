@@ -1,0 +1,59 @@
+<app-loader [loading]="loading">
+    <div *ngIf="paymentDetails" class="row gutters justify-content-center mt-3 rounded ">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 ">
+            <div class="card shadow-lg">
+                <div class="card-body ">
+                    <div class="row gutters">
+
+                        <div class="col-12 text-center">
+                            <div cclass="text-center">
+                                <i><img src="assets/images/payment-success.png" width="87" height="87"></i>
+                                <h5 style="color:#8BF343; margin:10px 0px 10px 0px;">Payment Successful</h5>
+                                <strong>
+                                    ${{paymentDetails.amountTotal | number}} paid on {{paymentDetails.created | date:
+                                    'MMM d, y'}}
+                                </strong>
+                            </div>
+
+                            <div class="table-responsive ">
+                                <table class="table m-0">
+                                    <thead>
+                                        <tr class="th-center">
+                                            <th>Tier Name</th>
+                                            <th>Qty</th>
+                                            <th>Unit price </th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="td-color">
+                                            <td>{{paymentDetails.tierName}}</td>
+                                            <td>01</td>
+                                            <td>${{paymentDetails.amountSubTotal | number}}</td>
+                                            <td>${{paymentDetails.amountSubTotal | number}}</td>
+                                        </tr>
+                                        <tr class="td-color">
+                                            <td></td>
+                                            <td></td>
+                                            <td>VAT 20%</td>
+                                            <td>${{paymentDetails.amountTax | number}}</td>
+                                        </tr>
+                                        <tr class="td-color">
+                                            <td></td>
+                                            <td></td>
+                                            <td>Amount paid </td>
+                                            <td>${{paymentDetails.amountTotal | number}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-success  mt-3 mr-3" (click)="download()">Download
+                                    Invoice</button>
+                                <button type="button" (click)="ok();" class="btn btn-success mt-3">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

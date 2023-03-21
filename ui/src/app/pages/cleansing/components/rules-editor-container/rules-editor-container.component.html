@@ -1,0 +1,59 @@
+<div [ngSwitch]="editorComponent">
+    <div *ngSwitchCase="ruleTypes.PatternReplace">
+        <app-replace-text-or-pattern [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-replace-text-or-pattern>
+    </div>
+    <div *ngSwitchCase="ruleTypes.FindReplace">
+        <app-replace-cell [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)"></app-replace-cell>
+    </div>
+    <div *ngSwitchCase="'fillNull'">
+        <app-replace-missing [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-replace-missing>
+    </div>
+    <div *ngSwitchCase="ruleTypes.CountMatch">
+        <app-count-matches [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)"></app-count-matches>
+    </div>
+    <div *ngSwitchCase="'format'">
+        <app-format [columns]="columns" [rule]="selectedRule" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-format>
+    </div>
+    <div *ngSwitchCase="ruleTypes.SplitColumnValue">
+        <app-split [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)"></app-split>
+    </div>
+    <div *ngSwitchCase="'mergeRule'">
+        <app-merge [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)"></app-merge>
+    </div>
+    <div *ngSwitchCase="ruleTypes.FilterRows">
+        <app-remove-rows [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)"></app-remove-rows>
+    </div>
+    <div *ngSwitchCase="ruleTypes.FilterRowsByColumn">
+        <app-remove-rows-by-column-values [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-remove-rows-by-column-values>
+    </div>
+    <div *ngSwitchCase="'manageColumns'">
+        <app-manage-columns [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-manage-columns>
+    </div>
+
+    <div *ngSwitchCase="'removeDuplicateRows'">
+        <app-remove-duplicates [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-remove-duplicates>
+    </div>
+
+    <div *ngSwitchCase="'extractColumnValues'">
+        <app-extract-column-values [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)" [ruleInputLogic1]="ruleInputLogic1"
+            (previewRule)="handlePreviewRule($event)" (cancelPreview)="handleCancelPreview($event)">
+        </app-extract-column-values>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<ul class="list-inline toolbar">
+
+    <div class="editor-bar" [ngClass]="{'disabledDiv':isPreview}">
+        <li class="list-inline-item mb-0"  [ngClass]="{'disabledLi':isPreview}">
+            <a id="lnkAddJoin" class="btn show" (click)="addJoin()">
+                <img style="height: 20px; width: 20px; " src="https://static.thenounproject.com/png/60035-200.png"
+                    placement="top" ngbTooltip="Join" container="body">
+            </a>
+        </li>
+
+        <li class="list-inline-item mb-0"  [ngClass]="{'disabledLi':isPreview}">
+            <a id="lnkAddTotal" class="btn show" (click)="addTotal()">
+                <img style="height: 20px; width: 20px; " src="assets/media/image/sigma.png" placement="top"
+                    ngbTooltip="Aggregate" container="body">
+            </a>
+        </li>
+
+        <li class="list-inline-item mb-0"  [ngClass]="{'disabledLi':isPreview}">
+            <a id="lnkPgsql" class="btn show" (click)="pgsqlSelected()">
+                <img style="height: 20px; width: 20px; " src="assets/media/image/engineering-pgsql.svg" placement="top"
+                    ngbTooltip="PGSQL" container="body">
+            </a>
+        </li>
+
+        <li class="list-inline-item mb-0"  [ngClass]="{'disabledLi':isPreview}">
+            <a id="lnkDelete" class="btn show" (click)="delete()">
+                <img style="height: 20px; width: 20px; " src="assets/media/image/delete.png" placement="top"
+                    ngbTooltip="Delete" container="body">
+            </a>
+        </li>
+
+        <li class="list-inline-item mb-0"  [ngClass]="{'disabledLi':isPreview}">
+            <select class="form-control btn-udfname" (change)="onChangeUdf()" [(ngModel)]="selectedUdfFunction">
+                <option value="" [value]="undefined" disabled selected> --Select UDF Function-- </option>
+                <option *ngFor="let d of udfNameList" [ngValue]="d">
+                    <img style="height: 20px; width: 20px; " src="assets/media/image/udf-function-01.svg"
+                        placement="top" ngbTooltip="UDF" container="body">
+                    {{d.udfName}}
+                </option>
+            </select>
+        </li>
+
+        <li class="list-inline-item mb-0 pull-right">
+            <button type="button" id="btnSaveGraph" class="btn btn-primary mr-1"  [ngClass]="{'disabledLi':isPreview}" (click)="saveGraph.emit();">Save</button>
+
+            <button ngbPopover="Please make sure to Save the Flow before closing" triggers="mouseenter:mouseleave"
+                placement="auto" type="button" id="btnClose" class="btn btn-secondary btn-cancel" [disablePopover]="isPreview" (click)="back()">close</button>
+        </li>
+    </div>
+</ul>

@@ -1,0 +1,114 @@
+<nav id="sidebar" class="main-side-nav">
+    <a>
+        <img src="assets/img/side-bar/logo.svg" alt="home">
+    </a>
+    <ul>
+        <div class="ml-15">
+            <label class="paragraph-medium">Workspace</label>
+            <ng-select [multiple]="false" [clearable]="false" [searchable]="false" placeholder="Select workspace"
+                [dropdownPosition]="'bottom'" [closeOnSelect]="true" [(ngModel)]="workspaceId"
+                (change)="onWorkSpaceChange($event)">
+                <ng-option value="select-text" disabled>
+                    <span class="se-work"> Select workspace</span>
+                </ng-option>
+                <ng-option value="all" *ngIf="isAdmin">
+                    <span class="se-work">
+                        <img src="assets/img/side-bar/see-all.svg" class="mr-r-5">See all workspace
+                    </span>
+                </ng-option>
+                <ng-option *ngFor="let project of projects; let i = index" [value]="project.projectId">
+                    <span class="dot" [ngStyle]="{'background-color': projectColors[i]}"></span>
+                    <span class="wr-text">{{project?.projectDisplayName}}</span>
+                </ng-option>
+            </ng-select>
+        </div>
+
+        <p class="paragraph-medium data-menu pd-l-15">Data Menu</p>
+        <li routerLinkActive="active" #rlah="routerLinkActive">
+            <img *ngIf="rlah.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects', projectId, 'stats']">
+                <span class="w-30px">
+                    <img [src]="rlah.isActive ? 'assets/img/side-bar/new-home-active.svg' : 'assets/img/side-bar/new-home.svg'"
+                        alt="Home">
+                </span>
+                <span>Home</span>
+            </a>
+        </li>
+        <li routerLinkActive="active" #rlad="routerLinkActive">
+            <img *ngIf="rlad.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'ingest']">
+                <span class="w-30px">
+                    <img [src]="rlad.isActive ? 'assets/img/side-bar/dataset-active.svg' : 'assets/img/side-bar/new-data.svg'"
+                        alt="DataSet">
+                </span>
+                <span>Datasets</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="active" #rlap="routerLinkActive">
+            <img *ngIf="rlap.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'delta']" (click)="expandCollapseMenu('profile')">
+                <span class="w-30px">
+                    <img [src]="rlap.isActive ? 'assets/img/side-bar/profile-active.svg' : 'assets/img/side-bar/new-profile.svg'"
+                        alt="Profile">
+                </span>
+                <span>Profile</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="active" #rlapr="routerLinkActive">
+            <img *ngIf="rlapr.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'cleansing']">
+                <span class="w-30px">
+                    <img [src]="rlapr.isActive ? 'assets/img/side-bar/preparation-active.svg' : 'assets/img/side-bar/new-prep.svg'"
+                        alt="Preparation">
+                </span>
+                <span>Preparation</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="active" #rlae="routerLinkActive">
+            <img *ngIf="rlae.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'engineering']">
+                <span class="w-30px">
+                    <img [src]="rlae.isActive ? 'assets/img/side-bar/engineering-active.svg' : 'assets/img/side-bar/new-eng.svg'"
+                        alt="Engineering">
+                </span>
+                <span>Engineering</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="active" #rlaj="routerLinkActive">
+            <img *ngIf="rlaj.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'automation']">
+                <span class="w-30px">
+                    <img [src]="rlaj.isActive ? 'assets/img/side-bar/jobs-active.svg' : 'assets/img/side-bar/new-jobs.svg'"
+                        alt="Jobs">
+                </span>
+                <span>Jobs</span>
+            </a>
+        </li>
+
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" #rladh="routerLinkActive">
+            <img *ngIf="rladh.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects',projectId,'apps']">
+                <span class="w-30px">
+                    <img [src]="rladh.isActive ? 'assets/img/side-bar/dashboard-active.svg' : 'assets/img/side-bar/new-dash.svg'"
+                        alt="Dashboard">
+                </span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li *ngIf="isAdmin && !userType" routerLinkActive="active" class="position-a" #rlaw="routerLinkActive">
+            <img *ngIf="rlaw.isActive" src="assets/img/side-bar/active-left-content.svg" class="last-active-link">
+            <a [routerLink]="['projects',projectId,'workspace-setting']">
+                <span class="w-30px">
+                    <img [src]="rlaw.isActive ? 'assets/img/side-bar/settings-active.svg' : 'assets/img/side-bar/settings.svg'"
+                        alt="Settings">
+                </span>
+                <span>Workspace settings</span>
+            </a>
+        </li>
+    </ul>
+</nav>

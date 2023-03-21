@@ -1,0 +1,19 @@
+.d3-chart {
+  width: 100%;
+  height: 400px;
+}
+
+.info-panel {
+  width: 380px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 0 10px #ccc;
+  right: 0;
+  top: 0;
+  z-index: 999;
+  position: fixed;
+}
+
+::ng-deep rect {
+  stroke-width: 0px !important ;
+}

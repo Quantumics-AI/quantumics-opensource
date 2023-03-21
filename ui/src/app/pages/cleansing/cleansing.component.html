@@ -1,0 +1,95 @@
+<app-loader [loading]="loading">
+    <div class="main-container">
+        <div class="row page-header1 mb-4 mr-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-top">
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                    </li>
+                    <li class="breadcrumb-item"><a (click)="back()">Preparation</a></li>
+                    <li class="breadcrumb-item"><a (click)="redirectToFolder()">{{folderName}}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{file}}</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="cleansing-toolbar">
+            <app-cleansing-toolbar (editor)="viewChange($event)" [hasRulesCatalogue]="hasRulesCatalogue">
+            </app-cleansing-toolbar>
+        </div>
+        <div class="page-content">
+
+            <div class="left-penal cleansing-table" [ngStyle]="{'width': showFullView ? '100%' : '75%'}" id="table"
+                data-effect="fadeOut">
+                <div class="cleansing-tbl table-responsive auto-height">
+                    <table class="table table-fixed table-striped">
+                        <thead *ngIf="showPreview">
+                            <tr class="th-center">
+                                <ng-container *ngFor="let column of newColumns">
+                                    <th *ngIf="!column.preview" style="border: none"> </th>
+                                    <th *ngIf="column.preview === 'old'" class="source-preview"
+                                        style="background: #5ca5ef">Source
+                                    </th>
+                                    <th *ngIf="column.preview === 'keep'" class="source-preview"
+                                        style="background: #5ca5ef">Source
+                                    </th>
+                                    <th class="source-preview" *ngIf="column.preview === 'new'"
+                                        style="background: #f8d859">
+                                        Preview
+                                    </th>
+                                </ng-container>
+                            </tr>
+                        </thead>
+                        <thead class="thead-light">
+                            <tr class="th-center fixed-th">
+                                <th *ngFor="let column of newColumns; let isFirst = first" class="th-new">
+                                    <div class="d-flex fix-contetnt">
+                                        <span class=" mr-1" *ngIf="column.data_type == 'int'"><b><i
+                                                    style="color:gray">#</i></b></span>
+                                        <span class=" mr-1" *ngIf="column.data_type == 'string'"><b><i
+                                                    style="color:gray">ABC</i></b></span>
+                                        <span class=" mr-1" *ngIf="column.data_type == 'double'"><b><i
+                                                    style="color:gray">#.#</i></b></span>
+                                        <span>
+                                            {{column.column_name}}
+                                        </span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-b cleansing-tr-padding" *ngFor="let d of data;let i=index;"
+                                [style.background-color]="rowPreview(d)">
+                                <td class="cleansing-td-padding" *ngFor="let column of newColumns; let j=index;"
+                                    [ngStyle]="{'background': column.preview == 'new' ? '#FFFFE0' : column.preview == 'old' ? '#daedf4':''}">
+                                    <span *ngIf="isPIIColumn(column.column_name); else normal">
+                                        {{ d[column.column_name].slice(0,5) }}**********
+                                    </span>
+                                    <ng-template #normal>
+                                        {{ d[column.column_name] }}
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="rowLength" style="margin-top: 8px; margin-left: 8px;">
+                    <span> <img src="assets/media/image/eye.svg" class="mr-2" alt="" />
+                        {{columnLength}}
+                        Columns &nbsp; &nbsp; {{rowLength}} Rows &nbsp; &nbsp;{{uniqueDatatypes}}</span>
+                </div>
+            </div>
+            <div *ngIf="!showFullView" class="right-penal pb-2">
+                <app-rules-catelogue *ngIf="editorComponent === 'rules'" (edit)="edit($event)"
+                    (deleted)="ruleDeleted($event)" [rules]="rules" (sequenceChanged)="sequenceChanged()"
+                    (cancel)="cancelPreview($event)">
+                </app-rules-catelogue>
+
+                <app-rules-editor-container *ngIf="editorComponent !== 'rules'" [editorComponent]="editorComponent"
+                    [ruleInputLogic1]="ruleInputLogic1" [columns]="newColumns" [selectedRule]="selectedRule"
+                    (previewRule)="previewRuleNew($event)" (cancelPreview)="cancelPreview($event)"
+                    (addRule)="addRule($event)" [piiColumns]="piiColumns">
+                </app-rules-editor-container>
+            </div>
+        </div>
+    </div>
+</app-loader>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var url = 'http://3.8.73.74:8090/QuantumSparkServiceAPI/api/v1/unittestcasesinfo';
+        var token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDQ1NDM2MTUsInVzZXJfbmFtZSI6InF1YW50dW1zcGFyayIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJqdGkiOiI0MTRjMTI4Yy04YTA3LTRhOTgtOThmZi1iMTkxNTQ5ZjM4NTkiLCJjbGllbnRfaWQiOiJtb2RlbENsaWVudEFwcCIsInNjb3BlIjpbInJlYWRfcHJvZmlsZSJdfQ.QpCDFLcrIgC_-1p0zL8qxgd8XmuWxBy6E4yVpWONiPM';
+
+        $(document).ready(function () {
+            $('.loader').show();
+            $('#testcases').hide();
+            var response = doRequst(url);
+            if (response != null && response.responseJSON) {
+                var data = response.responseJSON.result;
+                data.forEach(element => {
+                    var result = test(element);
+                });
+            } else {
+                $('.loader').hide();    
+            }
+
+            $('tr:not(:has(th)):not(:contains(200))').addClass('error');
+            $('.loader').hide();
+            $('#testcases').show();
+        });
+
+        function doRequst(url, method, payload) {
+            return $.ajax({
+                url: url,
+                type: method,
+                data: payload,
+                async: false,
+                headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+                success: function (data) {return data;}
+            });
+        }
+
+        function test(data) {
+            var response = doRequst(data.endPoint, data.reqType, data.payload);
+            var status = 'Success';
+
+            if (response.status != 200) {
+                status = 'Failure';
+                console.log(data);
+            }
+
+            var str = '<tr><td>'+ data.id +'</td><td>'+ data.apiName +'</td><td>'+ data.endPoint +'</td><td>' +  response.status  + '</td><td>'+ status +'</td></tr>';
+            $("table").append(str);
+        }
+
+    </script>
+
+    <style>
+        h2 {
+            text-align: center;
+        }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: left;
+        }
+
+        .loader {
+            display: block;
+            margin: 0 auto;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .error {
+            background-color: #d9534f;
+        }
+        #testcases {
+            display: none;
+            width: 100%;
+        }
+    </style>
+</head>
+
+
+<body>
+    <h2>Auto Test API</h2>
+    <div class="loader"></div>
+    <table id="testcases">
+        <tr>
+            <th>Id</th>
+            <th>Module Name</th>
+            <th>EndPoint</th>
+            <th>Status</th>
+            <th>Result</th>
+        </tr>
+    </table>
+</body>
+</html>

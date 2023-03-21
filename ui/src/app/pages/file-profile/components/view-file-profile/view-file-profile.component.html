@@ -1,0 +1,256 @@
+<app-loader [loading]="loading">
+    <ng-container *ngIf="folderId && fileId else noFile">
+        <hr class="mr-0" />
+        <div class="pd-20 pd-t-b-16">
+            <ng-template #list>
+                <p class="c-t mr-b-0">Summary of your selected dataset</p>
+            </ng-template>
+            <p class="p2">Dataset summary <span><img src="/assets/img/data-profile/info.svg" class="cp"
+                        [ngbTooltip]="list"  container="body" placement="right" tooltipClass="my-custom-datasetclass"></span></p>
+            <div class="row">
+                <div class="col-md-3 pd-r-10">
+                    <div class="card card-shadow mr-0">
+                        <div class="card-body card-b-pd">
+                            <p class="mr-0 summary-d1">Total Columns</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.columnCount}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 pd-l-10 pd-r-10">
+                    <div class="card card-shadow mr-0">
+                        <div class="card-body card-b-pd">
+                            <p class="mr-0 summary-d1">Total Rows</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.recordCount}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 pd-l-10 pd-r-10">
+                    <div class="card card-shadow mr-0">
+                        <div class="card-body card-b-pd">
+                            <p class="mr-0 summary-d1">Data Types</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{uniqueTypes.length}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 pd-l-10">
+                    <div class="card card-shadow mr-0">
+                        <div class="card-body card-b-pd">
+                            <p class="mr-0 summary-d1">Size</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.fileSize}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <hr class="mr-0" />
+        <div class="pd-20 pd-t-b-16">
+            <ng-container  *ngIf="analysis?.recordCount != 0 else noRowsData ">
+                <ng-template #listTwo>
+                    <p class="c-t mr-b-0">{{columnAnalysisContent}}</p>
+                </ng-template>
+                <ng-template #listThree>
+                    <p class="c-t mr-b-0">{{datasetContent}}</p>
+                </ng-template>
+                <div class="df ai"> <span *ngIf="columnview" class="p2">Column analysis</span> <span *ngIf="listview"
+                        class="p2">Dataset analysis</span> &nbsp; <span>
+                            <img  *ngIf="columnview" src="/assets/img/data-profile/info.svg"
+                            class="cp" placement="right" tooltipClass="my-custom-class" [ngbTooltip]="listTwo"  container="body">
+                            <img *ngIf="listview" src="/assets/img/data-profile/info.svg"
+                            class="cp" placement="right" tooltipClass="my-custom-list-class" [ngbTooltip]="listThree"  container="body">
+                        </span>
+                    <div class="col btn-col pd-r-0">
+                        <span class="float-right">
+                            <button [ngClass]="{'activeBtn': columnview === true, 'activeListBtn': listview === true}"
+                                type="button" class="btn btn-br p1 wc br-c" (click)="columnView()">
+                                <span><img *ngIf="columnview" src="/assets/img/data-profile/column-active.svg"><img
+                                        *ngIf="!columnview" src="/assets/img/data-profile/column-deactive.svg"></span>
+                                Column
+                            </button>
+                            <button [ngClass]="{'activeBtn': listview === true, 'activeColumnBtn': columnview === true}"
+                                type="button" class="btn btn-br p1 wl br-l" (click)="listView()">
+                                <span><img *ngIf="listview" src="/assets/img/data-profile/list-active.svg"><img
+                                        *ngIf="!listview" src="/assets/img/data-profile/list-deactive.svg"></span>
+                                List
+                            </button>
+                        </span>
+    
+                    </div>
+                </div>
+                <ng-container *ngIf="columnview">
+                    <div class="row">
+                        <div class="col-md-5 pd-r-10">
+                            <app-columns [columns]="analysis.columns" [analysis]="analysis"
+                                (selectedColumn)="selectColumn($event)"></app-columns>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="analysis.frequency.length else noColumnData">
+                        <div class="row">
+                            <div class="col-md-5 pd-r-10">
+                                <app-data-analysis [attributeCount]="columnsStats?.attributeCounts" [analysis]="analysis"
+                                    [recordCount]="analysis.recordCount">
+                                </app-data-analysis>
+                            </div>
+                            <div class="col-md-7 pd-l-10">
+                                <app-statistical-analysis [statisticsParams]="columnsStats?.statisticsParams"
+                                    [analysis]="analysis" [dataType]="columnDataType">
+                                </app-statistical-analysis>
+                            </div>
+                            <div class="col-md-12">
+                                <app-frequency-analysis [frequency]="analysis.frequency" [analysis]="analysis"
+                                    [totalRecords]="analysis.recordCount" [loading]="loadingFrequency">
+                                </app-frequency-analysis>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #noColumnData>
+                        <div class="card card-shadow">
+                            <div class="card-body">
+                                <div class="no-content-div text-center">
+                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb-25">
+                                    <h5 class="summary-p1">No rows found!</h5>
+                                    <p class="summary-p2 mr-b-0">Selected column doesn’t have any rows for analysing.</p>
+                                    <p class="summary-p2">Please select another column.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    
+                </ng-container>
+    
+                <ng-container *ngIf="listview">
+                    <div class="card card-shadow">
+                        <div class="card-body cbp-16">
+                            <div class="row">
+                                <div *ngFor="let d of dataTypeData" class="dataTypes mr-0 col-md-2">
+                                    <span class="pd-r-4">
+                                        <img *ngIf="d.type == 'int64'" src="/assets/img/data-profile/int-l-r.svg">
+                                        <img  *ngIf="d.type == 'string'" src="/assets/img/data-profile/str-l-r.svg">
+                                        <img  *ngIf="d.type == 'float64'" src="/assets/img/data-profile/float-l-r.svg">
+                                    </span>
+                                    <span>{{d.columnCount}}</span>
+                                    <span class="t-pd">{{d.type}}</span>
+                                    <span>({{d.percentage.toFixed(2)}}%)</span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="card card-shadow">
+                        <div class="card-body pd-0">
+                            <ng-container *ngIf="tableListData.length else noRecords">
+                                <div class="table-responsive f-table-height">
+                                    <table class="table table-fixed">
+                                        <thead>
+                                            <tr class="fixed-tr">
+                                                <th scope="col">Type <span><img (click)="sortDataTypes();" src="/assets/img/data-profile/sort.svg"
+                                                            class="cp"></span></th>
+                                                <th scope="col">Column <span><img (click)="sortColumn();" src="/assets/img/data-profile/sort.svg"
+                                                            class="cp"></span></th>
+                                                <th scope="col">Missing <span><img (click)="sortMissing();" src="/assets/img/data-profile/sort.svg"
+                                                            class="cp"></span></th>
+                                                <th scope="col">Missing %</th>
+                                                <th scope="col">Unique</th>
+                                                <th scope="col">Unique %</th>
+                                                <th scope="col">Minimum</th>
+                                                <th scope="col">Maximum</th>
+                                                <th scope="col">Median</th>
+                                                <th scope="col">Mean</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="td-text" *ngFor="let item of tableListData" (click)="redirectToColumnView(item)">
+                                                <td>
+                                                    <img *ngIf="item.type == 'int64'" src="/assets/img/data-profile/int-float-l.svg">
+                                                    <img *ngIf="item.type == 'string'" src="/assets/img/data-profile/str-l-t.svg">
+                                                    <img *ngIf="item.type == 'float64'" src="/assets/img/data-profile/int-float-l.svg">
+                                                </td>
+                                                <td class="fw-600 cp">{{item.column}}</td>
+                                                <td>{{item.null}}</td>
+                                                <td>{{(item.null / analysis.recordCount * 100).toFixed(2)}}%</td>
+                                                <td>{{item.distinct}}</td>
+                                                <td>{{(item.distinct / analysis.recordCount * 100).toFixed(2)}}%</td>
+                                                <td>{{item.type === 'string' ? '' : item.min.toFixed(2)}}</td>
+                                                <td>{{item.type === 'string' ? '' : item.max.toFixed(2)}}</td>
+                                                <td>{{item.type === 'string' ? '' : item.median.toFixed(2)}}</td>
+                                                <td>{{item.type === 'string' ? '' : item.mean.toFixed(2)}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </ng-container>
+                            <ng-template #noRecords>
+                                <h6 class="no-frequency-h6">No data</h6>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+        <ng-template #noRowsData>
+            <div *ngIf="sourceType == 'pipeline'">
+                <div class="card card-shadow">
+                    <div class="card-body">
+                        <div class="no-content-div text-center">
+                            <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb-25">
+                            <h5 class="summary-p1">No rows found!</h5>
+                            <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any rows for analysing.
+                                </p>
+                            <p class="summary-p2">Please select other dataset.</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']"
+                                class="btn btn-design height-36 mr-b-20">Go to pipeline</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="sourceType == 'folder'">
+                <div class="card card-shadow">
+                    <div class="card-body">
+                        <div class="no-content-div text-center">
+                            <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                            <h5 class="summary-p1">No rows found!</h5>
+                            <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any rows for analysing.</p>
+                            <p class="summary-p2">Please select other dataset.</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'folders']"
+                                class="btn btn-design height-36 mr-b-20">Go to folder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-template #noFile>
+        <div *ngIf="sourceType == 'folder'" class="pd-20 pd-t-0">
+            <div class="card card-shadow">
+                <div class="card-body">
+                    <div class="no-content-div text-center">
+                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                        <h5 class="summary-p1">No records found!</h5>
+                        <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
+                        <p class="summary-p2">Please select other dataset or upload new dataset in the selected folder.
+                        </p>
+                        <a [routerLink]="['/projects', projectId, 'ingest', 'folders']"
+                            class="btn btn-design height-36 mr-b-20">Go to folder</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="sourceType == 'pipeline'" class="pd-20 pd-t-0">
+            <div class="card card-shadow">
+                <div class="card-body">
+                    <div class="no-content-div text-center">
+                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                        <h5 class="summary-p1">No records found!</h5>
+                        <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
+                                    <p class="summary-p2">Please select other dataset or refresh the pipeline to fetch new table.</p>
+                        <a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']"
+                            class="btn btn-design height-36 mr-b-20">Go to pipeline</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</app-loader>

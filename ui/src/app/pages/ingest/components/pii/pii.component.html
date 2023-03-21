@@ -1,0 +1,48 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title">PII - Personally identifiable information</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body modal-height">
+        <div class="col-12">
+            <div class="row gutters">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <div class="form-group">
+                        <div id="table" data-effect="fadeOut">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table m-0">
+                                        <ng-container *ngIf="data?.length > 0; else noData">
+                                            <thead>
+                                                <tr>
+                                                    <th *ngFor="let column of columns;" class="th-new">
+                                                        {{column}}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="td-color" *ngFor="let a of data">
+                                                    <td *ngFor="let key of  Object.keys(a);"
+                                                        [ngClass]="(a[key].includes('__ML__')) ? 'bg-yellow-color':''">
+                                                        <span>{{a[key].replace('__ML__', '')}}</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </ng-container>
+                                        <ng-template #noData>
+                                            <h5>No Record Found</h5>
+                                        </ng-template>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

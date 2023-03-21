@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25.533" height="18.699" viewBox="0 0 25.533 18.699">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="25.533" height="18.699" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Repeat_Grid_9" data-name="Repeat Grid 9" clip-path="url(#clip-path)">
+    <g id="Group_1783" data-name="Group 1783" transform="translate(24113.395 -14319.187)">
+      <line id="Line_1662" data-name="Line 1662" x2="4.425" transform="translate(-24113.084 14327.938)" fill="none" stroke="#4a4b77" stroke-width="1"/>
+      <line id="Line_1660" data-name="Line 1660" x2="8.473" transform="translate(-24088.172 14332.091) rotate(180)" fill="none" stroke="#4a4b77" stroke-width="1"/>
+      <line id="Line_1663" data-name="Line 1663" x2="4.425" transform="translate(-24113.084 14332.362)" fill="none" stroke="#4a4b77" stroke-width="1"/>
+      <line id="Line_1661" data-name="Line 1661" x2="8.473" transform="translate(-24088.172 14327.667) rotate(180)" fill="none" stroke="#4a4b77" stroke-width="1"/>
+      <path id="Path_10482" data-name="Path 10482" d="M-24110.27,14320.27v14.429" transform="translate(17.011 2.374)" fill="none" stroke="#4a4b77" stroke-width="1"/>
+      <path id="Path_10484" data-name="Path 10484" d="M-24122.607,14319.716h-4.723v14.742h4.723" transform="translate(14.435 2.928)" fill="none" stroke="#292a52" stroke-width="1"/>
+      <path id="Path_10481" data-name="Path 10481" d="M-24118.463,14319.716h-8.867v14.742h8.867" transform="translate(-48215.691 28657.102) rotate(180)" fill="none" stroke="#292a52" stroke-width="1"/>
+      <path id="Path_10483" data-name="Path 10483" d="M-24121.5,14317.474h7.736v15.618h-8.105v-16.172" transform="translate(15.375 2.267)" fill="#292a52" stroke="#292a52" stroke-width="1"/>
+      <g id="Group_1782" data-name="Group 1782" transform="translate(-24105.359 14324.687)">
+        <path id="Path_10475" data-name="Path 10475" d="M-24116.09,14312.785l-2.934-3.16-2.895,3.16" transform="translate(24121.918 -14309.625)" fill="none" stroke="#fff" stroke-width="1"/>
+        <path id="Path_10476" data-name="Path 10476" d="M-24118.758,14309.922c-.031,12.49,0,.986,0,.986" transform="translate(24121.652 -14309.652)" fill="none" stroke="#fff" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

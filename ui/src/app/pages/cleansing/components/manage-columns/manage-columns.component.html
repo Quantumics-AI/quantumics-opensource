@@ -1,0 +1,124 @@
+<h6 class="h6-font-hading">Manage Columns
+</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="ruleInputLogic1">Option</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <ng-select id="ruleInputLogic1" [(ngModel)]="ruleInputLogic1" (change)="preview()"
+                formControlName="ruleInputLogic1">
+                <ng-option *ngFor="let op of options" [value]="op.value">{{op.text}}</ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                [multiple]="false" (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+            <span class="alert-danger"
+                *ngIf="fg.get('ruleImpactedCols').touched && fg.get('ruleImpactedCols').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <ng-container *ngIf="ruleInputLogic1 === ruletypes.Create">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ruleInputValues">Column name</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="ruleInputValues" placeholder="Enter column name"
+                    [pattern]="'(^(?!_)[a-zA-Z0-9_]+(?<!_)$)'" minlength="1" maxlength="10"
+                    [(ngModel)]="ruleInputValues" formControlName="ruleInputValues" (change)="preview()">
+                <ng-container *ngIf="fg.get('ruleInputValues').touched">
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('required')">
+                        This field is required
+                    </span>
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('unique')">
+                        Column name should be unique
+                    </span>
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('pattern')">
+                        Not valid column name
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ruleInputValues1">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="ruleInputValues1" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues1" formControlName="ruleInputValues1" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('ruleInputValues1').touched && fg.get('ruleInputValues1').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === ruletypes.Rename">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="column-name">Column name</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="column-name" placeholder="Enter column name"
+                    [pattern]="'^[a-zA-Z0-9]+$'" [(ngModel)]="ruleInputValues" formControlName="ruleInputValues"
+                    (change)="preview()">
+                <ng-container *ngIf="fg.get('ruleInputValues').touched">
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('required')">
+                        This field is required
+                    </span>
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('unique')">
+                        Column name should be unique
+                    </span>
+                    <span class="alert-danger" *ngIf="fg.get('ruleInputValues').hasError('pattern')">
+                        Not valid column name
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === ruletypes.DataTypeCast">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="data-type">Data Types</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <ng-select id="data-type" [(ngModel)]="ruleInputValues" (change)="preview()"
+                    formControlName="ruleInputValues">
+                    <ng-option value="integer">Integer</ng-option>
+                    <ng-option value="varchar">String</ng-option>
+                    <ng-option value="boolean">Boolean</ng-option>
+                    <ng-option value="decimal">Decimal</ng-option>
+                    <ng-option value="timestamp">Timestamp</ng-option>
+                </ng-select>
+
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

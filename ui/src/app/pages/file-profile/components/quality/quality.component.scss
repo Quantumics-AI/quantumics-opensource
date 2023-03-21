@@ -1,0 +1,20 @@
+.info-stats2 {
+    background: #fcfcff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 1rem 0rem;
+}
+
+.info-stats2 .info-icon i {
+    font-size: 1.4rem;
+    color: #ffffff;
+}
+
+.invalid-color {
+    color: #06f;
+}

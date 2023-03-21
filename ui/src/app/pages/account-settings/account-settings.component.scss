@@ -1,0 +1,61 @@
+.workspace-bread {
+    padding-left: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+
+
+    /* Text/Default */
+
+    color: #202223;
+}
+
+.workspace-content {
+    padding-top: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.main-menu {
+    ul {
+        border-bottom: 2px solid #f1f1f1;
+    }
+
+    ul li {
+        display: inline-block;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        text-align: center;
+    }
+
+    li a {
+        display: inline-block;
+        padding: 5px 20px;
+        -webkit-user-select: none;
+        color: #888C92;
+    }
+
+    ul li a:hover {
+        color: #00977C;
+    }
+}
+
+.is-active {
+    border-bottom: 2px solid #00977C !important;
+    // cursor: not-allowed;
+    color: #212244 !important;
+}
+
+.is-active:hover {
+    color: #000000 !important;
+}
+
+.page-header {
+    padding: 0;
+}

@@ -1,0 +1,180 @@
+<div class="preview" cdkDropListGroup>
+    <div class="header">
+        Details
+        <button type="button" id="btnClose" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="closePanel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <li ngbNavItem>
+            <a ngbNavLink style="padding: 0;">Aggregate</a>
+            <ng-template ngbNavContent>
+                <div class="contents">
+                    <div style="height: calc(100vh - 250px); overflow-y: auto; overflow-x: hidden;">
+                        <div class="columns" [ngClass]="{'disabled': aggregate?.content?.viewOnly}">
+                            <div class="row">
+                                <div class="col-xl-6" style="width: auto;">
+                                    <label>Columns</label>
+                                </div>
+                                <div class="col-xl-6" style="margin-bottom: 10px;width: auto;">
+                                    <input type="text" id="searchTerm" class="form-control"
+                                        [(ngModel)]="searchTerm.value" placeholder="Search column..."
+                                        style="border-radius: 25px;height: 31px;">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div style="height: 90px; overflow-y: scroll;">
+                                        <div cdkDropList cdkDropListSortingDisabled [cdkDropListData]="columns">
+                                            <div class="border-left" *ngFor="let col of columns | filterBy:searchTerm"
+                                                cdkDrag (mousedown)="dragTouchEndEvent(columns,col)"
+                                                (cdkDragStarted)="dragStart($event, col)"
+                                                (cdkDragMoved)="dragMoved($event, col)">
+                                                <p>{{col.value}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="columns" style="height: 140px;"
+                            [ngClass]="{'disabled': aggregate?.content?.viewOnly}">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <label>Grouped</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div style="height: 90px; overflow-y: auto;" cdkDropList
+                                        [cdkDropListData]="groupByColumns" (cdkDropListDropped)="drop($event)">
+                                        <ng-container *ngIf="groupByColumns.length else noAggsRecords">
+                                            <div class="border-left" *ngFor="let item of groupByColumns">
+                                                <p>{{item?.value}}
+                                                    <button id="btnRemoveGrp" (click)="removeGroupBycolumn(item)"
+                                                        type="button" class="pull-right close" aria-label="Close"
+                                                        style="font-size: 17px;">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        </ng-container>
+                                        <ng-template #noAggsRecords>
+                                            <p>No Records</p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="columns" style="height: 140px;"
+                            [ngClass]="{'disabled': aggregate?.content?.viewOnly}">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <label>Aggregated</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div style="height: 90px; overflow-y: auto;" cdkDropList
+                                        [cdkDropListData]="aggregateColumns" (cdkDropListDropped)="drop($event)">
+                                        <ng-container *ngIf="aggregateColumns.length else noAggsRecords">
+                                            <div class="border-left" *ngFor="let item of aggregateColumns">
+                                                <p>
+                                                    <label style="width: 50%;"> {{item.value ? item.value :
+                                                        item.aliasName}}</label>
+                                                    <span style="display: inline-block;">
+                                                        <select [(ngModel)]="item.opName" class="form-control"
+                                                            style="height: 29px;font-size: 12px;">
+                                                            <option value="sum">Sum</option>
+                                                            <option value="avg">Average</option>
+                                                            <!-- <option value="median">Median</option> -->
+                                                            <option value="count">Count</option>
+                                                            <option value="min">Minimum</option>
+                                                        </select>
+                                                    </span>
+                                                    <button id="btnRemoveAggs" (click)="removeAggregateColumn(item)"
+                                                        type="button" class="pull-right close mt-1" aria-label="Close"
+                                                        style="font-size: 17px;">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        </ng-container>
+                                        <ng-template #noAggsRecords>
+                                            <p>No Records</p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group pull-right">
+                            <input type="button" tabindex="-1" id="btnApply"
+                                [disabled]="aggregate?.content?.viewOnly || aggregate?.content?.isDisabledApply"
+                                class="btn btn-primary" value="Apply" (click)="apply();">
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+        <li ngbNavItem [disabled]="!aggregate?.content?.disabledPreview">
+            <a ngbNavLink>Preview</a>
+            <ng-template ngbNavContent>
+                <div class="contents">
+                    <div class="color-bright-grey font-12px mb-1">
+                        Data Preview
+                    </div>
+                    <div class="preview-content" [class.bg-blue]="previewHover" (click)="viewFullPreviewData()"
+                        (mouseover)="previewHover=true" (mouseout)="previewHover=false">
+                        <div *ngIf="aggregate?.content?.eventProgress >= 100 else inProgress">
+                            <div *ngIf="aggregate?.content?.rowData?.length else noRecords">
+                                <div class="preview-text text-center" *ngIf="previewHover">
+                                    Preview
+                                </div>
+                                <div [ngClass]="previewHover ? 'opacity-10' : 'opacity-100'">
+                                    <table class="table table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th *ngFor="let column of aggregate?.content?.rowColumns">{{column |
+                                                    format}}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let d of aggregate?.content?.rowData">
+                                                <td *ngFor="let column of aggregate?.content?.rowColumns">
+                                                    <a>{{d[column]}}</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <ng-template #noRecords>
+                                <div class="preview-text text-center text-danger">
+                                    <h6>No Records</h6>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <ng-template #inProgress>
+                            <div class="preview-text progress">
+                                <div class="progress-bar"
+                                    [ngStyle]="{'width': aggregate?.content?.eventProgress + '%'}">
+                                    Loading ({{aggregate?.content?.eventProgress}} %)
+                                </div>
+                            </div>
+                            <div class="dot-loading preview-text text-center">
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+    </ul>
+
+    <div [ngbNavOutlet]="nav"></div>
+</div>

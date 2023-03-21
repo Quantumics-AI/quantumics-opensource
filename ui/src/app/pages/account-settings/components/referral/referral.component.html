@@ -1,0 +1,74 @@
+<div class="page-content">
+    <div class="card card-r">
+        <div class="card-header bg-w card-pd">
+            <h5 class="p2">Referral</h5>
+            <p class="p1 mr-b-0">Invite your friends to quantumics. If they register for a paid plan, you will get a $50 discount coupon for your account.</p>
+        </div>
+        <div class="card-body card-pd">
+            <div class="row text-center mr-t-b">
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                    <img src="assets/img/profile/invitation.svg" class="img-fluid">
+                    <p class="p2 m-t-4">Send invitation</p>
+                    <p class="p1">Send your referral link to friends and tell them how cool quantumics is!</p>
+                </div>
+                <div class="col-md-2">
+                    <div class="mr-t-50">
+                        <img src="assets/img/profile/arrow.svg" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/profile/reg.svg" class="img-fluid">
+                    <p class="p2 m-t-4">Registeration</p>
+                    <p class="p1">Let them register to our services using your referral link</p>
+                </div>
+                <div class="col-md-2">
+                    <div class="mr-t-50">
+                        <img src="assets/img/profile/arrow.svg" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/profile/up.svg" class="img-fluid">
+                    <p class="p2 m-t-4">Upgrade</p>
+                    <p class="p1">Once they upgrade to our paid plan, you will receive a $50 discount coupon.</p>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <dir class="link-div pd-0">
+                <p class="ref-link-text mr-b-8">Share the referral link</p>
+                <p class="p1">You can share your referral link by copying and sending it or sharing it on your social media.</p>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="input-group m-t-4">
+                            <input type="type" class="form-control input-design br-r" placeholder="https://www.quantumics.ai/refrral" aria-label="Recipient's username" aria-describedby="basic-addon2"
+                            id="Confirm-Password" readonly value="https://app.quantumics.ai/signup" #userinput>
+                            <div class="input-group-append append-btn">
+                              <button class="btn btn-link btn-link-text" type="button" (click)="copyInputText(userinput)">Copy link</button>
+                            </div>
+                        </div>
+                        <div *ngIf="isVisibleText" class="pull-right small text-success"> Copied!</div>
+                    </div>
+                    <div class="col-md-2 pd-0">
+                        <span>
+                            <a href="mailto:?subject=Sign up for Quantumics.AI https://www.quantumics.ai&body=The no-code data platform, engineered for business users instantly profile, cleanse, engineer, automate and govern your data for analytics and AI without dependence on the IT or Data Engineers.">
+                                <img src="assets/img/profile/mail.svg" class="img-fluid">
+                            </a>
+                        </span>&nbsp;
+                        <span>
+                            <a href="https://twitter.com/intent/tweet?text=Have you tried Quantumics.AI? The no-code data platform, engineered for business users. Instantly profile, cleanse, engineer, automate and govern your data for analytics and AI without IT or Data Engineers. Sign up for Quantumics.AI https://www.quantumics.ai"
+                                target="_blank">
+                                <img src="assets/img/profile/twitter.svg" class="img-fluid">
+                            </a>
+                        </span>&nbsp;
+                        <span>
+                            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.quantumics.ai&title=Create LinkedIn Share button on Website Webpages">
+                                <img src="assets/img/profile/ln.svg" class="img-fluid">
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                
+            </dir>
+        </div>
+    </div>
+</div>

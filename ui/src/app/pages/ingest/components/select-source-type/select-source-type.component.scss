@@ -1,0 +1,148 @@
+.source-type {
+    margin: 15px auto 0px auto;
+    font-size: 36px;
+    margin-top: 80px;
+}
+
+.sub-text {
+    font-size: 14px;
+    color: #A0A9BA;
+    margin:0px auto 10px auto;
+    font-weight: 300;
+}
+
+// .card {
+//     box-shadow: 0 2px 2px rgb(0 0 0 / 15%) !important;
+// }
+
+.tab-data-box {
+    box-shadow: 0 2px 2px rgb(0 0 0 / 15%)
+}
+
+.center-span {
+    line-height: 50px;
+}
+
+//////////////////////////////@at-root
+.bck {
+    position: absolute;
+}
+
+.back-func {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #0A0A15;
+    display: inline-flex;
+}
+
+.p-header {
+    background: #FAFAFA;
+}
+
+.navbar-light {
+    border-bottom: 1px solid #eee;
+}
+
+.ingest-header {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    color: #0A0A15;
+    display: inline-flex;
+    margin: 0;
+}
+
+.source-img {
+    margin: 0 auto;
+}
+
+.source-content {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 34px;
+    /* identical to box height, or 170% */
+
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1E1F3E;
+    margin: auto;
+    margin-top: 3vh;
+}
+
+.source-div {
+    margin: auto;
+    margin-top: 3vh;
+}
+
+.source-card {
+    // padding: 20px;
+    margin: 15px;
+    border: 1px solid #B1B2BE;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 2px rgb(0 0 0 / 10%);
+    border-radius: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: inline-flex;
+}
+
+.source-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    /* identical to box height, or 150% */
+
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1E1F3E;
+}
+
+.src-type {
+    text-align: center;
+    /* display: inline-flex; */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 30px;
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.src-nav {
+    padding: 20px;
+    position: fixed;
+    width: -webkit-fill-available;
+    margin-top: -31px;
+}
+
+.fx {
+    position: fixed;
+    margin-top: 24px;
+}
+
+.source-card:hover{ 
+    // box-shadow: 1px 8px 20px grey;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22);
+   -webkit-transition:  box-shadow .6s ease-in;
+}

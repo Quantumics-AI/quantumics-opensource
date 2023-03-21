@@ -1,0 +1,25 @@
+table,
+th,
+td {
+    font-size: 12px;
+
+    th {
+        line-height: 1px;
+        color: #505458;
+        background-color: #f6f6f6 !important;
+    }
+}
+
+.border-left {
+    border-left: 3px solid #00dfba !important;
+}
+
+::ng-deep .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #ccc;
+
+    .card {
+        background-color: #ccc;
+    }
+}

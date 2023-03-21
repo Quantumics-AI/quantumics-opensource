@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="dinesh (generated)" id="1674475859932-38">
+        <createTable tableName="qs_audit_events">
+            <column autoIncrement="true" name="audit_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_audit_events_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="audit_message" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="event_type_action" type="VARCHAR(255)"/>
+            <column name="is_notify" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_notify_read" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_message" type="VARCHAR(255)"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-43">
+        <createTable tableName="qs_datasource_types">
+            <column name="active" type="BOOL"/>
+            <column name="creation_date" type="VARCHAR(2147483647)"/>
+            <column name="data_source_id" type="FLOAT8"/>
+            <column name="data_source_name" type="VARCHAR(2147483647)"/>
+            <column name="data_source_type" type="VARCHAR(2147483647)"/>
+            <column name="data_source_image" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-46">
+        <createTable tableName="qs_metadata_reference">
+            <column autoIncrement="true" name="ref_id" type="BIGSERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_metadata_reference_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="destination_columnname_type" type="VARCHAR(255)"/>
+            <column name="modified_by" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="source_columnname_type" type="VARCHAR(255)"/>
+            <column name="source_type" type="VARCHAR(255)"/>
+            <column name="target_type" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-47">
+        <createTable tableName="qs_notifications">
+            <column autoIncrement="true" name="notification_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qs_notifications_pkey"/>
+            </column>
+            <column name="notification_msg" type="VARCHAR(512)"/>
+            <column name="admin_msg" type="BOOL"/>
+            <column name="notification_read" type="BOOL"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column defaultValueComputed="'-1'::integer" name="project_id" type="INT"/>
+            <column defaultValueComputed="'-1'::integer" name="user_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-49">
+        <createTable tableName="qs_product_features">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qs_features_explored_pkey"/>
+            </column>
+            <column name="module" type="VARCHAR(100)"/>
+            <column name="feature" type="VARCHAR(712)"/>
+            <column name="active" type="BOOL"/>
+            <column name="subscription_type" type="VARCHAR(20)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-50">
+        <createTable tableName="qs_project">
+            <column autoIncrement="true" name="project_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_project_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bucket_name" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="db_schema_name" type="VARCHAR(255)"/>
+            <column name="deletion_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="eng_crawler" type="VARCHAR(255)"/>
+            <column name="eng_db" type="VARCHAR(255)"/>
+            <column name="is_deleted" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="org_name" type="VARCHAR(255)"/>
+            <column name="processed_crawler" type="VARCHAR(255)"/>
+            <column name="processed_db" type="VARCHAR(255)"/>
+            <column name="project_automate" type="VARCHAR(255)"/>
+            <column name="project_dataset" type="VARCHAR(255)"/>
+            <column name="project_desc" type="VARCHAR(255)"/>
+            <column name="project_display_name" type="VARCHAR(255)"/>
+            <column name="project_engineer" type="VARCHAR(255)"/>
+            <column name="project_logo" type="VARCHAR(255)"/>
+            <column name="project_name" type="VARCHAR(255)"/>
+            <column name="project_outcome" type="VARCHAR(255)"/>
+            <column name="raw_crawler" type="VARCHAR(255)"/>
+            <column name="raw_db" type="VARCHAR(255)"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="mark_as_default" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-51">
+        <createTable tableName="qs_project_cumulative_size_info">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_project_cumulative_size_info_pkey"/>
+            </column>
+            <column name="cumulative_size" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-52">
+        <createTable tableName="qs_project_subscription_details">
+            <column autoIncrement="true" name="project_subscription_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_project_subscription_details_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="charge_status" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="invoice_id" type="VARCHAR(255)"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_total" type="FLOAT8"/>
+            <column name="subscription_id" type="VARCHAR(255)"/>
+            <column name="subscription_plan_type" type="VARCHAR(255)"/>
+            <column name="subscription_plan_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subscription_status" type="VARCHAR(255)"/>
+            <column name="subscription_type" type="VARCHAR(255)"/>
+            <column name="subscription_valid_from" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="subscription_valid_to" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="tax" type="FLOAT8"/>
+            <column name="total" type="FLOAT8"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-53">
+        <createTable tableName="qs_qsai_customer_info">
+            <column autoIncrement="true" name="customer_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qsai_customer_info_pkey"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stripe_customer_identifier" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-54">
+        <createTable tableName="qs_redash_view_info">
+            <column autoIncrement="true" name="redash_view_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="schema_name" type="VARCHAR(50)"/>
+            <column name="view_name" type="VARCHAR(100)"/>
+            <column name="active" type="BOOL"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-56">
+        <createTable tableName="qs_rules_catalog">
+            <column autoIncrement="true" name="rule_def_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="rule_contents" type="TEXT"/>
+            <column name="rule_name" type="TEXT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-58">
+        <createTable tableName="qs_subscription_v2">
+            <column autoIncrement="true" name="sub_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_subscription_v2_pkey"/>
+            </column>
+            <column name="accounts" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="plan_type" type="VARCHAR(255)"/>
+            <column name="plan_type_account_price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plan_type_currency" type="VARCHAR(255)"/>
+            <column name="plan_type_id" type="VARCHAR(255)"/>
+            <column name="plan_type_price" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plan_type_settings" type="VARCHAR(255)"/>
+            <column name="subscription_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="validity_days" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-59">
+        <createTable tableName="qs_udf">
+            <column autoIncrement="true" name="udf_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_udf_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="arguments" type="TEXT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="udf_filepath" type="VARCHAR(255)"/>
+            <column name="udf_iconpath" type="VARCHAR(255)"/>
+            <column name="udf_name" type="VARCHAR(255)"/>
+            <column name="udf_publish" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="udf_returnvalue" type="VARCHAR(255)"/>
+            <column name="udf_scriptlanguage" type="VARCHAR(255)"/>
+            <column name="udf_syntax" type="VARCHAR(255)"/>
+            <column name="udf_version" type="VARCHAR(255)"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-61">
+        <createTable tableName="qs_user_v2">
+            <column autoIncrement="true" name="user_id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_user_v2_pkey"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="failed_login_attempts_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_time_login" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="salt" type="VARCHAR(255)"/>
+            <column name="stripe_customer_id" type="VARCHAR(255)"/>
+            <column name="user_default_projects" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_email" type="VARCHAR(255)"/>
+            <column name="user_parent_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_pwd" type="VARCHAR(255)"/>
+            <column name="user_redash_key" type="VARCHAR(255)"/>
+            <column name="user_role" type="VARCHAR(255)"/>
+            <column name="user_subscription_plan_type" type="VARCHAR(255)"/>
+            <column name="user_subscription_type" type="VARCHAR(255)"/>
+            <column name="user_subscription_type_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_subscription_valid_from" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="user_subscription_valid_to" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="user_type" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-62">
+        <createTable tableName="qs_userprofile">
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="user_company" type="VARCHAR(255)"/>
+            <column name="user_company_role" type="VARCHAR(255)"/>
+            <column name="user_country" type="VARCHAR(255)"/>
+            <column name="user_depart" type="VARCHAR(255)"/>
+            <column name="user_first_name" type="VARCHAR(255)"/>
+            <column name="user_image" type="VARCHAR(255)"/>
+            <column name="user_last_name" type="VARCHAR(255)"/>
+            <column name="user_middle_name" type="VARCHAR(255)"/>
+            <column name="user_phone" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-63">
+        <createTable tableName="qs_userprojects">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="qs_userprojects_pkey"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-64">
+        <createTable tableName="qs_userrole">
+            <column autoIncrement="true" name="roleid" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rolename" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="isactive" type="BOOL"/>
+            <column name="creationdate" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="createdby" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modifiedby" type="VARCHAR(50)"/>
+            <column name="modifieddate" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-72">
+        <addPrimaryKey columnNames="user_id" constraintName="qs_userprofile_pkey" tableName="qs_userprofile"/>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-73">
+        <addUniqueConstraint columnNames="rule_name" constraintName="qs_rules_catalog_rule_name_key" tableName="qs_rules_catalog"/>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674475859932-74">
+        <addUniqueConstraint columnNames="rule_name" constraintName="uk_82wk7n21mgx9of211kxo9qcvm" tableName="qs_rules_catalog"/>
+    </changeSet>
+</databaseChangeLog>
+

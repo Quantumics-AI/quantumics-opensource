@@ -1,0 +1,99 @@
+<h6 class="h6-font-hading">Count matches</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required</small>
+            <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                [multiple]="false" (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+            <span class="alert-danger"
+                *ngIf="fg.get('ruleImpactedCols').touched && fg.get('ruleImpactedCols').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="ruleInputLogic1">Option</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <select class="form-control" id="ruleInputLogic1" formControlName="ruleInputLogic1"
+                [(ngModel)]="ruleInputLogic1">
+                <option value="Text">Text or pattern</option>
+                <option value="Delimiter">By delimiter</option>
+            </select>
+        </div>
+    </div>
+
+    <ng-container *ngIf="ruleInputLogic1 === 'Text'">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ruleInputValues">Text or pattern to count</label>
+                <input type="text" class="form-control" id="ruleInputValues" formControlName="ruleInputValues"
+                    [(ngModel)]="ruleInputValues" (change)="preview()" placeholder="Text or pattern">
+                <span class="alert-danger"
+                    *ngIf="fg.get('ruleInputValues').touched && fg.get('ruleInputValues').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === 'Delimiter'">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ruleInputValues">Start delimiter</label>
+                <input type="text" class="form-control" id="ruleInputValues" formControlName="ruleInputValues"
+                    [(ngModel)]="ruleInputValues" (change)="preview()" placeholder="Start delimiter">
+                <span class="alert-danger"
+                    *ngIf="fg.get('ruleInputValues').touched && fg.get('ruleInputValues').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ruleInputValues1">End delimiter</label>
+                <input type="text" class="form-control" id="ruleInputValues1" formControlName="ruleInputValues1"
+                    [(ngModel)]="ruleInputValues1" (change)="preview()" placeholder="End delimiter">
+                <span class="alert-danger"
+                    *ngIf="fg.get('ruleInputValues1').touched && fg.get('ruleInputValues1').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="ruleInputValues2">New Column Name</label>
+            <input type="text" class="form-control" id="ruleInputValues2" formControlName="ruleInputValues2"
+                [pattern]="'(^(?!_)[a-zA-Z0-9_]+(?<!_)$)'" minlength="1" maxlength="10" [(ngModel)]="ruleInputValues2"
+                placeholder="Insert New Name" (change)="preview()">
+
+            <ng-container *ngIf="fg.get('ruleInputValues2').touched ">
+                <span class="alert-danger" *ngIf="fg.get('ruleInputValues2').hasError('required')">
+                    Column name is required
+                </span>
+                <span class="alert-danger" *ngIf="fg.get('ruleInputValues2').hasError('unique')">
+                    Column name should be unique
+                </span>
+                <span class="alert-danger" *ngIf="fg.get('ruleInputValues2').hasError('pattern')">
+                    Not valid column name
+                </span>
+            </ng-container>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

@@ -1,0 +1,350 @@
+<div class="row gutters bg">
+
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex align-items-center py-1">
+        <!-- Filter Rows  -->
+        <div class="dropdown clean-btn pd" ngbDropdown ngbTooltip="Filter Rows" container="body">
+            <p>
+                <button id="filter-rule" type="button" class="btn btn-default lean-btn btn-width pd-0" ngbDropdownToggle>
+                    <img src="assets/media/cleanse-tools/FilterRule.svg" alt="filter">
+                </button>
+            </p>
+            
+            <div class="dropdown-menu w-250px" ngbDropdownMenu>
+                <a id="top-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRows', filterRuleTypes.TopRows)" ngbDropdownItem>
+                    Top rows
+                </a>
+                <a id="range-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRows', filterRuleTypes.Range)" ngbDropdownItem>
+                    Range
+                </a>
+                <a id="interval-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRows', filterRuleTypes.RegularInterval)" ngbDropdownItem>
+                    At regular interval
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="missing-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.IsMissing)" ngbDropdownItem>
+                    Missing column values
+                </a>
+
+                <a id="mismatched-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.TypeMismatched)" ngbDropdownItem>
+                    Column value type mismatched
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="equal-to-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.EqualTo)" ngbDropdownItem>
+                    Column value is exactly
+                </a>
+
+                <a id="not-equal-to-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.NotEqualTo)" ngbDropdownItem>
+                    Column value is not
+                </a>
+
+                <a id="is-one-of-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.IsOneOf)" ngbDropdownItem>
+                    Column value is one of
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="less-than-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.LessThanOrEqualTo)"
+                    ngbDropdownItem>
+                    Column value is less than or equal to
+                </a>
+
+                <a id="greater-than-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.GreaterThanOrEqualTo)"
+                    ngbDropdownItem>
+                    Column value is greater than or equal to
+                </a>
+
+                <a id="value-between-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.IsBetween)" ngbDropdownItem>
+                    Column value is between
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="value-contains-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.Contains)" ngbDropdownItem>
+                    Column value contains
+                </a>
+
+                <a id="value-start-with-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.StartsWith)" ngbDropdownItem>
+                    Column value start with
+                </a>
+
+                <a id="value-end-with-rows-filter-rule" class="dropdown-item"
+                    (click)="setEditorComponent('filterRowsByColumn', filterRuleTypes.EndsWith)" ngbDropdownItem>
+                    Column value end with
+                </a>
+            </div>
+        </div>
+        <!-- two rules == Replace || Extract  -->
+        <div class="two-rules-div clean-btn pd-r-l">
+            <!-- Replace  -->
+            <div class="dropdown replace-btn pd-r" ngbDropdown>
+                <p>
+                    <button id="replace-rule" type="button" class="btn btn-default dropdown-toggle lean-btn btn-width pd-0" ngbDropdownToggle
+                    ngbTooltip="Replace" container="body">
+                        <img src="assets/media/cleanse-tools/replaceRule.svg" alt="replace">
+                    </button>
+                </p>
+                
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <a id="pattern-replace-rule" class="dropdown-item" (click)="setEditorComponent('patternReplace')"
+                        ngbDropdownItem>Text or
+                        Pattern</a>
+                    <a id="text-replace-rule" class="dropdown-item" (click)="setEditorComponent('findReplace')"
+                        ngbDropdownItem>Cell</a>
+                    <div class="dropdown-divider"> </div>
+                    <a id="missing-replace-rule" class="dropdown-item" (click)="setEditorComponent('fillNull')"
+                        ngbDropdownItem>Missing</a>
+                </div>
+            </div>
+            <!-- Extract -->
+            <div class="dropdown" ngbDropdown ngbTooltip="Extract" container="body">
+                <p>
+                    <button id="extract-rule" type="button" class="btn btn-default dropdown-toggle lean-btn btn-width pd-0" ngbDropdownToggle>
+                        <img src="assets/media/cleanse-tools/extractRule.svg" alt="extract">
+                    </button>
+                </p>
+                
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <a id="numbers-extract-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.Numbers)" ngbDropdownItem>
+                        Numbers
+                    </a>
+                    <a id="extract-first-char-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.FirstCharacters)"
+                        ngbDropdownItem>
+                        First characters
+                    </a>
+                    <a id="extract-last-char-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.LastCharacters)"
+                        ngbDropdownItem>
+                        Last characters
+                    </a>
+                    <a id="extract-type-mismatched-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.TypeMismatched)"
+                        ngbDropdownItem>
+                        Type mismatched
+                    </a>
+                    <a id="extract-btn-positions-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.CharactersBetweenPostions)"
+                        ngbDropdownItem>
+                        Characters between positions
+                    </a>
+                    <a id="extract-text-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.TextOrPattern)" ngbDropdownItem>
+                        Text or Pattern
+                    </a>
+                    <a id="extract-query-string-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.QueryStrings)" ngbDropdownItem>
+                        Query strings
+                    </a>
+                    <a id="extract-delimiter-rule" class="dropdown-item"
+                        (click)="setEditorComponent('extractColumnValues', extractRuleTypes.BetweenDelimiters)"
+                        ngbDropdownItem>
+                        Between delimiter
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Rules == Split || Merge  -->
+        <div class="two-rules-div clean-btn pd-r-l">
+            <!-- Split  -->
+            <div class="dropdown pd-r" ngbDropdown>
+                <p>
+                    <button id="split-rule" type="button" class="btn btn-default dropdown-toggle lean-btn btn-width pd-0" ngbDropdownToggle
+                    ngbTooltip="Split" container="body">
+                        <img src="assets/media/cleanse-tools/splitRule.svg" alt="split">
+                    </button>
+                </p>
+                
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <a id="delimiter-split-rule" class="dropdown-item"
+                        (click)="setEditorComponent('split', splitRuleTypes.ByDelimiter)" ngbDropdownItem>
+                        On delimiter
+                    </a>
+                    <a id="two-delimiter-split-rule" class="dropdown-item"
+                        (click)="setEditorComponent('split', splitRuleTypes.BetweenDelimiter)" ngbDropdownItem>
+                        Between two delimiter
+                    </a>
+                    <a id="position-split-rule" class="dropdown-item"
+                        (click)="setEditorComponent('split', splitRuleTypes.ByPositions)" ngbDropdownItem>
+                        At positions
+                    </a>
+                    <a id="between-split-rule" class="dropdown-item"
+                        (click)="setEditorComponent('split', splitRuleTypes.BetweenTwoPositions)" ngbDropdownItem>
+                        Between positions
+                    </a>
+                </div>
+            </div>
+            <!-- Merge  -->
+            <div class="dropdown" ngbTooltip="Merge" container="body">
+                <p>
+                    <button id="merge-rule" type="button" class="btn btn-default lean-btn btn-width pd-0"
+                    (click)="setEditorComponent('mergeRule')">
+                        <img src="assets/media/cleanse-tools/mergeRule.svg" alt="merge">
+                    </button>
+                </p>
+                
+            </div>
+        </div>
+
+        <!-- Format  -->
+        <div class="dropdown clean-btn pd-r-l" ngbDropdown>
+            <p>
+                <button id="format-rule" type="button" class="btn btn-default dropdown-toggle lean-btn btn-width pd-0" ngbDropdownToggle
+                ngbTooltip="Format" container="body">
+                    <!-- <i class="fa fa-font" style="font-size: 19.5px;"></i> -->
+                    <img src="assets/media/cleanse-tools/FormatRule.svg" alt="format">
+                </button>
+            </p>
+            
+            <div class="dropdown-menu w-250px" ngbDropdownMenu>
+
+                <a id="uppercase-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.Upper)" ngbDropdownItem>
+                    Convert to uppercase
+                </a>
+                <a id="lowercase-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.Lower)" ngbDropdownItem>
+                    Convert to lowercase
+                </a>
+                <a id="proper-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.Proper)" ngbDropdownItem>
+                    Convert to proper case
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="trims-spaces-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.TrimWhitespace)" ngbDropdownItem>
+                    Trim leading and trailing whitespaces
+                </a>
+                <a id="trim-quotes-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.TrimQuotes)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Trim leading and trailing quotes
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="remove-white-space-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.RemoveWhitespaces)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Remove whitespace
+                </a>
+                <a id="remove-spl-char-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.RemoveSpecialCharacters)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Remove symbols
+                </a>
+                <a id="remove-acents-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.RemoveAccents)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Remove accents
+                </a>
+
+                <div class="dropdown-divider"> </div>
+
+                <a id="add-prefix-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.AddPrefix)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Add prefix
+                </a>
+                <a id="add-post-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.AddSuffix)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Add suffix
+                </a>
+                <a id="padd-char-format-rule" class="dropdown-item"
+                    (click)="setEditorComponent('format', formatRuleTypes.PadWithLeadingCharacters)" id="navbarDropdown"
+                    ngbDropdownItem>
+                    Pad text with leading characters
+                </a>
+            </div>
+        </div>
+
+        <!-- Standardize -->
+        <div class="dropdown clean-btn pd-r-l">
+            <p>
+                <button id="standardize-rule" type="button" class="btn btn-default lean-btn btn-width pd-0"
+                (click)="setEditorComponent('standardize')" ngbDropdown ngbTooltip="Standardise" container="body">
+                    <img src="assets/media/cleanse-tools/StandardizeRule.svg" alt="standardize">
+                </button>
+            </p>
+            
+        </div>
+        
+        <!-- Count matches  -->
+        <div class="dropdown clean-btn pd-r-l">
+            <p>
+                <button id="count-match-rule" type="button" class="btn btn-default lean-btn btn-width pd-0" ngbTooltip="Count Matches" container="body"
+                (click)="setEditorComponent('countMatch')">
+                    <img src="assets/media/cleanse-tools/CountmatchesRule.svg" alt="count">
+                </button>
+            </p>
+            
+        </div>
+
+        <!-- Manage Columns -->
+        <div class="dropdown clean-btn pd-r-l" ngbDropdown ngbTooltip="Manage Columns" container="body">
+            <p>
+                <button id="manage-columns-rule" type="button" class="btn btn-default dropdown-toggle lean-btn btn-width pd-0"
+                ngbDropdownToggle>
+                    <img src="assets/media/cleanse-tools/ManagecolumnsRule.svg" alt="manage columns">
+                </button>
+            </p>
+            
+            <div class="dropdown-menu" ngbDropdownMenu>
+                <a id="create-columns-rule" class="dropdown-item"
+                    (click)="setEditorComponent('manageColumns', manageColumnRuleTypes.Create)" ngbDropdownItem>
+                    Create column
+                </a>
+                <a id="clone-columns-rule" class="dropdown-item"
+                    (click)="setEditorComponent('manageColumns', manageColumnRuleTypes.Clone)" ngbDropdownItem>
+                    Clone column
+                </a>
+                <a id="cast-columns-rule" class="dropdown-item"
+                    (click)="setEditorComponent('manageColumns', manageColumnRuleTypes.DataTypeCast)" ngbDropdownItem>
+                    Cast Data Type
+                </a>
+            </div>
+        </div>
+
+        <!-- Remove Duplicates  -->
+        <div class="dropdown clean-btn standardize-btn pd-l" ngbTooltip="Remove Duplicates" container="body">
+            <p>
+                <button id="duplicate-rows-filter-rule" type="button" class="btn btn-default lean-btn btn-width pd-0"
+                (click)="setEditorComponent('removeDuplicateRows')">
+                    <img src="assets/media/cleanse-tools/RemovedDuplicatesRule.svg" alt="filter duplicates">
+                </button>
+            </p>
+            
+        </div>
+
+        <div class="flex-grow-1"></div>
+
+
+        <button id="rules-btn" type="button" class="btn btn-light mr-1"
+            (click)="setEditorComponent('rules')" *ngIf="hasRulesCatalogue">Rules Catalogue</button>
+
+        <div> 
+            <button type="button" class="btn btn-secondary pull-right" (click)="redirectToFolder()">Close</button>
+        </div>
+    </div>
+
+</div>

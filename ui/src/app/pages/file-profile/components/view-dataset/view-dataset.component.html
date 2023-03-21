@@ -1,0 +1,45 @@
+<app-loader [loading]="loading">
+    <div class="modal-body pd-0">
+        <div class="ingest-tbl table-responsive auto-height bx-s">
+            <table class="table m-0 table-fixed table-striped">
+                <thead class="thead-light">
+                    <tr class="th-center fixed-th">
+                        <th *ngFor="let column of newColumns;let isFirst = first" class="th-new">
+                            <!-- Hide only for version-1 release -->
+                            <!-- <span *ngIf="isFirst">
+                            <img src="assets/img/chart-icon.svg" width="25" class="pull-left"
+                                (click)="graphToggle()" title="Data Profile" class="cursor-pointer">
+                        </span> -->
+                            {{column.display_name}}
+                            <span class="pull-right" *ngIf="column.data_type == 'bigint'"><b><i
+                                        style="color:gray">#</i></b></span>
+                            <span class="pull-right" *ngIf="column.data_type == 'varchar'"><b><i
+                                        style="color:gray">ABC</i></b></span>
+                            <span class="pull-right" *ngIf="column.data_type == 'double'"><b><i
+                                        style="color:gray">#.#</i></b></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="td-b" *ngFor="let d of data;let i=index;">
+                        <td *ngFor="let column of newColumns; let j=index;"
+                            [ngClass]="[j==0 ? 'gride-side1' : '', j==0 ? 'left-indicator1' : '']">
+                            <!-- <span style="cursor:pointer;">{{d[column.display_name]}}</span> -->
+                            <span *ngIf="isPIIColumn(column.column_name); else normal">
+                                {{ d[column.display_name].slice(0,5) }}**********
+                            </span>
+                            <ng-template #normal>
+                                {{ d[column.display_name] }}
+                            </ng-template>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin:10px 5px 5px 30px">
+            <span> <img src="../../../../assets/media/image/eye.svg" class="mr-2" /> {{columnLength}}
+                Columns &nbsp; &nbsp; {{rowLength}} Rows</span>
+        </div>
+    </div>
+</app-loader>

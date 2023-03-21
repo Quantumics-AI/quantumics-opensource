@@ -1,0 +1,225 @@
+.license-type {
+    position: absolute;
+    left: 11px;
+    top: 0px;
+    padding: 2px 10px;
+    font-size: 0.72rem;
+    border-radius: 0 3px 3px 0;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02rem;
+    z-index: 2;
+}
+
+.trial {
+    background: #00dfba;
+    color: #503b19;
+}
+
+.trial::after {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 0 solid transparent;
+    border-top: 5px solid #00dfba;
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+}
+
+::ng-deep .modal-size .modal-dialog {
+    max-width: 1100px;
+}
+
+.middle {
+    transition: 0.5s ease;
+    opacity: 0;
+}
+
+.gren-box:hover .image {
+    opacity: 0.3;
+}
+
+.gren-box:hover .middle {
+    opacity: 1;
+}
+
+.text {
+    color: #111;
+    width: 363px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.icon-img {
+    margin: 1px 4px;
+    float: right;
+}
+
+.info-stats2 {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding: 1.2rem 1rem;
+    background: #f6f6ff;
+    height: 190px;
+    border: 1px solid gainsboro;
+}
+
+.info-stats2 .info-icon i {
+    font-size: 1.4rem;
+    color: #ffffff;
+}
+.info-stats2 .info-icon.info {
+    background: #007ae1;
+}
+
+.-ml {
+    margin-left: -12px;
+}
+
+.user {
+    line-height: 25px;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 1;
+}
+
+.action-label {
+    position: absolute;
+    right: 0%;
+    bottom: 1%;
+    transform: translate(-21%, -48%);
+}
+
+.btn-upgrade {
+    background: #fe8d8c !important;
+    border: none;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+.welcome-message {
+    background: linear-gradient(90deg, #121542 -1.44%, #888ab4 98.92%);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 21px 20px;
+}
+
+.create-project-box {
+    background: #ffffff;
+    // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid #00DFBA;
+    border-radius: 4px;
+    height: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn-create {
+    // background: linear-gradient(89.78deg, #00dfba 0.19%, rgba(0, 223, 186, 0.2) 99.82%);
+    background: #00DFBA;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.pnl-interactive-demo {
+    position: relative;
+    margin: auto;
+    width: 50%;
+    background-color: #9dffef;
+    /* padding: 15px; */
+    margin-top: 5%;
+    /* height: 40vh; */
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+}
+
+.id-img {
+    width: 100%;
+    height: auto;
+}
+
+.btn-interactive {
+    border: 2px solid #121542;
+    box-sizing: border-box;
+    border-radius: 34px;
+    position: absolute;
+    top: 50%;
+    left: 32%;
+    // color: white;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #00DFBA;
+}
+
+// .triangle-right {
+//     width: 0;
+//     height: 0;
+//     border-top: 60px solid transparent;
+//     border-bottom: 60px solid transparent;
+//     border-left: 60px solid green;
+// }
+
+.blink-interactive {
+    animation: blinker 1s linear infinite;
+}
+
+.welcome-p {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 29px;
+}
+
+.view-demo-link {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+}
+
+.create-new {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    
+    color: #212244;
+}
+
+.mb-3 {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 58px;
+}
+
+.create-project-text {
+    margin-top: 10px;
+    margin-bottom: -10px;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}

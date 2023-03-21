@@ -1,0 +1,159 @@
+<app-loader [loading]="loading">
+    <form [formGroup]="fg">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="col-12">
+                <div class="row gutters">
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputName">Term</label>
+                            <input type="text" class="form-control" id="term" placeholder="Customer"
+                                formControlName="term" readonly>
+
+                            <div *ngIf="fg.get('term').invalid && (fg.get('term').dirty || fg.get('term').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('term').hasError('required')">
+                                    Term is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputEmail">Description</label>
+                            <input type="text" class="form-control" id="definition"
+                                placeholder="Customer of the company" formControlName="definition" readonly>
+
+                            <div
+                                *ngIf="fg.get('definition').invalid && (fg.get('definition').dirty || fg.get('definition').touched)">
+                                <div class="text-danger" *ngIf="fg.get('definition').hasError('required')">
+                                    Definition is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputEmail">Data Owner</label>
+                            <input type="text" class="form-control" id="dataOwner" placeholder="Joe Bloggs"
+                                formControlName="dataOwner" readonly>
+
+                            <div
+                                *ngIf="fg.get('dataOwner').invalid && (fg.get('dataOwner').dirty || fg.get('dataOwner').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('dataOwner').hasError('required')">
+                                    DataOwner is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputEmail">Business Rule</label>
+                            <input type="text" id="businessRules" class="form-control" placeholder="Must be Characters"
+                                formControlName="businessRules">
+
+                            <div
+                                *ngIf="fg.get('businessRules').invalid && (fg.get('businessRules').dirty || fg.get('businessRules').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('businessRules').hasError('required')">
+                                    Business Rule is required.
+                                </div>
+
+                                <div class="text-danger" *ngIf="fg.get('businessRules').hasError('pattern')">
+                                    Must be Characters.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputEmail">Acronym</label>
+                            <input type="text" id="acronym" class="form-control" placeholder="CUS"
+                                formControlName="acronym">
+
+                            <div
+                                *ngIf="fg.get('acronym').invalid && (fg.get('acronym').dirty || fg.get('acronym').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('acronym').hasError('required')">
+                                    Acronym is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="inputEmail">Synonym Term</label>
+                            <input type="text" id="synonymTerm" class="form-control" placeholder="Client"
+                                formControlName="synonymTerm">
+
+                            <div
+                                *ngIf="fg.get('synonymTerm').invalid && (fg.get('synonymTerm').dirty || fg.get('synonymTerm').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('synonymTerm').hasError('required')">
+                                    Synonym Term is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <div class="form-group">
+                            <label for="relatedAttributes">Related Attributes</label>
+                            <ng-select id="relatedAttributes" [clearable]="false" formControlName="relatedAttributes"
+                                [multiple]="true" placeholder="Select Attributes" [dropdownPosition]="'bottom'"
+                                [closeOnSelect]="true" [items]="columnInfo">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span [title]="item">{{item}}</span>
+                                </ng-template>
+                            </ng-select>
+
+                            <div
+                                *ngIf="fg.get('relatedAttributes').invalid && (fg.get('relatedAttributes').dirty || fg.get('relatedAttributes').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('relatedAttributes').hasError('required')">
+                                    Related Attributes are required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <div class="form-group">
+                            <label for="relatedAttributes">Add Tags</label>
+                            <tag-input id="addTags" formControlName="addTags" placeholder="Tags"
+                                [secondaryPlaceholder]="'Enter Tags'">
+                            </tag-input>
+
+                            <div
+                                *ngIf="fg.get('addTags').invalid && (fg.get('addTags').dirty || fg.get('addTags').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('addTags').hasError('required')">
+                                    Tags are required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" id="btnSave" [disabled]="fg.invalid" class="btn btn-primary"
+                (click)="update(false)">Save</button>
+            <button type="button" id="btnPublish" [disabled]="fg.invalid" class="btn btn-success"
+                (click)="update(true)">Publish</button>
+        </div>
+    </form>
+</app-loader>

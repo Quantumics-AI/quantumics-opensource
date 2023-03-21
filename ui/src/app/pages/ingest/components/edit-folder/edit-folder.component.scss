@@ -1,0 +1,30 @@
+.right-panel {
+  width: 380px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 0 10px #ccc;
+  position: absolute;
+  right: 0;
+  z-index: 999;
+  position: absolute;
+}
+
+::ng-deep {
+  .popover .arrow {
+    display: none;
+  }
+
+  .edit-pophover {
+    max-width: 400px !important;
+    width: 350px !important;
+  }
+
+  ul {
+    list-style-type: disc;
+    padding-left: 0;
+  }
+}
+
+textarea {
+  height: 150px;
+}

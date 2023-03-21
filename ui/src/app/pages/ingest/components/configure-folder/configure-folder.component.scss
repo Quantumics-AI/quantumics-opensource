@@ -1,0 +1,234 @@
+.table-height {
+    height: calc(100vh - 300px);
+}
+
+.first-child {
+    background-color: #212245;
+    color: #ffffff;
+}
+
+.upload-file {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 15px;
+    margin-right: 15px;
+    top: auto;
+    text-align: start;
+}
+
+.ingest-input {
+    width: 40% !important;
+    height: 37px !important;
+    margin: -3px auto -18px auto !important;
+}
+
+table.table1 td,
+tr {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+table.table2 {
+    td {
+        border-left: 3px solid #fff;
+        border-right: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+    }
+    th {
+        border: 1px solid #fff;
+    }
+}
+
+
+.show:hover + .list-categories{
+    max-height: inherit;
+    opacity: 1;
+}
+  
+.list-categories{
+    // padding: 10px;
+    padding-top: 5px;
+    padding-right: 7px;
+    margin: 0 auto;
+    max-height: 0px;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 300ms ease;
+    font-size: 12px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    // background: #111;
+    background: rgba(0, 0, 0, .7);
+}
+
+
+/////////
+.pii-table thead th{
+    background: #DEDEE3 !important;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    /* font-size: 14px; */
+    line-height: 19px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #121542; 
+}
+
+.pii-table thead th:first-of-type{
+    border-top-left-radius: 8px; 
+}
+
+.pii-table thead th:last-of-type{
+    border-top-right-radius: 8px; 
+}
+
+.pii-note {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 17px;
+    letter-spacing: -0.015em;
+    color: #000000;
+}
+
+.pii-c-btn {
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 25px;
+}
+
+.pii-btn {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #FFFFFF;
+}
+
+/////// drag n drop style ///////
+
+.gutters {
+    margin-top: 25px;
+}
+
+.file-upload {
+    text-align: center;
+}
+
+.file-upload-input {
+    opacity: 0;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.drag-drop-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 29px;
+    color: #212245;
+    margin-top: 30px;
+}
+
+.or-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 29px;
+    color: #212245;
+}
+
+.browse-lable {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #009C82;
+    border: 1px solid #009C82;
+    border-radius: 4px;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.continue-btn {
+    margin-top: 20px;
+}
+
+.file-name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    line-height: 29px;
+    color: #212245;
+    font-size: 12px;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+.btn-continue {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.015em;
+}
+
+.local-file {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.csv-file {
+    height: 21px;
+}
+
+.shadow-lg {
+    box-shadow: none !important;
+}
+
+.selectd-file-text {
+    text-align: start;
+    margin: 0;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 30px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.file-lable-div {
+    padding-bottom: 20px;
+}
+
+ol {
+    list-style-type: none;
+    padding-left: 10px;
+}

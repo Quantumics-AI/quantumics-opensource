@@ -1,0 +1,42 @@
+<form [formGroup]="fg">
+    <div class="data-grid">
+        <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 custom-col4">
+                <div class="form-group">
+                    <input type="text" class="ml-3 form-control" id="folderName" #folder
+                        [pattern]="'^([0-9]?)(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'" minlength="3" maxlength="30"
+                        formControlName="folderName" autocomplete="off" placeholder="Folder Name" [autoClose]="false"
+                        (focus)="f.open()" (input)="folder.value.length > 0 ? f.close() : f.open()" (blur)="f.close()"
+                        triggers="manual" #f="ngbPopover" [ngbPopover]="popFolderContent" popoverClass="folder-pophover"
+                        placement="bottom">
+                </div>
+            </div>
+
+
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 custom-col4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="folderDescription" placeholder="Folder Description"
+                        maxlength="255" formControlName="folderDesc">
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="btnCreateFolder" [disabled]="fg.invalid" class="btn btn-primary mt-3"
+                    (click)="save()">Create
+                    Folder</button>
+            </div>
+
+        </div>
+
+        <ng-template #popFolderContent>
+            <div class="col-12">
+                <ul>
+                    <li>Folder name must be between 3 and 30 characters long.</li>
+                    <li>Folder name should not contain special characters and spaces.</li>
+                    <li>Folder name should be alphanumeric or should contain only alphabets.</li>
+                    <li>Folder name should be unique.</li>
+                </ul>
+            </div>
+        </ng-template>
+    </div>
+</form>

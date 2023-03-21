@@ -1,0 +1,102 @@
+<div class="row ml-0">
+    <!-- <ng-container *ngFor="let item of data; let i = index;">
+        <div class="box" [ngClass]="{'active': selectedIndex == i, 'cursor-pointer' : selectedIndex !== i }">
+            <div class="row" (click)="selectType(i)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img src="assets/img/project-stats/{{item.image}}">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">{{item.label}}</span>
+                        <h5>{{item.value}}</h5>
+                        <h5>{{totalfile.dataPipes.total}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container> -->
+
+    <ng-container>
+        <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexOne, 'cursor-pointer' : selectedIndex !== selectedIndexOne }">
+            <div class="row" (click)="selectType(sourceData)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img id="ani" class="ps-icon" src="assets/img/project-stats/source-folder.svg">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">Source Data</span>
+                        <h5>{{totalfile?.sourceDataset?.total}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexTwo, 'cursor-pointer' : selectedIndex !== selectedIndexTwo }">
+            <div class="row" (click)="selectType(preparedData)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img class="ps-icon" src="assets/img/project-stats/datasets.svg">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">Prepared Datasets</span>
+                        <h5>{{totalfile?.preparedDataset?.total}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexThree, 'cursor-pointer' : selectedIndex !== selectedIndexThree }">
+            <div class="row" (click)="selectType(dataPipes)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img class="ps-icon" src="assets/img/project-stats/data-pipes.svg">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">Engineering Flows</span>
+                        <h5>{{totalfile?.dataPipes?.total}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexFour, 'cursor-pointer' : selectedIndex !== selectedIndexFour }">
+            <div class="row" (click)="selectType(dataVolume)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img class="ps-icon" src="assets/img/project-stats/data-volume.svg">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">Data Volume</span>
+                        <h5>{{totalfile?.dataVolume?.total}} <sub>MB</sub></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexFive, 'cursor-pointer' : selectedIndex !== selectedIndexFive }">
+            <div class="row" (click)="selectType(noOfPii)">
+                <div class="col-xl-3 p-0">
+                    <div class="left">
+                        <img src="assets/img/project-stats/pii.svg">
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="right">
+                        <span class="style2">NO. of PII</span>
+                        <h5>0</h5>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </ng-container>
+</div>

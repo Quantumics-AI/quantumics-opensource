@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="15" viewBox="0 0 59 15">
+  <g id="Group_2435" data-name="Group 2435" transform="translate(-723 -275.596)">
+    <rect id="Rectangle_3432" data-name="Rectangle 3432" width="59" height="15" rx="1" transform="translate(723 275.596)" fill="#f44336"/>
+    <path id="gmail-2" d="M.841,37.221H8.307a.842.842,0,0,0,.841-.841V31.126a.842.842,0,0,0-.841-.841H.841A.842.842,0,0,0,0,31.126V36.38A.842.842,0,0,0,.841,37.221Zm-.293-6.1a.293.293,0,0,1,.293-.293H8.307a.293.293,0,0,1,.293.293V36.38a.293.293,0,0,1-.293.293H.841a.293.293,0,0,1-.293-.293Zm1.086,5.16H1.086V31.243l3.42,2.22a.129.129,0,0,0,.137,0l3.42-2.22v5.043H7.514V32.251L4.94,33.922a.675.675,0,0,1-.733,0L1.633,32.251Z" transform="translate(728.537 248.843)" fill="#fff"/>
+    <text id="Gmail" transform="translate(752 285.596)" fill="#fff" font-size="8" font-family="SegoeUI, Segoe UI"><tspan x="-10.162" y="0">Gmail</tspan></text>
+  </g>
+</svg>

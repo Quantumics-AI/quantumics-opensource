@@ -1,0 +1,123 @@
+<div class="preview">
+    <div class="header">
+        Details
+        <button id="btnClose" type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="closePanel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeTab">
+        <li ngbNavItem="lnkJoin">
+            <a id="lnkJoin" ngbNavLink>Join</a>
+            <ng-template ngbNavContent>
+                <div class="contents" [ngClass]="{'disabled': selectedJoin?.content?.viewOnly}">
+                    <form [formGroup]="fg">
+                        <div class="form-group">
+                            <label for="formJoinType">Join Type</label>
+                            <select id="joinType" tabindex="-1" class="form-control form-control-sm" formControlName="joinType"
+                                (change)="onSelectJoin()">
+                                <option *ngFor="let d of joinTypes.types" [value]="d?.value">{{d?.text}}</option>
+                            </select>
+
+                            <span class="text-danger"
+                                *ngIf="fg.get('joinType').touched && fg.get('joinType').hasError('required')">
+                                required
+                            </span>
+                        </div>
+                        <ng-container *ngIf="files?.length">
+                            <div class="form-group">
+                                <label>{{files[0]?.file}}</label>
+                                <select tabindex="-1" id="firstFileColumn" class="form-control form-control-sm"
+                                    formControlName="firstFileColumn">
+                                    <option value="">Select column</option>
+                                    <option *ngFor="let col of files[0]?.columns" [value]="col.key">{{col.value}}
+                                    </option>
+                                </select>
+
+                                <span class="text-danger"
+                                    *ngIf="fg.get('firstFileColumn').touched && fg.get('firstFileColumn').hasError('required')">
+                                    required
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label>{{files[1]?.file}}</label>
+                                <select tabindex="-1" id="secondFileColumn" class="form-control form-control-sm"
+                                    formControlName="secondFileColumn">
+                                    <option value="">Select column</option>
+                                    <option *ngFor="let col of files[1]?.columns" [value]="col.key">{{col.value}}
+                                    </option>
+                                </select>
+
+                                <span class="text-danger"
+                                    *ngIf="fg.get('secondFileColumn').touched && fg.get('secondFileColumn').hasError('required')">
+                                    required
+                                </span>
+                            </div>
+                        </ng-container>
+                        <div class="form-group pull-right">
+                            <input type="button" tabindex="-1" id="btnApply" class="btn btn-primary" value="Apply"
+                                [disabled]="!fg.valid || selectedJoin?.content?.isDisabledApply" (click)="save();">
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </li>
+        <li ngbNavItem ngbNavItem="lnkPreview" [disabled]="!selectedJoin?.content?.disabledPreview">
+            <a id="lnkPreview" ngbNavLink>Preview</a>
+            <ng-template ngbNavContent>
+                <div class="contents">
+                    <div class="color-bright-grey font-12px mb-1">
+                        Data Preview
+                    </div>
+                    <div class="preview-content" [class.bg-blue]="previewHover" (click)="viewFullPreviewData()"
+                        (mouseover)="previewHover=true" (mouseout)="previewHover=false">
+                        <div *ngIf="selectedJoin?.content.eventProgress >= 100 else inProgress">
+                            <div *ngIf="selectedJoin?.content?.rowData?.length else noRecords">
+
+                                <div class="preview-text text-center color-white" *ngIf="previewHover">
+                                    Preview
+                                </div>
+                                <div [ngClass]="previewHover ? 'opacity-10' : 'opacity-100'">
+                                    <table class="table table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th *ngFor="let column of selectedJoin?.content?.rowColumns">{{column |
+                                                    format}}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let d of selectedJoin.content.rowData">
+                                                <td *ngFor="let column of selectedJoin.content.rowColumns">
+                                                    <a>{{d[column]}}</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <ng-template #noRecords>
+                                <div class="preview-text text-center text-danger">
+                                    <h6>No Records</h6>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <ng-template #inProgress>
+                            <div class="preview-text progress">
+                                <div class="progress-bar"
+                                    [ngStyle]="{'width': selectedJoin?.content?.eventProgress + '%'}">
+                                    Loading ({{selectedJoin?.content?.eventProgress}} %)
+                                </div>
+                            </div>
+                            <div class="dot-loading preview-text text-center">
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-template>
+        </li>
+    </ul>
+
+    <div [ngbNavOutlet]="nav"></div>
+</div>

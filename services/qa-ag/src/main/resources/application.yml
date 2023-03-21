@@ -1,0 +1,61 @@
+api:
+  exceptions: /authorization,/createuser,/resetpassword,/reqresetpswd,/validateresetpswdreq,/awsLanding,/stripe/events/webhook,api-docs,swagger-ui,/wsinit,/actuator,/validateToken,/QuantumSparkServiceAPI/api/v1/ops/file,/QuantumSparkServiceAPI/api/v1/ops/udf,/QuantumSparkServiceAPI/api/v1/ops/join,/QuantumSparkServiceAPI/api/v1/aggregate,/QuantumSparkServiceAPI/api/v1/ops/eng,/QuantumSparkServiceAPI/api/v1/ops/qswsrun,/QuantumSparkServiceAPI/api/v1/runjob/cleanse,/QuantumSparkServiceAPI/api/v1/projects/cleanprojects,/QuantumSparkServiceAPI/api/v1/pipeline/executepipeline
+
+retry:
+  max:
+    attempts: 5
+  backoff:
+    delay: 1000
+
+
+logging:
+  level:
+    root : INFO
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - name: AuthenticationFilter
+      globalcors:
+        add-to-simple-url-handler-mapping : true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            maxAge: 36000
+            allowedHeaders: "*"
+            allowCredentials: false
+            allowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: quantumsparkapi
+          uri: http://apiservice:8082
+          predicates:
+            - Path=/QuantumSparkServiceAPI/**
+
+        - id: commonservicesapi
+          uri: http://commonservice:8083
+          predicates:
+            - Path=/QSCommonService/**
+
+        - id: userservicesapi
+          uri: http://userservice:8081
+          predicates:
+            - Path=/QSUserService/**
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    loggers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+

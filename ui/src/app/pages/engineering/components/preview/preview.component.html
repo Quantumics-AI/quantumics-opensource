@@ -1,0 +1,41 @@
+<div class="modal-header text-center">
+    <h6 class="modal-title">Previewing {{tital}}</h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="table-responsive table-height bx-s">
+                <table class="table m-0 table-fixed table-striped">
+                    <ng-container *ngIf="data?.length; else noData">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th *ngFor="let column of columns" class="th-new">{{column | format}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let d of data;let i=index;" class="td-b">
+                                <td *ngFor="let column of columns">
+                                    <a>{{d[column]}}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </ng-container>
+
+                    <ng-template #noData>
+                        <h6>No Records Found</h6>
+                    </ng-template>
+                </table>
+            </div>
+            <div style="margin:10px 5px 5px 30px">
+                <span>
+                    <img src="../../../../../assets/media/image/eye.svg" class="mr-2" >
+                     {{column_length}}
+                    Columns &nbsp; &nbsp; {{row_length}} Rows</span>
+            </div>
+        </div>
+    </div>
+</div>

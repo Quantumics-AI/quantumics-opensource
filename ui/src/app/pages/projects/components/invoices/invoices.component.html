@@ -1,0 +1,36 @@
+<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="th-center fixed-th">
+                            <th>Invoice ID</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let invoice of invoices;let i=index" class="td-color">
+                            <td>Quantumics{{i + 1}}</td>
+                            <td class="text-capitalize">{{invoice.status}}</td>
+                            <td>
+                                {{invoice.created | date: 'dd-MM-yy, hh:mm a' }}
+                            </td>
+                            <td>${{invoice.invoiceAmount}}</td>
+                            <td>
+                                <i><a [href]="invoice.invoicePdf" 
+                                        data-original-title="Download"><img src="assets/img/download.svg" placement="top"
+                                        ngbTooltip="Download PDF" width="16" download></a></i>&nbsp; &nbsp;
+                                <i><a [href]="invoice.hostedInvoiceUrl" target="_blank" 
+                                        data-original-title="Invoice View"><img src="assets/img/pdf.svg" width="16" ngbTooltip="Print PDF" placement="top"></a></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

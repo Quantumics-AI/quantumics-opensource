@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="202" height="250" viewBox="0 0 202 250">
+  <g id="Group_1882" data-name="Group 1882" transform="translate(18496 -2882)">
+    <text id="Error" transform="translate(-18370 2908)" fill="red" font-size="25" font-family="Roboto-Medium, Roboto" font-weight="500"><tspan x="0" y="0">Error</tspan></text>
+    <g id="Rectangle_2175" data-name="Rectangle 2175" transform="translate(-18496 2916)" fill="#f5f5f5" stroke="#707070" stroke-width="1">
+      <rect width="202" height="216" rx="25" stroke="none"/>
+      <rect x="0.5" y="0.5" width="201" height="215" rx="24.5" fill="none"/>
+    </g>
+    <text id="Right_Join" data-name="Right Join" transform="translate(-18395 3087)" fill="#f05d5d" font-size="27" font-family="Roboto-Bold, Roboto" font-weight="700"><tspan x="-61.693" y="0">Right Join</tspan></text>
+    <g id="Group_1256" data-name="Group 1256" transform="translate(-19497 2683.913)">
+      <g id="Ellipse_371" data-name="Ellipse 371" transform="translate(1088 271.087)" fill="#f89b9b" stroke="#707070" stroke-width="1">
+        <circle cx="41" cy="41" r="41" stroke="none"/>
+        <circle cx="41" cy="41" r="40.5" fill="none"/>
+      </g>
+      <g id="Ellipse_372" data-name="Ellipse 372" transform="translate(1035 271.087)" fill="none" stroke="#707070" stroke-width="1">
+        <circle cx="41" cy="41" r="41" stroke="none"/>
+        <circle cx="41" cy="41" r="40.5" fill="none"/>
+      </g>
+    </g>
+  </g>
+</svg>

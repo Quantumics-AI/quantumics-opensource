@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h5 class="modal-title">File Statistics</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body overflow-auto" style="height: 500px;">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group custom-search pull-right">
+                <input type="text" class="search-query" placeholder="Search here...">
+            </div>
+        </div>
+    </div>
+    <div class="row gutters">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table m-0">
+                    <thead>
+                        <tr class="th-center" style="background:#54E7B1;">
+                            <th bgcolor="#212245" class="gride-side" width="100%"
+                                style="border-left:6px solid #F783D0 !important; line-height:17px; color:#fff; font-weight:bold;">
+                                Column Name</th>
+                            <th class="border-left">Null</th>
+                            <th class="border-left">Missing </th>
+                            <th class="border-left">Count </th>
+                            <th class="border-left">Unique </th>
+                            <th class="border-left">Top </th>
+                            <th class="border-left">Frequency </th>
+                            <th class="border-left">Mean </th>
+                            <th class="border-left">Std </th>
+                            <th class="border-left">Min </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="td-color" *ngFor="let row of data;">
+                            <td [ngClass]="{'gride-side' : isFirst}" *ngFor="let d of row; let isFirst = first">
+                                {{d}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

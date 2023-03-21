@@ -1,0 +1,142 @@
+.login_ {
+    background-color: #F5F7FA;
+    height: -webkit-fill-available;
+}
+
+.signup-link {
+    margin-top: 20px;
+}
+
+.text-size {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 200;
+    font-size: 12px;
+    line-height: 156.02%;
+    text-align: center;
+    letter-spacing: 0.035em;
+    color: #999999;
+}
+
+.public-link {
+    text-align: center;
+    color: #00DFBA;
+    // margin-top: -70px;
+}
+
+.login-content-div {
+    position: relative;
+    border: 0;
+    margin: 80px auto;
+    // height: 400px;
+    max-width: 405px;
+    color: #000000;
+}
+
+.form-div {
+    background: #FFFFFF;
+    box-shadow: 0px 2px 2px rgb(0 0 0 / 10%);
+    border-radius: 4px;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+    margin-top: 8vh;
+}
+
+.p-logo {
+    text-align: center;
+}
+
+.login-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 156.02%;
+    /* or 37px */
+    
+    text-align: center;
+    letter-spacing: -0.005em;
+    
+    color: #212244;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.l-input {
+    background: #FCFCFE;
+    border: 1px solid #CCCCCC;
+    box-sizing: border-box;
+    border-radius: 4px;
+    height: 38px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 156.02%;
+    /* identical to box height, or 19px */
+
+    // text-align: center;
+    letter-spacing: 0.035em;
+}
+
+.form-check-input {
+    margin-top: 0.4rem;
+}
+
+.lgn-btn {
+    width: 100%;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 156.02%;
+    text-align: center;
+    letter-spacing: 0.035em;
+    background: #01B798;
+    color: #FFFFFF;
+}
+
+.tnc {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 156.02%;
+    /* identical to box height, or 19px */
+
+    text-align: center;
+    letter-spacing: 0.03em;
+
+    color: rgba(0, 5, 158, 0.6);
+}
+
+.new-user {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 156.02%;
+    text-align: center;
+    letter-spacing: -0.03em;
+    color: #212244;
+}
+
+.forgot-pwd {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 156.02%;
+    /* identical to box height, or 19px */
+    letter-spacing: 0.03em;
+
+    // color: rgba(0, 5, 158, 0.6);
+}
+
+.l-border {
+    border-right: none;
+}
+
+.eye-icon {
+    background: #FCFCFE;
+}

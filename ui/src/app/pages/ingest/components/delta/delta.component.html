@@ -1,0 +1,105 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title">Delta Between 2 Files</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body" style="height: 500px; overflow-y: scroll;">
+        <ng-container *ngIf="files1.length == 1 else filesRecords">
+            <h5>Selected {{folderName}} Folder only have one file.</h5>
+        </ng-container>
+
+        <ng-template #filesRecords>
+            <div class="row gutters data-grid">
+                <div class="col-xl-3 col-3 custom-col3">
+                    <div class="form-group">
+                        <label>Selected File</label>
+                        <select class="form-control" [(ngModel)]="selectedFileId" disabled>
+                            <option *ngFor="let file of files1;" [value]="file.fileId">{{file.fileName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-4 custom-col3">
+                    <div class="form-group">
+                        <label>Select Second File</label>
+                        <select class="form-control" [(ngModel)]="file2Id">
+                            <option *ngFor="let file of files2;" [value]="file.fileId">{{file.fileName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 custom-col3">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select class="form-control" id="sel1">
+                                <option>Type</option>
+                                <option>Type1</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-1 mt-3">
+                    <label></label>
+                    <button type="button" class="btn btn-primary" (click)="getData();">Apply</button>
+                </div>
+            </div>
+
+            <div class="row gutters">
+                <div class="col-xl-12 col-12">
+                    <ng-container *ngIf="data.length">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="custom-search pull-right mb-3">
+                                    <input type="text" [(ngModel)]="query" class="search-query" placeholder="Search...">
+                                </div>
+                                <div class="table-responsive ">
+                                    <table class="table m-0">
+                                        <tbody>
+                                            <tr class="th-center" style="background:#54E7B1;">
+                                                <th bgcolor="#fff"></th>
+                                                <th colspan="2" style="border-left: 1px solid #fff"
+                                                    *ngFor="let column of columns;">
+                                                    {{column}}
+                                                </th>
+                                            </tr>
+                                            <tr class="td-color">
+                                                <td class="gride-side" bgcolor="#212245" width="100%"
+                                                    style="border-left:6px solid #F783D0 !important;font-weight:bold; color:#fff;">
+                                                    Column Name</td>
+                                                <ng-container *ngFor="let d of columns">
+                                                    <td class="odd-color">Previous</td>
+                                                    <td class="even-color">Latest</td>
+                                                </ng-container>
+                                            </tr>
+                                            <tr class="td-color" *ngFor="let item of data">
+                                                <ng-container *ngFor="let col of columns;let isFirst = first">
+                                                    <td class="gride-side" *ngIf="isFirst">{{item.column_name}}</td>
+                                                    <td>{{item[col]?.file1}}</td>
+                                                    <td
+                                                        [ngStyle]="{'background': item[col]?.sign == '+' ? '#EAF7F2' : item[col]?.sign == '-' ? '#F7EAEA' : ''}">
+                                                        {{item[col]?.file2}}
+                                                        <i *ngIf="item[col]?.sign == '+'"
+                                                            class="fa fa-arrow-up up-arrow"></i>
+                                                        <i *ngIf="item[col]?.sign == '-'"
+                                                            class="fa fa-arrow-down down-arrow"></i>
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</app-loader>

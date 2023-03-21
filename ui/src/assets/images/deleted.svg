@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <g id="Group_2443" data-name="Group 2443" transform="translate(22321 -17097)">
+    <g id="Ellipse_1108" data-name="Ellipse 1108" transform="translate(-22321 17097)" fill="#fff" stroke="#f6f6f6" stroke-width="2">
+      <circle cx="16" cy="16" r="16" stroke="none"/>
+      <circle cx="16" cy="16" r="15" fill="none"/>
+    </g>
+    <g id="Group_2442" data-name="Group 2442" transform="translate(-518.929 -321.921)">
+      <g id="Rectangle_3443" data-name="Rectangle 3443" transform="translate(-21794.07 17428.283)" fill="none" stroke="#ea4848" stroke-width="1">
+        <rect width="8.26" height="13.216" stroke="none"/>
+        <rect x="0.5" y="0.5" width="7.26" height="12.216" fill="none"/>
+      </g>
+      <line id="Line_1711" data-name="Line 1711" x2="7.517" transform="translate(-21793.699 17431.445)" fill="none" stroke="#ea4848" stroke-width="1"/>
+      <line id="Line_1712" data-name="Line 1712" x2="7.517" transform="translate(-21793.699 17438.336)" fill="none" stroke="#ea4848" stroke-width="1"/>
+      <line id="Line_1713" data-name="Line 1713" y2="13.155" transform="translate(-21789.939 17428.313)" fill="none" stroke="#ea4848" stroke-width="1"/>
+      <path id="Path_11326" data-name="Path 11326" d="M-21831.279,17428.549l2.68-1.428,3.275,7.191,1.826,4.01-3.684,1.164Z" transform="translate(45.411 0.879)" fill="none" stroke="#ea4848" stroke-width="1"/>
+    </g>
+  </g>
+</svg>

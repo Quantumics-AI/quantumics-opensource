@@ -1,0 +1,83 @@
+/* Importing Bootstrap SCSS file. */
+
+// @import "~bootstrap/scss/bootstrap";
+
+// Buttons
+$primary: #00dfba !default;
+$success: #00dfba !default;
+$secondary: #fd768f !default;
+$btn-font-size: 0.825rem;
+
+// Breadcrumb
+$breadcrumb-bg: #ffffff !default;
+$breadcrumb-bg: #ffffff !default;
+$breadcrumb-padding-y: 0px !default;
+$breadcrumb-padding-x: 1px !default;
+$breadcrumb-active-color: #00dfba !default;
+
+.breadcrumb {
+    margin-top: 15px;
+}
+
+// Table.
+$table-bg: #ffffff !default;
+$table-cell-padding: 5px !default;
+
+.table {
+    font-size: small;
+    border-spacing: 0 2px;
+
+    thead th {
+        border: 0px;
+        font-weight: 600;
+        padding: 0.8rem 1rem;
+        text-align: center;
+        border-bottom: 1px solid #dee2e6 !important;
+        background-color: #fff !important;
+    }
+
+    td {
+        border-top: 1px solid #e0e3ec;
+        border-left: 3px solid #fff;
+    }
+}
+
+.table-fixed {
+    .fixed-th {
+        th {
+            position: sticky;
+            top: 0;
+            border: 1px;
+        }
+    }
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// Required
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+@import "bootstrap/scss/buttons";
+@import "bootstrap/scss/breadcrumb";
+@import "bootstrap/scss/tables";
+@import "bootstrap/scss/card";
+
+// finally, import Bootstrap to set the changes!
+@import "bootstrap";
+
+.body {
+    overflow-x: hidden;
+}
+
+.breadcrumb-top {
+    position: fixed;
+    top: 0.1%;
+    z-index: 999;
+    padding: 0px 20px;
+}

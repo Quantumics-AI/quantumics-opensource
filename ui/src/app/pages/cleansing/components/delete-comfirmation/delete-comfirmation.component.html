@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Rule deletion</h4>
+    <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('cancel')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <p><strong>Are you sure you want to delete this rule?</strong></p>
+    <p>There are other rules dependent on this rule and will be ineffective if this rule is deleted.</p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('confirm')">Ok</button>
+</div>

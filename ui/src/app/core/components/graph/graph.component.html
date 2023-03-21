@@ -1,0 +1,8 @@
+<app-loader [loading]="loading">
+    <div *ngFor="let column of newColumns">
+        <canvas baseChart [datasets]="column?.barChartData" [labels]="column?.barChartLabel" [options]="barChartOptions"
+            [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType"
+            [ngStyle]="{'width': '150px', 'max-height': '100px', 'color':'green'}">
+        </canvas>
+    </div>
+</app-loader>

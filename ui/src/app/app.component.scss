@@ -1,0 +1,15 @@
+:host{
+
+    display: block;
+    height: 100%;
+
+    // .wrapper, .content{
+    //     height: 100%;
+    // }
+}
+
+.content {
+    margin-top: 56px;
+    /* height: fit-content; */
+    overflow: auto;
+}

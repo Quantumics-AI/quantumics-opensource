@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-xl-12">
+        <div class="custom-search pull-right">
+            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderDisplayName" class="search-query absolute"
+                placeholder="Search...">
+        </div>
+    </div>
+</div>
+
+<app-loader [loading]="loading">
+    <div class="row gutters">
+        <div class="col-xl-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col">Folder Name </th>
+                            <th scope="col">Created By </th>
+                            <th scope="col">Created Date </th>
+                            <th scope="col">Select Files to Run</th>
+                            <th scope="col">History</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="cleansingJobs$ | async as cleansingJobs">
+                            <ng-container *ngIf="cleansingJobs?.length > 0; else noRecords">
+                                <tr class="td-color" *ngFor="let job of cleansingJobs | filterBy: searchTerm">
+                                    <td class="text-left">{{job.folderDisplayName}}</td>
+                                    <td>{{job.createdBy}}</td>
+                                    <td>{{job.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td>
+                                        <a id="lnkSelectCleanseFile" (click)="selectFiles(job)">
+                                            <em>
+                                                <img src="assets/img/file-icon.png" width="30" placement="top"
+                                                    ngbTooltip="File" alt="">
+                                            </em>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a id="lnkHistoryCleanseFile" (click)="openModal(job)">
+                                            <em>
+                                                <img src="assets/img/history-icon.svg" width="20" placement="top"
+                                                    ngbTooltip="History" alt="history">
+                                            </em>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecords>
+                                <h6>No result found</h6>
+                            </ng-template>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

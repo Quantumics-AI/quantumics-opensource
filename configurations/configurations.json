@@ -1,0 +1,14 @@
+[
+    {
+      "Classification": "emrfs-site",
+      "Properties": {
+        "fs.s3.maxConnections": "500"
+      }
+    },
+    {
+      "Classification": "spark-hive-site",
+      "Properties": {
+        "hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
+      }
+    }
+]

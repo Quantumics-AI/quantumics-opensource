@@ -1,0 +1,85 @@
+<div class="row">
+	<ng-container *ngFor="let p of projects; let isLast= last">
+		<!-- [class.pr-0]="!isLast" -->
+		<div class="col-xl-4">
+			<!-- [class.disabled]="p?.validDays <= 0 || p?.isDeleted" -->
+			<div [ngClass]="p?.validDays <= 0 || p?.isDeleted ? 'expired-box' : 'subscribe-box'" class="project-card" (click)="selectedProject.emit(p);">
+				<!-- <div class="btn-action" *ngIf="isAdmin && !(p?.validDays <= 0 ||
+					p?.isDeleted)"> -->
+				<div class="btn-action" *ngIf="isAdmin && !p?.isDeleted" >
+					<a id="lnkProjectSetting" (click)="redirectToSetting.emit(p);">
+						<img src="/assets/img/project/s-icon.svg" class="mr-2" placement="bottom"
+							ngbTooltip="Setting" width="15px">
+					</a>
+
+					<a id="lnkProjectDelete" (click)="deleteProject.emit(p?.projectId)">
+						<img src="/assets/img/project/d-icon.svg" placement="bottom"
+							ngbTooltip="Delete" width="15px">
+					</a>
+				</div>
+				<div class="row">
+					<div class="col-xl-3">
+						<img class="userlogo" [src]="p?.projectLogo ? p?.projectLogo : '/assets/img/project/upload-icon.svg'" width="70">
+						<!-- <img src="" alt=""> -->
+					</div>
+					<div class="col-xl-9 mt-2">
+						<h6 class="project-display-name"><a (click)="selectedProject.emit(p);">{{p.projectDisplayName}}</a></h6>
+						<h6 class="project-creation-date">{{p?.createdDate | date : 'dd-MM-yy, hh:mm a'}}</h6>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-xl-6">
+						<span *ngIf="p.subscriptionType === 'Trial' && !p?.isDeleted">
+							Trial ({{p?.validDays <= 0 ? 0 : p?.validDays }} days left)
+						</span>
+						<span class="badge text-uppercase"
+							*ngFor="let m of p?.firstFourMember; let isFirst= first; let i= index"
+							[class.-ml]="!isFirst"
+							[ngClass]="i % 2 === 0 ? 'badge-round-primary' : 'badge-round-secondary'"
+							placement="bottom" ngbTooltip="{{m?.fullName}}">
+							<a>{{m?.shortName}}</a>
+						</span>&nbsp;
+						<span *ngIf="p?.totalMembers?.length"><img class="ml-1"
+								src="/assets/img/project/members.svg" width="27" height="17">&nbsp;
+							<a class="ml-1 members-count" placement="bottom auto" [autoClose]="'outside'"
+							ngbTooltip="Team members">({{p?.totalMembers?.length}})</a>
+						</span>
+
+						<ng-template #popContent>
+							<div style="max-height: 200px; overflow-y: auto;">
+								<ul>
+									<li *ngFor="let member of p?.projectMembers" #user class="user"
+										[disableTooltip]="!isEllipsisActive(user)" [ngbTooltip]="member"
+										placement="top" container="body">
+										<a>{{member}}</a>
+									</li>
+								</ul>
+							</div>
+						</ng-template>
+					</div>
+					<!-- <div class="license-type trial" *ngIf="p.subscriptionType === 'Trial'">
+						Trial ({{p?.validDays <= 0 ? 0 : p?.validDays }} days left) </div> -->
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-xl-12">
+					<div *ngIf="isAdmin && !userType && !p?.isDeleted && p?.validDays > 0">
+						<button class="btn btn-upgrade position" (click)="redirectToPlans.emit(p?.projectId)">Upgrade</button>
+					</div>
+					<div *ngIf=" isAdmin && userType && !p?.isDeleted && p?.validDays > 0">
+						<button class="btn btn-upgrade position" placement="bottom" ngbTooltip="Click here to upgrade subscription from aws market place" (click)="redirectToAwsPlans.emit('https://www.google.com/')">Upgrade</button>
+					</div>
+					<div *ngIf="p?.validDays <= 0 && !userType">
+						<button class="btn btn-subscribe position" (click)="redirectToPlans.emit(p?.projectId)">Subscribe</button>
+					</div>
+					<div *ngIf="p?.validDays <= 0 && userType">
+						<button class="btn btn-subscribe position" ngbTooltip="Click here to upgrade subscription from aws market place" (click)="redirectToAwsPlans.emit('https://www.google.com/')">Subscribe</button>
+					</div>
+					<div *ngIf="p?.isDeleted">
+						<button class="btn btn-restore position" (click)="restoreProject.emit(p?.projectId)">Restore</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</div>

@@ -1,0 +1,105 @@
+<app-loader [loading]="loading">
+    <div class="page-content">
+        <ng-container *ngIf="!loading && !showCard">
+            <div>
+                <div class="floder-count">
+                    Total Folders ({{total_folder_length}})
+                </div>
+                <div class="row pull-right">
+                    <div class="col-12">
+                        <div class="custom-search">
+
+                            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderName" class="search-query"
+                                placeholder="Search Folder Name">
+                            
+                            <button type="button" id="btnConnectToSource" class="btn btn-design mr-l-10"
+                                (click)="selectSourceType()">
+                                Connect to a source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col" class="folder-name" (click)="sortFolder();">Folder Name
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col">Created By</th>
+                            <th scope="col" class="folder-name" (click)="sort();">Created Date
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col" class="folder-name" (click)="sort();">Modified Date
+                                <img class="sort-icon" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'">
+                            </th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let folder of folders | filterBy:searchTerm" class="td-color">
+                            <td class="text-left" (click)="select(folder)"
+                                title="{{ folder?.folderDisplayName ? folder?.folderDisplayName : folder?.folderName }}">
+                                <a>
+                                    <!-- <i> <img *ngIf="!folder.external" src="assets/img/close-folder.svg" class="icon-space"
+                                            width="19" /> </i>
+                                    <i *ngIf="folder.external"><img src="assets/img/external-source.svg" width="18"
+                                            class="icon-space"></i> -->
+                                    {{ folder?.folderDisplayName ? folder?.folderDisplayName : folder?.folderName }}
+                                </a>
+                            </td>
+                            <td>{{ folder.dataOwner }} </td>
+                            <td>
+                                {{ folder.createdDate | date: 'dd-MM-yy, hh:mm a'}}
+                            </td>
+                            <td>{{folder.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+
+                            <td>
+                                <a placement="top" id="lnkEdit" ngbTooltip="Edit" (click)="editFolderModal(folder)">
+                                    <i><img src="assets/img/edit.svg" width="18"></i>
+                                </a> &nbsp;
+                                <a placement="top" id="lnkDelete" ngbTooltip="Delete" (click)="deleteFolder(folder)">
+                                    <i><img src="assets/img/delete.svg" width="18"></i>
+                                </a> &nbsp;
+                                <a placement="top" id="lnkUpload" *ngIf="!folder.external" ngbTooltip="Upload"
+                                    (click)="uploadFile(folder)">
+                                    <i><img src="assets/img/upload.png" width="18"></i>
+                                </a>
+                                <a *ngIf="folder.external" class="disableUpload"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <app-edit-folder *ngIf="editFolder" [projectId]="projectId" [userId]="userId" [folder]="folder"
+                (updatedFolder)="updatedFolder($event)" (close)="editFolder=false">
+            </app-edit-folder>
+        </ng-container>
+
+        <ng-container *ngIf="showCard">
+            <div *ngIf="!loading" class="row gutters justify-content-center mt-6 rounded m-0">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                    <div class="card shadow-lg">
+                        <div class="card-body plus-add">
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']">
+                                <img src="assets/img/cleansing-add.svg" width="55" alt="add" class="mb-3"></a>
+                            <p class="plus-add-text">
+                                You do not have any Folders. <br>
+                                Why don't you create one by clicking "Plus" button.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+    </div>
+</app-loader>

@@ -1,0 +1,167 @@
+.gradient-1 {
+    // background: linear-gradient(#fde7e7, #f2b0b0) !important;
+    background: #FFE4E4;
+    padding-bottom: 15px;
+    box-shadow: none;
+    height: 205px;
+}
+
+.data-analyst-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+
+    color: #000000;
+    border-bottom: 1px solid #b5b5b5;
+    margin: 5px;
+    padding: 5px 5px;
+}
+
+.gradient-2 {
+    // background: linear-gradient(to right, #2cbeea 0%, #50f7df 100%) !important;
+    background: #94E9FF;
+}
+
+.progress-bar {
+    color: #000000;
+}
+
+.file-p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    /* identical to box height */
+    letter-spacing: -0.02em;
+
+    color: #000000;
+}
+
+.ps-center {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+}
+
+.br {
+    border-bottom: 1px solid #E2E8F2;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.mr-t-16 {
+    margin-top: 16px;
+}
+
+.bl {
+    width: 12px;
+    height: 12px;
+    background: #3F8EFC;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.l-bl {
+    width: 12px;
+    height: 12px;
+    background: #A3C9FF;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.bl-back {
+    background-color: #3F8EFC;
+}
+
+.l-bl-back {
+    background-color: #A3C9FF;
+}
+
+.pr {
+    width: 12px;
+    height: 12px;
+    background: #735CDD;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.l-pr {
+    width: 12px;
+    height: 12px;
+    background: #C5BBF4;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.pr-back {
+    background-color: #735CDD;
+}
+
+.l-pr-back {
+    background-color: #C5BBF4;
+}
+
+.ib {
+    display: inline-block;
+}
+
+.value-count-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    /* Blue */
+    
+    color: #212244;
+    margin-right: 4px;
+}
+
+.mr-r-18 {
+    margin-left: 18px;
+}
+
+.mr-t-24 {
+    margin-top: 24px;
+}
+
+.h-8 {
+    height: 8px;
+}
+
+.progress-div-pd {
+    padding-top: 16px;
+}
+
+.br-0 {
+    border-radius: 0;
+}
+
+.c-t {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* or 133% */
+    
+    
+    /* Background */
+    
+    color: #FFFFFF;
+
+    span {
+        font-weight: 700;
+    }
+}
+
+.cp {
+    cursor: pointer;
+}

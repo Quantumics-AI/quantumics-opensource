@@ -1,0 +1,58 @@
+<div class="preview">
+    <div class="header">
+        Details
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closePanel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="contents">
+        <div class="mb-2">
+            <img src="assets/img/csv-icon.svg" width="22" height="22" alt="csv">
+            <span class="file color-bright-grey">{{selectedFile?.name}}</span>
+        </div>
+        <div class="color-bright-grey font-12px mb-1">
+            Data Preview
+        </div>
+        <div class="preview-content" [class.bg-blue]="previewHover" (click)="viewFullPreviewData()"
+            (mouseover)="previewHover=true" (mouseout)="previewHover=false">
+            <div *ngIf="selectedFile?.content?.rowData?.length else inProgress">
+                <div class="preview-text text-center" *ngIf="previewHover">
+                    Preview
+                </div>
+                <div [ngClass]="previewHover ? 'opacity-10' : 'opacity-100'">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th *ngFor="let column of selectedFile?.content?.rowColumns">{{column}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let d of selectedFile?.content?.rowData;">
+                                <td *ngFor="let column of selectedFile?.content?.rowColumns">
+                                    <a>{{d[column]}}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <ng-template #inProgress>
+                <div class="preview-text progress">
+                    <div class="progress-bar" [ngStyle]="{'width': selectedFile?.content?.eventProgress + '%'}">
+                        Loading ({{selectedFile?.content?.eventProgress}} %)
+                    </div>
+                </div>
+                <div class="dot-loading preview-text text-center"></div>
+            </ng-template>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-xl-4">
+                <span class="color-bright-grey">Type</span>
+            </div>
+            <div class="col-xl-8">
+                {{selectedFile?.fileType}}
+            </div>
+        </div>
+    </div>
+</div>

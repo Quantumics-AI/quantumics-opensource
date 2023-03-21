@@ -1,0 +1,176 @@
+<div class="modal-header">
+    <h5 class="modal-title">Files</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<ng-container *ngIf="loading; else loaded">
+    <div class="modal-body">
+        loading
+    </div>
+</ng-container>
+<ng-template #loaded>
+    <div class="modal-body d-flex ">
+        <div class="col-4">
+            <div class="row" style="border-bottom:1px solid #e9e9e9; padding: 5px 10px 10px 10px;">
+                <div class="col-5" style="float:left; font-size:14px;">Raw Files</div>
+
+                <div class="col-5" style="float:right;">
+                    <div class="custom-search">
+                        <!-- <input type="text" class="search-query search-auto" placeholder="Search here ..."> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="height:250px; overflow:auto;">
+                <div class="table-responsive ">
+                    <table class="table m-0">
+                        <thead>
+                            <tr class="th-center">
+                                <th scope="col"></th>
+                                <th scope="col">Folder</th>
+                                <th scope="col">File</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-color" *ngFor="let rfile of rawFiles">
+                                <td class="pt-2"> <label><input type="checkbox"
+                                            (change)="selectFile($event, rfile)"></label></td>
+                                <td class="text-left">
+                                    {{rfile.folderDisplayName}}
+                                </td>
+                                <td>
+                                    {{rfile.fileName}}
+                                </td>
+                                <td>
+                                    {{rfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!rawFiles?.length">
+                                <td colspan="4">
+                                    No files
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" *ngIf="rawFiles?.length">
+                <div class="auto-select-file">{{rawFilesSelected}} Selected </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-4">
+
+            <div class="row" style=" border-bottom:1px solid #e9e9e9; padding: 5px 10px 10px 10px;">
+                <div class="col-5" style="float:left; font-size:14px;">Cleansed Files</div>
+                <div class="col-5" style="float:right;">
+                    <div class="custom-search">
+                        <!-- <input type="text" class="search-query search-auto" placeholder="Search here ..."> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="height:250px; overflow:auto;">
+                <div class="table-responsive ">
+                    <table class="table m-0">
+                        <thead>
+                            <tr class="th-center">
+                                <th scope="col"></th>
+                                <th scope="col">Folder</th>
+                                <th scope="col">File</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-color" *ngFor="let cfile of cleansedFiles">
+                                <td class="pt-2"> <label><input type="checkbox" (change)="selectFile($event, cfile)"></label></td>
+                                <td class="text-left">
+                                    {{cfile.folderDisplayName}}
+                                </td>
+                                <td>
+                                    {{cfile.fileName}}
+                                </td>
+                                <td>
+                                    {{cfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!cleansedFiles?.length">
+                                <td colspan="4">
+                                    No files
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" *ngIf="cleansedFiles?.length">
+                <div class="auto-select-file">{{cleansedFilesSelected}} Selected </div>
+            </div>
+        </div>
+
+
+        <div class="col-4">
+
+            <div class="row" style=" border-bottom:1px solid #e9e9e9; padding: 5px 10px 10px 10px;">
+                <div class="col-5" style="float:left; font-size:14px;">Engineered</div>
+
+                <div class="col-5" style="float:right;">
+                    <div class="custom-search">
+                        <!-- <input type="text" class="search-query search-auto" placeholder="Search here ..."> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="height:250px; overflow:auto;">
+                <div class="table-responsive ">
+                    <table class="table m-0">
+                        <thead>
+                            <tr class="th-center">
+                                <th scope="col"></th>
+                                <th scope="col">Flow</th>
+                                <!-- <th scope="col">File</th> -->
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="td-color" *ngFor="let efile of engFiles">
+                                <td class="pt-2"> <label><input type="checkbox" (change)="selectFile($event, efile)"></label></td>
+                                <td class="text-left">
+                                    {{efile.engFlowName}}
+                                </td>
+                                <!-- <td><a href="#" data-toggle="tooltip" title="We know company needs.">
+                                        File</a></td> -->
+                                <td>
+                                    {{ efile.flowCreationDate | date: 'dd-MM-yy, hh:mm a'}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="!engFiles?.length">
+                                <td colspan="4">
+                                    No files
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="row" *ngIf="engFiles?.length">
+                <div class="auto-select-file">{{engFilesSelected}} Selected </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" [disabled]="!selectedFiles?.length" id="btnRunJob" class="btn btn-primary" (click)="runJob()">Run job</button>
+    </div>
+</ng-template>

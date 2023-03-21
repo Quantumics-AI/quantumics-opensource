@@ -1,0 +1,1067 @@
+html {
+  font-size: 100%;
+  height: 100vh
+}
+
+body {
+  height: 100%;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  line-height: 0px;
+  width: 16px;
+  color: transparent;
+  content: "";
+  background-image: url("../img/arrow.svg");
+  background-size: 22px;
+  position: relative;
+  left: -8px;
+  top: 2px;
+}
+
+.breadcrumb-item:hover {
+  color: #00977C;
+}
+
+.login {
+  position: absolute;
+  left: 0;
+  top: 0%;
+  bottom: 0;
+  width: 100%;
+}
+
+.login .login-content {
+  position: relative;
+  background: #ffffff;
+  border: 0;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  margin: 80px auto;
+  min-width: 320px;
+  height: 400px;
+  max-width: 320px;
+  color: #000000;
+}
+
+canvas {
+  height: 520px;
+}
+
+.dropdown-menu .dropdown-menu-header {
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #52bd95;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  position: relative;
+  margin-top: -8px;
+}
+
+/************************************************
+	************************************************
+										Re Usable Css							
+	************************************************
+************************************************/
+a {
+  color: #000000;
+  cursor: pointer;
+}
+a:hover {
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.text-secondary {
+  color: #ff3e61 !important;
+}
+
+.text-dark {
+  color: #616265 !important;
+}
+
+.text-muted {
+  color: #9fa8b9 !important;
+}
+
+.custom-search {
+  margin: 0 15px 0 0;
+  position: relative;
+}
+.custom-search .search-query {
+  padding: 7px 15px;
+  color: #2e323c;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  line-height: 20px;
+  width: 240px;
+  background: #ffffff;
+  border: 1px solid #e1e5f1;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+}
+.custom-search .search-query:focus {
+  outline: none;
+  background: #ffffff;
+  width: 280px;
+}
+.custom-search .search-query::-webkit-input-placeholder {
+  color: #9fa8b9;
+}
+.custom-search .search-query:-moz-placeholder {
+  color: #9fa8b9;
+}
+.custom-search .search-query::-moz-placeholder {
+  color: #9fa8b9;
+}
+.custom-search .search-query:-ms-input-placeholder {
+  color: #9fa8b9;
+}
+.custom-search i {
+  padding: 0 20px;
+  height: 36px;
+  line-height: 36px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #007ae1;
+  border-left: 1px solid #e1e5f1;
+  font-size: 1.2rem;
+}
+
+.wrapper {
+  background: #ffffff;
+  /* background: #F4F6FA; */
+}
+
+/* .wrapper .content {
+  padding: 0 0 0 68px;
+} */
+
+@media (min-width: 768px) {
+  .main-container {
+    margin: 0;
+    /* padding: 0.5rem 1.5rem 0 1.5rem; */
+    padding: 0px;
+    min-height: 100vh;
+  }
+}
+
+button:focus {
+  outline: none;
+}
+
+.form-group {
+  margin: 0 0 1rem 0;
+}
+
+.form-control {
+  border: 1px solid #cfd1d8;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 0.825rem;
+  background: #ffffff;
+  color: #2e323c;
+}
+.form-control:focus {
+  border-color: #007ae1;
+  box-shadow: none;
+  background: #ffffff;
+  color: #2e323c;
+}
+
+label {
+  margin-bottom: 0.3rem;
+  font-size: 0.725rem;
+  font-weight: 600;
+}
+
+.nav-link {
+  color: #2e323c;
+}
+.nav-link.active {
+  color: #007ae1;
+}
+.nav-link.disabled {
+  color: #9fa8b9;
+}
+
+.nav-pills .nav-link {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.nav-pills .nav-link:hover {
+  background: #dadeea;
+  color: #616265;
+}
+.nav-pills .nav-link.active {
+  background: #1111;
+  color: #111;
+  pointer-events: none;
+}
+.nav-pills.primary .nav-link.active {
+  background: #007ae1;
+  color: #ffffff;
+}
+.nav-pills.secondary .nav-link.active {
+  background: #ff3e61;
+  color: #ffffff;
+}
+
+.chart {
+  width: 500px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.modal-height {
+  height: 500px;
+  overflow: auto;
+}
+
+.font-weight-400 {
+  font-weight: 400;
+}
+
+.margin-right-10px {
+  margin-right: 10px;
+}
+
+.tbl-first-col-width {
+  width: 130px;
+  line-height: 40px;
+}
+
+.bg-yellow-color {
+  background-color: lightyellow;
+}
+
+/* Table border */
+
+.folder-tbl-left-border {
+  border-top: 0px !important;
+  text-align: left;
+  border-left: 6px solid #212245 !important;
+  position: absolute;
+  line-height: 23px;
+}
+
+.file-tbl-left-border {
+  border-top: 0px !important;
+  text-align: left;
+  border-left: 6px solid #f783d0 !important;
+  position: absolute;
+  line-height: 23px;
+}
+
+.error {
+  color: coral;
+  font-size: 10px;
+  padding-top: 2px;
+}
+
+.cols-left-indicator {
+  border-left: 6px solid green;
+}
+
+.grp-left-indicator {
+  border-left: 6px solid #212245;
+}
+
+.aggs-left-indicator {
+  border-left: 6px solid #ff5bdc;
+}
+
+.hidden {
+  display: none;
+}
+
+/* width property provid at component level */
+.ellips-text {
+  overflow: hidden;
+  /* white-space: nowrap; */
+  text-overflow: ellipsis;
+}
+
+.right-panel {
+  background: #fff;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.35);
+  border-right: 1px solid #e5e5e5;
+  position: fixed;
+  top: 0;
+  height: 100%;
+  right: 0;
+  float: right;
+  width: 400px;
+  z-index: 999 !important;
+  color: #000000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: animation-name 0.3s ease-out forwards;
+}
+
+@keyframes animation-name {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.page-header {
+  height: 56px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  /* margin-left: -13px; */
+  background: #ffffff;
+}
+
+.page-content,
+.page-header {
+  /* padding: 0 1.5rem 0 0; */
+  padding: 20px;
+}
+
+.left-indicator {
+  text-align: left;
+  border-left: 6px solid #212245 !important;
+  position: absolute !important;
+  /* line-height: 23px !important; */
+  border-collapse: separate !important;
+  border-spacing: 0 3px !important;
+  /* width: 305px; */
+}
+
+.table-height {
+  height: calc(100vh - 150px);
+}
+
+.font-12px {
+  font-size: 12px;
+}
+
+.font-16px {
+  font-size: 16px;
+}
+
+.bg-blue {
+  background: #0c69ae;
+}
+
+.color-bright-grey {
+  color: #505458;
+}
+
+.color-white {
+  color: #ffffff;
+}
+
+.opacity-10 {
+  opacity: 0.1;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+/* Engineering screen preview  */
+
+.preview .header {
+  padding: 8px 16px;
+  font-size: 16px;
+  position: relative;
+  line-height: 1.4;
+  background-color: #f6f6f6;
+  text-align: center;
+}
+
+.preview .nav-tabs > li > a {
+  color: #666;
+  padding: 6px 17px !important;
+}
+
+.preview .contents {
+  padding: 5px;
+}
+
+.contents .columns {
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  height: 150px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.contents .columns p {
+  background-color: #f5f6f8;
+  border: 1px solid #f5f6f8;
+  color: #aaabae;
+  margin-bottom: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.contents .preview-content {
+  height: 230px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid gainsboro;
+}
+
+.contents .preview-content .preview-text {
+  position: absolute;
+  top: 50%;
+  transform: translate(-0%, -50%);
+  font-size: 12px;
+  pointer-events: none;
+  width: 96%;
+  margin: 0px 5px;
+  color: #ffffff;
+}
+
+/* Engineering screen preview  */
+
+/* *************** 3 dots loader ************** */
+.dot-loading:after {
+  content: " .";
+  font-size: 50px;
+  animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: #212245;
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 #212245, 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 #212245, 0.5em 0 0 #212245;
+  }
+}
+
+/* *************** 3 dots loader ************** */
+
+.cdk-overlay-container{
+  z-index: 90000 !important;
+}
+
+.file-statis-h6 {
+  font-size: 16px;
+  border-bottom: 1px solid #b5b5b5;
+  margin: 5px;
+  padding: 5px 5px;
+}
+
+
+/* *************** Users setting ************** */
+.user-setting-bg {
+  width: 380px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 0 10px #ccc;
+  position: fixed;
+  overflow-y: auto;
+  right: 0;
+  top: 0;
+  z-index: 999;
+}
+
+/* we need to use this common class for all the place */
+.right-panel {
+  width: 380px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 0 10px #ccc;
+  position: fixed;
+  overflow-y: auto;
+  right: 0;
+  z-index: 999;
+}
+
+/* *************** Users setting ************** */
+
+
+.style1 {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  line-height: 29px;
+}
+
+.style2 {
+  font-family: "Inter";
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.font-24 {
+  font-size: 24px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
+.font-32 {
+  font-size: 32px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+/* *************** Right side width *************************** */
+
+.mx-rw {
+  width: 1040px;
+}
+
+/* *********************** Side Navigation **************** */
+
+.mx-w {
+  width: 240px;
+  max-width: 240px;
+  padding: 0;
+}
+
+.main-side-nav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 240px;
+  overflow: hidden;
+  z-index: 1000;
+  background: #FFFFFF;
+  box-shadow: inset -1px 0px 0px #e4e5e7;
+}
+
+/* *************** ERROR TEXT ******************* */
+.text-error {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+
+  color: #D72C0D;
+}
+
+/* ************** paragraph-medium *************** */
+.paragraph-medium {
+  font-family: 'Inter';
+  font-style: medium;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #212244;
+}
+
+/* ************ Button Green *********** */
+.btn-design {
+  height: 36px;
+  left: 224px;
+  background: #00977C;
+  border-radius: 4px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.btn-design:hover {
+  background: #01745F;
+  color: #FFFFFF;
+}
+
+/* ************** Contact-Us Button *************** */
+.btn-contact-us {
+  background: #FFFFFF;
+  border: 1px solid #888C92;
+  border-radius: 4px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #212244;
+  height: 36px;
+}
+
+/* **************** Body text muted *************** */
+.body-text-muted {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* or 133% */
+
+
+  /* Dark Grey */
+
+  color: #888C92
+}
+
+/* ************* Modal header text ************ */
+.modal-header-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  
+  
+  /* Text/Default */
+  
+  color: #202223;
+}
+
+/* ************** padding - 0 ***************** */
+.pd-0 {
+  padding: 0;
+}
+
+/* ************* Body Baground color **************** */
+.bg-color {
+  background: #F4F6FA;
+}
+
+/* ************** Regular text ************** */
+.p2 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  
+  /* text-align: center; */
+  
+  /* Blue */
+  
+  color: #212244;
+}
+
+/* ************* child text ************* */
+.p1 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+
+
+  /* Dark Grey */
+
+  color: #888C92;
+}
+
+/* ************ background white ************* */
+.bg-w {
+  background: #ffffff;
+}
+
+/* *********** margin bottom zero ************ */
+.mr-b-0 {
+  margin-bottom: 0;
+}
+
+/* ************** Input box design *********** */
+.input-design {
+  background: #F4F6FA;
+  border: 1px solid #E2E8F2;
+  border-radius: 8px;
+  height: 36px;
+}
+
+/* ************** Deactivate button ************** */
+.deactivate-btn {
+  background: #FFFFFF;
+  border: 1px solid #FD5749;
+  /* box-shadow: 0px 1px 0px rgb(0 0 0 / 5%); */
+  border-radius: 4px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #DF2C0D;
+  /* height: 36px; */
+}
+
+/* **************** Card box shadow ************* */
+
+.card-shadow {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.cr-12 {
+  border-radius: 12px !important;
+}
+
+/* ************ Plans obj text ************** */
+.plan-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: #212244;
+  margin-bottom: 8px;
+}
+
+
+.plan-li {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  /* or 133% */
+  
+  
+  /* Text/Default */
+  
+  color: #202223;
+  list-style: disc;
+  margin-left: 20px;
+}
+
+/* *************** contact us btn ************ */
+.cnt-us-btn {
+  background: #E2E8F2;
+  border-radius: 4px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  color: #888C92;
+  /* height: 36px; */
+}
+
+/* ************ upgrade plans btn ********** */
+.up-btn {
+  background: #00977C;
+  box-shadow: 0px 0.84589px 0px rgb(0 0 0 / 8%);
+  border-radius: 4px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  color: #FFFFFF;
+  /* height: 36px; */
+}
+
+/* **************** padding bottom zero ************** */
+.pd-b-0 {
+  padding-bottom: 0 !important;
+}
+
+/* ************ border - none ********************* */
+.br-none {
+  border: none;
+}
+
+/* ************ margin zero ***************** */
+.mr-0 {
+  margin: 0;
+}
+
+.pd-l-0 {
+  padding-left: 0;
+}
+
+.pd-r-0 {
+  padding-right: 0;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+/* ********** padding - 24 ************** */
+.pd-24 {
+  padding: 24px;
+}
+
+/* ************* Card Padding ************* */
+.card-pd {
+  padding-left: 24px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+/* ************* Input Lable CSS ***************** */
+.lable-style {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  
+  
+  /* Dark Grey */
+  
+  color: #888C92;
+}
+
+/* ********************* Card Radius ***************** */
+.card-r {
+  border-radius: 8px !important;
+}
+
+
+/* ************* Input Padding ************ */
+.pd-l-12 {
+  padding-left: 12px !important;
+}
+
+.pd-r-12 {
+  padding-right: 12px !important;
+}
+
+/* ************ Breadcrumb Padding ************** */
+.pd-l-20 {
+  padding-left: 20px !important;
+}
+
+/* ************* Ingest Header *********** */
+.localDiv {
+  margin-top: 65px;
+  position: fixed;
+  width: -webkit-fill-available;
+}
+
+/* ************** Viewdatasets button ************** */
+.viewdata-btn {
+  height: 36px;
+  background: #FFFFFF;
+  border: 1px solid #00977C;;
+  /* box-shadow: 0px 1px 0px rgb(0 0 0 / 5%); */
+  border-radius: 4px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #00977C;
+  /* height: 36px; */
+}
+
+/* ********** padding - 20 ************** */
+.pd-20 {
+  padding: 20px;
+}
+
+/* *********** card-body padding -16 *********** */
+.cbp-16 {
+  padding: 16px;
+}
+
+/* **************** Page background color **************** */
+
+.p-background {
+  background: #F4F6FA;
+}
+
+/* ************** Padding to zero ****************** */
+.pd-t-0 {
+  padding-top: 0;
+}
+
+/* ********************** Padding top-bottom ************** */
+.pd-t-b-16 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.mr-b-16 {
+  margin-bottom: 16px;
+}
+
+/* Card header style  */
+.ch {
+  background-color: #ffffff;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  padding: 24px;
+}
+
+.di {
+  display: inline-block;
+}
+
+.search-input {
+  border-left: none;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #667085;
+  box-shadow: 0px 1px 2px rgb(16 24 40 / 5%);
+  /* border-radius: 8px; */
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+.search-icon {
+  background-color: white;
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0px 1px 2px rgb(16 24 40 / 5%);
+}
+
+.mr-l-16 {
+  margin-left: 16px;
+}
+
+.card-d {
+  box-shadow: 0px 1px 0px rgb(0 0 0 / 5%);
+  /* border-radius: 4px; */
+  border-radius: 8px;
+}
+
+.mr-t-10 {
+  margin-top: 10px;
+}
+
+.card-main-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 150%;
+  color: #101828;
+  margin-bottom: 8px;
+}
+
+.pd-l-24 {
+  padding-left: 24px !important;
+}
+
+.pd-r-24 {
+  padding-right: 24px !important;
+}
+
+
+/* Back button  */
+.bck-btn {
+  border-radius: 4px;
+  border: 1px solid #888C92;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #888C92;
+}
+
+/* Border bottom  */
+.br-b {
+  border-bottom: 1px solid #EBEBEB;
+}
+
+/* save btn  */
+.saveBtn {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #00977C;
+  border: 1px solid #00977C;
+  filter: drop-shadow(0px 1px 2px rgba(16, 24, 40, 0.05));
+  border-radius: 8px;
+  height: 36px;
+}
+
+.pd-l-10 {
+  padding-left: 10px;
+}
+
+.pd-r-10 {
+  padding-right: 10px;
+}
+
+.cp {
+  cursor: pointer;
+}
+
+/* card padding  */
+.pd-16 {
+  padding: 16px;
+}
+/* Next Btn */
+
+.nextBtn {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+
+  /* Blue */
+
+  color: #212244;
+
+  background: #FFFFFF;
+  /* Gray/200 */
+  
+  border: 1px solid #EAECF0;
+  /* Shadow/sm */
+  
+  box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
+  border-radius: 12px;
+}

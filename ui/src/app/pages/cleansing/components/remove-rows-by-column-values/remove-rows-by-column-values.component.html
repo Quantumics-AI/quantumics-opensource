@@ -1,0 +1,230 @@
+<h6 class="h6-font-hading">
+    Filter rows
+</h6>
+
+<form [formGroup]="fg" (keydown.enter)="$event.preventDefault()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="filter-option">Option</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <ng-select id="filter-option" [(ngModel)]="ruleInputLogic1" formControlName="ruleInputLogic1"
+                (change)="preview()" placeholder="Select option" [dropdownPosition]="'bottom'">
+                <ng-option *ngFor="let op of options" [value]="op.value">{{op.text}}</ng-option>
+            </ng-select>
+
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                [multiple]="false" (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+        </div>
+    </div>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.LessThanOrEqualTo">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-less-than">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-less-than" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues" formControlName="lessThanOrEqualTo" (change)="preview()" type="number"
+                    appQsMaxLength>
+                <span class="alert-danger"
+                    *ngIf="fg.get('lessThanOrEqualTo').touched && fg.get('lessThanOrEqualTo').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.StartsWith">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-start-with">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-start-with" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues" formControlName="startsWith" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('startsWith').touched && fg.get('startsWith').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.EndsWith">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-end-with">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-end-with" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues" formControlName="endsWith" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('endsWith').touched && fg.get('endsWith').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.Contains">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-contains">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-contains" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues" formControlName="contains" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('contains').touched && fg.get('contains').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.GreaterThanOrEqualTo">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-greater-than">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-greater-than" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues" formControlName="greaterThanOrEqualTo" (change)="preview()"
+                    type="number" appQsMaxLength>
+                <span class="alert-danger"
+                    *ngIf="fg.get('greaterThanOrEqualTo').touched && fg.get('greaterThanOrEqualTo').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.EqualTo">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-equal-to">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-equal-to" placeholder="Enter value"
+                    formControlName="equalTo" (change)="preview()" [(ngModel)]="ruleInputValues">
+                <span class="alert-danger" *ngIf="fg.get('equalTo').touched && fg.get('equalTo').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.NotEqualTo">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="value-not-equal-to">Value</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="value-not-equal-to" placeholder="Enter value"
+                    formControlName="notEqualTo" (change)="preview()" [(ngModel)]="ruleInputValues">
+                <span class="alert-danger"
+                    *ngIf="fg.get('notEqualTo').touched && fg.get('notEqualTo').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.IsBetween">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="start-value">Value 1</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="number" class="form-control" id="start-value" placeholder="Enter start value"
+                    [(ngModel)]="ruleInputValues" formControlName="startValue" (change)="preview()" type="number"
+                    appQsMaxLength>
+                <span class="alert-danger"
+                    *ngIf="fg.get('startValue').touched && fg.get('startValue').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="end-value">Value 2</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="number" appQsMaxLength class="form-control" id="end-value" placeholder="Enter value"
+                    [(ngModel)]="ruleInputValues1" formControlName="endValue" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('endValue').touched && fg.get('endValue').hasError('required')">
+                    This field is required
+                </span>
+                <span class="alert-danger" *ngIf="fg.get('endValue').touched && fg.get('endValue').hasError('invalid')">
+                    This field should be greater than value 1
+                </span>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.IsOneOf">
+        <div class="col-12">
+            <div class="form-group">
+                <label>Values</label>
+                <small class="form-text text-muted pull-right"> Required
+                </small>
+                <div class="form-row px-1 row" *ngFor="let v of values; let i=index;">
+                    <input [id]="i" type="text" class="form-control col-11" placeholder="Enter one value per line"
+                        [(ngModel)]="v.value" (change)="preview()" [ngModelOptions]="{standalone: true}">
+
+                    <div class="col-1 px-0 d-flex align-items-center">
+                        <a id="btn-remove-value" (click)="removeValue(i)"><i
+                                [class.disable-delete]="values?.length === 1"
+                                class="fa fa-times-circle text-secondary pull-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 24px;">
+            <button id="btn-add-value" type="button" class="btn btn-success pull-right mr-3" (click)="addValue()">Add
+                more</button>
+        </div>
+    </ng-container>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label>Action</label>
+            <div>
+                <div class="radio-box" [class.selected]="ruleInputValues5 === 'Keep'" (click)="setAction('Keep')">
+                    Keep matching rows
+                </div>
+                <div class="radio-box" [class.selected]="ruleInputValues5 === 'Delete'" (click)="setAction('Delete')">
+                    Delete matching rows
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3" (click)="saveRule()"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

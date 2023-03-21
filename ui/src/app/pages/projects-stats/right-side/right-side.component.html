@@ -1,0 +1,29 @@
+<div class="periods">
+    <div class="row">
+        <!-- <div class="col-xl-4" *ngFor="let p of perios; let i=index;" [class.active]="selectedIndex === i">
+            <a (click)="selectPeriod(i,p.value)" class="btn">{{p.label}}</a>
+        </div> -->
+        <div class="col-4"  *ngFor="let p of perios; let i=index;">
+            <button type="button" [class.active]="selectedIndex === i" class="btn" (click)="selectPeriod(i,p.value)">{{p.label}}</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xl-12 mt-3">
+        <div class="box h-120px">
+            <h1 class="hr">{{time}}</h1>
+            <img src="assets/img/project-stats/hr-save.gif" height="35">
+            <span class="style font-24"> Hours Saved </span>
+        </div>
+    </div>
+
+    <div class="col-xl-12 mt-2">
+        <div class="box h-220px">
+            <img src="assets/img/project-stats/dollars.svg" height="80">
+            <h1>{{money}}</h1>
+            <div class="style font-24">Dollars Saved</div>
+        </div>
+    </div>
+</div>

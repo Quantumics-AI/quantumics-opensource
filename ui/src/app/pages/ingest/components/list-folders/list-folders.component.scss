@@ -1,0 +1,39 @@
+.table-height {
+    height: calc(100vh - 230px);
+}
+
+.sort-icon {
+    float: right;
+    width: 14px;
+}
+
+.folder-name {
+    cursor: pointer;
+}
+
+.floder-count {
+    display: inline-flex; 
+    margin-top: 2px;
+}
+
+.page-content {
+    padding: 0;
+}
+
+.table td {
+    width: 60px;
+    max-width: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.disableUpload {
+    // cursor: not-allowed;
+    pointer-events: none;
+    padding: 11px;
+}
+
+.mr-l-10 {
+    margin-left: 10px;
+}

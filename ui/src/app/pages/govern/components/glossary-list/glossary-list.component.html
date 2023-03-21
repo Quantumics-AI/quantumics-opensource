@@ -1,0 +1,53 @@
+<app-loader [loading]="loading">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="custom-search pull-right">
+                <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search..">
+                <!-- <a (click)="onAddPopup()" class="btn btn-primary ml-1 create-gl">Create</a> -->
+                <button type="button" class="btn btn-design ml-1 create-gl" (click)="onAddPopup()">Create</button>
+            </div>
+        </div>
+    </div>
+    <div class="row gutters mt-3">
+        <div class="col-xl-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th>Term</th>
+                            <th>Data Owner</th>
+                            <th>Description</th>
+                            <th>Created Date</th>
+                            <th>Updated Date</th>
+                            <th width="100">Status</th>
+                            <th width="100">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="td-color"
+                            *ngFor="let data of glossary | filterBy: 'term, dataOwner, definition, creationDate, modifiedDate': searchTerm">
+                            <td class="text-left">{{data?.term}}</td>
+                            <td>{{data?.dataOwner}}</td>
+                            <td>{{data?.definition}}</td>
+                            <td>{{data?.creationDate}}</td>
+                            <td>{{data?.modifiedDate}}</td>
+                            <td [ngClass]="data?.published ? 'published-status' : 'draft-status'">
+                                {{data?.published ? 'Published' : 'Draft'}}</td>
+                            <td>
+                                <a id="lnkEdit" (click)="open(data)">
+                                    <em><img src="assets/img/edit.svg" width="18" placement="top" ngbTooltip="Edit"></em>
+                                </a>&nbsp;&nbsp;
+                                <a id="lnkDelete" (click)="delete(data?.id, data?.term)">
+                                    <em><img src="assets/img/delete.svg" width="18" placement="top" ngbTooltip="Delete"></em>
+                                </a>&nbsp;&nbsp;
+                                <a id="lnkSankey" [routerLink]="['../..', data.id, 'schart']" target="_blank">
+                                    <em><img src="assets/img/new-pro-img.png" width="18" placement="top" ngbTooltip="Chart"></em>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

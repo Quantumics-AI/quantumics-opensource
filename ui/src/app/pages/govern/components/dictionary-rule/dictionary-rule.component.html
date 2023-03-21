@@ -1,0 +1,227 @@
+<app-loader [loading]="loading">
+    <form [formGroup]="fg">
+        <div class="modal-header">
+            <h5 class="modal-title">Data Quality Rule</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label for="columnName">Column Name</label>
+                        <input type="text" class="form-control" id="txtColumnName" formControlName="columnName" disabled
+                            *ngIf="!onCreate">
+                        <select class="form-control" id="drpColumnName" formControlName="columnName" *ngIf="onCreate" [(ngModel)]="selectedColumnName">
+                            <option value="" [value]="undefined" disabled selected > --Select column name-- </option>
+                            <option *ngFor="let col of columns" [value]="col?.column_name">{{col?.column_name}}</option>
+                        </select>
+                        <div
+                            *ngIf="fg.get('columnName').invalid && (fg.get('columnName').dirty || fg.get('columnName').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('columnName').hasError('required')">
+                                Column required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label for="type">Data Type</label>
+                        <select class="form-control" id="dataType" formControlName="dataType" [(ngModel)]="selectedDataType">
+                            <option value="" [value]="undefined" disabled selected >--Select Data Type--</option>
+                            <option *ngFor="let type of dataTypes" [value]="type.value">{{type.text}}</option>
+                        </select>
+                        <div
+                            *ngIf="fg.get('dataType').invalid && (fg.get('dataType').dirty || fg.get('dataType').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('dataType').hasError('required')">
+                                DataType required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" placeholder="Description"
+                            formControlName="description">
+                        <div
+                            *ngIf="fg.get('description').invalid && (fg.get('description').dirty || fg.get('description').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('description').hasError('required')">
+                                Description required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" formControlName="regexType" name="regexType"
+                                id="radioPreDefined" value="PD" (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label" for="radioPreDefined">Pre Defined Regular Expression</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" formControlName="regexType" name="regexType"
+                                id="radioReguler" value="CS" (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label" for="radioReguler">Custom Regular Expression</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <ng-template #regularExpression>
+                    <p>
+                        <a target="_blank" class="link-primary"
+                            href="https://docs.quantumics.ai/v1/docs/regular-expressions">Click
+                            here:</a>
+                        To see sample Regular Expressions
+                    </p>
+                    <p>
+                        <a target="_blank" class="link-primary" href="https://regex101.com">Click here:</a>
+                        To generate Regular Expressions
+                    </p>
+                </ng-template>
+
+                <ng-container *ngIf="isPredefined else regular">
+                    <div class="col-xl-4">
+                        <label for="pdRegexCode">Regular Expression</label>
+                        <select class="form-control" formControlName="pdRegexCode" #pdRegexCode
+                            (change)="onSelectPDRegexCode(pdRegexCode.value)" [(ngModel)]="selectedRegularExpression">
+                            <option value="" [value]="undefined" disabled selected > --Select Regular Expression-- </option>
+                            <option *ngFor="let item of commonRegexPatterns" [value]="item.regexPatternId">
+                                {{item.regexName}}
+                            </option>
+                        </select>
+                        <div
+                            *ngIf="fg.get('pdRegexCode').invalid && (fg.get('pdRegexCode').dirty || fg.get('pdRegexCode').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('pdRegexCode').hasError('required')">
+                                Regular Expression required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="regularExpression">Regular Expression Value</label>
+                        <input type="text" formControlName="regularExpression" class="form-control"
+                            placeholder="Regular Expression">
+
+                        <div
+                            *ngIf="fg.get('regularExpression').invalid && (fg.get('regularExpression').dirty || fg.get('regularExpression').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('regularExpression').hasError('required')">
+                                Regular Expression Value required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="form-group">
+                            <label for="example">Example</label>
+                            <input type="text" id="example" class="form-control" placeholder={{example}}
+                                formControlName="example">
+                            <div
+                                *ngIf="fg.get('example').invalid && (fg.get('example').dirty || fg.get('example').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('example').hasError('required')">
+                                    Example required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #regular>
+                    <div class="col-xl-6">
+                        <label for="regularExpression">Regular Expression</label>
+                        <label class="pull-right cursor-pointer"><i placement="auto" [autoClose]="true" container="body"
+                                (click)="p.open()" popoverClass="regular-expression" [ngbPopover]="regularExpression"
+                                triggers="manual" #p="ngbPopover" class="fa fa-info-circle"></i></label>
+
+                        <input type="text" id="regularExpression" class="form-control" placeholder="^[0-9]*$"
+                            formControlName="regularExpression">
+
+                        <div
+                            *ngIf="fg.get('regularExpression').invalid && (fg.get('regularExpression').dirty || fg.get('regularExpression').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('regularExpression').hasError('required')">
+                                Regular Expression required.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="form-group">
+                            <label for="example">Example</label>
+                            <input type="text" id="example" class="form-control" placeholder="123"
+                                formControlName="example">
+                            <div
+                                *ngIf="fg.get('example').invalid && (fg.get('example').dirty || fg.get('example').touched)">
+
+                                <div class="text-danger" *ngIf="fg.get('example').hasError('required')">
+                                    Example required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label for="dataCustodian">Data Custodian</label>
+                        <tag-input id="dataCustodian" [onlyFromAutocomplete]="true" formControlName="dataCustodian"
+                            [placeholder]="'Data Custodian'" [secondaryPlaceholder]="'Enter Data Custodian'">
+                            <tag-input-dropdown [appendToBody]="false" [showDropdownIfEmpty]="true"
+                                [autocompleteItems]="subUsers">
+                            </tag-input-dropdown>
+                        </tag-input>
+                        <div
+                            *ngIf="fg.get('dataCustodian').invalid && (fg.get('dataCustodian').dirty || fg.get('dataCustodian').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('dataCustodian').hasError('required')">
+                                Data Custodian required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label for="addTags">Add Tags</label>
+                        <tag-input id="tags" formControlName="tags" [placeholder]="'Tags'"
+                            [secondaryPlaceholder]="'Enter Tags'">
+                        </tag-input>
+                        <div *ngIf="fg.get('tags').invalid && (fg.get('tags').dirty || fg.get('tags').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('tags').hasError('required')">
+                                Tags required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pull-right">
+                <div class="form-group">
+                    <div class="col-xl-12">
+                        <input type="button" id="btnSave" class="btn btn-design mr-1" value="Save"
+                            (click)="save(false)">
+                        <input type="button" id="btnPublish" class="btn btn-design" value="Publish"
+                            (click)="save(true)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-loader>

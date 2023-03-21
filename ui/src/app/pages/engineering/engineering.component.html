@@ -1,0 +1,33 @@
+<div class="main-container">
+    <!-- <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top">
+                <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Data Engineering</li>
+            </ol>
+        </nav>
+    </div> -->
+
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top">
+                <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Data Engineering</li>
+            </ol>
+        </nav>
+
+    </div>
+
+    <div class="page-content main-menu">
+        <ul>
+            <li><a [routerLink]="['engineer']" routerLinkActive="is-active">&nbsp;Engineer</a></li>
+            <li><a [routerLink]="['udf']" routerLinkActive="is-active"> &nbsp;UDF</a></li>
+        </ul>
+
+        <div class="mt-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

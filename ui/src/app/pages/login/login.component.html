@@ -1,0 +1,58 @@
+<div class="login_">
+    <div class="container">
+        <form [formGroup]="fg" (submit)=login()>
+            <div class="row">
+                <div class="col-xl-12">
+                    
+                    <div class="login-content-div">
+                        <p class="p-logo">
+                            <a (click)="viewPublicWebsite('https://www.quantumics.ai/');">
+                                <img src="assets/img/full-logo.svg" width="250">
+                            </a>
+                            
+                        </p>
+                        <div class="p-3 form-div">
+                            <h6 class="login-text">Login</h6>
+                            <div class="input-group mb-3">
+                                <input type="text" id="email" class="form-control l-input" placeholder="Email Address"
+                                    formControlName="email">
+                            </div>
+                            <div class="input-group mb-3">
+                                <!-- <div class="form-group"> -->
+                                    <input [type]="fieldTextType ? 'text' : 'password'" id="password" class="form-control l-input l-border" placeholder="Password"
+                                        formControlName="password" maxlength="30">
+                                <!-- </div> -->
+                                <div class="input-group-append">
+                                    <span class="input-group-text eye-icon" id="basic-addon2" (click)="toggleShow()">
+                                        <img src="assets/img/open-eye.svg" alt=""  [hidden]="showPassword">
+                                        <img src="assets/img/close-eye.svg" alt="" [hidden]="!showPassword">
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" [(ngModel)]="rememberMe"
+                                        [ngModelOptions]="{standalone: true}" class="form-check-input"
+                                        id="chkRememberPwd">
+                                    <label class="form-check-label text-size">Keep me logged in</label>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" id="btnLogin" class="btn btn-primary lgn-btn"
+                                    [disabled]="fg.invalid">Log In</button>
+                            </div>
+                            <div class="signup-link">
+                                <p class="text-center tnc">
+                                    <a style="color: rgba(0, 5, 158, 0.6);" href="https://www.quantumics.ai/terms-of-use" target="_blank">
+                                        Terms & Condition
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

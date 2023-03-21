@@ -1,0 +1,73 @@
+<app-loading [loading]="loading">
+    <div class="main-container">
+        <div class="page-header1">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-top pd-l-20">
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                    </li>
+                    <li class="breadcrumb-item"><a [routerLink]="[]" (click)="back()">Datasets</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{folderName}} </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="page-content p-0">
+            <div class="row m-0">
+                <div class="col-xl-2 pd-r-0 pd-l-0 box-s">
+                    <div class="sidenav source-bg">
+                        <div style="height: calc(100% - 100px);overflow-y: auto;">
+                            <ol id="accordion" class="accordion">
+                                <li *ngFor="let type of sourceTypes" class="source-types"
+                                    [ngStyle]="{'background': type.bgColor}">
+                                    <span (click)="getSourceTypeData(type)" class="ml-3 cursor-pointer">
+                                        {{type.name}}
+                                        <img *ngIf="!type.isExpanded" src="assets/img/white-down-icon.svg"
+                                            class="arrow-icon">
+                                        <img *ngIf="type.isExpanded" src="assets/img/white-up-icon.svg"
+                                            class="arrow-icon">
+                                    </span>
+                                    <ul *ngIf="type.id === 0 && type.isExpanded" class="source-bg">
+                                        <li *ngFor="let folder of type.data" (click)="getFiles(folder)"
+                                            class="separator">
+                                            <ng-container *ngIf="folder.folderName == folderName; else normalFolder">
+                                                <img class="img-folder" src="assets/img/active-folder.svg" width="22">
+                                            </ng-container>
+                                            <ng-template #normalFolder>
+                                                <img class="img-folder" src="assets/img/close-folder.svg" width="20">
+                                            </ng-template>
+                                            <label class="folder-name">{{folder.folderName}}</label>
+                                        </li>
+                                    </ul>
+                                    <ul *ngIf="type.id === 1 && type.isExpanded" class="source-bg">
+                                        <li *ngFor="let pipeline of type.data" class="separator">
+                                            <span class="ml-30px cursor-pointer"
+                                                (click)="getPipelineDetails(pipeline)">{{pipeline.pipelineName}}
+                                                <img *ngIf="!pipeline.isExpanded" src="assets/img/black-down-icon.svg"
+                                                    class="arrow-icon">
+                                                <img *ngIf="pipeline.isExpanded" src="assets/img/black-up-icon.svg"
+                                                    class="arrow-icon">
+                                            </span>
+                                            <ul *ngIf="pipeline.isExpanded">
+                                                <li *ngFor="let item of pipeline.schemes"
+                                                    (click)="getSelectedPipeLineFiles(item)">
+                                                    <div>
+                                                        <img src="assets/img/external-source-icon.svg" width="18"
+                                                            class="ml-3">
+                                                        <span
+                                                            class="cursor-pointer ml-1">{{item.qsFolders.folderDisplayName}}</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-10 pd-lr">
+                    <app-list-source-data [referesh]="referesh"></app-list-source-data>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loading>

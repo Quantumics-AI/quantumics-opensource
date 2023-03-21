@@ -1,0 +1,43 @@
+.border-radius-8px {
+    border-radius: 8px;
+}
+
+.input-box {
+    height: 36px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+    align-items: flex-start;
+    padding: 8px 12px;
+}
+
+.btn-create {
+    background: #00DFBA;
+    border-radius: 4px;
+    margin-right: 20px;
+    color: #FFFFFF;
+}
+
+.create-project-form {
+    padding: 20px;
+}
+
+.p2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.invalidInput {
+    background: rgba(225, 97, 73, 0.2);
+    /* Error */
+
+    border: 1px solid #D72C0D;
+}

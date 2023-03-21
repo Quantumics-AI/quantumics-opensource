@@ -1,0 +1,200 @@
+.is-active {
+    border-bottom: 2px solid #292f4c !important;
+}
+
+.main-menu {
+
+    margin-top: 25px;
+
+    ul li {
+        display: inline-block;
+        border-bottom: 2px solid #f1f1f1;
+    }
+
+    li a {
+        color: #000000;
+        display: inline-block;
+        text-decoration: none;
+        padding: 5px 20px;
+        color: #323338;
+        font-weight: 400;
+        font-size: 17px;
+    }
+
+    ul li a:hover {
+        color: #54e7b1;
+    }
+}
+
+.summary-p1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+    text-align: center;
+    color: #212244;
+}
+  
+.summary-p2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    text-align: center;
+    
+    color: #888C92;
+}
+
+.mr-tb {
+    margin-top: 40px;
+    margin-bottom: 48px;
+}
+
+.height-36 {
+    height: 36px;
+}
+
+.mr-b-20 {
+    margin-bottom: 20px;
+}
+
+.source-type-div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.source-type {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    text-align: center;
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.s-label {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    text-align: center;
+    
+    /* Dark Grey */
+    
+    color: #888C92;
+}
+
+.btn-col {
+    max-width: 270px;
+    padding: 0;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.align-item {
+    align-items: baseline;
+}
+
+.select-display {
+    display: inline-block;
+    width: 209px;
+}
+
+.mr-r-16 {
+    margin-right: 16px;
+}
+
+.select-l {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    display: flex;
+    align-items: center;
+    
+    /* highlight */
+    
+    color: #202123;
+}
+
+.pd-16 {
+    padding: 16px;
+}
+
+::ng-deep {
+    .ng-select.ng-select-single .ng-select-container {
+        border: 1px solid #E2E8F2;
+        border-radius: 4px;
+    }
+}
+
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}
+
+.activeText {
+    color: #00977C;
+}
+
+.select-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.btn:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+::ng-deep {
+    // add ouline style for ng-select option 
+    .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+        border: 1px solid #00977C;
+        box-shadow: 0px 1px 0px rgb(0 0 0 / 5%);
+    }
+
+    // add background color and hover color for selected option
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected, .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
+        background-color: #f0f8f4;
+    }
+
+    .ng-option:hover{
+        background-color: #F0F8F4 !important;
+    }
+}
+
+.cp {
+    cursor: pointer;
+}

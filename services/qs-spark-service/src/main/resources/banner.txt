@@ -1,0 +1,8 @@
+${AnsiBackground.WHITE} 
+
+  QUANTUMICS.AI
+
+Application Name: QuantumicsAPI
+Application Version: V1
+${AnsiColor.RED} :: Spring Boot${spring-boot.formatted-version} :: ${AnsiColor.RED}
+${AnsiColor.DEFAULT}

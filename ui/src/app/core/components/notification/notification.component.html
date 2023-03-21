@@ -1,0 +1,92 @@
+<div class="noti-panel">
+        <div class="col-12 pd-l-16" style="float:left; z-index:9999; position:relative;">
+            <h6 class="mt-3 wrk-up">Workspace Updates</h6>
+        </div>
+    
+        <div class="col-xl-12 pd-0">
+            <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeTab" style="list-style-type: none;">
+    
+                <li ngbNavItem="unreadNotification" class="pd-b-1" (click)="getUnReadNotification()">
+                    <a ngbNavLink class="tab-text" >Inbox</a>
+                    <ng-template ngbNavContent>
+                        <div class="noti-inner-bg">
+                            <div *ngIf="loading" class="spinner-center spinner-border text-primary">
+                            </div>
+    
+                            <ng-container *ngIf="unReadNotification?.length else noUnreadNotification">
+                                <div class="noti-height">
+                                    <div class="notif-bg col-12 pd-8" *ngFor="let item of unReadNotification">
+                                        <div class="pd-r-8">
+                                            <img *ngIf="item.eventTypeAction == 'SUCCEEDED'" src="assets/img/profile/check-circle.svg">
+                                            <img *ngIf="item.eventTypeAction == 'Delete'" src="assets/img/profile/delete-circle.svg">
+                                            <img *ngIf="item.eventTypeAction == 'Create'" src="assets/img/profile/import-circle.svg">
+                                            <img *ngIf="item.eventTypeAction == 'STARTING'" src="assets/img/profile/time-circle.svg">
+                                        </div>
+                                        <div class="noti-text">
+                                            <p class="noti-p mr-b-0" [innerHTML]="item?.notificationMsg">
+                                                <!-- <span [innerHTML]="item?.notificationMsg | highlight"></span> -->
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noUnreadNotification>
+                                <div *ngIf="!loading" class="noti-inner-bg text-center">
+                                    <div class="text-center mr-t-40">
+                                        <img src="assets/img/profile/unread.svg" class="img-fluid" alt="">
+                                    </div>
+                                    <h5 class="p2 mr-t-40 mr-b-5">No new updates</h5>
+                                    <p class="p1 pd-10">Actions like create, delete, publish, job status etc will appear here.</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </ng-template>
+                </li>
+    
+                <li ngbNavItem="allNotification" class="pd-b-1" (click)="getAllNotification()">
+                    <a ngbNavLink class="tab-text" >All</a>
+                    <ng-template ngbNavContent>
+                        <div class="noti-inner-bg">
+                            <div *ngIf="loading" class="spinner-center spinner-border text-primary">
+                            </div>
+                            <ng-container *ngIf="allNotificationGrp else noAllNotification">
+                                <div class="noti-height">
+                                    <ng-container *ngFor="let grp of allNotificationGrp | keyvalue; let first = first">
+                                        <div class="separator" *ngIf="!first">{{getNoticicationDate(grp.key)}}</div>
+                                        <div class="notif-bg hover-div col-12 pd-8" *ngFor="let item of grp.value">
+                                            <div class="pd-r-8">
+                                                <img *ngIf="item.eventTypeAction == 'SUCCEEDED'" src="assets/img/profile/check-circle.svg">
+                                                <img *ngIf="item.eventTypeAction == 'Delete'" src="assets/img/profile/delete-circle.svg" >
+                                                <img *ngIf="item.eventTypeAction == 'Create'" src="assets/img/profile/import-circle.svg" >
+                                                <img *ngIf="item.eventTypeAction == 'STARTING'" src="assets/img/profile/time-circle.svg" >
+                                            </div>
+                                            <div class="noti-text">
+                                                <p class="noti-p mr-b-0" [innerHTML]="item?.notificationMsg">
+                                                    <!-- <span [innerHTML]="item?.notificationMsg | highlight"></span> -->
+                                                </p>
+                                                <!-- <p><a class="noti-hide" (click)="hideAllNotification(item.notificationId)">Archive</a></p> -->
+                                            </div>
+                                            <div class="mr-l-24"><img (click)="hideAllNotification(item.notificationId)" src="assets/img/profile/cancel.svg" alt=""
+                                                ngbTooltip="Delete" placement="top" container="body" class="close-icon"></div>
+                                        </div>
+                                        
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                            <ng-template #noAllNotification>
+                                <div *ngIf="!loading" class="noti-inner-bg text-center">
+                                    <div class="text-center mr-t-40">
+                                        <img src="assets/img/profile/unread.svg" class="img-fluid" alt="">
+                                    </div>
+                                    <h5 class="p2 mr-t-40 mr-b-5">No new updates</h5>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </ng-template>
+                </li>
+    
+            </ul>
+        </div>
+        <div [ngbNavOutlet]="nav"></div>
+    <!-- </div> -->
+</div>

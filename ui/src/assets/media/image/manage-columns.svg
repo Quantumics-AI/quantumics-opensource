@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="339" height="331" viewBox="0 0 339 331">
+  <g id="Group_1400" data-name="Group 1400" transform="translate(12627 -5486)">
+    <rect id="Rectangle_2363" data-name="Rectangle 2363" width="112" height="228" transform="translate(-12535 5558)" fill="#87cbff"/>
+    <g id="Group_1398" data-name="Group 1398" transform="translate(13 295)">
+      <g id="Group_1397" data-name="Group 1397" transform="translate(1038 24)">
+        <g id="Rectangle_2360" data-name="Rectangle 2360" transform="translate(-13678 5167)" fill="none" stroke="#000" stroke-width="8">
+          <rect width="306" height="306" rx="19" stroke="none"/>
+          <rect x="4" y="4" width="298" height="298" rx="15" fill="none"/>
+        </g>
+        <g id="Rectangle_2361" data-name="Rectangle 2361" transform="translate(-13678 5167)" stroke="#000" stroke-width="8">
+          <rect width="306" height="72" stroke="none"/>
+          <rect x="4" y="4" width="298" height="64" fill="none"/>
+        </g>
+        <line id="Line_1553" data-name="Line 1553" x2="301" transform="translate(-13674.5 5279.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1554" data-name="Line 1554" x2="301" transform="translate(-13674.5 5351.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1555" data-name="Line 1555" x2="301" transform="translate(-13674.5 5412.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1556" data-name="Line 1556" y1="228" transform="translate(-13582.5 5239.5)" fill="none" stroke="#000" stroke-width="10"/>
+        <line id="Line_1557" data-name="Line 1557" y1="228" transform="translate(-13469.5 5239.5)" fill="none" stroke="#000" stroke-width="10"/>
+      </g>
+      <g id="Ellipse_543" data-name="Ellipse 543" transform="translate(-12459 5364)" fill="#fff" stroke="#000" stroke-width="10">
+        <circle cx="79" cy="79" r="79" stroke="none"/>
+        <circle cx="79" cy="79" r="74" fill="none"/>
+      </g>
+      <path id="check" d="M35.3,70.6a4.7,4.7,0,0,1-6.655,0L2.068,44.023a7.056,7.056,0,0,1,0-9.982L5.4,30.713a7.057,7.057,0,0,1,9.983,0L31.968,47.3,76.8,2.474a7.057,7.057,0,0,1,9.983,0L90.107,5.8a7.056,7.056,0,0,1,0,9.982Zm0,0" transform="translate(-12426.182 5407.02)" fill="#00da0f"/>
+    </g>
+  </g>
+</svg>

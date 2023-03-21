@@ -1,0 +1,152 @@
+<h6 class="h6-font-hading">Filter rows</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="filter-option">Option</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <ng-select id="filter-option" [(ngModel)]="ruleInputLogic1" formControlName="ruleInputLogic1"
+                placeholder="Select option" [dropdownPosition]="'bottom'">
+                <ng-option *ngFor="let op of options" [value]="op.value">{{op.text}}</ng-option>
+            </ng-select>
+            <span class="alert-danger"
+                *ngIf="fg.get('ruleInputLogic1').touched && fg.get('ruleInputLogic1').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <ng-container [ngSwitch]="ruleInputLogic1">
+        <ng-container *ngSwitchCase="filterTypes.TopRows">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="topRows">Number of rows to filter </label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <input type="text" class="form-control" id="topRows" placeholder="Insert number of rows"
+                        [(ngModel)]="ruleInputValues" formControlName="topRows" (change)="preview()" type="number"
+                        appPositiveNumberOnly min="1">
+                    <span class="alert-danger"
+                        *ngIf="fg.get('topRows').touched && fg.get('topRows').hasError('required')">This field is
+                        required</span>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="filterTypes.Range">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="startRow">Start row </label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <input type="text" class="form-control" id="startRow" required placeholder="Insert start index"
+                        [(ngModel)]="ruleInputValues" formControlName="startRow" (change)="preview()" type="number"
+                        appPositiveNumberOnly min="1">
+                    <span class="alert-danger"
+                        *ngIf="fg.get('startRow').touched && fg.get('startRow').hasError('required')">This field is
+                        required</span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="endRow">End row </label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <input type="text" class="form-control" id="endRow" required placeholder="Insert end index"
+                        [(ngModel)]="ruleInputValues1" formControlName="endRow" (change)="preview()" type="number"
+                        appPositiveNumberOnly min="1">
+                    <span class="alert-danger"
+                        *ngIf="fg.get('endRow').touched && fg.get('endRow').hasError('required')">This field is
+                        required
+                    </span>
+                    <span class="alert-danger"
+                        *ngIf="fg.get('endRow').touched && fg.get('endRow').hasError('rangeValidator')">
+                        This value should be greater than start row
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="filterTypes.RegularInterval">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="interval">Interval </label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <input type="text" class="form-control" id="interval" required placeholder="Interval"
+                        [(ngModel)]="ruleInputValues" formControlName="interval" (change)="preview()" type="number"
+                        appPositiveNumberOnly min="1">
+                    <span class="alert-danger"
+                        *ngIf="fg.get('interval').touched && fg.get('interval').hasError('required')">This field is
+                        required</span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="iStartRow">Start from </label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <input type="text" class="form-control" id="iStartRow" required placeholder="Insert end index"
+                        [(ngModel)]="ruleInputValues1" formControlName="iStartRow" (change)="preview()" type="number"
+                        appPositiveNumberOnly min="1">
+                    <span class="alert-danger"
+                        *ngIf="fg.get('iStartRow').touched && fg.get('iStartRow').hasError('required')">This field is
+                        required</span>
+                </div>
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="sort-by">Sort rows by</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <ng-select id="sort-by" [(ngModel)]="ruleInputValues4" formControlName="ruleInputValues4"
+                (change)="handleSortChange()">
+                <ng-option [value]="'default'">Default</ng-option>
+                <ng-option [value]="'columns'">Columns</ng-option>
+            </ng-select>
+        </div>
+    </div>
+
+    <ng-container *ngIf="ruleInputValues4 === 'columns'">
+        <div class="col-12">
+            <div class="form-group">
+                <label>Column</label>
+                <small class="form-text text-muted pull-right"> Required
+                </small>
+                <div class="row mb-2" *ngFor="let c of sortColumns; let i=index;">
+                    <ng-select class="col-11" [id]="i" [(ngModel)]="sortColumns[i]"
+                        [ngModelOptions]="{standalone: true}" [multiple]="false" (change)="preview()"
+                        placeholder="Select column" [dropdownPosition]="'bottom'" [closeOnSelect]="true" [clearable]="false"
+                        [items]="columns" bindLabel="column_name" bindValue="column_name">
+                        <ng-template ng-option-tmp let-item="item">
+                            <span [title]="item.column_name">{{item.column_name}}</span>
+                        </ng-template>
+                    </ng-select>
+                    <div class="col-1 px-0 d-flex align-items-center">
+                        <a (click)="removeColumn(i)"><i [class.disable-delete]="sortColumns?.length === 1"
+                                class="fa fa-times-circle text-secondary pull-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 24px;">
+            <button type="button" class="btn btn-success pull-right mr-3" (click)="addColumn()">Add more</button>
+        </div>
+    </ng-container>
+    <div class="col-12">
+        <div class="form-group">
+            <label>Action</label>
+            <div>
+                <div class="radio-box" [class.selected]="ruleInputValues5 === 'Keep'" (click)="setAction('Keep')">
+                    Keep matching rows
+                </div>
+                <div class="radio-box" [class.selected]="ruleInputValues5 === 'Delete'" (click)="setAction('Delete')">
+                    Delete matching rows
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

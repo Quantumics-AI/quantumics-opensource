@@ -1,0 +1,273 @@
+.step-divider {
+    height: 7px;
+    background: linear-gradient(270deg, #00dfba -3.4%, #1721c1 112.35%);
+    position: fixed;
+    margin-top: 40px;
+    z-index: 2;
+    border-radius: 4px;
+}
+
+.p-header {
+    background: #fafafa;
+}
+
+.navbar-light {
+    border-bottom: 1px solid #eee;
+}
+
+.ingest-header {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    color: #0a0a15;
+    display: inline-flex;
+    margin: 0;
+}
+//dbconnection css
+.main-div-pgsql {
+    margin-top: 5vh;
+}
+
+.pgsql-content {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #1e1f3e;
+}
+
+.generic-content {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 120.02%;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #000000;
+    max-width: 763px;
+    margin: auto;
+}
+
+.pipeline-input-div {
+    margin: 7vh auto;
+    max-width: 710px;
+}
+
+.pipeline-input-connection-div {
+    margin: 4vh auto;
+    max-width: 710px;
+}
+
+.pipeLable {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 30px;
+    /* identical to box height, or 188% */
+
+    // text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1e1f3e;
+}
+
+.pipeInput {
+    background: #fcfcfe;
+    border: 1px solid #cccccc;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 156.02%;
+    /* identical to box height, or 25px */
+
+    // text-align: center;
+    letter-spacing: 0.035em;
+
+    color: #999999;
+}
+
+.start-text {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 30px;
+    /* identical to box height, or 125% */
+
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1e1f3e;
+}
+
+.newConnection {
+    background: #ffffff;
+    /* BLUE/(200) */
+
+    border: 1px solid #b1b2be;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    // margin: 5vh auto;
+    display: inline-flex;
+    margin: 15px;
+}
+
+.new-c {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+    /* identical to box height, or 150% */
+
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* BLUE/(600) */
+
+    color: #1e1f3e;
+}
+
+.marginTop {
+    margin-top: 10px;
+}
+
+.checkDiv {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #00705d;
+}
+
+.btns {
+    float: right;
+}
+
+.connectionBtns {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #009c82;
+}
+
+//Progress
+.process-model {
+    list-style: none;
+    padding: 0;
+    position: fixed;
+    width: -webkit-fill-available;
+    // margin: 0px auto 20px auto;
+    border: none;
+    z-index: 1;
+    padding-top: 10px;
+    background: #ffffff;
+}
+
+.process-model li::after {
+    background: #b1b2be none repeat scroll 0 0;
+    bottom: 0;
+    content: "";
+    height: 2px;
+    margin: 0 auto;
+    position: absolute;
+    top: 33px;
+    width: 100%;
+    z-index: -1;
+}
+
+.process-model li.visited::after {
+    background: #00d3b0;
+    // background: linear-gradient(270deg, #00DFBA -3.4%, #1721C1 112.35%);
+    height: 4px;
+}
+
+// .process-model li:last-child::after {
+//     width: 0;
+// }
+
+.process-model li {
+    display: inline-block;
+    width: 20%;
+    // text-align: center;
+    position: relative;
+}
+
+.process-model li a {
+    padding: 0;
+    border: none;
+    color: #606060;
+}
+
+.process-model li i {
+    display: block;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    margin: 12px auto 0px auto;
+    background: #f5f6f7;
+    border: 2px solid #e5e5e5;
+    line-height: 38px;
+    font-size: 18px;
+    border-radius: 50%;
+}
+
+.process-model li.active i,
+.process-model li.visited i {
+    background: #00dfba;
+    border-color: #00d3b0;
+    color: #333;
+}
+
+.back-func {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    // text-align: center;
+    letter-spacing: -0.02em;
+    color: #0a0a15;
+    // display: inline-flex;
+    padding-left: 20px;
+}
+
+.step-text {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #858599;
+}
+
+.newConnection:hover {
+    box-shadow: 1px 8px 20px grey;
+    -webkit-transition: box-shadow 0.6s ease-in;
+}

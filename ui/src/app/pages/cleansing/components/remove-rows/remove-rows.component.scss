@@ -1,0 +1,19 @@
+.radio-box {
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #e5ecf3;
+
+    &.selected {
+        background-color: #eaf6ff;
+    }
+
+    &:hover {
+        background-color: #f4f8fd;
+    }
+}
+
+.disable-delete {
+    opacity: 0.2;
+    cursor: default;
+}

@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h5 class="modal-title">Modules</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <div class="row">
+    <div class="col-xl-3" *ngFor="let module of modules">
+      <div class="font-weight-500">{{module}}</div>
+      <div *ngFor="let item of data[module]">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" disabled checked>
+          <label class="custom-control-label">{{item}}</label>
+        </div>
+      </div>
+      <!-- <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" disabled>
+        <label class="custom-control-label">Postgress SQL</label>
+      </div> -->
+    </div>
+  </div>
+</div>

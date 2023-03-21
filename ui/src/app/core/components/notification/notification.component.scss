@@ -1,0 +1,268 @@
+::ng-deep {
+    .menu-width {
+        max-width: 500px !important;
+        width: 150px !important;
+    }
+
+    .noti-success-text {
+        color: #52BD95 !important;
+    }
+}
+
+.nav-tabs {
+    display: inline-flex !important;
+    width: 100% !important;
+    padding: 0px;
+    border-bottom: 1px solid #ddd;
+}
+.notification-main-bg {
+    ul {
+        list-style-type: disc;
+        margin-left: 8px;
+        font-size: 15px;
+    }
+
+    .noti-inner-bg {
+        width: 475px;
+        height: 300px;
+        float: left;
+        background: #fff;
+        overflow: auto;
+    }
+
+    .notif-bg {
+        width: 97%;
+        float: left;
+        background: #fff;
+        margin: 4px 10px 0px 10px;
+
+        &:hover {
+            background: #fbfbfb;
+            box-shadow: 0 0 1px #e5e5e5;
+            border-radius: 5px;
+        }
+    }
+    .noti-p {
+        font-size: 14px;
+        // width: 355px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+        display: inline-block;
+    }
+
+    .read-more {
+        position: absolute;
+        top: 0px;
+    }
+
+    .more-font {
+        font-size: 13px;
+        padding: 5px 10px;
+    }
+
+    .noti-hide {
+        padding: 3px 5px 3px 5px;
+        background: #f6f6f6;
+        font-size: 10px;
+        float: right;
+        border-radius: 3px;
+        margin: 3px -10px 3px 0px;
+    }
+}
+
+.nav-tabs {
+    overflow: hidden;
+}
+.nav-tabs > li > a {
+    border: none;
+    color: #666;
+    padding: 10px 40px;
+    padding-bottom: 16px;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    border-bottom: 1px solid #00977C;
+}
+
+.nav-link:hover {
+    border-radius: 0px;
+}
+
+.spinner-center {
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 20%;
+    bottom: 0;
+    position: absolute;
+}
+
+.wrk-up {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    /* identical to box height, or 114% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.tab-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    /* identical to box height, or 114% */
+    
+    
+    /* Dark Grey */
+    
+    color: #888C92;
+}
+
+.mr-t-40 {
+    margin-top: 40px;
+}
+
+.noti-panel {
+    background: #fff;
+    box-shadow: 0 0 10px #ccc;
+    position: fixed;
+    right: 138px;
+    width: 320px;
+    z-index: 1;
+    border-radius: 4px;
+    height: 510px;
+}
+
+.pd-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.mr-b-5 {
+    margin-bottom: 5px;
+}
+
+.noti-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* or 133% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+    padding-bottom: 20px;
+    width: 203px;
+}
+
+.noti-height {
+    height: 393px;
+    overflow: auto;
+}
+
+.notif-bg {
+    display: inline-flex;
+}
+
+.pd-r-8 {
+    padding-right: 8px;
+}
+
+.pd-8 {
+    padding: 8px;
+}
+
+.pd-t-10 {
+    padding-top: 10px;
+}
+
+.pd-l-16 {
+    padding-left: 16px;
+}
+
+.pd-b-1 {
+    padding-bottom: 1px;
+}
+
+.pd-b-16 {
+    padding-bottom: 16px;
+}
+
+.noti-hide {
+    padding: 3px 5px 3px 5px;
+    background: #f6f6f6;
+    font-size: 10px;
+    float: right;
+    border-radius: 3px;
+    margin: 3px -10px 3px 0px;
+}
+
+///////////////
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: #888C92;
+    padding-left: 11px;
+    padding-right: 11px;
+    padding-bottom: 10px;
+  }
+  
+  .separator::before,
+  .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #888C92;
+  }
+  
+  .separator:not(:empty)::before {
+    margin-right: .25em;
+  }
+  
+  .separator:not(:empty)::after {
+    margin-left: .25em;
+  }
+
+  .noti-p {
+    overflow-wrap: anywhere;
+  }
+
+  .mr-b-0 {
+    margin-bottom: 0;
+  }
+
+  .mr-l-24 {
+    margin-left: 24px;
+  }
+
+  .close-icon {
+    visibility: hidden;
+  }
+
+  .hover-div:hover .close-icon {
+    visibility: visible;
+  }

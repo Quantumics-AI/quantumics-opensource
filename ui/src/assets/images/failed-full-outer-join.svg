@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="202" height="250" viewBox="0 0 202 250">
+  <g id="Group_1884" data-name="Group 1884" transform="translate(18039 -2882)">
+    <text id="Error" transform="translate(-17916 2908)" fill="red" font-size="25" font-family="Roboto-Medium, Roboto" font-weight="500"><tspan x="0" y="0">Error</tspan></text>
+    <g id="Rectangle_2177" data-name="Rectangle 2177" transform="translate(-18039 2916)" fill="#f5f5f5" stroke="#707070" stroke-width="1">
+      <rect width="202" height="216" rx="25" stroke="none"/>
+      <rect x="0.5" y="0.5" width="201" height="215" rx="24.5" fill="none"/>
+    </g>
+    <text id="Full_Outer_Join" data-name="Full Outer Join" transform="translate(-17938 3087)" fill="#f05d5d" font-size="27" font-family="Roboto-Bold, Roboto" font-weight="700"><tspan x="-88.66" y="0">Full Outer Join</tspan></text>
+    <g id="Group_1788" data-name="Group 1788" transform="translate(-1424 481)">
+      <g id="Group_1257" data-name="Group 1257" transform="translate(-17614.967 2128.5)">
+        <g id="Ellipse_375" data-name="Ellipse 375" transform="translate(1086.966 344.5)" fill="#f89b9b" stroke="#707070" stroke-width="2">
+          <circle cx="40.5" cy="40.5" r="40.5" stroke="none"/>
+          <circle cx="40.5" cy="40.5" r="39.5" fill="none"/>
+        </g>
+        <g id="Ellipse_376" data-name="Ellipse 376" transform="translate(1034.966 344.5)" fill="#f89b9b" stroke="#707070" stroke-width="2">
+          <circle cx="40.5" cy="40.5" r="40.5" stroke="none"/>
+          <circle cx="40.5" cy="40.5" r="39.5" fill="none"/>
+        </g>
+      </g>
+      <g id="Group_1787" data-name="Group 1787" transform="translate(-17614.967 2128.5)">
+        <g id="Ellipse_375-2" data-name="Ellipse 375" transform="translate(1086.966 344.5)" fill="none" stroke="#707070" stroke-width="2">
+          <circle cx="40.5" cy="40.5" r="40.5" stroke="none"/>
+          <circle cx="40.5" cy="40.5" r="39.5" fill="none"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

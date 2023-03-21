@@ -1,0 +1,66 @@
+<div class="row gutters mt-3">
+    <div class="col-xl-12">
+        <div class="table-responsive">
+            <table class="table m-0 table-fixed">
+                <thead class="thead-light">
+                    <tr class="fixed-th">
+                        <th>Project Name</th>
+                        <th>Last Modified</th>
+                        <th>Created</th>
+                        <th>Members</th>
+                        <th>Action</th>
+                        <th>Subscription</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="td-color" *ngFor="let p of projects" style="height: 45px;">
+                        <td [class.disabled]="isDisabled(p)">
+                            <img class="userlogo" [src]="p?.projectLogo ? p?.projectLogo : '/assets/img/project/upload-icon.svg'" width="32">&nbsp;
+                            <a (click)="selectedProject.emit(p);"><strong>{{p.projectDisplayName}}</strong></a>
+                        </td>
+                        <!-- <td>2 Days ago</td> -->
+                        <td></td>
+                        <td>{{p?.createdDate | date : 'dd-MM-yy, hh:mm a'}}</td>
+                        <td>{{p?.totalMembers?.length}}</td>
+                        <td>
+                            <!-- *ngIf="isAdmin && !isDisabled(p)"  -->
+                            <ng-container *ngIf="isAdmin && !p?.isDeleted">
+                                <a (click)="redirectToSetting.emit(p);" class="mr-1">
+                                    <img src="/assets/img/project/s-icon.svg" placement="bottom" ngbTooltip="Setting" width="15px">
+                                </a>&nbsp;
+                                <a (click)="deleteProject.emit(p?.projectId)">
+                                    <img src="/assets/img/project/d-icon.svg" placement="bottom" ngbTooltip="Delete" width="15px">
+                                </a>
+                            </ng-container>
+                        </td>
+                        <td class="text-capitalize">
+                            <!-- <strong [class.text-success]="p?.subscriptionStatus === 'active'">{{p?.subscriptionStatus}}</strong>  -->
+                            
+                            <strong *ngIf="!p?.isDeleted && p?.validDays > 0" class="active" >{{p?.subscriptionStatus}}</strong>
+                            <strong *ngIf="p?.validDays <= 0" class="expired" > Expired</strong>
+                            <strong *ngIf="p?.isDeleted" class="expired" > Deleted</strong>
+                        </td>
+                        <td>
+                            <div *ngIf=" isAdmin && !userType && !p?.isDeleted && p?.validDays > 0">
+                                <button class="btn btn-upgrade position" (click)="redirectToPlans.emit(p?.projectId)">Upgrade</button>
+                            </div>
+                            <div *ngIf=" isAdmin && userType && !p?.isDeleted && p?.validDays > 0">
+                                <button class="btn btn-upgrade position" placement="bottom" ngbTooltip="Click here to upgrade subscription from aws market place" (click)="redirectToAwsPlans.emit('https://www.google.com/')">Upgrade</button>
+                            </div>
+                            <div *ngIf="p?.validDays <= 0 && !userType">
+                                <button class="btn btn-subscribe position" (click)="redirectToPlans.emit(p?.projectId)">Subscribe</button>
+                            </div>
+                            <div *ngIf="p?.validDays <= 0 && userType">
+                                <button class="btn btn-subscribe position" ngbTooltip="Click here to upgrade subscription from aws market place" (click)="redirectToAwsPlans.emit('https://www.google.com/')">Subscribe</button>
+                            </div>
+                            <div *ngIf="p?.isDeleted">
+                                <button class="btn btn-restore position" (click)="restoreProject.emit(p?.projectId)">Restore</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

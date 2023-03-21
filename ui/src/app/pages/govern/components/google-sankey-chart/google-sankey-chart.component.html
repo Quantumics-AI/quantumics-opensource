@@ -1,0 +1,21 @@
+<div class="row page-header mb-4 mr-0">
+   <div class="col">
+       <nav aria-label="breadcrumb">
+           <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a (click)="closeCurrentWindow()">{{projectName}}</a></li>
+                <li class="breadcrumb-item active">Business Term: {{termName}}</li>
+           </ol>
+       </nav>
+   </div>
+</div>
+<google-chart *ngIf="data" #chart
+   [title]="title"
+   [type]="type"
+   [data]="data"
+   
+   [options]="options"
+   [width]="width"
+   [height]="height">
+</google-chart>
+
+<!-- <app-sankey-chart></app-sankey-chart> -->

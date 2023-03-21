@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19.133" height="19.133" viewBox="0 0 19.133 19.133">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="19.133" height="19.133" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Repeat_Grid_11" data-name="Repeat Grid 11" clip-path="url(#clip-path)">
+    <g id="Group_2509" data-name="Group 2509" transform="translate(22118 -17600)">
+      <g id="Group_2470" data-name="Group 2470" transform="translate(-22118 17600)">
+        <g id="Group_2467" data-name="Group 2467" transform="translate(0)">
+          <g id="check">
+            <path id="Path_11441" data-name="Path 11441" d="M9.566,0a9.566,9.566,0,1,0,9.566,9.566A9.577,9.577,0,0,0,9.566,0Zm0,0" fill="#df0004"/>
+          </g>
+        </g>
+      </g>
+      <g id="trash" transform="translate(-22161 17604)">
+        <path id="Path_11778" data-name="Path 11778" d="M55.485,1.274H53.733V.956A.956.956,0,0,0,52.778,0H51.5a.956.956,0,0,0-.956.956v.319H48.8a.8.8,0,0,0-.8.8v.637a.318.318,0,0,0,.319.319h7.644a.318.318,0,0,0,.319-.319V2.07A.8.8,0,0,0,55.485,1.274Zm-4.3-.319A.319.319,0,0,1,51.5.637h1.274A.319.319,0,0,1,53.1.956v.319H51.185Z" fill="#fff"/>
+        <path id="Path_11779" data-name="Path 11779" d="M73.464,184a.1.1,0,0,0-.1.1l.263,5.515a.954.954,0,0,0,.954.91h4.837a.954.954,0,0,0,.954-.91l.263-5.515a.1.1,0,0,0-.1-.1Zm4.81.8a.319.319,0,1,1,.637,0v4.141a.319.319,0,0,1-.637,0Zm-1.593,0a.319.319,0,1,1,.637,0v4.141a.319.319,0,0,1-.637,0Zm-1.593,0a.319.319,0,1,1,.637,0v4.141a.319.319,0,1,1-.637,0Z" transform="translate(-24.859 -180.337)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

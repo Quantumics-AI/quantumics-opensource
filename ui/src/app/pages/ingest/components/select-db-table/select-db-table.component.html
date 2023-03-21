@@ -1,0 +1,130 @@
+<app-loader [loading]="loading">
+    <div class="main-table-div">
+        <p class="pgsql-content">
+            <img class="img-fluid" alt="Responsive image" alt="Responsive image"
+                src="assets/img/db-connectors/pgsql-img.svg" alt="">
+            PgSQL
+        </p>
+        <div class="row row-view">
+            <div class="col-md-4">
+                <div class="card card-style">
+                    <div class="row table-details">
+                        <div class="col-3 mt-2" style="padding: 0;">Database</div>
+                        <div class="col-9">
+                            <input type="text" class="form-control" [(ngModel)]="searchByQuery"
+                                placeholder="Search By Schema" #searchBySchema>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="schemas; else noData">
+                        <ul class="database-container">
+                            <li *ngFor="let s of schemas | filterDatabase:searchByQuery" class="schema-container">
+                                <span class="cursor-pointer" (click)="selectionSchema(s.name)">
+                                    <img src="assets/img/rightArrow.svg" *ngIf="!s.isClick">
+                                    <img src="assets/img/downArrow.svg" *ngIf="s.isClick">
+                                    &nbsp;{{s.name}}
+                                </span>
+                                <ul class="ml-30px" *ngIf="s.isClick">
+                                    <li *ngFor="let t of tables">
+                                        <div class="form-check">
+                                            <input type="checkbox" [(ngModel)]="t.isClick" class="form-check-input"
+                                                [value]="t.name" (change)="selectionTable($event, s.name, t.name)"
+                                                [id]="t.name">
+                                            <label class="form-check-label" [for]="t.name">
+                                                <img src="assets/img/rightArrow.svg" *ngIf="!t.isClick">
+                                                <img src="assets/img/downArrow.svg" *ngIf="t.isClick">
+                                                &nbsp;<strong class=" cursor-pointer">{{t.name}}</strong>
+                                            </label>
+                                        </div>
+                                        <ul class="ml-30px" *ngIf="t.isClick">
+                                            <li *ngFor="let m of t.metaData">{{m.column_name}}</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-template #noData>
+                        <h5 class="text-danger p-3">No data available</h5>
+                    </ng-template>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card card-style">
+                    <div class="card-boy table-view-body">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" [(ngModel)]="queryType" type="radio" name="sqlQuery"
+                                id="defaultQuery" value="default" (change)="changeQrType($event)">
+                            <label class="form-check-label" for="defaultQuery">Default</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" [(ngModel)]="queryType" type="radio" name="sqlQuery"
+                                id="customQuery" value="custom" (change)="changeQrType($event)">
+                            <label class="form-check-label" for="customQuery">Custom Query</label>
+                        </div>
+                        <div class="query-div" [ngClass]="isPreviewClicked ? 'width-23vh' : 'width-55vh' ">
+                            <form [formGroup]="fg">
+                                <div class="form-group">
+                                    <textarea class="form-control queryInput pre-wrap" formControlName="sqlQueryName"
+                                        id="udfdefination" placeholder="Select * From Table" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <br />
+                        <div class="preview-table-div center" *ngIf="isPreviewClicked">
+                            <ng-container>
+                                <div class="watermark-text" *ngIf="!isPreviewClicked else tbl">
+                                    Preview Table
+                                </div>
+                            </ng-container>
+                            <ng-template #tbl>
+                                <ng-container *ngIf="previewColumn?.length; else emptyData">
+                                    <div class="table-view">
+                                        <table class="table table2 m-0 table-fixed table-bordered tableD">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th *ngFor="let column of previewColumn">{{column}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let row of previewRow">
+                                                    <td *ngFor="let column of previewColumn">
+                                                        {{row[column]}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-container>
+                                <ng-template #emptyData>
+                                    <h5 class="text-danger" *ngIf="!loading">No table data available</h5>
+                                </ng-template>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-view">
+            <div class="col-xl-12 mt-1">
+                <div class="row justify-content-end mr-r-0">
+                    <div *ngIf="selectedTables && selectedTables.length > 1">
+                        <select class="form-control form-control-sm" [(ngModel)]="userSelectedTable">
+                            <option [value]="item.tableName" *ngFor="let item of selectedTables">{{item.tableName}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mr-l-20">
+                        <p class="float-right">
+                            <button type="button" class="btn btn-outline-success mr-2" (click)="previewData()"
+                                [ngClass]="{'validBtn': fg.valid}" [disabled]="fg.invalid">Preview</button>
+                            <button type="button" class="btn btn-primary" (click)="downloadData()"
+                            [ngClass]="{'validBtn': fg.valid}" [disabled]="fg.invalid">Continue</button>
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

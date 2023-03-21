@@ -1,0 +1,83 @@
+.home-box {
+  width: 32%;
+  border-radius: 10px;
+  margin: 0px 20px 0px 0px;
+  height: 245px;
+}
+
+.home-box:hover {
+  box-shadow: 0 0 10px #999;
+}
+
+.workspace-box {
+  background-color: #202123;
+  padding: 15px;
+  color: #FFFFFF;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  margin-top: 2%;
+  width: 80%;
+  height: 75px;
+}
+
+.btn-plan {
+  border-radius: 4px;
+  margin-right: 20px;
+  color: #FFFFFF;
+  background: #00977C;
+  display: flex;
+  flex-direction: column;
+  margin-top: 9px;
+}
+
+.connect-to-source {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  margin-top: 24px;
+  padding: 1%;
+  width: 80%;
+  height: 424px;
+}
+
+.btn-source {
+  background: #00DFBA;
+  border-radius: 4px;
+  margin-right: 20px;
+  color: #FFFFFF;
+}
+
+.summary-p1 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+  text-align: center;
+  color: #212244;
+}
+
+.summary-p2 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  
+  text-align: center;
+  
+  color: #888C92;
+}
+
+.workspace-box-p1 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  /* or 143% */
+  
+  
+  color: #FFFFFF;
+}

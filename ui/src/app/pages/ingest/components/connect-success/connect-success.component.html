@@ -1,0 +1,78 @@
+<app-loader [loading]="loading">
+    <form [formGroup]="fg" (ngSubmit)="download()">
+        <div class="modal-header">
+            <h5 class="modal-title">Database</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="card-body" style="height: calc(100vh - 250px);overflow-y: auto;">
+                <label>Choose Folder</label>
+                <select class="form-control" id="folderId" formControlName="folderId" (change)="onFolderChange()">
+                    <option *ngFor="let folder of folders" [value]="folder.folderId">
+                        {{folder.folderName}}
+                    </option>
+                </select>
+
+                <div class="error" *ngIf="fg.get('folderId').hasError('required') && fg.get('folderId').touched">
+                    Folder is required
+                </div>
+
+                <h2 class="text-center">Tables</h2>
+                <div *ngFor="let data of tables; let i=index">
+                    <label class="form-group form-check">
+                        <input type="radio" class="form-check-input" name="radioFiles" [value]="data.table_name"
+                            (change)="onCheckboxChange($event)">
+                        {{data.table_name}}
+                    </label>
+                </div>
+            </div>
+
+            <div *ngIf="error" style="margin-top: 8px;">
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+                <div class="row">
+                    <div class="col-xl-6" align="center" *ngIf="originalFileColumns.length">
+                        <table>
+                            <tr class="first-child">
+                                <th class="font-weight-400">Original Column Headers</th>
+                            </tr>
+                            <tr *ngFor="let column of originalFileColumns;">
+                                <td>{{column}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xl-6 text-center" *ngIf="currentFileColumns?.length">
+                        <table>
+                            <tr class="first-child">
+                                <th class="font-weight-400">Current File Column Headers</th>
+                            </tr>
+                            <tr *ngFor="let column of currentFileColumns;">
+                                <td>{{column}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xl-6 text-center" *ngIf="duplicateFileColumns?.length">
+                        <table>
+                            <tr class="first-child">
+                                <th class="font-weight-400">Column Headers</th>
+                            </tr>
+                            <tr *ngFor="let column of duplicateFileColumns;">
+                                <td>{{column}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" value="Submit" class="col-lg-5 col-md-12 btn btn-primary" style="cursor: pointer"
+                [disabled]="fg.invalid || fg.get('checkArray').hasError('required')">Download</button>
+
+        </div>
+    </form>
+</app-loader>

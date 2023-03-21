@@ -1,0 +1,104 @@
+<app-loader [loading]="loading">
+    <form [formGroup]="fg">
+        <div class="modal-header">
+            <h5 class="modal-title">Update UDF</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control addheight" id="udfname" placeholder="UDF Name" formControlName="udfname">
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <select class="form-control addheight" id="scriptLanguage" formControlName="scriptLanguage" [(ngModel)]="selectedLanguage">
+                            <option value="" [value]="undefined" disabled selected >--Select Language--</option>
+                            <option value="Pyspark">Pyspark</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" placeholder="Description"
+                            formControlName="description">
+                        <div
+                            *ngIf="fg.get('description').invalid && (fg.get('description').dirty || fg.get('description').touched)">
+
+                            <div class="text-danger" *ngIf="fg.get('description').hasError('required')">
+                                Description required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <select class="form-control addheight" id="dataValue" formControlName="dataValue" [(ngModel)]="selectedDataValue">
+                        <option value="" [value]="undefined" disabled selected >--Select Value--</option>
+                        <option value="Argument">Argument</option>
+                        <option value="Variable">Variable</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control addheight" id="options" formControlName="options" [(ngModel)]="selectedOptions">
+                        <option value="" [value]="undefined" disabled selected >--Select Options--</option>
+                        <option value="Mandatory">Mandatory</option>
+                        <option value="Optional">Optional</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <select class="form-control addheight" id="dataType" formControlName="dataType" [(ngModel)]="selectedDataType">
+                        <option value="" [value]="undefined" disabled selected >--Select Data Type--</option>
+                        <option value="Data frame">Data frame</option>
+                        <option value="String">String</option>
+                        <option value="Integer">Integer</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12" >
+                    <div class="form-group">
+                        <textarea class="form-control" id="udfdefination" formControlName="udfdefination" placeholder="Input Logic"  rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <input type="text" id="return" class="form-control addheight" placeholder="Return Data Type">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <input type="text" id="udfsyntax" formControlName="udfsyntax" class="form-control addheight" placeholder="UDF Syntax">
+                    </div>
+                </div>
+            </div>
+
+            
+            
+            <div class="row pull-right">
+                <div class="form-group">
+                    <div class="col-xl-12">
+                        <button type="submit" class="btn btn-primary btnsize" [disabled]="fg.invalid" (click)="updateUdf()">Update</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-loader>

@@ -1,0 +1,101 @@
+.box {
+    // width: 17.1%;
+    width: 21.5%;
+    height: 66px;
+    margin: 10px 15px;
+    border-radius: 8px;
+    background: #ffffff;
+    transition: all 0.8s ease-in-out;
+
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+
+    .left {
+        background: linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+        border-radius: 8px 0px 0px 8px;
+        padding: 15.5px 5px;
+        width: 55px;
+        img {
+            margin-left: 5px;
+            width: 35px;
+        }
+        background-size: 100% 350%;
+    }
+
+    .right {
+        margin-top: 7px;
+        margin-right: -13px;
+    }
+    
+
+    // background-position: 0 -50px;
+}
+
+.active {
+    // transition: all 0.3s ease-in-out;
+    background: linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+    color: #fff; 
+
+    // background-image: -moz-linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+    // background-image: -webkit-gradient(linear, 100% 100%, 100% 100%, from(#423962), to(#8e91b9));
+    // background-image: -webkit-linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+    // background-image: -o-linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+    // background-image: linear-gradient(180deg, #423962 0%, #8e91b9 100%);
+    // background-repeat: repeat-x;
+    // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff50abdf', endColorstr='#ff1f78aa', GradientType=0);
+    // background-repeat: repeat-y;
+    // background-size: 100% 90px;
+    
+    // -webkit-transition: all 3s linear;
+    //     -moz-transition: all 3s linear;
+    //     -o-transition: all 3s linear;
+    //         transition: all 3s linear;
+
+    // background-position: 0 0;
+    background-size: 100% 350%;
+    animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% -50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% -50%;
+	}
+}
+
+.ps-icon::before{
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+.ps-icon::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.ps-icon:hover{
+    animation: ro 2s linear infinite;
+}
+
+@keyframes ro {
+    0%{
+      transform: rotate(0);
+    }
+    100%{
+      transform: rotate(360deg);
+    }
+}

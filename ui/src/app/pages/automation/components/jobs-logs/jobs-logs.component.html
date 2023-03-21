@@ -1,0 +1,12 @@
+<div class="main-container">
+    <div class="page-content">
+        <ng-container *ngIf="batchJobLog?.length else noLogs">
+            <div *ngFor="let log of batchJobLog">
+                <p> {{log}}</p>
+            </div>
+        </ng-container>
+        <ng-template #noLogs>
+            <h6>No job log</h6>
+        </ng-template>
+    </div>
+</div>

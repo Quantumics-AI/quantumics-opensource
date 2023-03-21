@@ -1,0 +1,37 @@
+<app-loader [loading]="loading">
+    <div class="modal-header border-bottom-0">
+        <button *ngIf="isClosed" type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('cancel')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="text-center">
+            <img src="assets/img/project/create-workspace.svg" class="img-fluid">
+            <h4>Create workspace</h4>
+        </div>
+
+        <form [formGroup]="fg" (ngSubmit)="save()" class="create-project-form">
+            <div class="form-group">
+                <label for="workspace">Workspace name</label>
+                <input type="text" class="form-control input-box" [ngClass]="{'invalidInput' : fg.get('workSpaceName').invalid && fg.get('workSpaceName').dirty}" formControlName="workSpaceName"
+                    placeholder="Enter workspace name" (ngModelChange)="modelChangeWorkspaceName($event)">
+                <small class="form-text text-muted">Workspace name must be between 3 and 20 characters long.</small>
+
+                <div
+                    *ngIf="fg.get('workSpaceName').invalid && fg.get('workSpaceName').dirty || fg.get('workSpaceName').touched">
+                    <div class="text-error" *ngIf="fg.get('workSpaceName').hasError('required')">
+                       <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Workspace name is required.
+                    </div>
+                </div>
+                <div class="text-error" *ngIf="invalidPattern">
+                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Only alphanumeric characters, underscore and space allowed.
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" [disabled]="fg.invalid" class="btn btn-design p2">
+                    Create Workspace
+                </button>
+            </div>
+        </form>
+    </div>
+</app-loader>

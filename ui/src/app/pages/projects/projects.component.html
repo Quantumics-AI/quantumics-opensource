@@ -1,0 +1,107 @@
+<!-- <div class="main-container">
+    <div class="row page-header mb-4 mr-0">
+        <div class="col-xl-6">
+            Projects
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xl-9 pr-0">
+                <div class="welcome-message">
+                    <div class="row">
+                        <div class="col-xl-9">
+                            <h1 class="mb-3">Welcome, {{userFirstName}}!</h1>
+
+                            <p class="welcome-p">
+                                We are excited to have you on board. <br>
+                                Create project, upload your data and let
+                                Quantumics do the job!
+                            </p>
+                        </div>
+                        <div class="col-xl-3 text-right">
+                            <img src="/assets/img/project/welcome-icon.svg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="create-project-box">
+                    <img src="/assets/img/project/project-icon.svg" class="mt-3"
+                        width="80">
+                    <div class="create-project-text">
+                        <h6 class="create-new">Create a new project!</h6>
+                    </div>
+                    <button class="btn btn-create" *ngIf="isAdmin()"
+                        id="btnCreateProject"
+                        (click)="createProject(p)" placement="auto"
+                        [autoClose]="true" [ngbPopover]="trialNotification"
+                        triggers="manual" #p="ngbPopover">
+                        New Project
+                    </button>
+                    <ng-template #trialNotification>
+                        {{notificationContent}}
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="projects?.length === 0 else projectsList">
+            <div class="pnl-interactive-demo">
+                <button class="btn btn-interactive" (click)="viewInteractiveDemo('https://www.quantumics.ai/interactive-demo');">
+                    <span class="blink-interactive">Start interactive demo</span>
+                </button>
+                <img src="/assets/img/project/interactive-demo.png" class="id-img">
+            </div>
+        </ng-container>
+        <ng-template #projectsList>
+            <div class="row mt-3">
+                <div class="col-xl-6">
+                    <a (click)="sort();" class="mr-1">
+                        Last Modified
+                        <img [src]="isDescending ?
+                            '/assets/img/project/up-sort.svg'
+                            : '/assets/img/project/down-sort.svg'">
+                    </a>
+                    <a (click)="isVisibleGrid=true">
+                        <img [src]="isVisibleGrid ?
+                            '/assets/img/project/list-green.svg' :
+                            '/assets/img/project/list-black.svg'">
+                    </a>&nbsp;
+                    <a (click)="isVisibleGrid=false">
+                        <img [src]="isVisibleGrid ?
+                            '/assets/img/project/grid-black.svg' :
+                            '/assets/img/project/grid-green.svg'"></a>
+                    
+                </div>
+                <div class="col-xl-6 text-right">
+                    <a (click)="viewInteractiveDemo('https://www.quantumics.ai/interactive-demo');">
+                        <u class="view-demo-link">Click here to watch the demo video, if you have missed it!</u>
+                    </a>
+                </div>
+
+                <div class="col-xl-12 mt-3">
+                    <app-project-grid-view
+                        *ngIf="!isVisibleGrid"
+                        [projects]="projects"
+                        (selectedProject)="select($event)"
+                        (deleteProject)="deleteProject($event)"
+                        (restoreProject)="restoreProject($event)"
+                        (redirectToPlans)="redirectToPlans($event)"
+                        (redirectToAwsPlans)="redirectToAwsPlans($event)"
+                        (redirectToSetting)="redirectToSetting($event)">
+                    </app-project-grid-view>
+                    <app-project-list-view
+                        *ngIf="isVisibleGrid"
+                        [projects]="projects"
+                        (selectedProject)="select($event)"
+                        (deleteProject)="deleteProject($event)"
+                        (restoreProject)="restoreProject($event)"
+                        (redirectToPlans)="redirectToPlans($event)"
+                        (redirectToAwsPlans)="redirectToAwsPlans($event)"
+                        (redirectToSetting)="redirectToSetting($event)">
+                    </app-project-list-view>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div> -->

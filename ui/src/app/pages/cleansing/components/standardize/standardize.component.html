@@ -1,0 +1,57 @@
+<div class="modal-header modal-popup-header">
+    <h4 class="modal-title h4-font text-white">Standardize</h4>
+    <button type="button" class="close" style="margin-top:-23px;" (click)="modal.dismiss()">&times;</button>
+</div>
+
+<div class="modal-body modal-height" >
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="float:left;">
+        <div class="form-group">
+            <select id="selectColumn" class="form-control" (change)="handleColumnSelection($event.target.value)" [(ngModel)]="selectedColumn">
+                <option value="" [value]="undefined" selected>--Select column--</option>
+                <option *ngFor="let col of columns" [value]="col.column_name">{{col.column_name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="float:left;">
+        <div class="form-group">
+            <input id="new-value" type="text" [(ngModel)]="newValue" (ngModelChange)="modelChangedNewValue($event)"   class="form-control" placeholder="Input New Value">
+        </div>
+    </div>
+    <div>
+        <div class="table-responsive" *ngIf="groupedRows.length">
+            <table class="table m-0">
+                <thead>
+                    <tr class="th-center" style="background:#54E7B1;">
+                        <th class="border-left"><input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll($event.target.checked)"> All</th>
+                        <th class="border-left cursor-pointer" (click)="sort('column_value')">Source Value 
+                            <i class="fa fa-sort" aria-hidden="true"></i>
+                        </th>
+                        <th class="border-left cursor-pointer" (click)="sort('count')">Row Count 
+                            <i class="fa fa-sort" aria-hidden="true"></i>
+                        </th>                        
+                        <th class="border-left">New Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="td-color" *ngFor="let item of groupedRows | sortBy: sortDirection : sortBy : updateView">
+                        <td><label><input type="checkbox" (change)="handleSelection()" [(ngModel)]="item.selected"></label></td>
+                        <td>{{item.column_value}}</td>
+                        <td>{{item.count}}</td>
+                        <td>
+                            <ng-container *ngIf="item.selected">
+                                {{newValue}}
+                            </ng-container>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-footer">
+    <div class="col-12">
+        <button id="btn-apply" class="btn btn-success pull-right" [disabled]="!selectColumn || !selectNewValue" (click)="apply()">Apply</button>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+.statistical-widget {
+    margin: 10px 10px;
+    min-width: 100px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    label {
+        // font-size: 14px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        /* identical to box height */
+
+        color: #646464;
+        padding: 8px 0px;
+    }
+
+    span {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        /* identical to box height */
+        
+        color: #000000;
+    }
+}
+
+.statistical-card {
+    // background: #F7E6F6;
+    background: #FCF5FB;
+    padding-bottom: 15px;
+    box-shadow: none;
+    height: 246px;
+}
+
+.statis-text-h6 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    
+    color: #000000;
+    border-bottom: 1px solid #b5b5b5;
+    margin: 5px;
+    padding: 5px 5px;
+}
+
+.pt {
+    padding-top: 10px;
+}
+
+.br {
+    border-bottom: 1px solid #E2E8F2;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.pd-t-b-16 {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.pd-b-16 {
+    padding-bottom: 16px;
+}
+
+.textNumerical {
+    font-family: 'Inter';
+    font-style: italic;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    /* Dark Grey */
+    
+    color: #888C92;
+}
+
+.bt {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    /* text-align: center; */
+    color: #2B2F43;
+}
+
+.h-232 {
+    height: 231px;
+}
+
+.c-t {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* or 133% */
+    
+    
+    /* Background */
+    
+    color: #FFFFFF;
+}
+
+.cp {
+    cursor: pointer;
+}

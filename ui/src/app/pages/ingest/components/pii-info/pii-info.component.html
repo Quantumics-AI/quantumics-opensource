@@ -1,0 +1,36 @@
+<div class="right-panel">
+    <div class="col-12" style="border-bottom:1px solid #f1f1f1; float:left; z-index:9999; position:relative;">
+        <h6 class="mt-3">Personal Identifiable Information [PII]:</h6>
+        <a (click)="close.emit(true);"><i class="fa fa-times-circle pull-right"
+                style="margin:-25px 0px 15px 0px; color:#F00;"></i></a>
+    </div>
+
+    <div class="col-12">
+        <div class="info-msg">
+            <p>PII is essential for personal privacy, data privacy, data protection, information privacy and information security.</p>
+            <p>Quantumics will auto identify PII columns in a file.</p>
+            <p>A column in a file can be marked or unmarked as PII by selecting the checkbox.</p>
+            <p>Marked PII column will not be shown in the ingested file.</p>
+            <p>
+                <b>Some of the PII's that are currently identified in a file by Quantumics.</b>
+            </p>
+        </div>
+        <ol>
+            <li>Credit Card - Visa</li>
+            <li>Credit Card - Mastercard</li>
+            <li>Credit Card - Amex</li>
+            <li>Credit Card - Diner's Club</li>
+            <li>Credit Card - Discover</li>
+            <li>Credit Card - JCB</li>
+            <li>Credit Card - Maestro</li>
+            <li>Email - RFC5322 standard</li>
+            <li>SSN</li>
+            <li>Passport- UK</li>
+            <li>NI Number</li>
+            <li>Driving License UK</li>
+            <li>IBAN Number</li>
+            <li>Phone Number - ITUT Standard</li>
+            <li>Phone Number - EPP Standard</li>
+        </ol>
+    </div>
+</div>

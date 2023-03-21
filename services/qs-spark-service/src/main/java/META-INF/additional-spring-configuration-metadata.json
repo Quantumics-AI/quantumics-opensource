@@ -1,0 +1,57 @@
+{"properties": [
+  {
+    "name": "spring.jpa.hibernate.show-sql",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.jpa.hibernate.show-sql'"
+  },
+  {
+    "name": "cloud.aws.stack.auto",
+    "type": "java.lang.String",
+    "description": "A description for 'cloud.aws.stack.auto'"
+  },
+  {
+    "name": "cloud.aws.region.static",
+    "type": "java.lang.String",
+    "description": "A description for 'cloud.aws.region.static'"
+  },
+  {
+    "name": "cloud.aws.credentials.accessKey",
+    "type": "java.lang.String",
+    "description": "A description for 'cloud.aws.credentials.accessKey'"
+  },
+  {
+    "name": "cloud.aws.credentials.secretKey",
+    "type": "java.lang.String",
+    "description": "A description for 'cloud.aws.credentials.secretKey'"
+  },
+  {
+    "name": "app.awsServices.bucketName",
+    "type": "java.lang.String",
+    "description": "A description for 'app.awsServices.bucketName'"
+  },
+  {
+    "name": "cloud.aws.region.auto",
+    "type": "java.lang.String",
+    "description": "A description for 'cloud.aws.region.auto'"
+  },
+  {
+    "name": "audit.project.create.auditMessage",
+    "type": "java.lang.String",
+    "description": "A description for 'audit.project.create.auditMessage'"
+  },
+  {
+    "name": "audpt.roject.update.auditMessage",
+    "type": "java.lang.String",
+    "description": "A description for 'audpt.roject.update.auditMessage'"
+  },
+  {
+    "name": "audit.project.delete.auditMessage",
+    "type": "java.lang.String",
+    "description": "A description for 'audit.project.delete.auditMessage'"
+  },
+  {
+    "name": "audit.project.delete.notificationMsg",
+    "type": "java.lang.String",
+    "description": "A description for 'audit.project.delete.notificationMsg'"
+  }
+]}

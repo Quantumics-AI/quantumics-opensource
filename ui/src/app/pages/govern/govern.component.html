@@ -1,0 +1,32 @@
+<app-loader [loading]="loading">
+    <ng-container *ngIf="businessData$ | async as businessData">
+        <ng-container *ngIf="businessData?.length == 0;">
+            <div class="main-container">
+                <div class="page-header1">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb breadcrumb-top">
+                            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Governance</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row gutters justify-content-center mt-6 rounded m-0">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+                        <div class="card shadow-lg">
+                            <div class="card-body plus-add">
+                                <a (click)="redirectToCreate()">
+                                    <img src="assets/img/cleansing-add.svg" width="55" alt="add"
+                                        class="mb-3"></a>
+                                <p class="plus-add-text">
+                                    You do not have any business terms. <br>
+                                    Why don't you create one by clicking "Create" button.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</app-loader>

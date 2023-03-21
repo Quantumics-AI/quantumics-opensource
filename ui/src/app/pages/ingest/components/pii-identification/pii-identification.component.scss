@@ -1,0 +1,142 @@
+.table-height {
+    height: calc(676px - 250px);
+}
+
+.first-child {
+    background-color: #212245;
+    color: #ffffff;
+}
+
+.upload-file {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ingest-input {
+    width: 40% !important;
+    height: 37px !important;
+    margin: -3px auto -18px auto !important;
+}
+
+table.table1 td,
+tr {
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+table.table2 {
+    td {
+        border-left: 3px solid #fff;
+        border-right: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+    }
+    th {
+        border: 1px solid #fff;
+    }
+}
+
+.show:hover + .list-categories {
+    max-height: inherit;
+    opacity: 1;
+}
+
+.list-categories {
+    // padding: 10px;
+    padding-top: 5px;
+    padding-right: 7px;
+    margin: 0 auto;
+    max-height: 0px;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 300ms ease;
+    font-size: 12px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    // background: #111;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/////////
+.pii-table thead th {
+    background: #dedee3 !important;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    /* font-size: 14px; */
+    line-height: 19px;
+    /* text-align: center; */
+    letter-spacing: -0.02em;
+    color: #121542;
+}
+
+.pii-table thead th:first-of-type {
+    border-top-left-radius: 8px;
+}
+
+.pii-table thead th:last-of-type {
+    border-top-right-radius: 8px;
+}
+
+.pii-note {
+    font-family: "Inter";
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 17px;
+    letter-spacing: -0.015em;
+    color: #000000;
+}
+
+.pii-c-btn {
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 25px;
+}
+
+.pii-btn {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #ffffff;
+}
+
+.database-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 366px;
+}
+
+.table-container {
+    border-bottom: 2px solid #efeff1;
+    padding-left: 2%;
+    line-height: 2;
+}
+
+.table-details {
+    background: #dedee3;
+    opacity: 0.5;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    color: #121542;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+
+.cursor-pointer {
+    color:#121542;
+}
+
+.th-pii {
+    width: 300px;
+}

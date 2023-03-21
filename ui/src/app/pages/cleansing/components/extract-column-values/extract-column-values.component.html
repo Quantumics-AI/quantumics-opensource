@@ -1,0 +1,208 @@
+<h6 class="h6-font-hading">
+    Extract Column Values
+</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="extract-option">Option</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <ng-select id="extract-option" [(ngModel)]="ruleInputLogic1" (change)="preview()"
+                formControlName="ruleInputLogic1">
+                <ng-option *ngFor="let op of options" [value]="op.value">{{op.text}}</ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                [multiple]="false" (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+            <span class="alert-danger"
+                *ngIf="fg.get('ruleImpactedCols').touched && fg.get('ruleImpactedCols').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.Numbers">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="number-of-matches">Number of matches to extract</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input class="form-control" id="number-of-matches" [(ngModel)]="ruleInputValues"
+                    formControlName="numbersToExtract" (change)="preview()" type="number" appPositiveNumberOnly min="1">
+                <span class="alert-danger"
+                    *ngIf="fg.get('numbersToExtract').touched && fg.get('numbersToExtract').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.QueryStrings">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="fields-to-extract">Fields to extract</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input type="text" class="form-control" id="fields-to-extract" [(ngModel)]="ruleInputValues"
+                    placeholder="Enter comma separated values" formControlName="fieldsToExtract" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('fieldsToExtract').touched && fg.get('fieldsToExtract').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.TypeMismatched">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="data-type">Select type</label>
+                <small class="form-text text-muted pull-right">Required</small>
+                <ng-select id="data-type" (change)="preview()" formControlName="typeToMatchAgainst"
+                    [(ngModel)]="ruleInputValues">
+                    <ng-option *ngFor="let type of dataTypes" [value]="type.value">{{type.text}}</ng-option>
+                </ng-select>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container
+        *ngIf="ruleInputLogic1 === filterTypes.FirstCharacters || ruleInputLogic1 === filterTypes.LastCharacters">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="characters-to-extract">Number of characters to extract</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input class="form-control" id="characters-to-extract" [(ngModel)]="ruleInputValues"
+                    formControlName="charactersToExtract" (change)="preview()" type="number" appPositiveNumberOnly
+                    min="1">
+                <span class="alert-danger"
+                    *ngIf="fg.get('charactersToExtract').touched && fg.get('charactersToExtract').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.CharactersBetweenPostions">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="start-position">Starting position</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input class="form-control" id="start-position" placeholder="Enter start value"
+                    [(ngModel)]="ruleInputValues" formControlName="startValue" (change)="preview()" type="number"
+                    appPositiveNumberOnly min="1">
+                <span class="alert-danger"
+                    *ngIf="fg.get('startValue').touched && fg.get('startValue').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="end-position">Ending position</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input class="form-control" id="end-position" placeholder="Enter value" [(ngModel)]="ruleInputValues1"
+                    formControlName="endValue" (change)="preview()" type="number" appPositiveNumberOnly min="1">
+                <span class="alert-danger"
+                    *ngIf="fg.get('endValue').touched && fg.get('endValue').hasError('required')">
+                    This field is required
+                </span>
+                <span class="alert-danger" *ngIf="fg.get('endValue').touched && fg.get('endValue').hasError('invalid')">
+                    This field should be greater than value 1
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.TextOrPattern">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="text-to-extract">Text to Extract</label>
+                <small class="form-text text-muted pull-right">
+                    Required
+                </small>
+                <input id="text-to-extract" type="text" class="form-control" placeholder="Enter text to extract"
+                    [(ngModel)]="ruleInputValues" formControlName="textToExtract" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="fg.get('textToExtract').touched && fg.get('textToExtract').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="extract-after">Start extracting after</label>
+
+                <input id="extract-after" type="text" class="form-control" placeholder="Enter text"
+                    formControlName="extractAfter" [(ngModel)]="ruleInputValues1" (change)="preview()">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="extract-before">End extracting before</label>
+                <input id="extract-before" type="text" class="form-control" placeholder="Enter text"
+                    formControlName="endExtractBefore" [(ngModel)]="ruleInputValues2" (change)="preview()">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="number-of-matches">Number of matches to extract</label>
+                <input id="number-of-matches" type="text" class="form-control" placeholder="Enter number"
+                    formControlName="textOrPatternMatches" [(ngModel)]="ruleInputValues3" (change)="preview()">
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === filterTypes.BetweenDelimiters">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="starting-delimiter">Starting delimiter</label>
+                <input id="starting-delimiter" type="text" class="form-control" placeholder="Enter text"
+                    formControlName="startingDelimiter" [(ngModel)]="ruleInputValues" (change)="preview()">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <label for="ending-delimiter">Ending delimiter</label>
+                <input id="ending-delimiter" type="text" class="form-control" placeholder="Enter text"
+                    formControlName="endingDelimiter" [(ngModel)]="ruleInputValues1" (change)="preview()">
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="number-of-matches">Number of matches to extract</label>
+
+                <input id="number-of-matches" type="text" class="form-control" placeholder="Enter number"
+                    formControlName="numberOfMatches" [(ngModel)]="ruleInputValues2" (change)="preview()">
+            </div>
+        </div>
+    </ng-container>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

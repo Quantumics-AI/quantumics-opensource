@@ -1,0 +1,145 @@
+.noti-cont {
+    width: 16px;
+    height: 16px;
+    background: #f00;
+    border-radius: 100%;
+    padding: 1.2px;
+    // margin: 0px 0px 10px -11px;
+    text-align: center;
+    font-size: 10px;
+    color: #ffff;
+    position: relative;
+    top: -24px;
+    left: 9px;
+}
+
+.content {
+    position: fixed;
+    width: -webkit-fill-available;
+    z-index: 1;
+}
+
+.fl-0 {
+    flex: 0 !important;
+}
+
+.list-group {
+    box-shadow: 0px 1px 4px rgb(0 0 0 / 25%);
+    border-radius: 4px;
+}
+
+.rc {
+    color: #D72C0D !important;
+}
+
+.li-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.bcolor {
+    background-color: #F6F6F7 !important;
+    border-color: #F6F6F7 !important;
+    cursor: none;
+    padding-left: 8px;
+}
+
+.pd-l {
+    padding-left: 12px;
+}
+
+.if {
+    display: inline-flex;
+}
+
+.mr-r-8 {
+    margin-right: 8px;
+}
+
+.li-c {
+    color: #888C92 !important;
+}
+
+::ng-deep {
+    .popover .arrow {
+        display: none !important;
+    }
+    
+    .popover {
+        // border: 1px solid #E2E8F2;
+        // box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+        // border-radius: 4px;
+        width: 224px !important;
+        margin-top: 20px;
+        border: none;
+    }
+
+    .popover-body {
+        padding: 0;
+    }
+}
+
+.circle {
+    background: #CAFFA9;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    text-transform: capitalize;
+    color: #858599;
+    font-family: "Inter";
+    font-weight: 500;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.dr-circle {
+    background: #CAFFA9;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    text-transform: capitalize;
+    color: #858599;
+    font-family: "Inter";
+    font-weight: 500;
+    font-size: 20px;
+    width: 35px;
+    height: 35px;
+}
+
+.w-140 {
+    width: 140px;
+}
+
+.pl {
+    position: absolute;
+    font-size: 8px;
+    line-height: 8px;
+    right: 1px;
+}
+
+::ng-deep {
+    .popover {
+        top: 0px !important;
+        // left: -8.5% !important;
+    }
+}
+
+.stroke {
+    position: absolute;
+    top: 10px;
+    left: 43px;;
+}

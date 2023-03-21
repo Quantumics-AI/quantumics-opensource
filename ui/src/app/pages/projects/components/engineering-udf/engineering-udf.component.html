@@ -1,0 +1,43 @@
+<app-loader [loading]="loading">
+    <div class="main-container">
+
+        <div class="page-header">
+
+            <div class="col-xl-6 p-0">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects']">Project List</a></li>
+                    <li class="breadcrumb-item active">Engineering UDF</li>
+                </ol>
+            </div>
+
+        </div>
+
+        <div class="row p-0 m-0">
+            <div class="col-2 sidenav-new p-0">
+                <a [routerLink]="['../general-setting']" routerLinkActive="is-active">&nbsp;General</a>
+                <a [routerLink]="['../team-setting']" routerLinkActive="is-active"> &nbsp;Team</a>
+                <a [routerLink]="['../billing']" routerLinkActive="is-active"> &nbsp;Billing</a>
+                <a [routerLink]="['../team-auditing']" routerLinkActive="is-active"> &nbsp;Team Auditing</a>
+                <!-- <a [routerLink]="['../engineering-udf']" routerLinkActive="is-active"> &nbsp;UDF</a> -->
+            </div>
+
+            <ng-container >
+                <div class="page-content main-menu col-10">
+                    <ul>
+                        <li>
+                            <a [routerLink]="['create-udf']" routerLinkActive="is-active">Create UDF</a>
+                        </li>
+                        <li>
+                            <a [routerLink]="['edit-udf']" routerLinkActive="is-active">Edit UDF</a>
+                        </li>
+                    </ul>
+            
+                    <div class="mt-3">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+                
+            </ng-container>
+        </div>
+    </div>
+</app-loader>

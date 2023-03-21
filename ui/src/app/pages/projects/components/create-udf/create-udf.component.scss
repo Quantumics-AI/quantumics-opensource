@@ -1,0 +1,104 @@
+button {
+    // width: 100%;
+    font-size: 16px;
+}
+
+.addheight {
+    // height: 6vh;
+    font-size: 14px;
+}
+
+// .addBtn {
+//     margin-top: 6px;
+// }
+
+.btns {
+    padding-top: 15px;
+}
+
+textarea.form-control {
+    font-size: 16px;
+}
+
+.removeBtn {
+    font-size: 26px;
+    padding: 0;
+    color: red;
+}
+
+.addBtn {
+    font-size: 22px;
+    padding: 0;
+    margin-top: -50px;
+}
+
+.custom-file {
+    margin-bottom: 12px !important;
+}
+
+.custom-file-label {
+    // height: 6vh;
+    font-size: 14px;
+}
+
+.upload-logo {
+    // width: 437px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.imgspan {
+    float: right;
+    margin: -4px;
+    // padding: 3px;
+    // margin-top: -2px;
+    border: 1px solid #9F9F9F;
+    box-sizing: border-box;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.15));
+    border-radius: 4px;
+}
+
+.custom-file-label::after {
+    opacity: 0;
+}
+
+.or {
+    font-size: 14px;
+    margin-bottom: 4px;
+    margin-top: -10px;
+    color: #737C83;
+}
+
+.table td {
+    border: none;
+}
+
+.deleteBtn {
+    padding: revert;
+    margin-top: 4px;
+}
+
+.add-btn {
+    padding: revert;
+}
+
+.table thead th {
+    border: none !important;
+    // padding: 0;
+    text-align: start;
+    padding: 7px;
+}
+
+.scroll-div {
+    height: 70vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-width: none;
+    padding-right: 15px;
+}
+
+div::-webkit-scrollbar {
+    width: 3px;
+}

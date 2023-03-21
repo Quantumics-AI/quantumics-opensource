@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="236" height="255" viewBox="0 0 236 255">
+  <g id="Group_1868" data-name="Group 1868" transform="translate(18738 -3234)">
+    <text id="Completed" transform="translate(-18647 3260)" fill="#06d084" font-size="25" font-family="Roboto-Medium, Roboto" font-weight="500"><tspan x="0" y="0">Completed</tspan></text>
+    <g id="Rectangle_2144" data-name="Rectangle 2144" transform="translate(-18738 3270)" fill="#f5f5f5" stroke="#707070" stroke-width="1">
+      <rect width="236" height="219" rx="25" stroke="none"/>
+      <rect x="0.5" y="0.5" width="235" height="218" rx="24.5" fill="none"/>
+    </g>
+    <text id="aGGREGATE" transform="translate(-18719 3460)" fill="#06d084" font-size="35" font-family="Roboto-Medium, Roboto" font-weight="500"><tspan x="0" y="0">AGGREGATE</tspan></text>
+    <g id="noun_sigma_1745973" transform="translate(-18661.445 3301.864)">
+      <rect id="Rectangle_2123" data-name="Rectangle 2123" width="1" height="1" rx="0.5" transform="translate(0.55 0.136)" fill="#06d084"/>
+      <g id="Group_1237" data-name="Group 1237" transform="translate(0.445 0.084)">
+        <g id="Group_1236" data-name="Group 1236" transform="translate(0)">
+          <g id="Group_1235" data-name="Group 1235">
+            <path id="Path_9837" data-name="Path 9837" d="M76.169,77.826c0-5.139,6.138-5.139,6.138,0V102.49a.853.853,0,0,1-.846.856H.943c0-.02-1.448-.459-.642-1.4L43.052,51.673.331,1.438A.849.849,0,0,1,.943,0H81.461a.844.844,0,0,1,.846.846V27.539c0,5.139-6.138,5.139-6.138,0A20.289,20.289,0,0,0,55.95,7.311h-31.3L55.7,45.78a.861.861,0,0,1-.01,1.091l-34.463,40.4h45.7A9.258,9.258,0,0,0,76.169,77.826Z" transform="translate(-0.056)" fill="#06d084"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

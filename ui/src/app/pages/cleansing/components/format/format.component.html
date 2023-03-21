@@ -1,0 +1,79 @@
+<h6 class="h6-font-hading">Format</h6>
+<form [formGroup]="form" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <ng-select id="selectColumn" [(ngModel)]="selectedColumns" formControlName="column" [multiple]="false"
+                (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+            <span class="alert-danger" *ngIf="form.get('column').touched && form.get('column').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="formatOption">Format</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <ng-select id="formatOption" [(ngModel)]="ruleInputLogic1" formControlName="formatOption" id="formatOption"
+                (change)="preview()" placeholder="Select option" [dropdownPosition]="'bottom'">
+                <ng-option value="Upper">Convert to Uppercase</ng-option>
+                <ng-option value="Lower">Convert to Lowercase</ng-option>
+                <ng-option value="Proper">Convert to Propercase</ng-option>
+                <ng-option value="TrimWhitespace">Trim leading and trailing whitespaces</ng-option>
+                <ng-option value="TrimQuotes">Trim leading and trailing quotes</ng-option>
+                <ng-option value="RemoveWhitespaces">Remove Whitespaces</ng-option>
+                <ng-option value="RemoveSpecialCharacters">Remove Special characters</ng-option>
+                <ng-option value="RemoveAscents">Remove Accents</ng-option>
+                <ng-option value="AddPrefix">Add Prefix</ng-option>
+                <ng-option value="AddSuffix">Add Suffix</ng-option>
+                <ng-option value="PadWithLeadingCharacters">Pad with leading characters</ng-option>
+            </ng-select>
+        </div>
+    </div>
+    <ng-container
+        *ngIf="ruleInputLogic1 === formatRuletypes.AddPrefix || ruleInputLogic1 === formatRuletypes.AddSuffix">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="textToAdd">Text to Add</label>
+                <small class="form-text text-muted pull-right"> Required
+                </small>
+                <input id="textToAdd" type="text" class="form-control" required placeholder="Text to add"
+                    formControlName="textToAdd" maxlength="10" [(ngModel)]="ruleInputValues" (change)="preview()">
+                <span class="alert-danger"
+                    *ngIf="form.get('textToAdd').touched && form.get('textToAdd').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="ruleInputLogic1 === formatRuletypes.PadWithLeadingCharacters">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="charactersToPadd">Characters to pad with</label>
+                <small class="form-text text-muted pull-right"> Required
+                </small>
+                <input id="charactersToPadd" type="text" class="form-control" required placeholder="Characters to pad"
+                    [(ngModel)]="ruleInputValues" formControlName="charactersToPadd" (change)="preview()">
+
+                <span class="alert-danger"
+                    *ngIf="form.get('charactersToPadd').touched && form.get('charactersToPadd').hasError('required')">
+                    This field is required
+                </span>
+            </div>
+        </div>
+    </ng-container>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success  mr-3"
+            [disabled]="!form.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

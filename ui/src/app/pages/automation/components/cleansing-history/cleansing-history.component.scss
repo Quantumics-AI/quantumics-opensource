@@ -1,0 +1,17 @@
+.ellips-text {
+    // width: 130px;
+    width: 208px;
+    display: inline-block;
+}
+
+.table-height {
+    height: calc(100vh - 220px);
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+.w-200px {
+    width: 200px;
+}

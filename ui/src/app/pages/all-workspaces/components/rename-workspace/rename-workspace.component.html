@@ -1,0 +1,48 @@
+<app-loader [loading]="loading">
+    <div class="modal-header border-bottom-0">
+        <h4 class="modal-title">Rename workspace</h4>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="modal.close();">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="fg">
+                    <div class="form-group">
+                        <label for="workspaceName" class="p2">Workspace name*</label>
+                        <input type="text" class="form-control input-design" formControlName="projectName" #project
+                            id="projectName" placeholder="Workspace name" minlength="3" maxlength="30"
+                            (ngModelChange)="modelChangeUpdateWorkspaceName($event)" autocomplete="off" required
+                            triggers="manual">
+                        <small id="workspaceNameHelp" class="form-text body-text-muted">Workspace name must be
+                            between 3 and 20 characters long.</small>
+                        <div
+                            *ngIf="fg.get('projectName').invalid && fg.get('projectName').dirty || fg.get('projectName').touched">
+                            <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">
+                                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Workspace name is
+                                required.
+                            </div>
+                        </div>
+                        <div class="text-error" *ngIf="invalidPattern">
+                            <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Only alphanumeric
+                            characters, underscore and space allowed.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workspaceDescription" class="p2">Workspace description</label>
+                        <textarea class="form-control input-design resize-none" id="workspaceDescription" rows="3"
+                            maxlength="255" formControlName="projectDescription"></textarea>
+                    </div>
+
+                    <div class="btn-div">
+                        <button type="submit" class="btn btn-design" [disabled]="fg.invalid"
+                            (click)="save()">Save</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</app-loader>

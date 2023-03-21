@@ -1,0 +1,37 @@
+<app-loader [loading]="loading">
+    <div class="modal-header">
+        <h5 class="modal-title">Select File To Edit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th>Name </th>
+                            <th>Date </th>
+                            <th>Modified Date </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="td-color" *ngFor="let file of files">
+                            <td class="file-tbl-left-border1"><a
+                                    (click)="cleansingEditor(file.fileId, file.fileName)">{{file.fileName}}</a></td>
+                            <td>{{file.createdDate | date: 'dd-MM-yy, hh:mm a' }}</td>
+                            <td>{{file.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>
+                                <i><a (click)="cleansingEditor(file.fileId, file.fileName)" placement="top" ngbTooltip="Edit"><img
+                                            src="assets/img/edit.svg" width="18" alt=""></a></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

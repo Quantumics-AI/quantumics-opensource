@@ -1,0 +1,109 @@
+<h6 class="h6-font-hading">
+    Replace Missing
+</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+    <!-- Commented for release 1 -->
+    <!-- 
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selection-type">Type</label>
+            <small class="form-text text-muted pull-right"></small>
+            <select id="selection-type" class="form-control" [(ngModel)]="ruleInputValues"
+                formControlName="ruleInputValues">
+                <option *ngFor="let op of selectionTypes" [value]="op.value">{{op.title}}</option>
+            </select>
+        </div>
+    </div> -->
+
+    <ng-container [ngSwitch]="ruleInputValues">
+        <ng-container *ngSwitchCase="selectionType.Multiple">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="selectColumn">Column</label>
+                    <small class="form-text text-muted pull-right"> Required</small>
+
+                    <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                        [multiple]="false" (change)="change($event)" placeholder="Select column"
+                        [dropdownPosition]="'bottom'" [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                        <ng-template ng-option-tmp let-item="item">
+                            <span [title]="item.column_name">{{item.column_name}}</span>
+                        </ng-template>
+                    </ng-select>
+
+                    <ng-container *ngIf="fg.get('ruleImpactedCols').touched">
+                        <span class="alert-danger" *ngIf="fg.get('ruleImpactedCols').hasError('required')">
+                            This field is required
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="selectionType.Range">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="start-column">Start Column</label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <select id="start-column" class="form-control" [(ngModel)]="ruleInputValues1"
+                        formControlName="ruleInputValues1">
+                        <option *ngFor="let col of columns; let i = index;" [value]="i">
+                            {{col.column_name}}</option>
+                    </select>
+
+                    <ng-container *ngIf="fg.get('ruleInputValues1').touched">
+                        <span class="alert-danger" *ngIf="fg.get('ruleInputValues1').hasError('required')">
+                            This field is required
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="end-column">End Column</label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <select id="end-column" class="form-control" [(ngModel)]="ruleInputValues2"
+                        formControlName="ruleInputValues2" (change)="preview()">
+                        <option *ngFor="let col of columns; let i = index;" [value]="i">
+                            {{col.column_name}}</option>
+                    </select>
+                    <ng-container *ngIf="fg.get('ruleInputValues2').touched">
+                        <span class="alert-danger" *ngIf="fg.get('ruleInputValues2').hasError('required')">
+                            This field is required
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+    <div class="col-12">
+        <div class="form-group">
+            <label for="replaceWith">Replace with</label>
+            <small class="form-text text-muted pull-right"> Required</small>
+            <select id="replaceWith" class="form-control" formControlName="ruleInputLogic1"
+                [(ngModel)]="ruleInputLogic1" (change)="preview()">
+                <option *ngFor="let option of replaceOptions" [value]="option.value">{{option.text}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="form-group" *ngIf="ruleInputLogic1 === ruleTypes.CustomValue">
+            <label for="newValue">New Value</label>
+            <small class="form-text text-muted pull-right"> Required
+            </small>
+            <input id="newValue" type="text" class="form-control" [(ngModel)]="ruleInputValues3"
+                formControlName="ruleInputValues3" placeholder="String" (change)="preview()">
+
+            <ng-container *ngIf="fg.get('ruleInputValues3').touched ">
+                <span class="alert-danger" *ngIf="fg.get('ruleInputValues3').hasError('required')">
+                    This field is required
+                </span>
+            </ng-container>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

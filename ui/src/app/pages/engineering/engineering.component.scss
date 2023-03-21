@@ -1,0 +1,28 @@
+.is-active {
+    border-bottom: 2px solid #292f4c !important;
+}
+
+.main-menu {
+    ul li {
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        display: inline-block;
+        border-bottom: 2px solid #f1f1f1;
+    }
+
+    li a {
+        color: #000000;
+        display: inline-block;
+        text-decoration: none;
+        padding: 5px 20px;
+        color: #323338;
+        font-weight: 400;
+        font-size: 17px;
+        -webkit-user-select: none;
+    }
+
+    ul li a:hover {
+        color: #54e7b1;
+    }
+}
+
+

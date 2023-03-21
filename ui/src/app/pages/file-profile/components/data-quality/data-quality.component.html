@@ -1,0 +1,27 @@
+<app-loader [loading]="loading">
+    <ng-container *ngIf="!isLock else lock">
+        <ng-container *ngIf="!loading && folderId && fileId else noFile">
+            <app-quality [dataQuality]="dataQuality" [userId]="userId" [projectId]="projectId" [folderId]="folderId"
+                [fileId]="fileId">
+            </app-quality>
+        </ng-container>
+        <ng-template #noFile>
+            <div class="row gutters justify-content-center mt-6 rounded m-0">
+                <div class="col-xl-7">
+                    <div class="card shadow-lg">
+                        <div class="card-body plus-add">
+                            <p class="plus-add-text">
+                                Selected folder doesn't have any file to view data profile. <br> Please upload new file
+                                or
+                                select different folder.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+    <ng-template #lock>
+        <app-lock [projectId]="projectId" [message]="errorMessage"></app-lock>
+    </ng-template>
+</app-loader>

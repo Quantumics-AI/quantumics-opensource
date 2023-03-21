@@ -1,0 +1,73 @@
+<div class="content">
+    <div class="page-header">
+        <div class="col-xl-12">
+            <div class="float-right">
+                <div class="row">
+                    <div class="col-md-6 fl-0">
+                        <a container="body" popoverClass="notification-width" [autoClose]="'outside'"
+                            [ngbPopover]="popNotification" placement="right-bottom">
+                            <span>
+                                <img src="assets/img/profile/bell.svg">
+                                <div class="noti-cont" *ngIf="notificationCount < 9 && notificationCount > 0">{{notificationCount}}</div>
+                                <div class="noti-cont" *ngIf="notificationCount > 9 && notificationCount > 0">9 <span class="pl">+</span></div>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="col-md-6 fl-0">
+                        <a [ngbPopover]="popUserMenuContent" popoverClass="user-menu-width" placement="bottom-right"
+                            container="body">
+                            <ng-container *ngIf="userImageUrl else defaultProfileImage">
+                                <img [src]="userImageUrl" class="rounded-circle user-img" alt="User Profile" width="30">
+                                <span class="stroke"> <img src="assets/img/profile/down-stroke.svg"></span>
+                            </ng-container>
+                            <ng-template #defaultProfileImage>
+                                <span class="circle">
+                                    {{userName.substring(0,1)}}
+                                </span>
+                                <span class="stroke"> <img src="assets/img/profile/down-stroke.svg"></span>
+                            </ng-template>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #popUserMenuContent>
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action active if li-text bcolor">
+            <div class="mr-r-8">
+                <ng-container *ngIf="userImageUrl else defaultProfileImage">
+                    <img [src]="userImageUrl" class="rounded-circle user-img" alt="User Profile" width="30">
+                </ng-container>
+                <ng-template #defaultProfileImage>
+                    <span class="dr-circle" style="padding-top: 10px;">
+                        {{userName.substring(0,1)}}
+                    </span>
+                </ng-template>
+            </div>
+            <div class="w-140">
+                <span class="li-c">{{userName}} <span class="font" *ngIf="isSuperAdmin">(Super Admin) </span></span>
+                <span>{{userEmail}}</span>
+            </div>
+        </a>
+        <a [routerLink]="['account', 'profile']" class="list-group-item list-group-item-action li-text pd-l">
+            <img src="assets/img/profile/acc.svg" class="img-fluid">&nbsp;Account settings</a>
+        <a href="https://docs.quantumics.ai" target="_blank"
+            class="list-group-item list-group-item-action li-text pd-l">
+            <img src="assets/img/profile/docs.svg" class="img-fluid">&nbsp;Docs</a>
+        <a (click)="logout();" class="list-group-item list-group-item-action li-text rc pd-l">
+            <img src="assets/img/profile/logout.svg" class="img-fluid">&nbsp;Log out</a>
+    </div>
+</ng-template>
+
+<ng-template #popNotification>
+    <app-notification></app-notification>
+</ng-template>
+
+<!-- <app-user-profile *ngIf="visibleUserProfile" (close)="visibleUserProfile =false"></app-user-profile>
+<app-update-password *ngIf="visibleChangePassword" (close)="visibleChangePassword=false"></app-update-password>
+<app-share-the-love *ngIf="sharetWith" (close)="sharetWith=false"></app-share-the-love>
+<app-consent *ngIf="consent" (close)="consent=false"></app-consent>
+<app-system-status *ngIf="systemStatus" (close)="systemStatus=false"></app-system-status> -->

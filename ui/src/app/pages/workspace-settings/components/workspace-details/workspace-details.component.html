@@ -1,0 +1,67 @@
+<!-- <app-loader [loading]="loading"> -->
+<div class="page-content">
+    <div class="card">
+        <div class="card-header bg-w card-pd">
+            <h5 class="p2">Basic information</h5>
+            <p class="p1 mr-b-0">Edit you workspace basic details here.</p>
+        </div>
+        <div class="card-body card-pd">
+            <div class="row">
+                <div class="col-md-6">
+                    <form [formGroup]="fg">
+                        <div class="form-group">
+                            <label for="workspaceName" class="p2">Workspace name*</label>
+                            <input type="text" class="form-control input-design" formControlName="projectName" #project
+                                id="projectName" placeholder="Workspace name" minlength="3" maxlength="30"
+                                (ngModelChange)="modelChangeUpdateWorkspaceName($event)" autocomplete="off" required
+                                triggers="manual">
+                            <small id="workspaceNameHelp" class="form-text body-text-muted">Workspace name must be
+                                between 3 and 20 characters long.</small>
+                            <div
+                                *ngIf="fg.get('projectName').invalid && fg.get('projectName').dirty || fg.get('projectName').touched">
+                                <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Workspace name is
+                                    required.
+                                </div>
+                            </div>
+                            <div class="text-error" *ngIf="invalidPattern">
+                                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Only alphanumeric
+                                characters, underscore and space allowed.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="workspaceDescription" class="p2">Workspace description</label>
+                            <textarea class="form-control input-design resize-none" id="workspaceDescription" rows="3"
+                                maxlength="255" formControlName="projectDescription"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <p class="p2 mr-b-13">Make this workspace default? &nbsp;
+                                <span><img src="assets/img/workspace-icons/info.svg" class="img-fluid" placement="right"
+                                        ngbTooltip="When accessing quantumics, this workspace will be opened by default, if this option is set to yes."></span>
+                            </p>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" formControlName="markAsDefault"
+                                    [value]="true">
+                                <label class="form-check-label p2" for="inlineRadio1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" formControlName="markAsDefault"
+                                    [value]="false">
+                                <label class="form-check-label p2" for="inlineRadio2">No</label>
+                            </div>
+                        </div>
+
+                        <div class="btn-div">
+                            <button type="submit" class="btn btn-design" [disabled]="fg.invalid"
+                                (click)="save()">Save</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- </app-loader> -->

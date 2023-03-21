@@ -1,0 +1,76 @@
+<div class="card card-shadow mr-b-16">
+    <div class="card-body cbp-16">
+        <ng-template #list>
+            <div >
+                <p class="c-t"><span>Missing values:</span> the number of rows that are empty.</p>
+                <p class="c-t"><span>Valid values:</span> the number of rows that are not empty.</p>
+                <p class="c-t"><span>Unique values:</span> the number of values that has no duplicates in the selected column.</p>
+                <p class="c-t"><span>Repeating values:</span> the number of values that has atleast one duplicate in the selected column.</p>
+            </div>
+        </ng-template>
+        <p class="p2 br">Count  <span><img src="/assets/img/data-profile/info.svg" class="cp" 
+            placement="right" [ngbTooltip]="list"  container="body" tooltipClass="my-custom-class"></span>
+        <span class="float-right">Rows: {{analysis?.recordCount}}</span>
+        </p>
+
+        <div class="progress-div-pd">
+            <ng-container *ngIf="attributeCount else noRecords">
+                <div class="progress h-8 br-0">
+                    <div class="progress-bar bl-back" role="progressbar"  [ngStyle]="{'width': attributeCount?.notNull / recordCount * 100 + '%'}" 
+                        aria-valuenow="{{(attributeCount?.notNull / recordCount * 100).toFixed(2)}}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                    <div class="progress-bar l-bl-back" role="progressbar" [ngStyle]="{'width': attributeCount?.null / recordCount * 100 + '%'}" 
+                        aria-valuenow="{{(attributeCount?.null / recordCount * 100).toFixed(2)}}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+                <div class="p1 mr-t-16">
+                    <div class="bl"></div><span>Valid values</span> <div class="float-right">
+                        <div class="l-bl"></div> <span>Missing values</span></div>
+                </div>
+                <div>
+                    <div class="ib">
+                        <span class="value-count-text">{{attributeCount?.notNull}}</span> 
+                        <span class="p1" *ngIf="attributeCount?.notNull.toString().split('.')[0] !== 0">({{(attributeCount?.notNull / recordCount * 100).toFixed(2)}} %)</span>
+                        <span class="p1" *ngIf="attributeCount?.notNull.toString().split('.')[0] && attributeCount?.notNull.toString().split('.')[1] == 0">({{(attributeCount?.notNull / recordCount * 100).toFixed(8)}} %)</span>
+                    </div>
+                    <div class="float-right mr-r-18"> 
+                        <span class="value-count-text">{{attributeCount?.null}}</span> 
+                        <span class="p1" *ngIf="attributeCount?.null.toString().split('.')[0] !== 0">({{(attributeCount?.null / recordCount * 100).toFixed(2)}} %) </span>
+                        <span class="p1" *ngIf="attributeCount?.null.toString().split('.')[0] && attributeCount?.null.toString().split('.')[1] == 0">({{(attributeCount?.null / recordCount * 100).toFixed(8)}} %) </span>
+                    </div>
+                </div>
+
+                <div class="progress mr-t-24 h-8 br-0">
+                    <div class="progress-bar pr-back" role="progressbar" [ngStyle]="{'width': attributeCount?.distinct / recordCount * 100 + '%'}" 
+                        aria-valuenow="{{(attributeCount?.distinct / recordCount * 100).toFixed(2)}}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                    <div class="progress-bar l-pr-back" role="progressbar"  [ngStyle]="{'width': attributeCount?.duplicate / recordCount * 100 + '%'}" 
+                        aria-valuenow="{{(attributeCount?.duplicate / recordCount * 100).toFixed(2)}}" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                </div>
+
+                <div class="p1 mr-t-16">
+                    <div class="pr"></div><span>Unique values</span> <div class="float-right">
+                        <div class="l-pr"></div> <span>Repeating values</span></div>
+                </div>
+                <div>
+                    <div class="ib">
+                        <span class="value-count-text">{{attributeCount?.distinct}}</span> 
+                        <span class="p1" *ngIf="attributeCount?.distinct.toString().split('.')[0] !== 0">({{(attributeCount?.distinct / recordCount * 100).toFixed(2)}} %)</span>
+                        <span class="p1" *ngIf="attributeCount?.distinct.toString().split('.')[0] && attributeCount?.distinct.toString().split('.')[1] == 0">({{(attributeCount?.distinct / recordCount * 100).toFixed(8)}} %)</span>
+                    </div>
+                    <div class="float-right mr-r-18"> 
+                        <span class="value-count-text">{{attributeCount?.duplicate}}</span> 
+                        <span class="p1" *ngIf="attributeCount?.duplicate.toString().split('.')[0] !== 0">({{(attributeCount?.duplicate / recordCount * 100).toFixed(2)}} %) </span>
+                        <span class="p1" *ngIf="attributeCount?.duplicate.toString().split('.')[0] && attributeCount?.duplicate.toString().split('.')[1] == 0">({{(attributeCount?.duplicate / recordCount * 100).toFixed(8)}} %) </span>
+                    </div>
+                </div>
+            </ng-container>
+    
+            <ng-template #noRecords>
+                <h6 class="p1">No data found for Data Analysis</h6>
+            </ng-template>
+        </div>
+    </div>
+    
+</div>

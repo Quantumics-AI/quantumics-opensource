@@ -1,0 +1,69 @@
+<app-loader [loading]="loading">
+
+    <form [formGroup]="fg" (ngSubmit)="save(file)" class="create-project-form">
+        <div class="modal-header create-project-header">
+            <h3 class="modal-title ml-3">
+                <img src="/assets/img/project/create-project.svg" height="70">
+                Let's Create a Project!
+            </h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="col-12">
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-lg project-name-input" id="projectName" #projectName placeholder="Enter Project Name*"
+                        minlength="3" maxlength="30" [autoClose]="false" (focus)="p.open()"
+                        (input)="projectName.value.length > 0 ? p.close() : p.open()" (blur)="p.close()"
+                        autocomplete="off" required triggers="manual" #p="ngbPopover"
+                        formControlName="projectName" [ngbPopover]="popContent" popoverClass="project-pophover"
+                        placement="bottom" container="body">
+                    
+                    <div *ngIf="fg.get('projectName').invalid && fg.get('projectName').dirty || fg.get('projectName').touched">
+                        <div class="text-danger" *ngIf="fg.get('projectName').hasError('required')">
+                            Project name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-control project-desc" id="projectDesc" rows="6" maxlength="255"
+                        formControlName="projectDesc" placeholder="Enter Project Description"></textarea>
+                </div>
+                <div class="custom-file">
+                    <input id="file" name="file" type="file" class="custom-file-input" id="projectLogo" accept="image/*"
+                        (change)="validate($event)" title="{{projectLogoName}}" enctype="multipart/form-data" multiple #file />
+                    <label class="custom-file-label upload-logo" for="customFile">{{projectLogoName}}
+                        <span class="imgspan">
+                            <img class="fileimg" src="../../../../../assets/img/project/attach_icon.svg" alt="">
+                        </span>
+                        
+                    </label>
+                    <!-- <input id="file" name="file" class="custom-file-input" type="file" id="projectLogo" accept="image/*"
+                    (change)="validate($event)" title="{{projectLogoName}}" enctype="multipart/form-data" multiple #file>
+                    <label for="customFile" class="filelabel">
+                        {{projectLogoName}}
+                        <img class="fileimg" src="../../../../../assets/img/project/attach_icon.svg" alt="">
+                    </label> -->
+                </div>
+            </div>
+        </div>
+
+        <ng-template #popContent>
+            <div class="col-12">
+                <ul>
+                    <li>Project name must be between 3 and 30 characters long.</li>                   
+                </ul>
+            </div>
+        </ng-template>
+
+        <div class="modal-footer create-project-footer">
+            <button type="submit" id="btnCreateProject" [disabled]="fg.invalid" class="btn btn-create mt-3 ">
+                Create Project
+            </button>
+        </div>
+    </form>
+</app-loader>

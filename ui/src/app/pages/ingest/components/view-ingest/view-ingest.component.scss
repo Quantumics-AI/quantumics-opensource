@@ -1,0 +1,67 @@
+.togle-text-pii {
+    float: left;
+    margin: 8px -25px;
+    font-size: 12px;
+    position: relative;
+    z-index: 0;
+}
+
+.togle-div {
+    margin: 0px 0px 0px 60px;
+    float: left;
+}
+
+.togle-text {
+    float: left;
+    margin: 8px -51px;
+    font-size: 12px;
+    position: relative;
+    z-index: 0;
+}
+
+.plus-gra {
+    font-size: 14px !important;
+    color: #999;
+}
+.green-minus {
+    font-size: 14px !important;
+    color: #06d084;
+}
+
+// ::ng-deep .modal-size .modal-dialog {
+//     max-width: 1100px;
+// }
+
+.dispaly-block {
+    display: block;
+}
+
+.dispaly-none {
+    display: none;
+}
+
+.pointer-none {
+    pointer-events: none;
+}
+
+.ingest-tbl {
+    height: calc(100vh - 170px);
+}
+
+td {
+    white-space: normal;
+    height: 30px;
+}
+
+.breadcrumb-item .active{
+    cursor: auto;
+}
+
+.bx-s {
+    box-shadow: 0px 0px 5.18817px rgba(0, 0, 0, 0.05), 0px 1.03763px 2.07527px rgba(0, 0, 0, 0.15);
+    border-radius: 8.30107px;
+}
+
+.mr-t {
+    margin-top: 10px;
+}

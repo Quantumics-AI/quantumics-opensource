@@ -1,0 +1,166 @@
+<div class="modal-header">
+    <h5 class="modal-title w-100 text-center udf-text">
+        <img src="assets/img/Group.svg" width="18" class="align-baseline"> UDF
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body udf-body">
+    <form [formGroup]="udfForm">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="udfName" class="udf-lable">UDF Name</label>
+                    <input type="text" class="form-control udf-input" formControlName="udfName"
+                        placeholder="Enter UDF Name*">
+                    <div class="error"
+                        *ngIf="udfForm.get('udfName').hasError('required') && udfForm.get('udfName').touched">
+                        UDF Name is required
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="inputState" class="udf-lable">Select Language</label>
+                    <select class="form-control udf-input" formControlName="language">
+                        <option selected>Pyspark</option>
+                    </select>
+                    <div class="error"
+                        *ngIf="udfForm.get('language').hasError('required') && udfForm.get('language').touched">
+                        Language is required
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div style="border-bottom: 1px solid #1E1F3E;width: 47px;margin-bottom: 5px;" class="udf-lable">Values
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="input-variable">
+                    <table class="table" formArrayName="values">
+                        <tbody>
+                            <tr *ngFor="let form of values().controls; let i=index" [formGroupName]="i">
+                                <th class="number-divider text-center align-middle">{{i + 1}}</th>
+                                <td>
+                                    <select class="form-control form-control-sm udf-values" formControlName="dataValue">
+                                        <option value="Data Frame">Data Frame</option>
+                                        <option value="Parameter">Parameter</option>
+                                        <option value="Variable">Variable</option>
+                                    </select>
+                                    <div class="error"
+                                        *ngIf="form.get('dataValue').hasError('required') && form.get('dataValue').touched">
+                                        UDF Name is required
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm udf-values" formControlName="options">
+                                        <option value="Mandatory" selected>Mandatory</option>
+                                        <option value="Optional">Optional</option>
+                                    </select>
+                                    <div class="error"
+                                        *ngIf="form.get('options').hasError('required') && form.get('options').touched">
+                                        UDF Option is required
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-control form-control-sm udf-values"
+                                        [class.d-none]="form.get('dataValue').value === 'Data Frame'"
+                                        formControlName="dataType">
+                                        <option value="Data frame" selected>Data frame</option>
+                                        <option value="Data frame">String</option>
+                                        <option value="Integer">Integer</option>
+                                    </select>
+                                    <div class="error"
+                                        *ngIf="form.get('dataType').hasError('required') && form.get('dataType').touched">
+                                        Data Type is required
+                                    </div>
+                                </td>
+                                <td style="border-bottom: 1px solid #cccccc;">
+                                    <a (click)="remove(i);"><img src="assets/img/circle-minus.svg" width="15"
+                                            class="baseline-middle"></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-center add-values">
+                        <span class="add-more">
+                            <span (click)="addNewValues();">
+                                <img src="assets/img/circle-outlined.svg" width="20">
+                                <span class="ml-1">Add More Values</span>
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-xl-12">
+                <span [class.logicText]="!isUploadLogic" [class.logicNormalText]="isUploadLogic"
+                    style="margin-right: 12px;">Input Logic</span>
+                <label class="switch">
+                    <input type="checkbox" [(ngModel)]="isUploadLogic" [ngModelOptions]="{standalone: true}"
+                        (change)="checkValue(isUploadLogic?'true':'false')">
+                    <span class="slider round"></span>
+                </label>
+                <span [class.logicText]="isUploadLogic" [class.logicNormalText]="!isUploadLogic" class="ml-2">Upload
+                    Logic</span>
+            </div>
+            <div class="col-xl-12" *ngIf="!isUploadLogic">
+                <textarea class="form-control udf-input" id="udfdefination" formControlName="udfscript"
+                    placeholder="Input logic" rows="4"></textarea>
+            </div>
+            <div class="col-xl-12" [class.disabled-input]="!isUploadLogic" *ngIf="isUploadLogic">
+                <div style="height: 100px;">
+                    <div class="col-xl-12 col-lglg-12 col-md-12 col-sm-12 col-12 show">
+                        <input id="file" tabindex="-1" name="file" type="file" class="custom-file-input" id="customFile"
+                            accept=".csv" enctype="multipart/form-data" multiple #file title="" />
+                        <label class="custom-file-label upload-file udf-input" for="customFile" style="height: 100px;">
+                            Upload Logic
+                            <img src="assets/img/upload-icon.svg" width="18">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="returnDataType" class="udf-lable">Return Data Type</label>
+                    <input type="text" class="form-control udf-input" formControlName="dataType"
+                        placeholder="Enter return data type*">
+                    <div class="error"
+                        *ngIf="udfForm.get('dataType').hasError('required') && udfForm.get('dataType').touched">
+                        DataType is required
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="udfSyntax" class="udf-lable">UDF Syntax</label>
+                    <input type="text" class="form-control udf-input" formControlName="udfSyntax"
+                        placeholder="Enter UDF Syntax*">
+                    <div class="error"
+                        *ngIf="udfForm.get('udfSyntax').hasError('required') && udfForm.get('udfSyntax').touched">
+                        UDF Syntax is required
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pull-right btn-div">
+            <div class="col-xl-12 mb-3">
+                <input type="button" class="btn btn-primary btn-validate" value="VALIDATE" [disabled]="udfForm.invalid">
+                <button class="btn btn-primary btnStyle" [disabled]="udfForm.invalid" (click)="create()"
+                    [ngClass]="{'validBtn': !udfForm.invalid}">{{isUpdate ? 'UPDATE' : 'CREATE'}}</button>
+            </div>
+        </div>
+    </form>
+</div>

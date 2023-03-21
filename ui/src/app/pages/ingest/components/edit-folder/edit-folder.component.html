@@ -1,0 +1,54 @@
+<form [formGroup]="fg" (submit)="save()">
+    <div class="right-panel">
+        <div class="col-12" style="border-bottom:1px solid #f1f1f1; float:left; z-index:9999; position:relative;">
+            <h6 class="mt-3">Edit</h6>
+            <a (click)="close.emit(true);"><i class="fa fa-times-circle pull-right"
+                    style="margin:-24px 0px 15px 0px; color:#F00;"></i></a>
+        </div>
+
+        <div class="col-12">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="folderName">Folder Name</label>
+                    <input type="text" class="form-control" #folder formControlName="folderName" minlength="3"
+                        maxlength="30" id="folderName" autocomplete="off" placeholder="Folder Name"
+                        [pattern]="'^([0-9]?)(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'" [autoClose]="false" (focus)="f.open()"
+                        (input)="folder.value.length > 0 ? f.close() : f.open()" (blur)="f.close()" triggers="manual"
+                        #f="ngbPopover" [ngbPopover]="popFolderContent" popoverClass="edit-pophover" placement="bottom">
+
+                    <div class="error"
+                        *ngIf="fg.get('folderName').hasError('required') && fg.get('folderName').touched">
+                        Folder name is required
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="folderDesc">Folder Description</label>
+                    <textarea class="form-control" maxlength="255" formControlName="folderDesc" id="folderDesc"
+                        placeholder="Folder Description">
+                        </textarea>
+
+                    <div class="error"
+                        *ngIf="fg.get('folderDesc').hasError('required') && fg.get('folderDesc').touched">
+                        Folder Description is required
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" [disabled]="fg.invalid" class="btn btn-primary pull-right">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #popFolderContent>
+            <div class="col-12">
+                <ul>
+                    <li>Folder name must be between 3 and 30 characters long.</li>
+                    <li>Folder name should not contain special characters and spaces.</li>
+                    <li>Folder name should be alphanumeric or should contain only alphabets.</li>
+                    <li>Folder name should be unique.</li>
+                </ul>
+            </div>
+        </ng-template>
+    </div>
+</form>

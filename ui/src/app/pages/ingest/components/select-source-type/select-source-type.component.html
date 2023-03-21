@@ -1,0 +1,106 @@
+<div class="main-container">
+    <div class="page-header1">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item breadcrumb-top">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Ingest</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+    <!-- <nav class="navbar navbar-light p-header">
+        <p class="navbar-brand ingest-header">
+            <span>
+                <a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+            </span>&nbsp;
+            <img src="assets/img/db-connectors/back-arrow.svg" alt="" style="transform: rotate(180deg);"> &nbsp;
+            <span class="breadcrumb-item active">Ingest</span>
+        </p>
+    </nav> -->
+    <nav class="navbar navbar-light src-nav">
+        <div class="bck">
+            <a class="navbar-brand back-func" (click)="back()">
+                <img src="assets/img/db-connectors/back-arrow.svg" alt="">&nbsp;
+                GO BACK
+            </a>
+        </div>
+        
+        <div class="navbar-collapse src-type" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    Select Source Type
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-content fx">
+        <div class="row gutters">
+            <img class="img-fluid source-img" alt="Responsive image" src="assets/img/db-connectors/animation.svg">
+            <p class="source-content">Bring data from multiple Sources in near real-time and analyze it using your favorite DataOps tool.</p>
+            <div class="source-div">
+                <ng-container>
+                    <div class="card source-card" style="width: 13rem;" *ngFor="let sourceType of sourceData | filter:searchBy:type">
+                        <div class="card-body" style="cursor: pointer;" (click)="handleSelection(sourceType?.dataSourceName, sourceType.dataSourceType)">
+                            <p style="text-align:center;">
+                                <img class="img-fluid" alt="Responsive image" src="assets/img/{{sourceType.dataSourceImage}}" alt="">
+                            </p>
+                            
+                            <p class="source-text">{{sourceType.dataSourceName}}</p>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card">
+                    <div class="position-absolute" style="left: 10px;top: 11px;">
+                        <img src="assets/img/arrow.svg" width="19" height="20"
+                            style="margin:2px 0px; transform: rotate(180deg);">
+                        <a class="atext align-text-top" (click)="back()">Back</a>
+                    </div>
+                    <h5 class="source-type">Select Source Type </h5>
+                    <p class="sub-text">Select the Source you want to bring data from</p>
+                    <div class="custom-search" style="margin:0px auto 0px auto;">
+                        <input [(ngModel)]="searchBy" id="searchBy" type="text" class="search-query"
+                            placeholder="Search here ...">
+                    </div>
+
+
+                    <div class="card-body">
+                        <div class="bd-example bd-example-tabs">
+                            <div class="row">
+                                <div class="col-2 top-mt">
+                                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                        aria-orientation="vertical">
+                                    </div>
+                                </div>
+                                <div class="col-10">
+                                    <div class="tab-content" id="v-pills-tabContent">
+                                        <div class="tab-pane fade active show" id="v-pills-profile" role="tabpanel"
+                                            aria-labelledby="v-pills-profile-tab">
+                                            <ng-container
+                                                *ngFor="let sourceType of  sourceTypes$ | async | filter:searchBy:type">
+                                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 tab-data-box justify-content-center text-center">
+                                                    <a
+                                                        (click)="handleSelection(sourceType?.dataSourceName, sourceType.dataSourceType)">
+                                                        <div class="center-img"><img
+                                                                src="assets/img/{{sourceType.dataSourceImage}}"
+                                                                width="75">
+                                                        </div>
+                                                        <div class="center-span"> {{sourceType.dataSourceName}} </div>
+                                                    </a>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

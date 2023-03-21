@@ -1,0 +1,34 @@
+<div class="main-container">
+    <div class="page-header1">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Datasets</li>
+        </ol>
+    </div>
+
+    <div [style.width.%]="width" class="step-divider"></div>
+    <ul class="nav nav-tabs1 process-model more-icon-preocess">
+        <li *ngFor="let step of stepper;let i = index">
+            <ng-container *ngIf="i == 0; else otherSteps">
+                <a (click)="back();">
+                    <p class="back-func">
+                        <img src="assets/img/db-connectors/back-arrow.svg">&nbsp;
+                        {{step.name}}
+                    </p>
+                </a>
+            </ng-container>
+            <ng-template #otherSteps>
+                <a>
+                    <p class="step-text">{{step.name}}</p>
+                </a>
+            </ng-template>
+
+        </li>
+    </ul>
+
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

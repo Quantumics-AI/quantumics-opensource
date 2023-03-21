@@ -1,0 +1,132 @@
+<div class="workspaces">
+    <div class="container">
+        <div class="page-content pd-t-72">
+            <div class="row">
+                <div class="col-md-2">
+                    <a class="btn btn-back" routerLink="/projects">
+                        <img src="assets/img/workspace-icons/arr-left.svg">
+                        <span>&nbsp;&nbsp;Back</span>
+                    </a>
+                </div>
+                <div class="col-md-10">
+                    <div class="float-right">
+                        <div class="form-group has-search d-inflex">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="text" class="form-control" placeholder="Search workspace"
+                                [(ngModel)]="searchText">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="wrk-text">
+                Workspaces
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p class="p1 pd">
+                        Manage all workspace directly from here, create or modify workspaces.
+                    </p>
+                </div>
+                <div class="col-6">
+                    <div class="pull-right" role="button">
+
+                        
+    
+                        <div class="d-inline-block lh-1" placement="bottom-left" ngbDropdown #myDrop="ngbDropdown">
+                            <button type="button"  ngbDropdownAnchor class="btn sort-btn" (click)="myDrop.open();">
+                                Sort: {{sortBy === 'dateCreated' ? 'Date Created' : 'Alphabetical'}}
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownManual" class="sort-options">
+                                <button class="sortBtn pd-t-10" ngbDropdownItem disabled>Sort by</button>
+                                <button class="sortBtn" ngbDropdownItem (click)="sortWorkspace('dateCreated')">Date created
+                                    <img class="check-sort" *ngIf="sortBy === 'dateCreated'" src="assets/img/side-bar/selected-arrow.svg">
+                                </button>
+                                <button class="sortBtn pd-b-10" ngbDropdownItem (click)="sortWorkspace('workspaceName')">Alphabetical
+                                    <img class="check-sort" *ngIf="sortBy === 'workspaceName'" src="assets/img/side-bar/selected-arrow.svg">
+                                </button>
+                            </div>
+                        </div>
+    
+                        
+    
+                        <!-- <i (click)="orderBy();isDescending=!isDescending" class="fa text-white"
+                            [ngClass]="isDescending ? 'fa-arrow-down': 'fa-arrow-up'"></i> -->
+    
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row mr-t-40">
+                <div class="col-md-12">
+                    <div class="table-responsive table-height">
+                        <table class="table m-0 table-fixed">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="fw-400">Workspace name</th>
+                                    <th class="pd-l-7 fw-400">Created</th>
+                                    <th class="pd-l-7 fw-400">Plan</th>
+                                    <th class="pd-l-7 fw-400">Members <img class="info-icon" src="assets/img/side-bar/info.svg" alt="" ngbTooltip="Hover on the numbers to see the members email id."
+                                        placement="top" container="body"></th>
+                                    <!-- <th class="pd-l-7 fw-400">Status</th>
+                                    <th class="width-50"></th> -->
+                                    <th class="width-50"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let p of projects | filter: searchText; let i = index ">
+                                    <ng-template #list>
+                                        <div class="too">
+                                            <ul>
+                                                <li *ngFor="let l of p.projectMembers; let i = index">
+                                                    {{l}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </ng-template>
+                                    <td class="fw-600">
+                                        
+                                        <img *ngIf="p.markAsDefault" class="dfimg" src="assets/img/workspace-icons/default.svg" alt="">
+                                        <span class="dot" [ngStyle]="{'background-color': workSpaceColors[i]}"></span>
+                                        
+                                        <a (click)="redirectPage(p)">{{p.projectDisplayName}}</a>
+                                    </td>
+                                    <td class="fw-400">{{p.createdDate | date : 'dd-MM-yy'}}</td>
+                                    <td class="fw-400">{{p.subscriptionType}}</td>
+                                    <td class="member fw-400">
+                                        <span  [ngbTooltip]="list"
+                                        placement="right" container="body" tooltipClass="custom-class">
+                                            {{p.projectMembers?.length}}
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="last-th">
+                                        <div class="lh-1" ngbDropdown #myDrop="ngbDropdown">
+                                            <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="markAsDefaultWorkSpace(p);">Mark as default workspace</button>
+                                                <button ngbDropdownItem class="h-37" (click)="onRenameWorkSpace(p)">Rename workspace</button>
+                                                <button ngbDropdownItem class="h-37" (click)="onWorkspaceDeactivate(p)">Deactivate
+                                                    workspace</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="lh-1" ngbDropdown #myRestoreDrop="ngbDropdown">
+                                            <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="projectRestore(p.projectId);">Restore workspace</button>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <a *ngIf="!p.isDeleted" (click)="myDrop.open();"><img src="assets/img/side-bar/vertical-dot.svg" class="line-icon"  alt=""></a>
+                                        <a *ngIf="p.isDeleted" (click)="myRestoreDrop.open();"><img src="assets/img/side-bar/vertical-dot.svg" class="line-icon"  alt=""></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

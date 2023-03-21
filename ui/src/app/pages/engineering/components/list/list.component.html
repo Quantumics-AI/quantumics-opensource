@@ -1,0 +1,59 @@
+<app-loader [loading]="loading">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="count-eng-flows">
+                Total count of engineering flows ({{(flows | filterBy:searchTerm)?.length}})
+            </div>
+            <div class="custom-search txt-search">
+                <input type="text" id="searchTerm" [(ngModel)]="searchTerm.engFlowName" class="search-query mr-3"
+                    placeholder="Search...">
+                <button type="button" id="btnConnectToSource" class="btn btn-design mr-l-10 flowBtn" (click)="openModal()">
+                        Create Flow
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gutters">
+        <div class="col-xl-12 pd-0">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col">Engineering Flow Name</th>
+                            <th scope="col">Created By </th>
+                            <th scope="col">Created Date </th>
+                            <th scope="col">Modified Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let flow of flows | filterBy:searchTerm" class="td-color">
+                            <td class="text-left"><a (click)="redirectToCanvas(flow)">{{flow.engFlowDisplayName}}</a>
+                            </td>
+                            <td>{{flow.createdBy}}</td>
+                            <td>{{flow.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>{{flow.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>
+                                <a id="lnkEdit" [ngStyle]="{'visibility':flow.parentEngFlowId === 0 ? '' : 'hidden' }"
+                                    (click)="edit(flow)" placement="top" ngbTooltip="Edit">
+                                    <em><img src="assets/img/edit.svg" width="18" alt=""></em>
+                                </a> &nbsp;
+
+                                <a id="lnkViewFlow" (click)="view(flow.engFlowId, flow.engFlowDisplayName)"
+                                    placement="top" ngbTooltip="View">
+                                    <em><img src="assets/img/view.svg" width="18" alt=""></em>
+                                </a>&nbsp;
+
+                                <a id="lnkDeleteFlow" (click)="delete(flow.engFlowId)" placement="top"
+                                    ngbTooltip="Delete">
+                                    <em><img src="assets/img/delete.svg" width="18" alt=""></em>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</app-loader>

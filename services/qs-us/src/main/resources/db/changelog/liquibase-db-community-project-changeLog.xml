@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="dinesh (generated)" id="1674476505213-1">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS opensourcetest;
+        </sql>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-28">
+        <createTable tableName="qsp_cleansing_param">
+            <column autoIncrement="true" name="cleansing_param_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_cleansing_param_pkey"/>
+            </column>
+            <column name="cleansing_rule_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rule_delimiter" type="VARCHAR(255)"/>
+            <column name="rule_impacted_cols" type="TEXT"/>
+            <column name="rule_input_logic" type="VARCHAR(255)"/>
+            <column name="rule_input_logic1" type="VARCHAR(255)"/>
+            <column name="rule_input_logic2" type="VARCHAR(255)"/>
+            <column name="rule_input_logic3" type="VARCHAR(255)"/>
+            <column name="rule_input_logic4" type="VARCHAR(255)"/>
+            <column name="rule_input_logic5" type="VARCHAR(255)"/>
+            <column name="rule_input_values" type="VARCHAR(255)"/>
+            <column name="rule_input_values1" type="VARCHAR(255)"/>
+            <column name="rule_input_values2" type="VARCHAR(255)"/>
+            <column name="rule_input_values3" type="VARCHAR(255)"/>
+            <column name="rule_input_values4" type="VARCHAR(255)"/>
+            <column name="rule_input_values5" type="VARCHAR(255)"/>
+            <column name="rule_output_values" type="VARCHAR(255)"/>
+            <column name="rule_sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_rule_ids" type="VARCHAR(500)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="rule_input_newcolumns" type="TEXT"/>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-29">
+        <createTable tableName="qsp_cleansing_rule">
+            <column autoIncrement="true" name="cleansing_rule_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_cleansing_rule_pkey"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rule_name" type="VARCHAR(255)"/>
+            <column name="rule_tech_desc" type="VARCHAR(255)"/>
+            <column name="sequence" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-30">
+        <createTable tableName="qsp_connector_details">
+            <column autoIncrement="true" name="connector_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_connector_details_pk"/>
+            </column>
+            <column name="connector_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="connector_config" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="connector_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+            <column name="created_by" type="INT"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="INT"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-31">
+        <createTable tableName="qsp_datadictionary">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="column_name" type="VARCHAR(100)"/>
+            <column name="data_type" type="VARCHAR(100)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="example" type="VARCHAR(512)"/>
+            <column name="regular_expression" type="VARCHAR(100)"/>
+            <column name="data_custodian" type="VARCHAR(500)"/>
+            <column name="tags" type="VARCHAR(255)"/>
+            <column name="published" type="BOOL"/>
+            <column name="created_by" type="VARCHAR(100)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+            <column name="regex_type" type="VARCHAR(2)"/>
+            <column defaultValueNumeric="0" name="pd_regex_code" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-32">
+        <createTable tableName="qsp_dataset_metadata">
+            <column autoIncrement="true" name="datasetmetadata_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="datasetmetadata_id_pk"/>
+            </column>
+            <column name="datasetschema_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_metadata" type="TEXT"/>
+            <column name="ui_metadata" type="TEXT"/>
+            <column name="target_metadata" type="TEXT"/>
+            <column name="version" type="VARCHAR(5)"/>
+            <column name="created_by" type="SMALLINT"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="SMALLINT"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-33">
+        <createTable tableName="qsp_dataset_reference">
+            <column autoIncrement="true" name="data_set_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="qsp_dataset_reference_pkey"/>
+            </column>
+            <column name="athena_table" type="VARCHAR(255)"/>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_name" type="VARCHAR(255)"/>
+            <column name="project_id" type="VARCHAR(255)"/>
+            <column name="table_partition" type="VARCHAR(255)"/>
+            <column name="created_by" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-34">
+        <createTable tableName="qsp_dataset_schema">
+            <column autoIncrement="true" name="datasetschema_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_dataset_schema_pk"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="object_name" type="VARCHAR(50)"/>
+            <column name="object_type" type="VARCHAR(50)"/>
+            <column name="sql_script" type="TEXT"/>
+            <column name="dataset_properties" type="TEXT"/>
+            <column name="created_by" type="SMALLINT"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="SMALLINT"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="schema_name" type="VARCHAR(100)"/>
+            <column name="sql_type" type="BPCHAR(1)"/>
+            <column defaultValueBoolean="false" name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-35">
+        <createTable tableName="qsp_datasources_info">
+            <column autoIncrement="true" name="data_source_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_datasources_info_pkey"/>
+            </column>
+            <column name="connection_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT"/>
+            <column name="host" type="VARCHAR(100)"/>
+            <column name="port" type="VARCHAR(10)"/>
+            <column name="schema_name" type="VARCHAR(50)"/>
+            <column name="user_name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-36">
+        <createTable tableName="qsp_eng_flow">
+            <column autoIncrement="true" name="eng_flow_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_eng_flow_pkey"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="eng_flow_desc" type="VARCHAR(255)"/>
+            <column name="eng_flow_meta_data" type="TEXT"/>
+            <column name="eng_flow_name" type="VARCHAR(255)"/>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_eng_flow_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="eng_flow_config" type="TEXT"/>
+            <column name="eng_flow_display_name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-37">
+        <createTable tableName="qsp_eng_flow_datalineage">
+            <column autoIncrement="true" name="lineage_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_eng_flow_datalineage_pkey"/>
+            </column>
+            <column name="eng_flow_id" type="INT"/>
+            <column name="event_id" type="INT"/>
+            <column name="event_mapping_id" type="INT"/>
+            <column name="event_type" type="VARCHAR(6)"/>
+            <column name="join_type" type="VARCHAR(50)"/>
+            <column name="record_count" type="INT"/>
+            <column name="attributes" type="VARCHAR(1000)"/>
+            <column name="file_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-38">
+        <createTable tableName="qsp_eng_flow_event">
+            <column autoIncrement="true" name="eng_flow_event_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_eng_flow_event_pkey"/>
+            </column>
+            <column name="eng_flow_config" type="TEXT"/>
+            <column name="eng_flow_event_data" type="TEXT"/>
+            <column name="eng_flow_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="eng_flows3location" type="VARCHAR(255)"/>
+            <column name="event_type" type="VARCHAR(50)"/>
+            <column name="file_meta_data" type="TEXT"/>
+            <column name="join_operations" type="TEXT"/>
+            <column defaultValueBoolean="false" name="event_status" type="BOOL"/>
+            <column name="auto_config_event_id" type="INT"/>
+            <column name="event_progress" type="FLOAT8"/>
+            <column name="livy_stmt_execution_status" type="VARCHAR(15)"/>
+            <column name="livy_stmt_output" type="TEXT"/>
+            <column name="livy_stmt_start_time" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="livy_stmt_end_time" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column defaultValueNumeric="0" name="livy_stmt_duration" type="INT"/>
+            <column defaultValueNumeric="0" name="project_id" type="INT"/>
+            <column defaultValueNumeric="0" name="folder_id" type="INT"/>
+            <column defaultValueNumeric="0" name="file_id" type="INT"/>
+            <column defaultValueNumeric="0" name="user_id" type="INT"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="file_type" type="VARCHAR(50)"/>
+            <column defaultValueBoolean="false" name="deleted" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-39">
+        <createTable tableName="qsp_eng_flow_job">
+            <column autoIncrement="true" name="flow_job_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_eng_flow_job_pkey"/>
+            </column>
+            <column name="eng_flow_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)"/>
+            <column defaultValueComputed="CURRENT_TIMESTAMP" name="rundate" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="'-1'::integer" name="batch_job_id" type="INT"/>
+            <column name="batch_job_log" type="TEXT"/>
+            <column defaultValueNumeric="0" name="batch_job_duration" type="BIGINT"/>
+            <column name="autorun_req_payload" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-40">
+        <createTable tableName="qsp_eng_graph">
+            <column autoIncrement="true" name="eng_graph_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_eng_graph_pkey"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="eng_flow_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-41">
+        <createTable tableName="qsp_engflow_metadata_awsref">
+            <column autoIncrement="true" name="eng_aws_ref_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="qsp_engflow_metadata_awsref_pkey"/>
+            </column>
+            <column name="athena_table" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="eng_flow_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="eng_flow_meta_data" type="TEXT"/>
+            <column name="flow_type" type="VARCHAR(255)"/>
+            <column name="table_partition" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-42">
+        <createTable tableName="qsp_engg">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_engg_pkey"/>
+            </column>
+            <column name="content" type="TEXT"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-43">
+        <createTable tableName="qsp_file">
+            <column autoIncrement="true" name="file_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_file_pkey"/>
+            </column>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="file_size" type="VARCHAR(255)"/>
+            <column name="file_type" type="VARCHAR(255)"/>
+            <column name="file_version_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qs_meta_data" type="TEXT"/>
+            <column name="rule_created_from" type="VARCHAR(255)"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+            <column name="additional_info" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-44">
+        <createTable tableName="qsp_file_data_profiling_info">
+            <column autoIncrement="true" name="data_profile_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_file_data_profiling_info_pkey"/>
+            </column>
+            <column name="project_id" type="INT"/>
+            <column name="folder_id" type="INT"/>
+            <column name="file_id" type="INT"/>
+            <column name="file_profiling_info" type="TEXT"/>
+            <column name="stats_type" type="VARCHAR(30)"/>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-45">
+        <createTable tableName="qsp_filemetadata_awsref">
+            <column autoIncrement="true" name="aws_ref_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="qsp_filemetadata_awsref_pkey"/>
+            </column>
+            <column name="athena_table" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_meta_data" type="TEXT"/>
+            <column name="file_type" type="VARCHAR(255)"/>
+            <column name="table_partition" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-46">
+        <createTable tableName="qsp_folder">
+            <column autoIncrement="true" name="folder_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_folder_pkey"/>
+            </column>
+            <column name="cleansing_rule_set_name" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="data_owner" type="VARCHAR(255)"/>
+            <column name="data_prep_freq" type="VARCHAR(255)"/>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_desc" type="VARCHAR(255)"/>
+            <column name="folder_name" type="VARCHAR(255)"/>
+            <column name="folder_display_name" type="VARCHAR(255)"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_external" type="BOOL"/>
+            <column name="parent_id" type="INT"/>
+            <column name="column_headers" type="TEXT"/>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-47">
+        <createTable tableName="qsp_folder_piidata">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_folder_piidata_pk"/>
+            </column>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pii_data" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-48">
+        <createTable tableName="qsp_partition">
+            <column autoIncrement="true" name="partition_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_partition_pkey"/>
+            </column>
+            <column name="file_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="VARCHAR(255)"/>
+            <column name="folder_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="partition_name" type="VARCHAR(255)"/>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="s3location" type="VARCHAR(255)"/>
+            <column name="folder_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-49">
+        <createTable tableName="qsp_pipeline">
+            <column autoIncrement="true" name="pipeline_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qsp_pipeline_pk"/>
+            </column>
+            <column name="pipeline_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="active" type="BOOL"/>
+            <column name="created_by" type="VARCHAR(100)"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column defaultValueBoolean="false" name="is_published" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-50">
+        <createTable tableName="qsp_pipeline_connector_details">
+            <column autoIncrement="true" name="pc_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="connector_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-51">
+        <createTable tableName="qsp_pipeline_transcation_details">
+            <column autoIncrement="true" name="ptid" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_status" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pipeline_log" type="TEXT"/>
+            <column name="execution_date" type="TIMESTAMP(29) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-52">
+        <createTable tableName="qsp_redash_view_info">
+            <column autoIncrement="true" name="redash_view_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="schema_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="view_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOL"/>
+            <column name="creation_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-53">
+        <createTable tableName="qsp_run_job_status">
+            <column autoIncrement="true" name="run_job_id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="qs_run_job_status_pkey"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="aws_create_job_id" type="VARCHAR(255)"/>
+            <column name="aws_run_job_id" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_id" type="VARCHAR(255)"/>
+            <column name="folder_id" type="INT"/>
+            <column defaultValueComputed="'-1'::integer" name="batch_job_id" type="INT"/>
+            <column name="batch_job_log" type="TEXT"/>
+            <column defaultValueNumeric="0" name="batch_job_duration" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-54">
+        <createTable tableName="qsp_udf">
+            <column autoIncrement="true" name="udf_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="udf_name" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="udf_info" type="TEXT"/>
+            <column name="active" type="BOOL"/>
+            <column name="created_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="modified_date" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(100)"/>
+            <column name="modified_by" type="VARCHAR(100)"/>
+            <column name="arguments" type="TEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-55">
+        <createView fullDefinition="false" viewName="qsp_eng_flow_view"> SELECT qsp_eng_flow.eng_flow_name,
+    qsp_eng_flow.eng_flow_desc,
+    qsp_eng_flow.eng_flow_meta_data,
+    qsp_eng_flow.active,
+    qsp_eng_flow.parent_eng_flow_id,
+    qsp_eng_flow.project_id,
+    qsp_eng_flow.eng_flow_config,
+    qsp_eng_flow.created_date,
+    qsp_eng_flow.created_by
+   FROM qsp_eng_flow;</createView>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-56">
+        <createView fullDefinition="false" viewName="qsp_engflow_metadata_awsref_view"> SELECT qsp_engflow_metadata_awsref.athena_table,
+    qsp_engflow_metadata_awsref.created_date,
+    qsp_engflow_metadata_awsref.eng_flow_id,
+    qsp_engflow_metadata_awsref.eng_flow_meta_data,
+    qsp_engflow_metadata_awsref.flow_type,
+    qsp_engflow_metadata_awsref.table_partition
+   FROM qsp_engflow_metadata_awsref;</createView>
+    </changeSet>
+    <changeSet author="dinesh (generated)" id="1674476505213-57">
+        <createView fullDefinition="false" viewName="qsp_folder_view"> SELECT folder.folder_name,
+    folder.folder_desc,
+    folder.project_id,
+    proj.project_name,
+    folder.user_id,
+    concat(userprofile.user_first_name, ' ', userprofile.user_last_name) AS username,
+    folder.created_date,
+    folder.active
+   FROM (((qsp_folder folder
+     JOIN public.qs_project proj ON ((folder.project_id = proj.project_id)))
+     JOIN public.qs_user_v2 userv2 ON ((folder.user_id = userv2.user_id)))
+     JOIN public.qs_userprofile userprofile ON ((userv2.user_id = userprofile.user_id)));</createView>
+    </changeSet>
+</databaseChangeLog>
+

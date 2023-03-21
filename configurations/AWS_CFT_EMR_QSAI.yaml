@@ -1,0 +1,184 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  This Template is created by Quantumics.AI LTD and by using this temaplate you agree to Quamtumics.AI LTD T&C.
+  This template create infrastructure for orchestration Apache Spark on Amazon EMR Asper Quantumics.AI Requirment.
+  This Template lunches EMR Cluster on EC2 with Master,Core and Task instaces each one. 
+  Creates few S3 buckets and IAM resources like User and groups. Onc EC2 with Quantumics.AI AMI.
+# User need to have below parameters in hand before using this template.
+Parameters:
+  SubnetId:
+    Type: String
+  KeyPairName:
+    Type: String
+  InstanceType:
+    Type: String
+Resources:
+# EMR Cluster resources configurations
+  QsaiEMR:
+    Type: AWS::EMR::Cluster
+    Properties: 
+      Applications: 
+        - Name: 'Spark'
+        - Name: 'Livy'
+        - Name: 'Zeppelin'
+        - Name: 'Ganglia'
+        - Name: 'Hadoop'
+      Configurations: 
+        - Classification: 'emrfs-site'
+          ConfigurationProperties:
+            fs.s3.maxConnections: '500'
+        - Classification: 'spark-hive-site'
+          ConfigurationProperties:
+            hive.metastore.client.factory.class: 'com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory'
+      Instances: 
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: !Ref InstanceType
+          Market: ON_DEMAND
+          Name: QsaiEmrMaster
+        CoreInstanceGroup:
+          InstanceCount: 1
+          InstanceType: !Ref InstanceType
+          Market: ON_DEMAND
+          Name: QsaiEmrCore
+        TaskInstanceGroups:
+          - InstanceCount: 1
+            InstanceType: !Ref InstanceType
+            Market: ON_DEMAND
+            Name: QsaiEmrTask-1
+        TerminationProtected: 'false'
+        Ec2KeyName: !Ref KeyPairName
+        Ec2SubnetId: !Ref SubnetId
+      Name: QsaiEMRCluster
+      JobFlowRole: !Ref emrEc2InstanceProfile
+      ReleaseLabel: 'emr-6.4.0'
+      ServiceRole: !Ref emrRole
+      StepConcurrencyLevel: 10
+      Steps:
+        - ActionOnFailure: 'CANCEL_AND_WAIT'
+          Name: 'Setup hadoop debugging'
+          HadoopJarStep:
+            Jar: command-runner.jar
+            Args: 
+              - state-pusher-script
+      LogUri: 
+        Fn::Sub: s3://${EMRLogBucket}/emr-logs
+# IAM Role creations for EMR and EMR instnaces profile
+  emrRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: 'elasticmapreduce.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole'
+  emrEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2008-10-17
+        Statement:
+          - Sid: ''
+            Effect: Allow
+            Principal:
+              Service: 'ec2.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role'
+        - 'arn:aws:iam::aws:policy/AmazonEC2FullAccess'
+        - 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
+# Applying emrEc2Role to EMR Instaces profile
+  emrEc2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref emrEc2Role
+############# Creating S3 Buckets ##############
+  PIUIBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+  UDFBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+  AthenaBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+  ETLBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+  ResulutsBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+  EMRLogBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+############## Creating IAM User ################
+  IamUser:
+    Type: AWS::IAM::User
+    Properties: 
+      ManagedPolicyArns: 
+        - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
+        - arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+  AccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: Active
+      UserName: !Ref IamUser
+  AccessKeySecret:
+    Type: AWS::SecretsManager::Secret
+    Properties: 
+      Description: "These are the credentials for the IAM User "
+      SecretString: !Join
+        - ""
+        - - '{"AccessKeyId":"'
+          - !Ref AccessKey
+          - '","SecretAccessKey":"'
+          - !GetAtt AccessKey.SecretAccessKey

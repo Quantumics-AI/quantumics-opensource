@@ -1,0 +1,54 @@
+<h6 class="h6-font-hading">
+    Replace Cell
+</h6>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectColumn">Column</label>
+            <small class="form-text text-muted pull-right"> Required</small>
+            <ng-select id="selectColumn" [(ngModel)]="selectedColumns" formControlName="column" [multiple]="false"
+                (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                <ng-template ng-option-tmp let-item="item">
+                    <span [title]="item.column_name">{{item.column_name}}</span>
+                </ng-template>
+            </ng-select>
+            <span class="alert-danger" *ngIf="fg.get('column').touched && fg.get('column').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="editPattern">Find </label>
+            <small class="form-text text-muted pull-right"> Required</small>
+            <input type="text" class="form-control" id="editPattern" placeholder="Cell value to replace"
+                formControlName="findString" (change)="preview()">
+            <span class="alert-danger"
+                *ngIf="fg.get('findString').touched && fg.get('findString').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="replaceString">Replace with</label>
+            <small class="form-text text-muted pull-right"> Required</small>
+            <input type="text" class="form-control" id="replaceString" required placeholder="String"
+                formControlName="replaceString" (change)="preview()">
+            <span class="alert-danger"
+                *ngIf="fg.get('replaceString').touched && fg.get('replaceString').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>

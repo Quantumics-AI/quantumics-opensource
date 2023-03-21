@@ -1,0 +1,75 @@
+ <div class="user-setting-bg" style="width: 800px">
+    <div class="col-12" style="border-bottom:1px solid #f1f1f1; float:left;
+        z-index:9999; position:relative;">
+        <h5 class="mt-3">Systems Status</h5>
+        <a (click)="close.emit(true);"><i class="fa fa-times-circle
+                pull-right"
+                style="margin:-20px 0px 15px 0px; color:#F00;"></i></a>
+    </div>
+
+    <div class="col-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="container">
+                        <div class="systems-bg">
+                            <h5 class="pull-left h5-status">All systems
+                                operational</h5>
+                            <h6 class="pull-right h6-status">Refreshed less
+                                than a minute ago</h6>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <h4 class="h4-status">Quantumics.ai Status Page</h4>
+                        <p>This is our public status report on our services. If
+                            there is an incident/downtime, we will update this
+                            page.</p>
+                    </div>
+
+                    <ng-container *ngIf="!loading else inProgress">
+                        <div class="container">
+                            <h4 class="h4-status">Monitors</h4>
+                            <hr>
+
+                            <div class="box-line-status" *ngFor="let item of
+                                systemStatus;">
+                                <h4 class="h4-status-h4">{{item?.type}}
+                                    <span class="pull-right span-green">Operational</span>
+                                </h4>
+                                <h4 class="h4-status-h4">Outages
+                                    ({{item?.outages}})</h4>
+
+                                <div class="progress">
+                                    <div class="progress-bar"
+                                        [ngStyle]="{'width': item?.uptime +
+                                        '%'}">
+                                        {{item?.uptime}} %
+                                    </div>
+                                </div>
+                                <p class="p-status pull-left">Uptime over the
+                                    past {{item?.fromDays}} days </p>
+                                <span class="p-status pull-right">{{item?.uptime}}
+                                    % uptime</span>
+                            </div>
+                        </div>
+
+                        <div class="container">
+                            <h4 class="h4-status">Incidents</h4>
+                            <hr>
+                        </div>
+
+                        <ng-container *ngFor="let item of incidents;">
+                            <div [innerHTML]="item?.incidentDesc"></div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #inProgress>
+    <div class="spinner-center spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</ng-template>

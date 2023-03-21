@@ -1,0 +1,87 @@
+.cleansing-bg {
+    width: 100%;
+    // border-top: 1px solid #eee;
+    padding: 3px 0px 0px 0px;
+}
+
+.bg {
+    background: #F7FAFF;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.two-rules-div {
+    display: inline-flex;
+}
+
+.pd {
+    padding-right: 12px;
+}
+
+.pd-0 {
+    padding: 0;
+}
+
+.pd-r-l {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.pd-r {
+    padding-right: 8px;
+}
+
+.pd-l {
+    padding-left: 12px;
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.clean-btn {
+    float: left !important; /* border:1px solid #f1f1f1;*/
+    // width: 80px;
+    border-right: 1px solid #C4C4C4;
+    // margin: 0px 10px 5px 5px;
+    // border-radius: 3px;
+
+    // border: 1px solid;
+    // margin-right: 24px;
+
+    p {
+        margin: 0;
+        text-align: center;
+    }
+}
+.dropdown:hover {
+    background: #EAEFF9 !important;
+}
+
+#rules-btn{
+    border: 1px solid #dae0e5;
+}
+
+.mr-6px{
+    margin-right: 6px;
+}
+
+.dropdown-menu {
+    font-size: 13px;
+}
+
+// .btn-width {
+//     width: 64px;
+// }
+
+// .replace-btn {
+//     margin-left: 10px;
+// }
+
+.standardize-btn {
+    border: none !important;
+}
+
+.btn:focus, btn.focus {
+    box-shadow: none !important;
+}

@@ -1,0 +1,89 @@
+<div [class.loading]="loading">
+    <div class="main-container">
+        <div class="row page-header1 mb-0 mr-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-top">
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
+                    </li>
+                    <li class="breadcrumb-item"><a [routerLink]="[]" (click)="back()">Data Engineering</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{flowName}}</li>
+                </ol>
+            </nav>
+            <!-- <div class="pr-0">
+                <div class="pull-right">
+                    <button type="button" id="btnSaveGraph" [disabled]="viewOnly" class="btn btn-primary mr-1"
+                        (click)="saveGraph()">Save</button>
+                    <button ngbPopover="Please make sure to Save the Flow before closing" [disablePopover]="isPreview"
+                        triggers="mouseenter:mouseleave" placement="auto" type="button" id="btnClose"
+                        class="btn btn-secondary" (click)="back()">close</button>
+                </div>
+            </div> -->
+        </div>
+        <div class="page-content p-0">
+            <div class="row m-0">
+                <div class="col-xl-2 pd-r-0 pd-l-0 box-s">
+                    <div [ngClass]="{'disabled':isPreview}">
+                        <app-folders [projectId]="projectId" [userId]="userId" (folderChange)="folderChange($event)"
+                            (dropFile)="dropFile($event)">
+                        </app-folders>
+                    </div>
+                </div>
+                <div class="col-xl-10 pd-l-0">
+
+                    <app-toolbar [isPreview]="isPreview" (addTotalElement)="addTotalElement()"
+                        (addJoinElement)="addJoinElement()" (deleteElement)="deleteElement()" (udf)="udfElement()"
+                        (pgsql)="pgsqlElement()" (addUdfElement)="addUdfElement($event)" (saveGraph)="onSaveGraph();">
+                    </app-toolbar>
+
+                    <div class="watermark-text" *ngIf="!elements.length">
+                        <ol>
+                            <li>Drag or click on a dataset to the canvas from raw or cleansed or engineered or pipeline
+                            </li>
+                            <li>Select a function from tool bar </li>
+                            <li>Draw connection lines between dataset and function on the canvas</li>
+                            <li>Configure the function</li>
+                            <li>Preview your output</li>
+                            <li>Save your flow</li>
+                        </ol>
+                    </div>
+
+                    <div class="left-penal" [ngClass]="isPreviewNew ? 'w-69-p' : 'w-100-p' " (drop)="drop($event)"
+                        (dragover)="allowDrop($event)">
+
+                        <div cdkDropList id="doneList" (cdkDropListDropped)="drop($event)" [cdkDropListData]="items2"
+                            [cdkDropListConnectedTo]="'todoList'">
+                            <div class="overflow-auto" #graphContainer id="graphContainer"></div>
+                        </div>
+
+                        <div *ngIf="loading">
+                            <div class="eng-progressbar progress">
+                                <div class="progress-bar" role="progressbar"
+                                    [ngStyle]="{'width': graphProgressPercentage + '%'}" aria-valuenow="25"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    Loading ({{graphProgressPercentage}}%)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-panel" *ngIf="isPreviewNew">
+                        <app-preview-file *ngIf="selectedFile" [selectedFile]="selectedFile"
+                            (closePreviewPanel)="onClosePreviewPanel($event)">
+                        </app-preview-file>
+
+                        <app-preview-join *ngIf="selectedJoin" [selectedJoin]="selectedJoin"
+                            (saveJoinData)="saveJoinData($event)" (updateJoinImage)="updateJoinImage($event)"
+                            (closePreviewPanel)="onClosePreviewPanel($event)"></app-preview-join>
+
+                        <app-preview-aggregate *ngIf="selectedAggregate" [aggregate]="selectedAggregate"
+                            (previewData)="getPreviewData()" (closePreviewPanel)="onClosePreviewPanel($event)">
+                        </app-preview-aggregate>
+                        <!-- <app-view-udf></app-view-udf> -->
+                        <app-preview-udf *ngIf="selectedUdf" [selectedUdf]="selectedUdf"
+                            (saveUdfData)="saveUdfData($event)" (updateJoinImage)="updateJoinImage($event)"
+                            (closePreviewPanel)="onClosePreviewPanel($event)"></app-preview-udf>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

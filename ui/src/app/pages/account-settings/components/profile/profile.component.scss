@@ -1,0 +1,125 @@
+.grey {
+    color: #888C92;
+}
+
+.qs-color {
+    color: #00977C !important;
+    display: block;
+    margin-top: 8px;
+    margin-top: 8px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.circle {
+    // width: 64px;
+    // height: 64px;
+    // line-height: 64px;
+    // border-radius: 50%;
+    // font-weight: 500;
+    // font-size: 30.8148px;
+    // color: #858599;
+    // text-align: center;
+    // background: #CAFFA9;
+    // border: 1.18519px solid #D1CDD9;
+    // box-shadow: 0px 0px 6.14894px rgba(0, 0, 0, 0.05);
+    background: #CAFFA9;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    display: inline-block;
+    line-height: 64px;
+    margin-right: 5px;
+    text-align: center;
+    width: 64px;
+    text-transform: capitalize;
+    color: #858599;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 30.8148px;
+}
+
+.custom-file-input{
+    height: 1px;
+}
+
+.page-content {
+    padding: 0;
+}
+
+// ::ng-deep {
+//     .ng-select.ng-select-single .ng-select-container {
+//         background: #F4F6FA !important;
+        
+//         border: 1px solid #E2E8F2 !important;
+//         border-radius: 8px !important;
+//     }
+// }
+
+
+.pic-lable {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    /* Blue */
+    
+    color: #212244
+}
+
+.user-img {
+    width: 64px;
+}
+
+.mr-t-36 {
+    margin-top: -36px;
+}
+
+.lable-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    
+    /* Dark Grey */
+    
+    color: #888C92;
+}
+
+.in-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    display: flex;
+    align-items: center;
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.mr-b-16 {
+    margin-bottom: 16px;
+}
+
+.mr-b-24 {
+    margin-bottom: 24px;
+}
+
+.width-f {
+    width: fit-content;
+}

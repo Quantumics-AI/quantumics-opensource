@@ -1,0 +1,138 @@
+.spinner-center {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-48%, -50%);
+}
+
+.gradient {
+    background: linear-gradient(to right, #3375f7 0%, #65ccfe 100%);
+}
+
+.td-color {
+    background: #F9FAFE;
+}
+
+.frequency-card {
+    background: #f9fafe;
+    height: 480px; 
+    // overflow: auto;
+    box-shadow: none;
+}
+
+.f-table-height {
+    height: 352px;
+    overflow: auto;
+}
+
+.item-text {
+    text-align: start;
+    padding-left: 12px;
+}
+
+.table-style {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 11.6523px;
+    line-height: 14px;
+    letter-spacing: -0.035em;
+    
+    color: #000000;
+}
+
+.frequency-h6 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    
+    color: #000000;
+    border-bottom: 1px solid #b5b5b5;
+    margin: 5px;
+    padding: 5px 5px
+}
+
+.no-frequency-h6 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    
+    color: #000000;
+}
+
+.br {
+    border-bottom: 1px solid #E2E8F2;
+    margin: 0;
+    padding-bottom: 8px;
+}
+
+.mr-b-8 {
+    margin-bottom: 8px;
+}
+
+.table thead {
+    box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #888C92;
+    letter-spacing: normal;
+}
+
+.td-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+    border-bottom: 1px solid #E2E8F2;
+}
+
+.td-text td {
+    padding-top: 11px;
+    padding-bottom: 11px;
+}
+
+.fixed-th th {
+    text-align: start;
+    padding-left: 5px;
+    background-color: #F6F6F7 !important;
+}
+
+.cp {
+    cursor: pointer;
+}
+
+.c-t {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    /* or 133% */
+    
+    
+    /* Background */
+    
+    color: #FFFFFF;
+}
+
+.w-55 {
+    width: 55%;
+}

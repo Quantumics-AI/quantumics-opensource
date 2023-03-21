@@ -1,0 +1,44 @@
+<app-loader [loading]="loading">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="custom-search pull-right">
+                <input type="text" id="searchTerm" [(ngModel)]="searchUdf" class="search-query"
+                    placeholder="Search...">
+            </div>
+        </div>
+    </div>
+    
+    <div class="row gutters">
+        <div class="col-xl-12">
+            <div class="table-responsive table-height">
+                <table class="table m-0 table-fixed">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th scope="col">UDF Name</th>
+                            <th scope="col">Created By </th>
+                            <th scope="col">Created Date </th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let d of udfList" class="td-color" >
+                            <td>{{d?.udfName}}</td>
+                            <td>{{d?.createdBy}}</td>
+                            <td>{{d?.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                            <td>
+                                <a id="lnkEdit"  placement="top" ngbTooltip="Edit" (click)="onEditUDF(d)">
+                                    <em><img src="assets/img/edit.svg" width="18" alt=""></em>
+                                </a> &nbsp;
+    
+                                <a id="lnkDeleteFlow" placement="top" ngbTooltip="Delete" (click)="deleteUdf(d)">
+                                    <em><img src="assets/img/delete.svg" width="18" alt=""></em>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Total UDF ({{udfList?.length}})</p>
+            </div>
+        </div>
+    </div>
+</app-loader>

@@ -1,0 +1,114 @@
+<ng-container *ngIf="userProfile">
+    <form [formGroup]="fg" (ngSubmit)="save(file)">
+        <div class="user-setting-bg">
+
+            <div class="col-12" style="border-bottom:1px solid #f1f1f1; float:left; z-index:9999; position:relative;">
+                <h5 class="mt-3">My Profile</h5>
+                <a (click)="close.emit(true);"><i class="fa fa-times-circle pull-right"
+                        style="margin:-20px 0px 15px 0px; color:#F00;"></i></a>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group m">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="First Name" maxlength="50"
+                        formControlName="firstName">
+
+                    <div class="error" *ngIf="fg.get('firstName').hasError('required') && fg.get('firstName').touched">
+                        First name is required
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" maxlength="50"
+                        formControlName="lastName">
+                    <div class="error" *ngIf="fg.get('lastName').hasError('required') && fg.get('lastName').touched">
+                        Last name is required
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number" maxlength="15"
+                        formControlName="phone">
+
+                    <div class="error" *ngIf="fg.get('phone').hasError('required') && fg.get('phone').touched">
+                        Phone number is required
+                    </div>
+                    <div class="error" *ngIf="fg.get('phone').hasError('pattern') && fg.get('phone').touched">
+                        Enter valid phone number
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="email">Email ID</label>
+                    <input type="email" class="form-control" formControlName="email" id="email"
+                        placeholder="example@gmail.com" maxlength="100">
+
+                    <div class="error" *ngIf="fg.get('email').hasError('required') && fg.get('email').touched">
+                        Email address is required
+                    </div>
+
+                    <div class="error" *ngIf="fg.get('email').hasError('maxlength') && fg.get('email').touched">
+                         Enter valid email address
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="companyRole">Company Name</label>
+                    <input type="text" class="form-control" formControlName="company" id="companyName"
+                        placeholder="Company Name" maxlength="50">
+
+                    <div class="error" *ngIf="fg.get('company').hasError('required') && fg.get('company').touched">
+                        Company name is required
+                    </div>
+
+                    <div class="error" *ngIf="fg.get('company').hasError('maxlength') && fg.get('company').touched">
+                        Company validation failed
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="companyRole">Role</label>
+                    <input type="text" class="form-control" formControlName="companyRole" id="companyRole"
+                        placeholder="Company Role" maxlength="50">
+
+                    <div class="error" *ngIf="fg.get('companyRole').hasError('required') && fg.get('companyRole').touched">
+                        Company role is required
+                    </div>
+
+                    <div class="error" *ngIf="fg.get('companyRole').hasError('maxlength') && fg.get('companyRole').touched">
+                        Role validation failed
+                    </div>
+                </div>
+
+                <div class="form-group m">
+                    <label for="country">Country</label>
+
+                    <ng-select id="country" formControlName="country" [clearable]="false" [multiple]="false"
+                        placeholder="Select Country" [dropdownPosition]="'auto'" [closeOnSelect]="true">
+                        <ng-option *ngFor="let country of countryList" [value]="country.name">
+                            {{country.name}}
+                        </ng-option>
+                    </ng-select>
+
+                    <div class="error" *ngIf="fg.get('country').hasError('required') && fg.get('country').touched">
+                        Country is required
+                    </div>
+                </div>
+
+                <div class="custom-file m">
+                    <input id="file" name="file" type="file" class="custom-file-input" id="userLogo" accept=".png, .jpg, .jpeg"
+                        (change)="validate($event)" enctype="multipart/form-data" title="{{userProfile.userImage}}"
+                        multiple #file />
+                    <label class="custom-file-label upload-logo" for="customFile">{{userProfile.userImage}}</label>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" [disabled]="fg.invalid" class="btn btn-primary pull-right">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-container>

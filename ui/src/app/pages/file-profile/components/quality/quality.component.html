@@ -1,0 +1,111 @@
+<div class="row gutters">
+    <div class="col-xl-12">
+        <div class="card shadow-none">
+            <div class="card-body">
+                <div class="col-xl-3 pull-left">
+                    <div class="info-stats2">
+                        <div class="col-8">
+                            <h5>Overall Quality
+                                <span class="h4">{{dataQuality?.overview?.overallQuality.toFixed(2)}}%</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 pull-left">
+                    <div class="info-stats2">
+                        <div class="col-8">
+                            <h5>Records <br>
+                                <span class="h4">{{dataQuality?.overview?.recordCount}}</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 pull-left">
+                    <div class="info-stats2">
+                        <div class="col-8">
+                            <h5>DQ Checks <br>
+                                <span class="h4">{{dataQuality?.overview?.dqChecks}}</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 pull-left">
+                    <div class="info-stats2">
+                        <div class="col-8">
+                            <h5>Attributes <br>
+                                <span class="h4">{{dataQuality?.overview?.attributes}}</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mb-3">
+    <div class="col-xl-6">
+        <div class="atext">Attribute Validity</div>
+    </div>
+    <div class="col-xl-6 pull-right">
+        <div class="custom-search pull-right" style="margin:0px auto 0px auto;">
+            <input type="text" id="searchTerm" [(ngModel)]="searchTerm" class="search-query"
+                placeholder="Search here ...">
+        </div>
+    </div>
+</div>
+
+<div class="row gutters">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive ">
+                    <table class="table m-0">
+                        <thead>
+                            <tr class="th-center">
+                                <th>Attribute </th>
+                                <th>Validity</th>
+                                <th>Records</th>
+                                <th>Valid</th>
+                                <th>InValid</th>
+                                <th>DQ Rules</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="dataQuality?.attributeValidity?.length > 0 else noRecords">
+                                <tr class="td-color"
+                                    *ngFor="let data of dataQuality?.attributeValidity | filterBy: 'attribute, records, valid, inValid, dqRules': searchTerm">
+                                    <td>{{data?.attribute}}</td>
+                                    <td>
+                                        <div class="progress rounded" placement="top"
+                                            ngbTooltip="{{(data?.validity).toFixed(0)}} %">
+                                            <div class="progress-bar rounded progress-bar-success progress-bar-striped"
+                                                role="progressbar" [ngStyle]="{'width': data?.validity + '%'}"
+                                                style="background: linear-gradient(to right, #3375F7 0%, #65CCFE 100%); ">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{data?.records}}</td>
+                                    <td>{{data?.valid}}</td>
+                                    <td>
+                                        <a id="lnkInvalidData" class="invalid-color" *ngIf="data?.inValid; else text"
+                                            (click)="getInvalidData(data)">{{data?.inValid}}
+                                        </a>
+                                        <ng-template #text>
+                                            {{data?.inValid}}
+                                        </ng-template>
+                                    </td>
+                                    <td>{{data?.dqRules}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecords>
+                                <h6>No Records</h6>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

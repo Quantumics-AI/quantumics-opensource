@@ -1,0 +1,83 @@
+.sidenav {
+  height: calc(100vh - 85px);
+  overflow: hidden;
+  position: absolute;
+  width: 100% !important;
+  left: 0;
+  top: 0;
+}
+
+.ellips-text {
+  // width: 130px;
+  // width: 190px;
+  // display: inline-block;
+  font-size: 12px;
+  display: contents;
+}
+
+ol,
+ul,
+li {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ol {
+  padding-left: 0px;
+  list-style-type: none;
+  background-color: lightgray;
+}
+
+ul {
+  list-style-type: none;
+  background-color: #f2f1f1;
+}
+
+ol li {
+  line-height: 30px;
+}
+
+ul li {
+  padding-left: 10px;
+  line-height: 32px;
+}
+
+ol>li>label {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+ul>li>span {
+  margin-right: 10px;
+}
+
+.item-name {
+  margin-left: 10px;
+}
+
+.margin {
+  margin-right: 7px;
+  margin-top: -2px;
+}
+
+.white {
+  color: #ffffff;
+}
+
+.spinner-center {
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+.ul-scroll {
+  height: 370px;
+  overflow: scroll;
+}

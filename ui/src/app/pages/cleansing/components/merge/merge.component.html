@@ -1,0 +1,124 @@
+<h6 class="h6-font-hading">Merge</h6>
+
+<form [formGroup]="form" (ngSubmit)="saveRule()">
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selection-type">Type</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <select id="selection-type" class="form-control" [(ngModel)]="ruleInputValues1"
+                formControlName="ruleInputValues1">
+                <option *ngFor="let op of selectionTypes" [value]="op.value">{{op.title}}</option>
+            </select>
+        </div>
+    </div>
+    <ng-container [ngSwitch]="ruleInputValues1">
+        <ng-container *ngSwitchCase="selectionType.Multiple">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="selectColumn">Column</label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <ng-select id="selectColumn" [(ngModel)]="ruleImpactedCols" formControlName="ruleImpactedCols"
+                        [multiple]="true" (change)="preview()" placeholder="Select columns"
+                        [dropdownPosition]="'bottom'" [closeOnSelect]="false" [items]="columns" bindLabel="column_name"
+                        bindValue="column_name">
+                        <ng-template ng-option-tmp let-item="item">
+                            <span [title]="item.column_name">{{item.column_name}}</span>
+                        </ng-template>
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                                <span class="ng-value-label">
+                                    {{item.column_name}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 2">
+                                <span class="ng-value-label">{{items.length - 2}} more...</span>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+
+                    <span class="alert-danger"
+                        *ngIf="form.get('ruleImpactedCols').touched && form.get('ruleImpactedCols').hasError('required')">
+                        Please select Column
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="selectionType.Range">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="start-column">Start column {{ruleInputValues2}}</label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <ng-select id="start-column" [(ngModel)]="ruleInputValues2" formControlName="ruleInputValues2"
+                        [multiple]="false" (change)="preview()" placeholder="Select column"
+                        [dropdownPosition]="'bottom'" [closeOnSelect]="true" [items]="columns" bindLabel="column_name"
+                        bindValue="column_name">
+                        <ng-template ng-option-tmp let-item="item">
+                            <span [title]="item.column_name">{{item.column_name}}</span>
+                        </ng-template>
+                    </ng-select>
+
+                    <span class="alert-danger"
+                        *ngIf="form.get('ruleInputValues2').touched && form.get('ruleInputValues2').hasError('required')">
+                        Please select Column
+                    </span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="end-column">End column</label>
+                    <small class="form-text text-muted pull-right">Required</small>
+                    <ng-select id="end-column" [(ngModel)]="ruleInputValues3" formControlName="ruleInputValues3"
+                        [multiple]="false" (change)="preview()" placeholder="Select column"
+                        [dropdownPosition]="'bottom'" [closeOnSelect]="true" [items]="columns" bindLabel="column_name"
+                        bindValue="column_name">
+                        <ng-template ng-option-tmp let-item="item">
+                            <span [title]="item.column_name">{{item.column_name}}</span>
+                        </ng-template>
+                    </ng-select>
+                    <span class="alert-danger"
+                        *ngIf="form.get('ruleInputValues3').touched && form.get('ruleInputValues3').hasError('required')">
+                        Please select Column
+                    </span>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="ruleDelimiter">Seperator</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <input type="text" class="form-control" id="ruleDelimiter" placeholder="Text"
+                formControlName="ruleDelimiter" [(ngModel)]="ruleDelimiter" (change)="preview()">
+            <span class="alert-danger"
+                *ngIf="form.get('ruleDelimiter').touched && form.get('ruleDelimiter').hasError('required')">Seperator is
+                required.</span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-group">
+            <label for="ruleInputValues">New column name</label>
+            <small class="form-text text-muted pull-right">Required</small>
+            <input type="text" class="form-control" id="ruleInputValues" required placeholder="Insert new name"
+                [pattern]="'(^(?!_)[a-zA-Z0-9_]+(?<!_)$)'" minlength="1" maxlength="10"
+                formControlName="ruleInputValues" (change)="preview()" [(ngModel)]="ruleInputValues">
+            <ng-container *ngIf="form.get('ruleInputValues').touched ">
+                <span class="alert-danger" *ngIf="form.get('ruleInputValues').hasError('required')">
+                    New merge column name is required
+                </span>
+                <span class="alert-danger" *ngIf="form.get('ruleInputValues').hasError('unique')">
+                    Column name should be unique
+                </span>
+                <span class="alert-danger" *ngIf="form.get('ruleInputValues').hasError('pattern')">
+                    Not valid column name
+                </span>
+            </ng-container>
+        </div>
+    </div>
+    <div class="pull-right">
+        <button id="btn-save" type="submit" class="btn btn-success mr-3" [disabled]="!form.valid || submitted">
+            {{ruleButtonLabel}} </button>
+        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+    </div>
+</form>
