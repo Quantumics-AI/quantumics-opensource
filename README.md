@@ -48,12 +48,15 @@ By using our [cloudformation temlate](https://github.com/Quantumics-AI/quantumic
 2. Five numbers of s3 buckets.
 3. EMR cluster on EC2 which lunches three EC2 instaces Primery, Core and Task
 4. EC2 Machine prefere t3.larg with atlease 30 GB diskspace
-5. Secrity Grpous configuration 
-    - EMR-Master Security group : open below port on 0.0.0.0/0.
+```
+You have to manually configure security groups as below
+```text
+Secrity Grpous configuration 
+   - EMR-Master Security group : open below port on 0.0.0.0/0.
         - 8080 To allowing trafic from Quantumics gateway service 
         - 8998 To allowing trafic from EMR Livy traffic  
         - 18080 To allowing trafic from EMR Spark traffic
-    - EC2-Security group : open below port on 0.0.0.0/0.
+   - EC2-Security group : open below port on 0.0.0.0/0.
         - 7000 To allowing trafic from Quantumics backend service 
         - 8080 To allowing trafic from Quantumics backend service 
         - 8081 To allowing trafic from Quantumics backend service 
@@ -61,7 +64,6 @@ By using our [cloudformation temlate](https://github.com/Quantumics-AI/quantumic
         - 8083 To allowing trafic from Quantumics backend service 
         - 5000 To allowing trafic from Quantumics backend service 
 ```
-
 ### Setting up EMR with python modules
 Once the Quantumics.AI [cloudformation temlate](https://github.com/Quantumics-AI/quantumics/blob/main/configurations/AWS_CFT_EMR_QSAI.yaml) is created sucsufully you need to login to the primery EMR instace by using SSM and run the script [install-python-modules-emr.sh](https://github.com/Quantumics-AI/quantumics/blob/main/configurations/install-python-modules-emr.sh) to install required python modules. 
 
