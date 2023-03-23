@@ -73,7 +73,7 @@ You can run Quantumics.AI locally with Docker.
 ## Cloning repo and creating Environment file
 1. Cloning Quantumics.AI repository and creating .env file
 ```bash
-git clone https://github.com/Quantumics-AI/quantumics.git
+git clone https://github.com/Quantumics-AI/quantumics-opensource.git
 # Change directory to quantumics directory 
 cd quantumics
 # Create .env file and provide above said information
@@ -114,7 +114,7 @@ While you are developing and facing any issues in the application, use below com
 ```bash
 docker-compose up
 ```
-To configure the data source for dashboard please follow below steps in this [Dcoument](https://github.com/Quantumics-AI/quantumics/blob/main/configurations/OpesourceDocument.pdf)
+To configure the data source for dashboard please follow below steps in this [Dcoument](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/OpesourceDocument.pdf)
  
 ### If are deleting docker volume which will flush the local db data, it is necessary to update PROJECT_NAME in .env and do not keep the old project name.
 
