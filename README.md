@@ -65,7 +65,7 @@ Security Grpous configuration
         - 5000 To allowing trafic from Quantumics backend service 
 ```
 ### Setting up EMR with python modules
-Once the Quantumics.AI [cloudformation temlate](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/AWS_CFT_EMR_QSAI.yaml) is created sucsufully you need to login to the primery EMR instace by using SSM and run the script [install-python-modules-emr.sh]https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/install-python-modules-emr.sh) to install required python modules. 
+Once the Quantumics.AI [cloudformation temlate](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/AWS_CFT_EMR_QSAI.yaml) is created sucsufully you need to login to the primery EMR instace by using SSM and run the script [install-python-modules-emr.sh](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/install-python-modules-emr.sh) to install required python modules. 
 
 # Quick Start
 You can run Quantumics.AI locally with Docker.
