@@ -157,7 +157,7 @@ services:
     image: qsai/apiservice
     build:
       context: services
-      dockerfile: ../quantumics-opensource/qs-spark-service/Dockerfile
+      dockerfile: ../quantumics-opensource/services/qs-spark-service/Dockerfile
     environment:
       AWS_REGION: ${AWS_REGION}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
@@ -186,7 +186,7 @@ services:
     image: qsai/commonservice
     build:
       context: services
-      dockerfile: ../quantumics-opensource/qs-common-service/Dockerfile
+      dockerfile: ../quantumics-opensource/services/qs-common-service/Dockerfile
     environment:
       AWS_REGION: ${AWS_REGION}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
@@ -215,7 +215,7 @@ services:
     image: qsai/gateway
     build:
       context: services
-      dockerfile: ../quantumics-opensource/qa-ag/Dockerfile
+      dockerfile: ../quantumics-opensource/services/qa-ag/Dockerfile
     ports:
       - "8080:8080"
     depends_on:
