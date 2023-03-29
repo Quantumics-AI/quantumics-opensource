@@ -131,7 +131,7 @@ Follow Quantumics.AI documentations to know how to use Quantumics.AI application
 Read the [Quantumics.AI docs](https://docs.quantumics.ai).
 
 ## Quantumics.AI features : Open-source vs SaaS.
-Please see this [Dcoument](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/configurations/OpesourceDocument.pdf) to know about the features available in opensource Quantumics.AI application and Quantumics.AI SaaS platform.
+Please see this [Dcoument](https://github.com/Quantumics-AI/quantumics-opensource/blob/main/Quantumics_Features.pdf) to know about the features available in opensource Quantumics.AI application and Quantumics.AI SaaS platform.
 
 # Use Quantumics.AI SaaS
 
