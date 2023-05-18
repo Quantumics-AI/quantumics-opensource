@@ -1112,8 +1112,7 @@ public class AwsAdapter {
 					.build(); // TODO: We have to create a Singleton instance of TransferManager instance and close it as part of shutdown hook.
 
 
-			Upload upload = transferManager.upload(new PutObjectRequest(udfBucketName, fileName, is, objectMetadata)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+			Upload upload = transferManager.upload(new PutObjectRequest(udfBucketName, fileName, is, objectMetadata));
 
 			upload.waitForCompletion();
 			// After the upload is complete, release the TransferManager resources by calling shutdownNow() API of AWS SDK..
@@ -2536,8 +2535,7 @@ public class AwsAdapter {
 					.build(); // TODO: We have to create a Singleton instance of TransferManager instance and close it as part of shutdown hook.
 
 
-			Upload upload = transferManager.upload(new PutObjectRequest(bucketName, fileName, inputFile, objectMetadata)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+			Upload upload = transferManager.upload(new PutObjectRequest(bucketName, fileName, inputFile, objectMetadata));
 
 			upload.waitForCompletion();
 			// After the upload is complete, release the TransferManager resources by calling shutdownNow() API of AWS SDK..
