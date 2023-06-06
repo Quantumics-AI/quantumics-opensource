@@ -11,17 +11,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonPropertyOrder({
-  "total",
-  "unit",
-  "summary"
+		"total",
+		"unit",
+		"yesterdayCount",
+		"averageRange",
+		"summary"
 })
 public class DataVolumeOverview {
 	@JsonProperty
 	private double total;
-	
+
 	@JsonProperty
 	private String unit;
-	
+
+	@JsonProperty
+	private double yesterdayCount;
+
+	@JsonProperty
+	private String averageRange;
+
 	@JsonProperty
 	private Map<String, ? extends Object> summary;
 
