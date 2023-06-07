@@ -1,32 +1,10 @@
 package ai.quantumics.api.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import ai.quantumics.api.constants.PipelineStatusCode;
 import ai.quantumics.api.constants.QsConstants;
 import ai.quantumics.api.helper.FolderHelper;
-import ai.quantumics.api.model.DatasetSchema;
-import ai.quantumics.api.model.Pipeline;
-import ai.quantumics.api.model.PipelineTranscationDetails;
-import ai.quantumics.api.model.Projects;
-import ai.quantumics.api.model.QsUserV2;
-import ai.quantumics.api.service.DatasetSchemaService;
-import ai.quantumics.api.service.FileService;
-import ai.quantumics.api.service.IngestPipelineService;
-import ai.quantumics.api.service.PipelineService;
-import ai.quantumics.api.service.PipelineTranscationService;
+import ai.quantumics.api.model.*;
+import ai.quantumics.api.service.*;
 import ai.quantumics.api.util.DbSessionUtil;
 import ai.quantumics.api.util.ValidatorUtils;
 import io.swagger.annotations.Api;
@@ -34,7 +12,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.spring.web.json.Json;
+
+import java.sql.SQLException;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -66,7 +52,7 @@ public class PipelineController {
 	@GetMapping("/all/{projectId}/{userId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ingested all piplines") })
 	public ResponseEntity<Object> getAllIngestedPipelines(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId) throws Exception {
+														  @PathVariable(value = "userId") final int userId) throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		List<Pipeline> ingestPipeline = null;
 		dbUtil.changeSchema("public");
@@ -76,13 +62,24 @@ public class PipelineController {
 		ingestPipeline = pipelineService.getAllPipelines();
 		log.info("All pipelines {}", ingestPipeline);
 
-		if (ingestPipeline != null && !ingestPipeline.isEmpty()) {
-			response.put("code", 200);
-			response.put("result", ingestPipeline);
-		} else {
-			response.put("code", 400);
-			response.put("message", "Failed to fetch all the Pipeline info.");
+		if (CollectionUtils.isNotEmpty(ingestPipeline)) {
+			ingestPipeline.forEach(pipeline -> {
+				try {
+					List<PipelineTranscationDetails> transaction = pipelineTranscationService.getByPipelineTranscations(pipeline.getPipelineId());
+					if (CollectionUtils.isNotEmpty(transaction)) {
+						PipelineTranscationDetails pipelineTransactionDetails = Collections.max(transaction,
+								Comparator.comparing(transactionDetail -> transactionDetail.getExecutionDate()));
+						pipeline.setTransactionStatus(pipelineTransactionDetails.getTranscationStatus());
+						pipeline.setExecutionDate(pipelineTransactionDetails.getExecutionDate());
+					}
+				} catch (SQLException e) {
+					log.error("Error while fetching pipeline transaction " + e.getMessage());
+				}
+			});
+
 		}
+		response.put("code", 200);
+		response.put("result", ingestPipeline);
 		return ResponseEntity.ok().body(response);
 	}
 
@@ -90,7 +87,7 @@ public class PipelineController {
 	@GetMapping("/connector/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Connected pipline details") })
 	public ResponseEntity<Object> getConnectedPipeline(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+													   @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		Pipeline ingestPipeline = null;
@@ -116,7 +113,7 @@ public class PipelineController {
 	@DeleteMapping("/delete/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Delete Pipline") })
 	public ResponseEntity<Object> deletePipeline(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+												 @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -155,7 +152,7 @@ public class PipelineController {
 	@PostMapping("/executepipeline/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Process pipline details") })
 	public ResponseEntity<Object> processPipeline(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+												  @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 
 		final Map<String, Object> response = new HashMap<>();
@@ -163,7 +160,7 @@ public class PipelineController {
 		dbUtil.changeSchema("public");
 		QsUserV2 userObj = validatorUtils.checkUser(userId);
 		Projects project = validatorUtils.checkProject(projectId);
-		
+
 		dbUtil.changeSchema(project.getDbSchemaName());
 		Pipeline pipeline = validatorUtils.checkPipeline(pipelineId);
 		PipelineTranscationDetails trans = new PipelineTranscationDetails();
@@ -200,7 +197,7 @@ public class PipelineController {
 	@GetMapping("/transcationdetails/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pipline transcation details") })
 	public ResponseEntity<Object> getPipelineTranscationDetails(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+																@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -225,7 +222,7 @@ public class PipelineController {
 	@GetMapping("/folderDetails/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pipline folder details") })
 	public ResponseEntity<Object> getPipelineFolderDetails(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+														   @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -238,7 +235,7 @@ public class PipelineController {
 			dataSetSchema.getQsFolders().setFilesCount(fileService.getFileCount(dataSetSchema.getQsFolders().getFolderId()));
 		});
 
-		
+
 		if (schemaList != null && schemaList.size() > 0) {
 			response.put("code", 200);
 			response.put("result", schemaList);

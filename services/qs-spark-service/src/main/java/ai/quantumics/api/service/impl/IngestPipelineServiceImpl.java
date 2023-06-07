@@ -127,8 +127,8 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	public QsFolders savePipelineFolderInfo(Projects project, Pipeline pipeline, DataBaseRequest request,
-			QsUserV2 userObj, String withoutExtTableName, String schema, String sqlQuery,
-			ConnectorProperties properties) throws Exception {
+											QsUserV2 userObj, String withoutExtTableName, String schema, String sqlQuery,
+											ConnectorProperties properties) throws Exception {
 		String version = "1_0";
 		QsFolders qsRootFolder = null;
 		JSONArray dbObjects = null;
@@ -203,7 +203,7 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	public Map<String, Object> executePipelineService(final Projects project, final QsUserV2 userObj,
-			Pipeline pipeline) {
+													  Pipeline pipeline) {
 		Connection connection = null;
 		JSONArray dbObjects = null;
 		Map<String, Object> errorlog = new HashMap<>();
@@ -285,7 +285,7 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 								String[] dropColumnList = piiData.getDropColumns().split(",");
 								// hevo require to drop ? !c.get("column_name").contains("__hevo__") &&
 								listOfmapObject = listOfmapObject.stream().filter(
-										c -> !Arrays.stream(dropColumnList).anyMatch(c.get("column_name")::contains))
+												c -> !Arrays.stream(dropColumnList).anyMatch(c.get("column_name")::contains))
 										.collect(Collectors.toList());
 								selectedColumns = listOfmapObject.stream().map(map -> map.get("column_name"))
 										.toArray(String[]::new);
@@ -351,8 +351,8 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	public Map<String, Object> writeRecords(ResultSet result, Projects project, QsUserV2 userObj, QsFolders folder,
-			String[] selectedColumns, String dbObjects, List<List<String>> mapObj, ConnectorDetails connectorDetails,
-			ConnectorProperties properties, String tableName, UploadFileRequest uploadFileRequest)
+											String[] selectedColumns, String dbObjects, List<List<String>> mapObj, ConnectorDetails connectorDetails,
+											ConnectorProperties properties, String tableName, UploadFileRequest uploadFileRequest)
 			throws SQLException, Exception {
 		URL destUrl = null;
 		Map<String, Object> errorlog = new HashMap<>();
@@ -366,8 +366,8 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 			String userName = controllerHelper.getFullName(userObj.getQsUserProfile());
 
 			try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
-					OutputStreamWriter streamWriter = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
-					CSVWriter writer = buildCSVWriter(streamWriter)) {
+				 OutputStreamWriter streamWriter = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
+				 CSVWriter writer = buildCSVWriter(streamWriter)) {
 				if (selectedColumns != null) {
 					CustomResultSetHelperService resultService = new CustomResultSetHelperService();
 					resultService.setDesiredColumns(result, selectedColumns);
@@ -533,7 +533,6 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 		Pipeline pipeline = new Pipeline();
 		pipeline.setPipelineName(request.getPipelineName());
 		pipeline.setPipelineType(request.getConnectorType());
-		pipeline.setPipelineStatus(1);
 		pipeline.setActive(true);
 		pipeline.setCreatedDate(DateTime.now().toDate());
 		pipeline.setCreatedBy(getUserName(userObj.getQsUserProfile().getUserFirstName(),
@@ -559,7 +558,7 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	private DatasetSchema createDatasetSchema(QsFolders qsFolder, int pipelineId, String connectorType, int userId,
-			String sqlType, String schema, String tableName, String sqlQuery) throws Exception {
+											  String sqlType, String schema, String tableName, String sqlQuery) throws Exception {
 		DatasetSchema datasetSchema = new DatasetSchema();
 		datasetSchema.setFolderId(qsFolder.getFolderId());
 		datasetSchema.setPipelineId(pipelineId);
@@ -578,7 +577,7 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	private DatasetSchema createDatasetMetadata(DatasetSchema datasetSchema, String version, Map<String, Object> meta,
-			int userId) throws Exception {
+												int userId) throws Exception {
 		DatasetMetadata metadata = new DatasetMetadata();
 		metadata.setDatasetschemaId(datasetSchema.getDatasetschemaId());
 		metadata.setSourceMetadata(gson.toJson(meta));
@@ -594,7 +593,7 @@ public class IngestPipelineServiceImpl implements IngestPipelineService {
 	}
 
 	private JSONArray getDataObjects(DatasetSchema datasetSchema, ConnectorProperties properties, String connectorType,
-			String tableName) throws Exception {
+									 String tableName) throws Exception {
 		JSONArray dbObjects = null;
 		PreparedStatement preparedStatement = null;
 		if ("C".equalsIgnoreCase(datasetSchema.getSqlType())) {
