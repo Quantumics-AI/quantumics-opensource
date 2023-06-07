@@ -5,8 +5,8 @@
 -- Drop table
 
 -- DROP TABLE public.qs_audit_events;
-CREATE DATABASE IF NOT EXISTS devqsai;
-USE devqsai;
+--CREATE DATABASE IF NOT EXISTS devqsai;
+--USE devqsai;
 
 CREATE TABLE public.qs_audit_events (
 	audit_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -322,7 +322,7 @@ CREATE TABLE public.qs_qsai_customer_info (
 	customer_id serial NOT NULL,
 	user_id int4 NOT NULL,
 	stripe_customer_identifier varchar(255) NULL,
-	created_date timestamp NULL,    
+	created_date timestamp NULL,
 	modified_date timestamp NULL,
 	CONSTRAINT qsai_customer_info_pkey PRIMARY KEY (customer_id)
 );
@@ -363,23 +363,23 @@ DECLARE
 BEGIN
    --SELECT db_schema_name FROM public.qs_project where project_id=new.project_id into db_schema_name_tmp;
    SELECT concat(user_first_name,' ',user_last_name) as user_name FROM public.qs_userprofile WHERE USER_ID=new.user_id INTO user_name_tmp;
-   
+
    final_table_name := TG_TABLE_SCHEMA||'.'||'qsp_file';
    EXECUTE (format('SELECT file_name FROM %s where file_id=%s;', final_table_name, new.file_id)) INTO file_name_tmp;
-   
+
    if new.status != 'RUNNING' then
-    
+
 	audit_message := format('<span style="color:#00DFBA;">%s </span><span style="color:#f6bd5d;">Cleanse Job on File:</span> %s', new.status, file_name_tmp);
 	notification_message := new.status || ' '|| 'Cleanse Job on File: '||file_name_tmp;
-	
+
    	INSERT INTO public.qs_audit_events
-   (event_type, event_type_action, audit_message, notification_message, user_id, project_id, 
+   (event_type, event_type_action, audit_message, notification_message, user_id, project_id,
    user_name, creation_date, is_notify, active, is_notify_read)
-   VALUES('Cleanse Job', new.status, audit_message, notification_message, new.user_id, 
+   VALUES('Cleanse Job', new.status, audit_message, notification_message, new.user_id,
 		    new.project_id, user_name_tmp, now(), true, true, false);
-		
-    END IF;	
-		
+
+    END IF;
+
    return new;
 END;
 $BODY$;
@@ -410,26 +410,26 @@ DECLARE
 BEGIN
    qsp_eng_flow_job_tbl_tmp := TG_TABLE_SCHEMA||'.'||'qsp_eng_flow_job';
    qsp_eng_flow_tbl_tmp := TG_TABLE_SCHEMA||'.'||'qsp_eng_flow';
-   
+
    EXECUTE (format('SELECT eng_flow_name FROM %s where eng_flow_id=%s;', qsp_eng_flow_tbl_tmp, new.eng_flow_id)) INTO eng_flow_name_tmp;
    EXECUTE (format('SELECT user_id FROM %s where eng_flow_id=%s;', qsp_eng_flow_tbl_tmp, new.eng_flow_id)) INTO user_id_tmp;
    EXECUTE (format('SELECT project_id FROM %s where eng_flow_id=%s;', qsp_eng_flow_tbl_tmp, new.eng_flow_id)) INTO project_id_tmp;
-   
+
    SELECT concat(user_first_name,' ',user_last_name) as user_name FROM public.qs_userprofile WHERE USER_ID=user_id_tmp INTO user_name_tmp;
-   
+
    if new.status != 'RUNNING' then
-    
+
 	audit_message := format('<span style="color:#00DFBA;">%s </span><span style="color:#f6bd5d;">Engineering Job: </span> %s triggered.', new.status, eng_flow_name_tmp);
 	notification_message := new.status || ' '|| 'Engineering Job: '||eng_flow_name_tmp|| ' triggered.';
-	
+
    	INSERT INTO public.qs_audit_events
-   (event_type, event_type_action, audit_message, notification_message, user_id, project_id, 
+   (event_type, event_type_action, audit_message, notification_message, user_id, project_id,
    user_name, creation_date, is_notify, active, is_notify_read)
-   VALUES('Engineering Job', new.status, audit_message, notification_message, user_id_tmp, 
+   VALUES('Engineering Job', new.status, audit_message, notification_message, user_id_tmp,
 		    project_id_tmp, user_name_tmp, now(), true, true, false);
-		
-    END IF;	
-		
+
+    END IF;
+
    return new;
 END;
 $BODY$;
@@ -456,7 +456,7 @@ BEGIN
 	EXECUTE 'CREATE SCHEMA ' || schemaName;
 	EXECUTE 'ALTER SCHEMA '||schemaName|| ' OWNER TO postgres';
 
-	-- 
+	--
 	-- TOC entry 3892 (class 0 OID 0)
 	-- Dependencies: 7
 	-- Name: SCHEMA schemaName; Type: COMMENT; Schema: -; Owner: postgres
@@ -619,7 +619,7 @@ BEGIN
 	    user_id integer default 0,
             creation_date timestamp without time zone,
             file_type character varying(50),
-            deleted boolean default false, 
+            deleted boolean default false,
 	    CONSTRAINT qsp_eng_flow_event_pkey PRIMARY KEY (eng_flow_event_id)
 	)';
 
@@ -776,7 +776,7 @@ BEGIN
 	    modified_by character varying(100) COLLATE pg_catalog."default",
 	    arguments text COLLATE pg_catalog."default"
 	)';
-	
+
 	EXECUTE '
 	CREATE TABLE '||schemaName||'.qsp_redash_view_info (
 	    redash_view_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
@@ -785,7 +785,7 @@ BEGIN
 	    active boolean,
 	    creation_date timestamp without time zone
 	)';
-	
+
 	EXECUTE '
 	CREATE TABLE '||schemaName||'.qsp_file_data_profiling_info
 	(
@@ -800,7 +800,7 @@ BEGIN
 	    modified_date timestamp without time zone,
 	    CONSTRAINT qsp_file_data_profiling_info_pkey PRIMARY KEY (data_profile_id)
 	)';
-	
+
 	EXECUTE '
 	CREATE TABLE '||schemaName||'.qsp_eng_flow_datalineage
 	(
@@ -815,13 +815,12 @@ BEGIN
 	    file_id integer,
 	    CONSTRAINT qsp_eng_flow_datalineage_pkey PRIMARY KEY (lineage_id)
 	)';
-	
+
 	EXECUTE '
 		CREATE TABLE '||schemaName||'.qsp_pipeline (
 		pipeline_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 		pipeline_name varchar(100) NOT NULL,
 		pipeline_type varchar(50) NOT NULL,
-		pipeline_status int4 NOT NULL,
 		active bool NULL DEFAULT true,
 		created_by varchar(100) NULL,
 		created_date timestamp NULL,
@@ -830,7 +829,7 @@ BEGIN
 		is_published bool NULL DEFAULT false,
 		CONSTRAINT qsp_pipeline_pk PRIMARY KEY (pipeline_id)
 		)';
-	
+
 	EXECUTE '
 		CREATE TABLE '||schemaName||'.qsp_dataset_schema (
 		datasetschema_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -849,7 +848,7 @@ BEGIN
 		active bool NOT NULL DEFAULT false,
 		CONSTRAINT qsp_dataset_schema_pk PRIMARY KEY (datasetschema_id)
 		)';
-		
+
 		EXECUTE '
 			CREATE TABLE '||schemaName||'.qsp_dataset_metadata (
 			datasetmetadata_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -864,7 +863,7 @@ BEGIN
 			modified_date timestamp NULL,
 			CONSTRAINT datasetmetadata_id_pk PRIMARY KEY (datasetmetadata_id)
 			)';
-			
+
 			EXECUTE '
 				CREATE TABLE '||schemaName||'.qsp_pipeline_connector_details (
 				pc_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -880,8 +879,8 @@ BEGIN
 			pipeline_log text NULL,
 			execution_date timestamp NOT NULL
 			)';
-			
-			
+
+
 		EXECUTE '
 			CREATE TABLE  '||schemaName||'.qsp_connector_details (
 			connector_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
@@ -906,18 +905,36 @@ BEGIN
 			CONSTRAINT qsp_folder_piidata_pk PRIMARY KEY (id)
 			)';
 
-		
+		EXECUTE '
+        	CREATE TABLE '||schemaName||'.qsp_redash_dashboard (
+        	rd_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+        	rd_key varchar(255) NOT NULL,
+        	dashboard_name varchar(255) NULL,
+        	dashboard_id int4 NOT NULL,
+        	creation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        	active bool NULL DEFAULT true,
+        	CONSTRAINT qsp_redash_dashboard_pkey PRIMARY KEY (rd_id)
+        	)';
+
+		EXECUTE '
+        	CREATE TABLE '||schemaName||'.qsp_home_kpi (
+        	kpi_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+        	kpi_details varchar(255) NOT NULL,
+        	user_id int4 NOT NULL,
+        	CONSTRAINT qsp_home_kpi_pkey PRIMARY KEY (kpi_id)
+        	)';
+
 	--- Table Creation completed..
-	
+
 	--- Trigger Creation started..
-	
+
 	EXECUTE '
 	CREATE TRIGGER cleanse_job_changes
-	    AFTER INSERT OR UPDATE 
+	    AFTER INSERT OR UPDATE
 	    ON '||schemaName||'.qsp_run_job_status
 	    FOR EACH ROW
     	    EXECUTE PROCEDURE public.log_cleanse_job_changes()';
-	
+
 	--- Trigger Creation completed..
 
 	--- View Creation started...
@@ -927,7 +944,7 @@ BEGIN
 		SELECT folder.folder_name, FOLDER.FOLDER_DESC,
 		    FOLDER.PROJECT_ID, PROJ.PROJECT_NAME,
 		    FOLDER.USER_ID, CONCAT(USERPROFILE.USER_FIRST_NAME,'' '' ,USERPROFILE.USER_LAST_NAME) AS USERNAME,
-		    FOLDER.CREATED_DATE, FOLDER.ACTIVE 
+		    FOLDER.CREATED_DATE, FOLDER.ACTIVE
 		   FROM '||schemaName||'.QSP_FOLDER FOLDER
 		   INNER JOIN PUBLIC.QS_PROJECT PROJ ON FOLDER.PROJECT_ID = PROJ.PROJECT_ID
 		   INNER JOIN PUBLIC.QS_USER_V2 USERV2 ON FOLDER.USER_ID = USERV2.USER_ID
@@ -954,14 +971,14 @@ BEGIN
 
 	EXECUTE '
 	GRANT SELECT ON '||schemaName||'.qsp_eng_flow_view TO postgres';
-	
-	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date) 
+
+	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date)
 	    values (%L,%L,true,now());', schemaName, schemaName, 'qsp_folder_view');
-		
-	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date) 
+
+	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date)
 	    values (%L,%L,true,now());', schemaName, schemaName, 'qsp_engflow_metadata_awsref_view');
-		
-	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date) 
+
+	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date)
     	    values (%L,%L,true,now());', schemaName, schemaName, 'qsp_eng_flow_view');
 
 	--- View Creation completed...
@@ -985,7 +1002,7 @@ ALTER PROCEDURE public.create_project_schema_and_tables(character varying, integ
     OWNER TO postgres;
 
 
-	
+
 -- Procedure to create eng tables
 
 -- PROCEDURE: public.create_eng_flow_job_result_table(character varying, character varying, character varying, character varying, character varying, character varying, integer)
@@ -1016,12 +1033,12 @@ BEGIN
 
 	EXECUTE '
 	ALTER TABLE '||schemaname||'.'||tablename||' OWNER TO postgres';
-	
+
 	EXECUTE viewcreatequery;
-	
+
 	EXECUTE '
 	GRANT SELECT ON '||schemaname||'.'||viewname||' TO postgres';
-	
+
 	result := 0;
 
 	-- Completed on 2020-12-23 14:55:32
@@ -1079,7 +1096,7 @@ AS $BODY$
 	    result := -1;
 
 	end;
-	
+
 $BODY$;
 
 ALTER PROCEDURE public.insert_eng_flow_job_result_rows(character varying, integer)
@@ -1089,13 +1106,13 @@ ALTER PROCEDURE public.insert_eng_flow_job_result_rows(character varying, intege
 -- Add master data
 
 
-	
+
 INSERT INTO public.qs_datasource_types (data_source_type,data_source_name,data_source_image,active,creation_date) VALUES
 	 ('LocalFile','Local File','folder.png',true,'2021-01-30 13:58:07.772487'),
 	 ('api','API','api.png',true,'2021-02-13 12:11:09'),
 	 ('DB','PgSQL','pgsql.png',true,'2021-02-13 12:11:09');
-	
-	
+
+
 INSERT INTO public.qs_product_features ("module",feature,active,subscription_type,creation_date,modified_date) VALUES
 	 ('Ingestion','API',true,'Trial','2021-03-28 04:26:28.164625',NULL),
 	 ('Ingestion','Delta loads in same folder',true,'Trial','2021-03-28 04:26:28.164625',NULL),
@@ -1136,29 +1153,28 @@ INSERT INTO public.qs_product_features ("module",feature,active,subscription_typ
 	 ('Profile','View data in split seconds',true,'Trial','2021-03-28 04:26:28.164625',NULL),
 	 ('Engineer','Live preview of joined data',true,'Trial','2021-03-28 04:26:28.164625',NULL),
 	 ('Govern','Create data dictionary with data quality rules',true,'Trial','2021-03-28 04:26:28.164625',NULL);
-	
-	
+
+
 	INSERT INTO public.qs_redash_view_info (schema_name,view_name,active,creation_date) VALUES
 	 ('qs_automatic','qsp_engflow_metadata_awsref_view',true,'2021-01-30 10:25:01.531808'),
 	 ('qs_automatic','qsp_folder_view',true,'2021-01-30 10:25:01.531808'),
 	 ('qs_automatic','qsp_eng_flow_view',true,'2021-01-30 10:25:01.531808');
-	
+
 	INSERT INTO public.qs_redash_view_info (schema_name,view_name,active,creation_date) VALUES
 	 ('qs_automatic','qsp_engflow_metadata_awsref_view',true,'2021-01-30 10:25:01.531808'),
 	 ('qs_automatic','qsp_folder_view',true,'2021-01-30 10:25:01.531808'),
 	 ('qs_automatic','qsp_eng_flow_view',true,'2021-01-30 10:25:01.531808');
-	 
-	 
+
+
 	INSERT INTO public.qs_subscription_v2 (subscription_id,"name",plan_type,plan_type_price,accounts,plan_type_account_price,validity_days,plan_type_id,plan_type_currency,plan_type_settings,active) VALUES
 (2,'Starter','Monthly',120.0,1,14.0,730,'price_1K4xCICXjfdxZzBVAElzMgky','USD','
 {
-  "cumulative_size_bytes":"10000000000",
-  "max_file_size":"10000000"
+"cumulative_size_bytes":"10000000000",
+"max_file_size":"10000000"
 }
-',true),
-    (1,'Trial','Monthly',0.0,1,5.0,730,'price_1IlIB1CXjfdxZzBVsDPYAgZv','USD','{
-  "cumulative_size_bytes":"50000000",
-  "max_file_size":"500000"
+',true), (1,'Trial','Monthly',0.0,1,5.0,730,'price_1IlIB1CXjfdxZzBVsDPYAgZv','USD','{
+"cumulative_size_bytes":"50000000",
+"max_file_size":"500000"
 }',true); 
 	
 	
