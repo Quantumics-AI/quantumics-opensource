@@ -1,7 +1,7 @@
 <div class="clm-div">
     <p class="select-c-text">Select column</p>
     <div class="card cs-c mr-b-16">
-        <div class="card-body pd-l-r-16 cp" (click)="myDrop.open();" placement="bottom-left" ngbDropdown #myDrop="ngbDropdown">
+        <div class="card-body pd-l-r-16 cp" (click)="myDrop.open();searchTerm = ''" placement="bottom-left" ngbDropdown #myDrop="ngbDropdown">
             <p class="selected-c mr-b-0">
                 <!-- <span class="circle-logo" [ngClass]="{'grLogo': item.role == 'Admin'}"></span> -->
                 <span *ngIf="analysis?.selectedDataType !== 'string'" class="circle-logo">#</span>

@@ -99,3 +99,47 @@
       transform: rotate(360deg);
     }
 }
+
+// ************ NEW **************
+.m1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    color: #667085;
+    margin-bottom: 0;
+}
+
+.m2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 150%;
+    letter-spacing: -0.02em;
+    color: #667085;
+    margin-bottom: 0;
+}
+
+.br-b {
+    border-bottom: 1px solid #EAECF0;
+}
+
+.br-b:hover {
+    background-color: #F4F6FA;
+}
+
+.a-bg {
+    background: #f4fbfb;
+    border-bottom: 2px solid #00977C;
+}
+
+.a-color {
+    color: #00977C;
+}
+
+// Loader color 
+.text-primary {
+    color: #00977C !important;
+}

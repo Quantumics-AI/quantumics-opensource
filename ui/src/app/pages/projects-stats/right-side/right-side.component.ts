@@ -59,14 +59,14 @@ export class RightSideComponent implements OnInit {
 
   public getProjectStatsData(): void {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get('projectId'), 10);
-    this.statsService.getProjectStats(this.userId, this.projectId, this.requestType).subscribe(res => {
-      this.stats = res.result;
-      this.time = res.result.savings.time.value;
-      this.money = res.result.savings.money.value;
-      this.selectedEValue.emit(this.stats.savings.effort);
-      this.selectedFData.emit(this.stats);
-      // console.log(res.result.sourceDataset.total)
-    });
+    // this.statsService.getProjectStats(this.userId, this.projectId, this.requestType).subscribe(res => {
+    //   this.stats = res.result;
+    //   this.time = res.result.savings.time.value;
+    //   this.money = res.result.savings.money.value;
+    //   this.selectedEValue.emit(this.stats.savings.effort);
+    //   this.selectedFData.emit(this.stats);
+    //   // console.log(res.result.sourceDataset.total)
+    // });
   }
 
   public selectPeriod(index: number, data: string): void {

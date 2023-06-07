@@ -1,7 +1,139 @@
 <app-loader [loading]="loading">
-    <div class="page-content">
-        <ng-container *ngIf="!loading && !showCard">
-            <div>
+    <div class="page-header1 pd-l-20">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item">Dataset</li>
+            <li class="breadcrumb-item active" aria-current="page">Folders</li>
+        </ol>
+    </div>
+    <div class="page-content pd-20" *ngIf="!loading">
+        <ng-container *ngIf="folders.length > 0">
+            <div class="card card-d">
+                <div class="card-header ch">
+                    <div class="di mr-t-6" *ngIf="!searchDiv">
+                        <p class="card-main-text">Folders</p>
+                        <p class="p1 mr-b-0">Folders have same metadata dataset. To create new folder, go to import dataset.</p>
+                    </div>
+                    <div class="di" *ngIf="searchDiv">
+                        <p class="card-main-text">Search result</p>
+                    </div>
+                    <div class="pull-right">
+                        <!-- <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search term"> -->
+                        <div class="input-group mr-t-18 br-bx-a">
+                            <div class="input-group-prepend h36">
+                                <span class="input-group-text search-icon br-bx-n" id="basic-addon1">
+                                    <img src="assets/img/govern/search.svg">
+                                </span>
+                            </div>
+                            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderName" class="form-control search-input br-bx-n h36"
+                                placeholder="Search folder name" aria-label="Username" aria-describedby="basic-addon1"
+                                (ngModelChange)="searchInput($event)">
+                        </div>
+    
+                    </div>
+                </div>
+                <div class="card-body pd-0">
+                    <div class="table-responsive br-r">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="pd-l-24">Folder name
+                                        <span> <img (click)="sortFolder();" class="cp"
+                                                src="assets/img/govern/down-arrow.svg"></span>
+                                    </th>
+                                    <th class="pd-l-24">No of dataset</th>
+                                    <th class="pd-l-24">Last updated</th>
+                                    <th class="pd-l-24">Date created</th>
+                                    <th class="pd-l-24">Created by</th>
+                                    <th class="pd-l-24"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="td-text"
+                                    *ngFor="let folder of folders | filterBy: searchTerm | slice:startIndex:endIndex">
+                                    <td class="fn cp" (click)="select(folder)">
+                                        <span><img src="assets/img/project-stats/folder-i.svg"></span>
+                                        {{ folder?.folderDisplayName ? folder?.folderDisplayName : folder?.folderName }}</td>
+                                    <td class="cp" (click)="select(folder)">{{folder?.filesCount}}</td>
+                                    <td class="cp" (click)="select(folder)">
+                                        <span *ngIf="folder?.modifiedDate">{{folder?.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</span>
+                                        <span *ngIf="!folder?.modifiedDate">{{folder?.createdDate | date: 'dd-MM-yy, hh:mm a'}}</span>
+                                    </td>
+                                    <td class="cp" (click)="select(folder)">{{folder?.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td class="cp" (click)="select(folder)">{{(folder.dataOwner).split(' ')[0]}}</td>
+                                    <td class="float-right">
+                                        <div ngbDropdown container="body">
+                                            <a ngbDropdownToggle class="menu-icon">
+                                                <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                                <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                            </a>
+
+                                            <div ngbDropdownMenu class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="uploadFile(folder)">Add/ upload datasets</button>
+                                                <button ngbDropdownItem class="h-37" (click)="editFolderModal(folder)">Rename folder</button>
+                                                <button ngbDropdownItem class="h-37" (click)="deleteFolder(folder)">Delete folder</button>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="lh-1" ngbDropdown #myDrop="ngbDropdown">
+                                            <div ngbDropdownMenu aria-labelledby="dropdownManual" class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="uploadFile(folder)">Add/ upload datasets</button>
+                                                <button ngbDropdownItem class="h-37" (click)="editFolderModal(folder)">Rename folder</button>
+                                                <button ngbDropdownItem class="h-37" (click)="deleteFolder(folder)">Delete folder</button>
+                                            </div>
+                                        </div>
+                                        <a (click)="myDrop.open();" class="menu-icon">
+                                            <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                            <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                        </a> -->
+                                    </td>
+                                </tr>
+                                <tr  *ngIf="(folders | filterBy: searchTerm).length > 15" style="background-color: white !important;" class="pg-tr">
+                                    <td colspan="6" class="pg-pd">
+                                        <div class="text-center">
+                                            <!-- <span class="float-left">
+                                                <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                    (click)="previousPage();"><img
+                                                        src="assets/img/govern/arrow-left.svg">Previous</button>
+                                            </span>
+                                            <span class="cp digit" *ngFor="let page of pager"
+                                                (click)="redirectToPageIndex(page);"
+                                                [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
+                                            <span class="float-right">
+                                                <button type="button" class="btn nextBtn"
+                                                    [disabled]="currnetPage === totalPages - 1 || totalPages == 1" (click)="nextPage();">Next
+                                                    <img src="assets/img/govern/arrow-right.svg"></button>
+                                            </span> -->
+                                            <ngb-pagination [collectionSize]="folders.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                                            [rotate]="true" aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious>
+                                                    <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: white !important;"
+                                    *ngIf="(folders | filterBy: searchTerm).length == 0">
+                                    <td colspan="6">
+                                        <div class="text-center s-div">
+                                            <img src="assets/img/govern/no-search.svg">
+                                            <p class="no-term">No folder found</p>
+                                            <p class="term-2">Your search “{{searchString}}” did not match any folder name.
+                                                Please try again .</p>
+                                            <button type="button" class="btn saveBtn"
+                                                (click)="clearSearhInput()">Clear to go back</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div>
                 <div class="floder-count">
                     Total Folders ({{total_folder_length}})
                 </div>
@@ -19,9 +151,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="table-responsive table-height">
+            <!-- <div class="table-responsive table-height">
                 <table class="table m-0 table-fixed">
                     <thead class="thead-light">
                         <tr class="fixed-th">
@@ -49,10 +181,6 @@
                             <td class="text-left" (click)="select(folder)"
                                 title="{{ folder?.folderDisplayName ? folder?.folderDisplayName : folder?.folderName }}">
                                 <a>
-                                    <!-- <i> <img *ngIf="!folder.external" src="assets/img/close-folder.svg" class="icon-space"
-                                            width="19" /> </i>
-                                    <i *ngIf="folder.external"><img src="assets/img/external-source.svg" width="18"
-                                            class="icon-space"></i> -->
                                     {{ folder?.folderDisplayName ? folder?.folderDisplayName : folder?.folderName }}
                                 </a>
                             </td>
@@ -78,23 +206,26 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <app-edit-folder *ngIf="editFolder" [projectId]="projectId" [userId]="userId" [folder]="folder"
+            </div> -->
+            <!-- <app-edit-folder *ngIf="editFolder" [projectId]="projectId" [userId]="userId" [folder]="folder"
                 (updatedFolder)="updatedFolder($event)" (close)="editFolder=false">
-            </app-edit-folder>
+            </app-edit-folder> -->
         </ng-container>
 
-        <ng-container *ngIf="showCard">
-            <div *ngIf="!loading" class="row gutters justify-content-center mt-6 rounded m-0">
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-                    <div class="card shadow-lg">
-                        <div class="card-body plus-add">
-                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']">
-                                <img src="assets/img/cleansing-add.svg" width="55" alt="add" class="mb-3"></a>
-                            <p class="plus-add-text">
-                                You do not have any Folders. <br>
-                                Why don't you create one by clicking "Plus" button.
-                            </p>
+        <ng-container  *ngIf="folders.length == 0">
+            <div class="connect-source-div">
+                <div class="card card-d mr-t-16">
+                    <div class="card-header ch pd-t-b-20">
+                        <p class="card-main-text fs-18">Folders</p>
+                        <p class="p1 mr-b-0">Folders have same metadata dataset. To create new folder, go to import dataset.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="connect-s text-center">
+                            <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                            <p class="tp1 wm">Start by importing a dataset</p>
+                            <p class="tp2 mr-b-0">Any dataset ingested locally will live here.</p>
+                            <p class="tp2 mr-b-24">Start creating by importing your dataset.</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design mr-b-56">Import dataset</a>
                         </div>
                     </div>
                 </div>

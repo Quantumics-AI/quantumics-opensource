@@ -20,6 +20,9 @@ from redash.security import csp_allows_embeding
 from redash.serializers import serialize_dashboard
 from sqlalchemy.orm.exc import StaleDataError
 
+import logging
+import requests
+from redash.utils import json_dumps
 
 # Ordering map for relationships
 order_map = {
@@ -108,8 +111,35 @@ class DashboardListResource(BaseResource):
         )
         models.db.session.add(dashboard)
         models.db.session.commit()
-        return serialize_dashboard(dashboard)
 
+        try:
+            api_url = redis_connection.get("{}-api_url".format(self.current_user.name))
+            project_id = redis_connection.get("{}-project".format(self.current_user.name))
+            userId = redis_connection.get("{}-userId".format(self.current_user.name))
+            user_token = redis_connection.get("{}-user_token".format(self.current_user.name))
+            jwt_token = redis_connection.get("{}-jwt_token".format(self.current_user.name))
+
+            api_url = api_url.replace("_{}".format(project_id), "")
+
+            headers = {"Authorization": "Bearer {}".format(jwt_token)}
+
+            payload = {
+                'dashboardId': dashboard.id,
+                'dashboardName': dashboard.name.replace("_{}".format(project_id), ""),
+                'redashKey': user_token,
+                'projectId': project_id,
+                'userId': userId,
+            }
+
+            # Call the API to create the dashboard from postgres database.
+
+            url = f"{api_url}/QuantumSparkServiceAPI/api/v1/dashboard"
+            requests.post(url, json=payload, headers=headers)
+
+        except Exception as e:
+            print("Exception while calling QSAI API - ", e)
+
+        return serialize_dashboard(dashboard)
 
 class DashboardResource(BaseResource):
     @require_permission("list_dashboards")
@@ -256,6 +286,19 @@ class DashboardResource(BaseResource):
         models.db.session.add(dashboard)
         d = serialize_dashboard(dashboard, with_widgets=True, user=self.current_user)
         models.db.session.commit()
+
+        api_url = redis_connection.get("api_url")
+        project_id = redis_connection.get("{}-project".format(self.current_user.name))
+        user_token = redis_connection.get("{}-user_token".format(self.current_user.name))
+        jwt_token = redis_connection.get("{}-jwt_token".format(self.current_user.name))
+
+        api_url = api_url.replace("_{}".format(project_id), "")
+
+        headers = {"Authorization": "Bearer {}".format(jwt_token)}
+        
+        # Call the API to delete the dashboard from postgres database.
+        url = f"{api_url}/QuantumSparkServiceAPI/api/v1/dashboard/{dashboard.id}/{user_token}/{project_id}"
+        requests.delete(url, headers=headers)
 
         self.record_event(
             {"action": "archive", "object_id": dashboard.id, "object_type": "dashboard"}

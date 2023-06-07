@@ -81,7 +81,9 @@ export class ListComponent {
 
     modalRef.result.then((isDelete) => {
       if (isDelete) {
-        this.engrngService.deleteFlow(this.projectId, this.userId, flowId).subscribe((res) => {
+        this.engrngService.deleteFlow(this.projectId, this.userId, flowId)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((res) => {
           this.snackbar.open(res.message);
           const index = this.flows.findIndex(x => x.engFlowId === flowId);
           this.flows.splice(index, 1);

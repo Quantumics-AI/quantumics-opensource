@@ -32,7 +32,8 @@ export class SelectFilesComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    this.automationService.getFilesToRun(this.projectId, this.userId, this.flowId).subscribe((res) => {
+    this.automationService.getFilesToRun(this.projectId, this.userId, this.flowId)
+    .subscribe((res) => {
       this.loading = false;
 
       if (res.code === 200) {

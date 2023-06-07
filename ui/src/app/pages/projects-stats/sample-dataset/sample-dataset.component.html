@@ -1,0 +1,99 @@
+<div class="modal-header pd-b-0 db">
+    <h5 class="modal-header-text">Use example datasets</h5>
+    <p class="p1 fs-14">We prepared some industry-specific data sets to help you explore Quantumics</p>
+    <!-- <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('cancel')">
+        <span aria-hidden="true">&times;</span>
+    </button> -->
+</div>
+<div class="modal-body">
+    <div class="c-div">
+        <p class="p2">Select your industry</p>
+        <form>
+            <div class="row mr-0">
+                <div class="col pd-0">
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="auto"
+                                name="auto" id="radioAuto" value="auto"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioAuto">Automobile</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="biotech"
+                                name="auto" id="radioBioTech" value="bio"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioBioTech">Bio Tech</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="insurance"
+                                name="auto" id="radioInsurance" value="ins"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioInsurance">Insurance</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="teleCommunication"
+                                name="auto" id="radioTeleCommunication" value="tel"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioTeleCommunication">Telecommunication</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="retail"
+                                name="auto" id="radioRetails" value="retail"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioRetails">Retails/Ecommerce</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="banking"
+                                name="auto" id="radioBanking" value="bnk"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioBanking">Banking</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="healthCare"
+                                name="auto" id="radioHealthCare" value="hc"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioHealthCare">Healthcare</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="service"
+                                name="auto" id="radioService" value="it"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioService">IT services</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" formControlName="transport"
+                                name="auto" id="radioTransport" value="tp"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label p2 lc cp" for="radioTransport">Transportation</label>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="btn-div mr-t-16">
+                <button type="button" [disabled]="!selectDataset" (click)="downloadDataset();" class="btn btn-design">Download & go to dataset ingestion</button>
+            </div>
+        </form>
+       
+    </div>
+    
+</div>

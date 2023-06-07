@@ -10,6 +10,8 @@ import { Token } from '../models/token';
 })
 export class LoginService {
 
+  public stats: string = 'w';
+
 
   constructor(private http: HttpClient) {
   }
@@ -18,6 +20,7 @@ export class LoginService {
     return this.http.post(`/QSUserService/api/v2/authorization`, login).pipe(
       map((user: any) => {
         localStorage.setItem('certificate', JSON.stringify(user));
+        localStorage.setItem('stats', this.stats);
         return user;
       })
     );

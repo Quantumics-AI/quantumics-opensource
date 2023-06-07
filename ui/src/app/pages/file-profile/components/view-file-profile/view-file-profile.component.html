@@ -12,7 +12,7 @@
                     <div class="card card-shadow mr-0">
                         <div class="card-body card-b-pd">
                             <p class="mr-0 summary-d1">Total Columns</p>
-                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.columnCount}}</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.columnCount ?? 0}}</p>
                         </div>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                     <div class="card card-shadow mr-0">
                         <div class="card-body card-b-pd">
                             <p class="mr-0 summary-d1">Total Rows</p>
-                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.recordCount}}</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.recordCount ?? 0}}</p>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <div class="card card-shadow mr-0">
                         <div class="card-body card-b-pd">
                             <p class="mr-0 summary-d1">Data Types</p>
-                            <p class="mr-0 summary-d2 pd-t-4">{{uniqueTypes.length}}</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{uniqueTypes.length ?? 0}}</p>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     <div class="card card-shadow mr-0">
                         <div class="card-body card-b-pd">
                             <p class="mr-0 summary-d1">Size</p>
-                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.fileSize}}</p>
+                            <p class="mr-0 summary-d2 pd-t-4">{{analysis?.fileSize ?? 0}}</p>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                         </div>
                     </ng-container>
                     <ng-template #noColumnData>
-                        <div class="card card-shadow">
+                        <div class="card card-shadow" *ngIf="!loadingFrequency">
                             <div class="card-body">
                                 <div class="no-content-div text-center">
                                     <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb-25">
@@ -112,6 +112,13 @@
                                     <p class="summary-p2 mr-b-0">Selected column doesn’t have any rows for analysing.</p>
                                     <p class="summary-p2">Please select another column.
                                     </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-shadow" *ngIf="loadingFrequency">
+                            <div class="card-body">
+                                <div class="no-content-div text-center">
+                                    <h5 class="summary-p1">Loading...</h5>
                                 </div>
                             </div>
                         </div>

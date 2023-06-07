@@ -19,7 +19,71 @@
     </ng-container> -->
 
     <ng-container>
-        <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexOne, 'cursor-pointer' : selectedIndex !== selectedIndexOne }">
+
+        <div class="col pd-16 br-b" *ngFor="let k of selectedKpi"
+            [ngClass]="{'a-bg': selectedIndex == k.id, 'cursor-pointer' : selectedIndex !== k.id }"
+            (click)="selectType(k.label, k.id)">
+            <p class="m1" [ngClass]="{'a-color': selectedIndex == k.id}">{{k.label}}</p>
+            <ng-container *ngIf="!loadingData else loader">
+                <ng-container *ngIf="k.label =='Dataset'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.sourceDataset?.total}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Storage'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.dataVolume?.total}} {{totalfile?.dataVolume?.unit}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Data flow'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.dataPipes?.total}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Prepared Datasets'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.preparedDataset?.total}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Dashboard'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.dashboard?.total}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Folder'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.folders?.total}}</p>
+                </ng-container>
+                <ng-container *ngIf="k.label =='Pipeline'">
+                    <p class="m2" [ngClass]="{'a-color': selectedIndex == k.id}">{{totalfile?.pipeline?.total}}</p>
+                </ng-container>
+            </ng-container>
+            
+            <ng-template #loader>
+                <div class="spinner-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </ng-template>
+            
+        </div>
+
+        <!-- <div class="col pd-16 br-b" [ngClass]="{'a-bg': selectedIndex == selectedIndexOne, 'cursor-pointer' : selectedIndex !== selectedIndexOne }"
+        (click)="selectType(sourceData)">
+            <p class="m1" [ngClass]="{'a-color': selectedIndex == selectedIndexOne}">Source Data</p>
+            <p class="m2" [ngClass]="{'a-color': selectedIndex == selectedIndexOne}">{{totalfile?.sourceDataset?.total}}</p>
+        </div>
+
+        <div class="col pd-16 br-b" [ngClass]="{'a-bg': selectedIndex == selectedIndexTwo, 'cursor-pointer' : selectedIndex !== selectedIndexTwo }"
+        (click)="selectType(preparedData)">
+            <p class="m1">Prepared Datasets</p>
+            <p class="m2">{{totalfile?.preparedDataset?.total}}</p>
+        </div>
+
+        <div class="col pd-16 br-b" [ngClass]="{'a-bg': selectedIndex == selectedIndexThree, 'cursor-pointer' : selectedIndex !== selectedIndexThree }"
+        (click)="selectType(dataPipes)">
+            <p class="m1">Engineering Flows</p>
+            <p class="m2">{{totalfile?.dataPipes?.total}}</p>
+        </div>
+
+        <div class="col pd-16 br-b" [ngClass]="{'a-bg': selectedIndex == selectedIndexFour, 'cursor-pointer' : selectedIndex !== selectedIndexFour }"
+        (click)="selectType(dataVolume)">
+            <p class="m1">Storage</p>
+            <p class="m2">{{totalfile?.dataVolume?.total}} MB</p>
+        </div> -->
+
+
+        <!-- <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexOne, 'cursor-pointer' : selectedIndex !== selectedIndexOne }">
             <div class="row" (click)="selectType(sourceData)">
                 <div class="col-xl-3 p-0">
                     <div class="left">
@@ -81,7 +145,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- <div class="box" [ngClass]="{'active': selectedIndex == selectedIndexFive, 'cursor-pointer' : selectedIndex !== selectedIndexFive }">
             <div class="row" (click)="selectType(noOfPii)">

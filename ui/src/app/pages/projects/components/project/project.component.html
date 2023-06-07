@@ -15,7 +15,7 @@
                 <label for="workspace">Workspace name</label>
                 <input type="text" class="form-control input-box" [ngClass]="{'invalidInput' : fg.get('workSpaceName').invalid && fg.get('workSpaceName').dirty}" formControlName="workSpaceName"
                     placeholder="Enter workspace name" (ngModelChange)="modelChangeWorkspaceName($event)">
-                <small class="form-text text-muted">Workspace name must be between 3 and 20 characters long.</small>
+                <small class="form-text text-muted">Workspace name must be between 3 and 30 characters long.</small>
 
                 <div
                     *ngIf="fg.get('workSpaceName').invalid && fg.get('workSpaceName').dirty || fg.get('workSpaceName').touched">

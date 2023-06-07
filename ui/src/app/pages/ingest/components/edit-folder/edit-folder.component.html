@@ -1,4 +1,4 @@
-<form [formGroup]="fg" (submit)="save()">
+<!-- <form [formGroup]="fg" (submit)="save()">
     <div class="right-panel">
         <div class="col-12" style="border-bottom:1px solid #f1f1f1; float:left; z-index:9999; position:relative;">
             <h6 class="mt-3">Edit</h6>
@@ -51,4 +51,71 @@
             </div>
         </ng-template>
     </div>
-</form>
+</form> -->
+
+<app-loader [loading]="loading">
+    <div class="modal-header border-bottom-0 pd-b-0">
+        <div class="header-div">
+            <p class="ht1 mr-b-7">Rename folder</p>
+            <p class="ht2">Edit folder basic details.</p>
+        </div>
+        <!-- <h4 class="modal-title"></h4> -->
+        <button type="button" class="close" aria-describedby="modal-title" (click)="modal.close();">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pdt-0">
+        <div class="row">
+            <div class="col-md-12">
+                <form [formGroup]="fg">
+                    <div class="form-group">
+                        <label for="workspaceName" class="p2">Folder name*</label>
+                        <input type="text" class="form-control input-design"#folder formControlName="folderName" minlength="3"
+                        maxlength="30" id="folderName" autocomplete="off" placeholder="Folder Name"
+                        [pattern]="'^([0-9]?)(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'" [autoClose]="false" (focus)="f.open()"
+                        (input)="folder.value.length > 0 ? f.close() : f.open()" (blur)="f.close()" triggers="manual"
+                        #f="ngbPopover" [ngbPopover]="popFolderContent" popoverClass="edit-pophover" placement="bottom">
+                        <small id="workspaceNameHelp" class="form-text body-text-muted">Folder name must be between 3 and 30 characters long.</small>
+                        <div
+                        *ngIf="fg.get('folderName').hasError('required') && fg.get('folderName').touched">
+                            <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">
+                                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Folder name is
+                                required.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="workspaceDescription" class="p2">Folder description</label>
+                        <textarea class="form-control input-design resize-none" rows="5" maxlength="255" formControlName="folderDesc" id="folderDesc"
+                        placeholder="Folder Description"></textarea>
+                        
+                        <div *ngIf="fg.get('folderDesc').hasError('required') && fg.get('folderDesc').touched">
+                            <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">
+                                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp;
+                                Folder Description is required
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-div">
+                        <button type="submit" class="btn btn-design" [disabled]="fg.invalid"
+                            (click)="save()">Save</button>
+                    </div>
+
+                    <ng-template #popFolderContent>
+                        <div class="col-12">
+                            <ul>
+                                <li>Folder name must be between 3 and 30 characters long.</li>
+                                <li>Folder name should not contain special characters and spaces.</li>
+                                <li>Folder name should be alphanumeric or should contain only alphabets.</li>
+                                <li>Folder name should be unique.</li>
+                            </ul>
+                        </div>
+                    </ng-template>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</app-loader>

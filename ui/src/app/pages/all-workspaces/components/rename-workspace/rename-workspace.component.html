@@ -16,7 +16,7 @@
                             (ngModelChange)="modelChangeUpdateWorkspaceName($event)" autocomplete="off" required
                             triggers="manual">
                         <small id="workspaceNameHelp" class="form-text body-text-muted">Workspace name must be
-                            between 3 and 20 characters long.</small>
+                            between 3 and 30 characters long.</small>
                         <div
                             *ngIf="fg.get('projectName').invalid && fg.get('projectName').dirty || fg.get('projectName').touched">
                             <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">

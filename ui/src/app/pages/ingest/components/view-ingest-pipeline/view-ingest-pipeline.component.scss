@@ -1,0 +1,151 @@
+.togle-text-pii {
+    float: left;
+    margin: 8px -25px;
+    font-size: 12px;
+    position: relative;
+    z-index: 0;
+}
+
+.togle-div {
+    margin: 0px 0px 0px 60px;
+    float: left;
+}
+
+.togle-text {
+    float: left;
+    margin: 8px -51px;
+    font-size: 12px;
+    position: relative;
+    z-index: 0;
+}
+
+.plus-gra {
+    font-size: 14px !important;
+    color: #999;
+}
+.green-minus {
+    font-size: 14px !important;
+    color: #06d084;
+}
+
+// ::ng-deep .modal-size .modal-dialog {
+//     max-width: 1100px;
+// }
+
+.dispaly-block {
+    display: block;
+}
+
+.dispaly-none {
+    display: none;
+}
+
+.pointer-none {
+    pointer-events: none;
+}
+
+.ingest-tbl {
+    height: calc(100vh - 250px);
+}
+
+td {
+    white-space: normal;
+    height: 30px;
+}
+
+.breadcrumb-item .active{
+    cursor: auto;
+}
+
+// .bx-s {
+//     box-shadow: 0px 0px 5.18817px rgba(0, 0, 0, 0.05), 0px 1.03763px 2.07527px rgba(0, 0, 0, 0.15);
+//     border-radius: 8.30107px;
+// }
+
+.mr-t {
+    margin-top: 10px;
+}
+
+// chatgpt
+
+.bg-g {
+    // background: #00977C;
+    // background-color: rgb(245, 241, 255);
+    background-color: #e9fff0;
+}
+
+.ct1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    
+    /* Background */
+    
+    // color: #FFFFFF;
+    color: #101828;
+}
+
+.ct2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    
+    /* Background */
+    
+    // color: #FFFFFF;
+    color: #101828;
+    
+}
+
+.mr-t-17 {
+    margin-top: -17px;
+}
+
+.mr-r-12 {
+    margin-right: 12px;
+}
+
+.mr-b-4 {
+    margin-bottom: 4px;
+}
+
+.mr-t-4 {
+    margin-top: 4px;
+}
+
+.start-btn {
+    background: #FFFFFF;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+    border-radius: 8px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #212244;
+}
+
+.mr-t-8 {
+    margin-top: 8px;
+}
+
+@media (min-width: 768px) {
+    .main-container {
+      margin: 0;
+      /* padding: 0.5rem 1.5rem 0 1.5rem; */
+      padding: 0px;
+      min-height: unset;
+    }
+}
+
+.bx-s-n {
+    box-shadow: none !important;
+}

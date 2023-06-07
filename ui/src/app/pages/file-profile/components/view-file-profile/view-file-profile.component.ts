@@ -133,8 +133,8 @@ export class ViewFileProfileComponent implements OnInit {
             value: d[k]
           };
         });
-        console.log("LE",  this.analysis.frequency.length);
-        
+        console.log("LE", this.analysis.frequency.length);
+
       }
     }, () => {
       this.loadingFrequency = false;
@@ -143,12 +143,13 @@ export class ViewFileProfileComponent implements OnInit {
 
   public getfileStats(): void {
     this.loading = true;
+    this.analysis = new Analysis();
+    this.uniqueTypes = [];
 
     this.profileService.getFileStats(
       this.projectId, this.userId, this.folderId, this.fileId).subscribe((response: any) => {
         this.loading = false;
         if (response?.analytics) {
-
           try {
             // temporary fix as per dicussion with Prakash
             let data = response?.analytics?.replace(/NaN/g, '0.0');
@@ -156,6 +157,7 @@ export class ViewFileProfileComponent implements OnInit {
             this.dataTypeData = [];
             this.tableListData = [];
             // this.listData = data?.file1_stats[1].columnsStats;
+            this.analysis.columns.map(t => t.selected = false);
             this.formatResponse(data);
             const firstColumn = this.analysis.columns[0];
             this.columnDataType = firstColumn.dataType;
@@ -174,7 +176,7 @@ export class ViewFileProfileComponent implements OnInit {
 
     const fileStats = data?.file1_stats[0]?.fileStats;
     console.log("filestats", data?.file1_stats[0]?.fileStats);
-    
+
     const columnsStats = data?.file1_stats[1]?.columnsStats;
     const columns = fileStats?.columns;
 

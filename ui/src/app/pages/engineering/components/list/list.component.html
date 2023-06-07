@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="count-eng-flows">
-                Total count of engineering flows ({{(flows | filterBy:searchTerm)?.length}})
+                Total count of engineering flows ({{(flows | filterBy:searchTerm)?.length ?? 0}})
             </div>
             <div class="custom-search txt-search">
                 <input type="text" id="searchTerm" [(ngModel)]="searchTerm.engFlowName" class="search-query mr-3"

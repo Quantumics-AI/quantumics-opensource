@@ -41,3 +41,193 @@ ol {
     list-style-type: none;
     padding-left: 10px;
 }
+
+// new
+.ht-1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.ht-2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+    
+    
+    /* Blue */
+    
+    color: #212244;
+}
+
+.imp-div {
+    text-align: center;
+    padding: 16px;
+    border: 1px solid #EAECF0;
+    border-radius: 8px;
+}
+
+.up-t1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #00977C;
+}
+
+.up-t2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #475467;
+}
+
+.up-t3 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+    color: #475467;
+}
+
+.mr-t-12 {
+    margin-top: 12px;
+}
+
+.custom-file {
+    display: contents !important;
+}
+
+.custom-file-input {
+    opacity: 0;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.pd-lr-71 {
+    padding-left: 71px;
+    padding-right: 71px;
+}
+
+.br-n {
+    border: none !important;
+}
+
+.pd-86 {
+    padding-left: 71px;
+    padding-right: 71px;
+    padding-top: 24px;
+}
+
+.progress-div {
+    padding: 14px;
+    border: 1px solid #00977C;
+    border-radius: 12px;
+    display: flex;
+    margin-bottom: 31px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.pg-1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #344054;
+}
+
+.pg-2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #475467;
+}
+
+.mr-b-5 {
+    margin-bottom: 5px;
+}
+
+.h8 {
+    height: 8px;
+}
+
+.bg-c {
+    background-color: #00977C;
+    border-radius: 4px;
+}
+
+.mr-t-5 {
+    margin-top: 5px;
+}
+
+.bg-w {
+    background-color: #ffffff;
+}
+
+.per {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #344054;
+    padding-left: 12px;
+}
+
+.pd-l-14 {
+    padding-left: 14px;
+}
+
+.mrt-5 {
+    margin-top: -5px;
+}
+
+.mr-b-31 {
+    margin-bottom: 31px;
+}
+
+.pd-b-43 {
+    padding-bottom: 43px;
+}
+
+.mr-b-7 {
+    margin-bottom: 7px;
+}
+
+.pd-t-24 {
+    padding-top: 24px;
+}
+
+::ng-deep {
+    .modal-content {
+        border-radius: 8px;
+    } 
+}

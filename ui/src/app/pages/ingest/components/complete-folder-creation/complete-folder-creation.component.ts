@@ -110,8 +110,8 @@ export class CompleteFolderCreationComponent implements OnInit, OnDestroy {
         if (response.code === 200) {
           this.removeSessionData();
           // Redirect to ingest router.
-          this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
-            queryParams: { folderId: folder.folderId, name: folderName }
+          this.router.navigate([`projects/${this.projectId}/ingest/folders/dataset`], {
+            queryParams: { folderId: folder.folderId, name: folderName, dataSourceType: 'file' }
           });
         }
       }, (error) => {

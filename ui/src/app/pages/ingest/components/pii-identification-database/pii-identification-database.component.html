@@ -1,0 +1,118 @@
+<div class="localDiv">
+    <div class="card-body">
+        <ng-container [ngSwitch]="sourceType">
+            <ng-container *ngSwitchCase="'pgsql'">
+                <div class="row">
+                    <div class="col-xl-4">
+                        <div class="card card-style">
+                            <div class="row table-details">
+                                <div class="col-3 mt-2" style="padding: 0;">Table</div>
+                                <div class="col-9">
+                                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchByTable">
+                                </div>
+                            </div>
+                            <ng-container *ngIf="tables; else noTableData">
+                                <ul class="database-container">
+                                    <li *ngFor="let t of tables | filterDatabase:searchByTable" class="table-container">
+                                        <div class="form-check">
+                                            <input type="checkbox" [(ngModel)]="t.isClick" class="form-check-input"
+                                                style="margin-top:11px !important;"
+                                                (change)="selectionTable($event, t.name)">
+                                            <label class="form-check-label" [for]="t.name">
+                                                <strong class="cursor-pointer">{{t.name}}</strong>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </ng-container>
+                            <ng-template #noTableData>
+                                <h5 class="text-danger p-3">No data available</h5>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="col-xl-8">
+                        <ng-container *ngIf="pii.length; else noData">
+                            <div class="table-height table-responsive auto-height">
+                                <table class="table table2 m-0 table-fixed pii-table">
+                                    <thead class="thead-light">
+                                        <tr class="th-center fixed-th">
+                                            <th>Column</th>
+                                            <th class="th-pii">Personal Identifiable Information &nbsp;
+                                                <i (click)="isVisiablePii=true" class="fa fa-info-circle cursor-pointer"></i>
+                                            </th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="td-color" *ngFor="let item of pii">
+                                            <td class="text-left">
+                                                <span>{{item?.column}}</span>
+                                            </td>
+                                            <td><input type="checkbox" [checked]="item?.isPII"
+                                                    [value]="item?.column" (change)="updatePiiStatus($event)"></td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <select [disabled]="!item?.isPII" #mySelect
+                                                        class="form-control ingest-input" [value]="item?.piiMaskActionType"
+                                                        (change)="upatePiiMaskingStatus(mySelect, item?.column)">
+                                                        <option value="Don't Ingest">Don't Ingest</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-container>
+                        <ng-template #noData>
+                            <h3 class="error">No PII data available</h3>
+                        </ng-template>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div class="table-height table-responsive auto-height">
+                    <table class="table table2 m-0 table-fixed pii-table">
+                        <thead class="thead-light">
+                            <tr class="th-center fixed-th">
+                                <th>Column</th>
+                                <th class="th-pii">Personal Identifiable Information &nbsp;
+                                    <i (click)="isVisiablePii=true" class="fa fa-info-circle cursor-pointer"></i>
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-color" *ngFor="let item of pii">
+                                <td class="text-left">
+                                    <span>{{item?.column}}</span>
+                                </td>
+                                <td><input type="checkbox" [checked]="item?.isPII"
+                                        [value]="item?.column" (change)="updatePiiStatus($event)"></td>
+                                <td>
+                                    <div class="form-group">
+                                        <select [disabled]="!item?.isPII" #mySelect class="form-control ingest-input"
+                                            [value]="item?.piiMaskActionType"
+                                            (change)="upatePiiMaskingStatus(mySelect, item?.column)">
+                                            <option value="Don't Ingest">Don't Ingest</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div>
+            <!-- <i class="pii-note">
+                Note: Quantumics will auto identify PII in the file and if column is not identified as PII it will ingest
+                directly.
+            </i> -->
+            <p class="pii-c-btn">
+                <button type="button" class="btn btn-success pii-btn" (click)="continue();">CONTINUE</button>
+            </p>
+        </div>
+    </div>
+</div>
+<app-pii-info *ngIf="isVisiablePii" (close)="isVisiablePii=false"></app-pii-info>

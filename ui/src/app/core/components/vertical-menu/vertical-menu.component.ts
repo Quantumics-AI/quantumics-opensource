@@ -51,6 +51,8 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
     private modalService: NgbModal
   ) {
 
+    this.initializeMenu();
+
     this.sharedService.deActiveWorkSpace.subscribe((projectId: number) => {
       const selectedProject = this.projects.find(x => x.projectId === projectId);
       if (selectedProject) {
@@ -194,6 +196,11 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
         this.menus[key].collapse = false;
       }
     }
+  }
+
+  public initializeMenu(): void {
+    // As of now only added nested menu
+    this.menus['datasets'] = { collapse: false };
   }
 
   ngOnDestroy(): void {

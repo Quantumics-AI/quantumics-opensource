@@ -10,6 +10,7 @@ import { DbConnectorService } from '../../services/db-connector.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { UpdatePipelineComponent } from "../update-pipeline/update-pipeline.component"
 import { PipelineHistoryComponent } from "../pipeline-history/pipeline-history.component";
+import { PipelineConfirmationComponent } from '../pipeline-confirmation/pipeline-confirmation.component';
 
 @Component({
   selector: 'app-list-pipelines',
@@ -29,7 +30,18 @@ export class ListPipelinesComponent implements OnInit {
   total_pipeline_length: number;
   searchTerm: any = { pipelineName: '' };
   showCard: boolean = true;
+  public execute: boolean = false;
+  public executeId: number = null;
 
+  public searchDiv: boolean = false;
+  public searchString: string;
+  public startIndex: number = 0;
+  public pageSize: number = 15;
+  public endIndex: number = this.pageSize;
+  // public currnetPage: number = 0;
+  // public totalPages: number;
+  // public pager: Array<Pager> = [];
+  public page = 1;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -60,7 +72,8 @@ export class ListPipelinesComponent implements OnInit {
     this.loading = true;
     this.sourceDataService.getPipelineData(+this.projectId, this.userId).subscribe((res) => {
       this.loading = false;
-      this.pipelines = res.result;
+      if (res.code == 200) {
+        this.pipelines = res.result;
       if (this.pipelines.length > 0) {
         this.showCard = false;
       }
@@ -77,11 +90,32 @@ export class ListPipelinesComponent implements OnInit {
         });
       }
       this.total_pipeline_length = this.pipelines.length;
+      // this.totalPages = this.pipelines.length / this.pageSize;
+      // this.totalPages = Math.ceil(this.totalPages);
+
+      // for (let index = 0; index < this.totalPages; index++) {
+      //   const page = {
+      //     index,
+      //     isActive: index == 0
+      //   } as Pager;
+
+      //   this.pager.push(page);
+      // }
+      } else {
+        this.pipelines = [];
+      }
+      
+    }, (error) => {
+      this.loading = false;
     });
   }
 
+  public refresh() : void {
+    this.pipelineList();
+  }
+
   public getPipeLineFolderDetails(pipeline: any): void {
-    pipeline.isExpanded = !pipeline.isExpanded;
+    
     this.pipelines.map(t => {
       if (t.pipelineId != pipeline.pipelineId) {
         t.isExpanded = false;
@@ -96,14 +130,17 @@ export class ListPipelinesComponent implements OnInit {
       }
       else {
         this.pipeLineFolders = response.result;
+        pipeline.isExpanded = !pipeline.isExpanded;
       }
     });
   }
 
   public redirectToFolder(pipeline: any): void {
-    this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
-      queryParams: { folderId: pipeline.qsFolders.folderId, name: pipeline.qsFolders.folderName, pipelineId: pipeline.pipelineId, dataSourceType: 'pipeline' }
-    });
+    // this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
+    //   queryParams: { folderId: pipeline.qsFolders.folderId, name: pipeline.qsFolders.folderName, pipelineId: pipeline.pipelineId, dataSourceType: 'pipeline' }
+    // });
+    localStorage.setItem('selectedFolderName', pipeline.qsFolders.folderName);
+    this.router.navigate([`projects/${this.projectId}/ingest/pipelines/dataset/${pipeline.pipelineId}/${pipeline.qsFolders.folderId}`]);
   }
 
   openEditPipeline(pipe: any): void {
@@ -115,9 +152,11 @@ export class ListPipelinesComponent implements OnInit {
     modalRef.componentInstance.pipeData = pipe;
 
     modalRef.result.then((result) => {
+      // this.pager = [];
       this.pipelineList();
       console.log(result);
     }, (reason) => {
+      // this.pager = [];
       console.log(reason);
       this.pipelineList();
     });
@@ -125,23 +164,17 @@ export class ListPipelinesComponent implements OnInit {
   // ImportDbComponent
 
   executePipeline(pipelineId: number): void {
+    this.execute = true;
+    this.executeId = pipelineId;
 
-    this.loading = true;
+    // this.loading = true;
     this.sourceDataService.getPipelineExecuteData(+this.projectId, +this.userId, pipelineId).subscribe((res) => {
-      this.loading = false;
       this.snakbar.open(res.message);
+      this.execute = false;
+      this.executeId = null;
+      this.pipelineList();
+      
     });
-
-    // const modalRef = this.modalService.open(ImportDbComponent, { size: 'lg', windowClass: 'modal-size' });
-    // modalRef.componentInstance.projectId = this.projectId;
-    // modalRef.componentInstance.userId = this.userId;
-    // modalRef.componentInstance.pipelineId = pipelineId;
-
-    // modalRef.result.then((result) => {
-    //   console.log(result);
-    // }, (reason) => {
-    //   console.log(reason);
-    // });
   }
 
   // Open Pipeline History component
@@ -160,19 +193,43 @@ export class ListPipelinesComponent implements OnInit {
   }
 
   deletePipeline(d: number): void {
-    if (confirm("Are you sure to delete this pipeline")) {
-      this.loading = true;
-      this.sourceDataService.deletePipeline(+this.projectId, this.userId, d).subscribe((res) => {
-        this.loading = false;
-        if (res.code === 200) {
-          this.pipelineList();
-          this.snakbar.open(res.massage);
-        } else {
-          this.snakbar.open(res.message);
-        }
+    // if (confirm("Are you sure to delete this pipeline")) {
+    //   this.loading = true;
+    //   this.sourceDataService.deletePipeline(+this.projectId, this.userId, d).subscribe((res) => {
+    //     this.loading = false;
+    //     if (res.code === 200) {
+    //       this.pipelineList();
+    //       this.snakbar.open(res.massage);
+    //     } else {
+    //       this.snakbar.open(res.message);
+    //     }
 
-      })
-    }
+    //   })
+    // }
+
+    const modalRef = this.modalService.open(PipelineConfirmationComponent, { size: 'md modal-dialog-centered', scrollable: false });
+    modalRef.componentInstance.userId = this.userId;
+    modalRef.componentInstance.projectId = this.projectId;
+    modalRef.componentInstance.pipelineId = d;
+
+    modalRef.result.then((result) => {
+      this.loading = true;
+      this.sourceDataService.deletePipeline(+this.projectId, this.userId, d).subscribe((response: any) => {
+        this.loading = false;
+        if (response.code === 200) {
+          this.snakbar.open(response.massage);
+          const idx = this.pipelines.findIndex(x => x.pipelineId === d);
+          this.pipelines.splice(idx, 1);
+          this.pipelineList();
+          
+        }
+      }, (error) => {
+        this.loading = false;
+        this.snakbar.open(error);
+      });
+    }, (reason) => {
+
+     });
 
   }
 
@@ -184,8 +241,81 @@ export class ListPipelinesComponent implements OnInit {
     });
   }
 
+  searchInput(str) {
+    this.searchString = str;
+    if (str.length == 0) {
+      this.searchDiv = false;
+    } else {
+      this.searchDiv = true;
+    }
+  }
+
+  clearSearhInput() {
+    this.searchTerm = { pipelineName: '' };
+    this.searchDiv = false;
+  }
+
+  // public previousPage(): void {
+  //   this.currnetPage--;
+  //   this.pager.map(t => t.isActive = false);
+
+  //   if (this.currnetPage == 0) {
+  //     this.currnetPage = 0;
+  //     this.startIndex = 0;
+  //     this.endIndex = this.pageSize;
+  //   } else {
+  //     this.startIndex = this.pageSize * this.currnetPage;
+  //     this.endIndex = this.startIndex + this.pageSize;
+  //   }
+
+  //   this.pager[this.currnetPage].isActive = true;
+  // }
+
+  // public nextPage(): void {
+  //   this.pager.map(t => t.isActive = false);
+
+  //   this.currnetPage++;
+
+  //   if (this.totalPages != this.currnetPage) {
+  //     this.startIndex = this.endIndex;
+  //     this.endIndex = this.startIndex + this.pageSize;
+  //   }
+
+  //   this.pager[this.currnetPage].isActive = true;
+  // }
+
+  // public redirectToPageIndex(pager: Pager): void {
+  //   this.pager.map(t => t.isActive = false);
+  //   pager.isActive = true;
+  //   this.currnetPage = pager.index;
+  //   this.startIndex = this.pageSize * this.currnetPage;
+  //   this.endIndex = this.startIndex + this.pageSize;
+  // }
+
+  public onPageChange(currentPage: number): void {
+    this.startIndex = (currentPage - 1) * this.pageSize;
+    this.endIndex = this.startIndex + this.pageSize;
+  }
+
   public selectSourceType(): void {
     this.router.navigate([`projects/${this.projectId}/ingest/select-source-type`]);
+  }
+
+  public sortPipeLine(): void {
+    this.isDescending = !this.isDescending;
+
+    if (this.isDescending) {
+      this.pipelines = this.pipelines.sort((a, b) => {
+        var pipelineName_order = a.pipelineName.localeCompare(b.pipelineName);
+        return pipelineName_order;
+      });
+    } else {
+      this.pipelines = this.pipelines.sort((a, b) => {
+        var pipelineName_order = b.pipelineName.localeCompare(a.pipelineName);
+        return pipelineName_order;
+      });
+    }
+
   }
 
 }
