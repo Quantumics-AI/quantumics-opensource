@@ -1,161 +1,159 @@
-<div class="main-container bg-color">
-    <div class="page-header1">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb breadcrumb-top">
-                <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Data Profile</li>
-            </ol>
-        </nav>
-    </div>
-
-    <div class="page-content pd-0">
-        <ng-container *ngIf="foldersData">
-            <div class="pd-20 pd-t-b-16">
-                <div class="card card-shadow mr-b-0">
-                    <div class="card-body pd-16">
-                        <div class="source-type-div">
-                            <div class="form-check form-check-inline">
-                                <label class="form-check-label source-type" for="inlineRadio1">Source type:</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input cp" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="false"
-                                [checked]="isCheck" (change)="onItemChange($event.target.value)">
-                                <label class="form-check-label s-label" [ngClass]="{'activeText': queryFolders === false}" for="inlineRadio1">Local file</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input cp" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="true"
-                                (change)="onItemChange($event.target.value)">
-                                <label class="form-check-label s-label" [ngClass]="{'activeText': queryFolders === true}" for="inlineRadio2">Db Connector</label>
-                            </div>
-                        </div>
+<app-loader [loading]="loading">
+    <div class="main-container bg-color">
+        <div class="page-header1">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-top">
+                    <!-- <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li> -->
+                    <li class="breadcrumb-item" aria-current="page">Data Profile</li>
+                </ol>
+            </nav>
+        </div>
     
-                        <div class="row align-item">
-                            <div class="col">
-                                <ng-container *ngIf="!queryFolders" >
-                                    <div class="form-group select-display mr-r-16 mr-b-0">
-                                        <label class="select-l" for="folders">Select folders</label>
-                                        <ng-select class="select-text custom" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
-                                            placeholder="Select Folder" [title]="selectedFolderName" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                            (change)="selectFolder($event)" [items]="folders" bindLabel="folderDisplayName"
-                                            bindValue="folderId">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
-                                            </ng-template>
-                                        </ng-select>
-                                    </div>
-                                    <div class="form-group select-display mr-b-0">
-                                        <label class="select-l" for="files">Select dataset</label>
-                                        <ng-select class="select-text" id="fileId" [title]="selectedFileName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
-                                            placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                            (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                <span [title]="item.fileName">{{item.fileName}}</span>
-                                            </ng-template>
-                                        </ng-select>
-                                    </div>
-                                </ng-container>
-    
-                                <ng-container *ngIf="queryFolders" >
-                                    <div class="form-group select-display mr-r-16 mr-b-0">
-                                        <label class="select-l" for="Pipelines">Select pipeline</label>
-                                        <ng-select class="select-text" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
-                                            placeholder="Select Folder" [title]="selectedFolderName" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                            (change)="selectPipeline($event)" [items]="pipelines" bindLabel="folderDisplayName"
-                                            bindValue="folderId">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
-                                            </ng-template>
-                                        </ng-select>
-                                    </div>
-                                    <div class="form-group select-display mr-r-16 mr-b-0">
-                                        <label class="select-l" for="folders">Select table</label>
-                                        <ng-select class="select-text" id="fileId" [title]="selectedTableName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
-                                            placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                            (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                <span [title]="item.fileName.split('.').slice(0, -1).join('.')">{{item.fileName.split('.').slice(0, -1).join('.')}}</span>
-                                            </ng-template>
-                                        </ng-select>
-                                    </div>
-                                    <div class="form-group select-display mr-b-0">
-                                        <label class="select-l" for="files">Select dataset</label>
-                                        <ng-select class="select-text" id="fileId" [title]="selectedFileName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
-                                            placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                            (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
-                                            <ng-template ng-option-tmp let-item="item">
-                                                <span [title]="item.fileName">{{item.fileName}}</span>
-                                            </ng-template>
-                                        </ng-select>
-                                    </div>
-                                </ng-container>
+        <div class="page-content pd-0" *ngIf="!loading">
+            <ng-container *ngIf="foldersData">
+                <div class="pd-20 pd-t-b-16">
+                    <div class="card card-shadow mr-b-0">
+                        <div class="card-body pd-16">
+                            <div class="source-type-div">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label source-type" for="inlineRadio1">Source type:</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input cp" type="radio" name="inlineRadioOptions" 
+                                    [(ngModel)]="queryFolders" [value]="false" (change)="onItemChange($event.target.value)">
+                                    <label class="form-check-label s-label" [ngClass]="{'activeText': queryFolders === false}" for="inlineRadio1">Local file</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input cp" type="radio" name="inlineRadioOptions" 
+                                    [(ngModel)]="queryFolders" [value]="true" (change)="onItemChange($event.target.value)">
+                                    <label class="form-check-label s-label" [ngClass]="{'activeText': queryFolders === true}" for="inlineRadio2">Db Connector</label>
+                                </div>
+                            </div>
+        
+                            <div class="row align-item">
+                                <div class="col">
+                                    <ng-container *ngIf="!queryFolders" >
+                                        <div class="form-group select-display mr-r-16 mr-b-0">
+                                            <label class="select-l" for="folders">Select folders</label>
+                                            <ng-select class="select-text custom" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
+                                                placeholder="Select Folder" [title]="selectedFolderName" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                                (change)="selectFolder($event)" [items]="folders" bindLabel="folderDisplayName"
+                                                bindValue="folderId">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
+                                                </ng-template>
+                                            </ng-select>
+                                        </div>
+                                        <div class="form-group select-display mr-b-0">
+                                            <label class="select-l" for="files">Select dataset</label>
+                                            <ng-select class="select-text" id="fileId" [title]="selectedFileName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
+                                                placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                                (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <span [title]="item.fileName">{{item.fileName}}</span>
+                                                </ng-template>
+                                            </ng-select>
+                                        </div>
+                                    </ng-container>
+        
+                                    <ng-container *ngIf="queryFolders" >
+                                        <div class="form-group select-display mr-r-16 mr-b-0">
+                                            <label class="select-l" for="Pipelines">Select pipeline</label>
+                                            <ng-select class="select-text" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
+                                                placeholder="Select Folder" [title]="selectedFolderName" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                                (change)="selectPipeline($event)" [items]="pipelines" bindLabel="folderDisplayName"
+                                                bindValue="folderId">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
+                                                </ng-template>
+                                            </ng-select>
+                                        </div>
+                                        <div class="form-group select-display mr-r-16 mr-b-0">
+                                            <label class="select-l" for="folders">Select table</label>
+                                            <ng-select class="select-text" id="fileId" [title]="selectedTableName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
+                                                placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                                (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <span [title]="item.fileName.split('.').slice(0, -1).join('.')">{{item.fileName.split('.').slice(0, -1).join('.')}}</span>
+                                                </ng-template>
+                                            </ng-select>
+                                        </div>
+                                        <div class="form-group select-display mr-b-0">
+                                            <label class="select-l" for="files">Select dataset</label>
+                                            <ng-select class="select-text" id="fileId" [title]="selectedFileName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
+                                                placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                                (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <span [title]="item.fileName">{{item.fileName}}</span>
+                                                </ng-template>
+                                            </ng-select>
+                                        </div>
+                                    </ng-container>
+                                    
+                                </div>
+                                <div class="col btn-col">
+                                    <button type="button" class="btn viewdata-btn mr-10" (click)="viewDataset()" [disabled]="!fileId">View dataset</button>
+                                    <button type="button" class="btn btn-design" (click)="prepareData()" [disabled]="!fileId">Prepare dataset</button>
+                                </div>
                                 
-                            </div>
-                            <div class="col btn-col">
-                                <button type="button" class="btn viewdata-btn mr-10" (click)="viewDataset()" [disabled]="!fileId">View dataset</button>
-                                <button type="button" class="btn btn-design" (click)="prepareData()" [disabled]="!fileId">Prepare dataset</button>
                             </div>
                             
                         </div>
-                        
                     </div>
                 </div>
-            </div>
-            
-    
-            <div>
-                <ng-container *ngIf="!noData" > <router-outlet></router-outlet></ng-container>
-                <ng-container *ngIf="noData">
-                    <div *ngIf="!queryFolders" class="pd-20 pd-t-0">
-                        <div class="card card-shadow">
-                            <div class="card-body">
-                                <div class="no-content-div text-center">
-                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
-                                    <h5 class="summary-p1">No records found!</h5>
-                                    <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
-                                    <p class="summary-p2">Please select other dataset or upload new dataset in the selected folder.
-                                    </p>
-                                    <a [routerLink]="['/projects', projectId, 'ingest', 'folders']"
-                                        class="btn btn-design height-36 mr-b-20">Go to folder</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div *ngIf="queryFolders" class="pd-20 pd-t-0">
-                        <div class="card card-shadow">
-                            <div class="card-body">
-                                <div class="no-content-div text-center">
-                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
-                                    <h5 class="summary-p1">No records found!</h5>
-                                    <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
-                                    <p class="summary-p2">Please select other dataset or refresh the pipeline to fetch new table.</p>
-                                    <a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']"
-                                        class="btn btn-design height-36 mr-b-20">Go to pipeline</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </ng-container>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="!foldersData">
-            <div class="pd-20">
-                <div class="card card-shadow">
-                    <div class="card-body">
-                        <div class="no-content-div text-center">
-                            <img src="/assets/img/data-profile/no-data.svg" class="img-fluid mr-tb">
-                            <h5 class="summary-p1">Visualize your raw data.</h5>
-                            <p class="summary-p2">Get Insights like summary of data , column wise statistics of null and duplicates.</p>
-    
-                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design height-36 mr-b-20">Connect to a source</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </ng-container>
+                
         
-
+                <div>
+                    <ng-container *ngIf="!noData" > <router-outlet></router-outlet></ng-container>
+                    <ng-container *ngIf="noData">
+                        <div *ngIf="!queryFolders" class="pd-20 pd-t-0">
+                            <div class="card card-shadow">
+                                <div class="card-body">
+                                    <div class="no-content-div text-center">
+                                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                        <h5 class="summary-p1">No records found!</h5>
+                                        <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
+                                        <p class="summary-p2">Please select other dataset or upload new dataset in the selected folder.
+                                        </p>
+                                        <a [routerLink]="['/projects', projectId, 'ingest', 'folders']"
+                                            class="btn btn-design height-36 mr-b-20">Go to folder</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div *ngIf="queryFolders" class="pd-20 pd-t-0">
+                            <div class="card card-shadow">
+                                <div class="card-body">
+                                    <div class="no-content-div text-center">
+                                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                        <h5 class="summary-p1">No records found!</h5>
+                                        <p class="summary-p2 mr-b-0">Selected dataset doesn’t have any record for analysing.</p>
+                                        <p class="summary-p2">Please select other dataset or refresh the pipeline to fetch new table.</p>
+                                        <a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']"
+                                            class="btn btn-design height-36 mr-b-20">Go to pipeline</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!foldersData">
+                <div class="pd-20">
+                    <div class="card card-shadow">
+                        <div class="card-body">
+                            <div class="no-content-div text-center">
+                                <img src="/assets/img/data-profile/no-data.svg" class="img-fluid mr-tb">
+                                <h5 class="summary-p1">Visualize your raw data.</h5>
+                                <p class="summary-p2">Get Insights like summary of data , column wise statistics of null and duplicates.</p>
+        
+                                <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design height-36 mr-b-20">Connect to a source</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
     </div>
-</div>
+</app-loader>

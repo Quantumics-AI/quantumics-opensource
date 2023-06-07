@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { ViewDatasetComponent } from './components/view-dataset/view-dataset.com
   templateUrl: './file-profile.component.html',
   styleUrls: ['./file-profile.component.scss']
 })
-export class FileProfileComponent implements OnInit {
+export class FileProfileComponent implements OnInit, OnDestroy {
 
   private certificate$: Observable<Certificate>;
   private unsubscribe: Subject<void> = new Subject();
@@ -52,6 +52,13 @@ export class FileProfileComponent implements OnInit {
 
     this.projectId = +this.activatedRoute.snapshot.paramMap.get('projectId');
 
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.sourceType = params['sourcetype'];
+      this.folderId = +params['folderId'];
+      this.fileId = +params['fileId'];
+      this.queryFolders = this.sourceType === 'pipeline' ? true : false;
+    });
+
     this.certificate$ = this.quantumFacade.certificate$;
     this.certificate$
       .pipe(takeUntil(this.unsubscribe))
@@ -63,22 +70,33 @@ export class FileProfileComponent implements OnInit {
   ngOnInit(): void {
     this.projectName = localStorage.getItem('projectname');
     // get inital data
-    this.getFolderPipelineData();
+    if(this.sourceType == 'pipeline'){
+      this.getPipelinesData();
+    } else {
+      this.getFolderPipelineData();
+    }
     
   }
 
   public getFolderPipelineData(): void {
-    this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders).subscribe((res) => {
+    this.loading = true;
+    this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((res) => {
+     
       this.folders = res?.result;
       if (this.folders.length) {
         this.noData = false;
         this.foldersData = true;
-        const folder = this.folders[0];
+        this.loading = false;
+        const folder = this.folders.find(x => x.folderId == this.folderId) ?? this.folders[0];
         this.folderId = folder.folderId;
         this.folderName = folder.folderDisplayName;
         this.selectedDisplayFolderName = folder.folderDisplayName;
 
-        this.folderService.getFiles(this.projectId, this.userId, this.folderId).subscribe((res) => {
+        this.folderService.getFiles(this.projectId, this.userId, this.folderId)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((res) => {
           this.files = res?.result;
           // Sorting files list in descending order (sort by createdDate)
           if (this.files.length > 1) {
@@ -91,7 +109,7 @@ export class FileProfileComponent implements OnInit {
           }
 
           if (this.files.length) {
-            const file = this.files[0];
+            const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
             this.fileId = file.fileId;
             this.fileName = file.fileName;
           }
@@ -99,18 +117,23 @@ export class FileProfileComponent implements OnInit {
         });
       } else {
         this.noData = true;
+        this.loading = false;
       }
     });
   }
 
   public getFolders(): void {
-    this.folderService.getFolders(this.projectId, this.userId).subscribe((res) => {
+    this.folderService.getFolders(this.projectId, this.userId)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((res) => {
       this.folders = res?.result;
     });
   }
 
   public getFiles(): void {
-    this.folderService.getFiles(this.projectId, this.userId, this.folderId).subscribe((res) => {
+    this.folderService.getFiles(this.projectId, this.userId, this.folderId)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((res) => {
       this.files = res?.result;
 
       // Sorting files list in descending order (sort by createdDate)
@@ -199,18 +222,24 @@ export class FileProfileComponent implements OnInit {
   }
 
   public getPipelinesData(): void {
+    this.loading = true;
     this.queryFolders = true;
-    this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders).subscribe((res) => {
+    this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((res) => {
+      this.loading = false;
       this.pipelines = res?.result;
       if (this.pipelines.length) {
         this.noData = false;
         this.foldersData = true;
-        const pipeline = this.pipelines[0];
+        const pipeline =  this.pipelines.find(x => x.folderId === this.folderId) ?? this.pipelines[0];
         this.folderId = pipeline.folderId;
         this.folderName = pipeline.folderDisplayName;
         this.selectedDisplayFolderName = pipeline.folderDisplayName;
 
-        this.folderService.getFiles(this.projectId, this.userId, this.folderId).subscribe((res) => {
+        this.folderService.getFiles(this.projectId, this.userId, this.folderId)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((res) => {
           this.files = res?.result;
           // Sorting files list in descending order (sort by createdDate)
           if (this.files.length > 1) {
@@ -223,7 +252,7 @@ export class FileProfileComponent implements OnInit {
           }
 
           if (this.files.length) {
-            const file = this.files[0];
+            const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
             this.fileId = file.fileId;
             this.fileName = file.fileName;
           }
@@ -238,8 +267,7 @@ export class FileProfileComponent implements OnInit {
   }
 
   public onItemChange(value: string): void {
-    
-    if(value === "true"){
+    if(this.queryFolders === true){
       this.files = [];
       this.queryFolders = true;
       this.fileId = null;
@@ -262,7 +290,6 @@ export class FileProfileComponent implements OnInit {
     modalRef.componentInstance.folderId = this.folderId;
     modalRef.componentInstance.fileId = this.fileId;
     modalRef.result.then((res) => {
-      
     }, (reason) => {
       console.log(reason);
     });
@@ -272,5 +299,9 @@ export class FileProfileComponent implements OnInit {
     localStorage.setItem('cleansing-selected-folder-name', this.selectedDisplayFolderName);
     localStorage.setItem('cleansing-selected-file-name', this.selectedFileName);
     this.router.navigate([`projects/${this.projectId}/cleansing/${this.folderId}/${this.fileId}`]);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.unsubscribe();
   }
 }

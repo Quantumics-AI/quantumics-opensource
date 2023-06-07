@@ -39,6 +39,14 @@ import { UpdatePipelineComponent } from './components/update-pipeline/update-pip
 import { ImportDbComponent } from './components/import-db/import-db.component';
 import { PiiIdentificationComponent } from './components/pii-identification/pii-identification.component';
 import { PipelineHistoryComponent } from './components/pipeline-history/pipeline-history.component';
+import { PiiIdentificationDatabaseComponent } from './components/pii-identification-database/pii-identification-database.component';
+import { CompleteDatabaseCreationComponent } from './components/complete-database-creation/complete-database-creation.component';
+import { FolderConfirmationComponent } from './components/folder-confirmation/folder-confirmation.component';
+import { PipelineConfirmationComponent } from './components/pipeline-confirmation/pipeline-confirmation.component';
+import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
+import { FolderDatasetComponent } from './components/folder-dataset/folder-dataset.component';
+import { DeleteFolderDatasetComponent } from './components/delete-folder-dataset/delete-folder-dataset.component';
+import { ViewIngestPipelineComponent } from './components/view-ingest-pipeline/view-ingest-pipeline.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +82,14 @@ import { PipelineHistoryComponent } from './components/pipeline-history/pipeline
     ImportDbComponent,
     PiiIdentificationComponent,
     PipelineHistoryComponent,
+    PiiIdentificationDatabaseComponent,
+    CompleteDatabaseCreationComponent,
+    FolderConfirmationComponent,
+    PipelineConfirmationComponent,
+    DatasetListComponent,
+    FolderDatasetComponent,
+    DeleteFolderDatasetComponent,
+    ViewIngestPipelineComponent,
   ],
   imports: [
     CommonModule,

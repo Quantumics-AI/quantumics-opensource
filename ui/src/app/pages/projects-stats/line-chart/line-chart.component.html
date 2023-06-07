@@ -1,0 +1,37 @@
+<div class="creation-div">
+    <div class="mr-r-50">
+        <ng-container *ngIf="showLine else other">
+            <p class="ct1 mr-b-0" *ngIf="type === 'Storage'">{{type}} consumed yesterday</p>
+            <p class="ct1 mr-b-0" *ngIf="type === 'Dataset'">{{type}} imported yesterday</p>
+        </ng-container>
+        <ng-template #other>
+            <p class="ct1 mr-b-0">{{type}} created yesterday</p>
+        </ng-template>
+        
+        <p class="ct2 mr-b-0">{{yesterdayCount}} <span *ngIf="type === 'Storage'">MB</span></p>
+    </div>
+    <div>
+        <ng-container *ngIf="showLine else od">
+            <p class="ct1 mr-b-0" *ngIf="type === 'Storage'">Average {{type | lowercase}} consumed daily  (in 90 days)</p>
+            <p class="ct1 mr-b-0" *ngIf="type == 'Dataset'">Average {{type | lowercase}} imported daily  (in 90 days)</p>
+        </ng-container>
+        <ng-template #od>
+            <p class="ct1 mr-b-0">Average {{type | lowercase}} created daily (in 90 days)</p>
+        </ng-template>
+        <p class="ct2 mr-b-0">{{avgRange}} <span *ngIf="type === 'Storage'">MB</span></p>
+    </div>
+</div>
+<div class="row chart-div">
+    <div class="col-xl-12">
+        <div class="">
+            <!-- <p class="style1 font-20 mb-0"><strong>OverView</strong></p>
+            <p class="style1 font-16">{{type}}</p> -->
+            <div id="chart-container">
+                <canvas #myCanvas height="100" baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                    [colors]="lineChartColors" [options]="lineChartOptions" [legend]="lineChartLegend" [chartType]="'line'"
+                    (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>

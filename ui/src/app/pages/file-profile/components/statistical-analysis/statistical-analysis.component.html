@@ -11,31 +11,31 @@
             <ng-container *ngIf="statisticsParams else noRecords">
                 <div class="col-md-4 pd-t-b-16">
                     <p class="mr-0 p1">Minimum</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.min.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.min.toFixed(2) | number }}</p>
                 </div>
                 <div class="col-md-4 pd-t-b-16">
                     <p class="mr-0 p1">Maximum</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.max?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.max?.toFixed(2) | number}}</p>
                 </div>
                 <div class="col-md-4 pd-t-b-16">
                     <p class="mr-0 p1">Median</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.median?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.median?.toFixed(2) | number}}</p>
                 </div>
                 <div class="col-md-4 pd-b-16">
                     <p class="mr-0 p1">Mean</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.mean?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.mean?.toFixed(2) | number}}</p>
                 </div>
                 <div class="col-md-4 pd-b-16">
                     <p class="mr-0 p1">Variance</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.variance?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.variance?.toFixed(2) | number}}</p>
                 </div>
                 <div class="col-md-4 pd-b-16">
                     <p class="mr-0 p1">S.Darivation</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.std?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.std?.toFixed(2) | number}}</p>
                 </div>
                 <div class="col-md-4 pd-b-0">
                     <p class="mr-0 p1">Sum</p>
-                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.sum?.toFixed(2)}}</p>
+                    <p class="mr-0 bt">{{dataType === 'string' ? 'NA' : statisticsParams?.sum?.toFixed(2) | number}}</p>
                 </div>
             </ng-container>
 

@@ -11,13 +11,84 @@
 
 .workspace-box {
   background-color: #202123;
-  padding: 15px;
+  // padding: 15px;
   color: #FFFFFF;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05), 0px 1px 2px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
-  margin-top: 2%;
-  width: 80%;
-  height: 75px;
+  // margin-top: 2%;
+  // width: 80%;
+  height: 52px;
+}
+
+.mr-t-7 {
+  margin-top: -7px;
+}
+
+.mr-16 {
+  margin-right: 16px;
+}
+
+.fs-14 {
+  font-size: 14px;
+}
+
+.mr-t-11 {
+  margin-top: 11px;
+}
+
+.mr-tb-24 {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.mr-b-8 {
+  margin-bottom: 8px;
+}
+
+.w-560 {
+  width: 560px;
+}
+
+.mr-b-24 {
+  margin-bottom: 24px;
+}
+
+.pd-4 {
+  padding: 4px;
+}
+
+.s-card {
+  box-shadow: none;
+  border-radius: 8px;
+  width: 321px;
+}
+
+.mr-b-17 {
+  margin-bottom: 17px;
+}
+
+.st {
+  padding-top: 20px;
+  padding-left: 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #212244;
+}
+
+.c-2 {
+  max-width: 250px;
+  padding: 0;
+}
+
+.pd-t-32 {
+  padding-top: 32px;
+}
+
+.mr-b-25 {
+  margin-bottom: 25px;
 }
 
 .btn-plan {
@@ -74,10 +145,151 @@
   font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 16px;
   /* or 143% */
   
   
   color: #FFFFFF;
+  display: inline-flex;
+  padding-top: 18px;
+  padding-left: 16px;
+  padding-bottom: 18px;
+}
+
+// new design
+.overview-div {
+  padding-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #EBEBEB;
+}
+
+.edit-k {
+  margin-right: 20px;
+}
+
+.p-body {
+  padding: 0.5rem 0.75rem;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  /* identical to box height, or 18px */
+  
+  
+  /* Blue */
+  
+  color: #212244;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.kpi-check {
+  position: unset;
+  margin-left: 0;
+}
+
+.checkActions li {
+  padding-bottom: 16px;
+}
+
+input[type=checkbox]{
+  accent-color: #00977C;
+}
+
+input[type=checkbox]:checked{
+  accent-color: #00977C;
+}
+
+::ng-deep {
+  .kpi-menu-width {
+    max-width: 159px !important;
+    width: 159px !important;
+    margin-left: 80px;
+  }
+}
+
+.view-data-options {
+  position: absolute !important;
+  left: -65px !important;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 10px;
+  min-width: 134px;
+  top: 32px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  /* identical to box height, or 18px */
+  
+  
+  /* Blue */
+  
+  color: #212244;
+}
+
+.check-sort {
+  float: right;
+  margin-top: 3px;
+}
+
+.sortBtn {
+  padding-left: 8px;
+  padding-bottom: 20px;
+  padding-right: 8px;
+}
+
+.d-if {
+  display: inline-flex;
+}
+
+.mr-l-5 {
+  margin-left: 5px;
+}
+
+.mr-r-2 {
+  margin-right: 2px;
+}
+
+.mr-t1-7 {
+  margin-top: 7px;
+}
+
+.btn:focus{
+  outline: none;
+  box-shadow: none;
+}
+
+.lh-20 {
+  line-height: 20px;
+}
+
+
+// scroll 
+// line no 88 page-content pd-0
+.sc-1 {
+  overflow: auto;
+  height: calc(100vh - 40px);
+  position: sticky;
+  top: 0;
+}
+
+// // overview div 
+.sc-2 {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  background: #F4F6FA
+}
+
+// hover 
+.team-drop:hover {
+  background-color: #F4F6FA;
+}
+
+.mp {
+  padding-right: 16px;
+  margin-top: 8px;
 }

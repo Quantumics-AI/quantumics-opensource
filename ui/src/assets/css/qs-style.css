@@ -102,7 +102,7 @@
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f7f7f7 !important;
+    background-color: #f7f7f7;
 }
 
 .td-b {

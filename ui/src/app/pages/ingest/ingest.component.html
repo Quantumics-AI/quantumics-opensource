@@ -1,35 +1,33 @@
 <app-loader [loading]="loading">
-    <div class="main-container">
+    <div class="main-container bg-color">
 
-        <div class="page-header1">
+        <!-- <div class="page-header1">
             <ol class="breadcrumb breadcrumb-top">
                 <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Datasets</li>
             </ol>
-        </div>
+        </div> -->
 
-        <div class="page-content main-menu">
-            <ul>
+        <div class="main-menu">
+            <!-- <ul>
                 <li>
                     <a [routerLink]="['folders']" routerLinkActive="is-active" class="disabled-tab">
                         <img class="active-folder" src="assets/img/folder-fill.svg" width="28" alt="add">
-                        <!-- <img class="inactive-folder" src="assets/img/folder-inactive.svg" width="28" alt="add"> -->
                         &nbsp;Folder
                     </a>
                 </li>
                 <li>
                     <a [routerLink]="['pipelines']" routerLinkActive="is-active" class="disabled-tab">
                         <img class="active-pipe" src="assets/img/pipeline-fill.svg" width="28" alt="add">
-                        <!-- <img class="inactive-pipe" src="assets/img/pipe-inactive.svg" width="28" alt="add"> -->
                         &nbsp;Pipeline
                     </a>
                 </li>
-            </ul>
+            </ul> -->
 
-            <div class="mt-3">
+            <!-- <div> -->
                 <router-outlet></router-outlet>
-            </div>
+            <!-- </div> -->
         </div>
         <!-- <div class="page-content">
             <ng-container *ngIf="!loading && folders?.length > 0 else empty">

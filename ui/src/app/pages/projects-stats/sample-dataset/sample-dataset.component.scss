@@ -1,0 +1,31 @@
+.db {
+    display: block;
+}
+
+.fs-14 {
+    font-size: 14px;
+}
+
+input[type=radio]{
+    outline: none !important;
+}
+
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}
+
+.mr-t-16 {
+    margin-top: 16px;
+}
+
+.lc {
+    color: #888C92;
+}
+
+.form-check-input:checked + .form-check-label {
+    color: #212244;
+}

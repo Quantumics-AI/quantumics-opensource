@@ -17,8 +17,10 @@ export class ColumnsComponent implements OnChanges {
   public isDescending: boolean;
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.searchTerm = '';
+
     if (this.columns.length) {
-      const selectedColumn = this.columns.find(x=> x.selected);
+      const selectedColumn = this.columns.find(x => x.selected);
       this.selectedColumnValue = selectedColumn?.column;
     }
   }

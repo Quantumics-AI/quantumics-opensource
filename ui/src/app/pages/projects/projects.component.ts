@@ -98,6 +98,8 @@ export class ProjectsComponent implements OnInit {
     localStorage.setItem('processedDb', project.processedDb);
     localStorage.setItem('expired', project.validDays > 0 ? 'false' : 'true');
 
+    //
+
     this.router.navigate([`${project.projectId}/stats`], { relativeTo: this.activatedRoute });
   }
 

@@ -1,30 +1,39 @@
 <app-loader [loading]="loading">
     <div class="modal-header">
-        <h5 class="modal-title pipe-history"><img src="assets/img/pipeline.svg"
-            class="icon-space">Pipeline History</h5>
+        <!-- <h5 class="modal-title pipe-history"><img src="assets/img/pipeline.svg"
+            class="icon-space">Pipeline History</h5> -->
+        <div class="header-div">
+            <p class="ht1 mr-b-7">Pipeline execution history</p>
+            <p class="ht2 mr-b-0">Dataset should have same column headers of the first source dataset.</p>
+        </div>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
             (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
-    <div class="modal-body modal-height">
+    <div class="modal-body pd-0">
 
-        <div class="col-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
+        <!-- <div class="col-12"> -->
+            <div class="table-responsive br-r table-height">
+                <table class="table m-0 table-fixed table-striped">
                     <thead class="thead-light">
                         <tr class="fixed-th">
-                            <th>Sr. No</th>
-                            <th>Run Date</th>
+                            <th class="pd-l-24">Sr. No</th>
+                            <th class="pd-l-24">Run Date
+                                <span> <img class="cp" (click)="sortDate()"
+                                    src="assets/img/govern/down-arrow.svg"></span>
+                            </th>
                             <!-- <th>Log</th> -->
-                            <th>
-                                Status
-                                <em>
+                            <th class="pd-l-24">
+                                Job status
+                                <!-- <em>
                                     <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
                                         <img src="assets/img/refresh.svg" width="18" alt="refresh" (click)="refresh()">
                                     </a>
-                                </em>
+                                </em> -->
+                                <span> <img class="cp" (click)="sortStatus()"
+                                    src="assets/img/govern/down-arrow.svg"></span>
 
                             </th>
                         </tr>
@@ -33,25 +42,30 @@
                         <ng-container>
                             <ng-container *ngIf="pipelineData?.length > 0; else noRecords">
 
-                                <tr *ngFor="let h of pipelineData ;let i = index" class="td-color">
+                                <tr *ngFor="let h of pipelineData ;let i = index" class="td-text">
                                     <td>{{i + 1}}</td>
 
                                     <td>{{h.executionDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                                    
-                                    <!-- <td class="log-data" *ngIf="h.transcationStatus.toLowerCase() === 'failed'" title="{{h.pipelineLog}}">
-                                        {{h.pipelineLog}}
-                                    </td>
-                                    <td class="log-data" *ngIf="h.transcationStatus.toLowerCase() !== 'failed'" title="{{h.pipelineLog}}">
-                                        No Log
-                                    </td> -->
+                                
 
-                                    <td [class.bg-success]="h.transcationStatus.toLowerCase() === 'success'"
-                                        [class.bg-danger]="h.transcationStatus.toLowerCase() === 'failed'" [class.bg-warning]="h.transcationStatus.toLowerCase() === 'running' || 
-                                        h.transcationStatus.toLowerCase() === 'starting' ">
+                                    <td>
+                                        <span
+                                            [class.status-s]="h.transcationStatus.toLowerCase() === 'success'"
+                                            [class.status-f]="h.transcationStatus.toLowerCase() === 'failed'" 
+                                            [class.status-r]="h.transcationStatus.toLowerCase() === 'running' || 
+                                            h.transcationStatus.toLowerCase() === 'starting' "
+                                        >
+                                        <img *ngIf="h.transcationStatus.toLowerCase() === 'success'" src="assets/img/pipline/c-dot.svg">
+                                        <img *ngIf="h.transcationStatus.toLowerCase() === 'failed'" src="assets/img/pipline/f-dot.svg">
+                                        <img *ngIf="h.transcationStatus.toLowerCase() === 'running' || 
+                                        h.transcationStatus.toLowerCase() === 'starting'" src="assets/img/pipline/r-dot.svg">
                                         {{h.transcationStatus}}
-                                        <span class="cursor-pointer" (click)="viewLogs(h)" *ngIf="h.transcationStatus.toLowerCase() === 'failed'">
-                                            <em class="fa fa-info-circle"></em>
+                                        <img class="cursor-pointer" (click)="viewLogs(h)" *ngIf="h.transcationStatus.toLowerCase() === 'failed'" src="assets/img/pipline/f-info.svg">
                                         </span>
+                                        
+                                        <!-- <span class="cursor-pointer" (click)="viewLogs(h)" *ngIf="h.transcationStatus.toLowerCase() === 'failed'">
+                                            <em class="fa fa-info-circle"></em>
+                                        </span> -->
                                     </td>
                                 </tr>
                             </ng-container>
@@ -62,6 +76,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 </app-loader>

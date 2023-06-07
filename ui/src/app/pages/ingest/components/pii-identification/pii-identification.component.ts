@@ -35,7 +35,6 @@ export class PiiIdentificationComponent implements OnInit {
   ngOnInit(): void {
     this.dataservice.updateProgress(60);
     this.piiData = JSON.parse(sessionStorage.getItem('rowPii')) as Array<PiiData>;
-
     switch (this.sourceType) {
       case 'pgsql':
         this.piiData.map(t => {

@@ -1,88 +1,101 @@
 <app-loader [loading]="loading">
     <div class="modal-header">
-        <p class="pgsql-content">
+        <!-- <p class="pgsql-content">
             <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pgsql-img.svg" alt="">
             PgSQL (ODBC)
-        </p>
+        </p> -->
+        <div class="header-div">
+            <p class="ht1 mr-b-7">PgSQL (ODBC)</p>
+            <p class="ht2 mr-b-0">Edit the pipeline details.</p>
+        </div>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
             (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
-    <div class="modal-body modal-height">
-        <div class="container">
+    <div class="modal-body modal-height pd-0">
+        <div class="form-div">
             <form [formGroup]="fg">
-                <div class="form-group">
-                    <label for="pipelineName" class="pipeLable">
-                        <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pipeline.svg" alt="">
-                        Pipeline Name
-                    </label>
-                    <input type="text" class="form-control pipeInput" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Pipeline Name"
-                    formControlName="pipelineName" [value]="fg.get('pipelineName').value" readonly>
-                </div>
-    
-                <div class="form-group">
-                    <label for="pipelineName" class="pipeLable">
-                        Existing Connection
-                    </label>
-                    <input type="text" class="form-control pipeInput" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Enter Connection Name"
-                    formControlName="connectionName">
-                </div>
-        
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4" class="pipeLable">Connection Attributes</label>
-                        <input type="text" class="form-control pipeInput" id="inputEmail4" placeholder="Server"
-                        formControlName="server">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4" class="pipeLable"></label>
-                        <input type="text" class="form-control pipeInput marginTop" id="inputPassword4" placeholder="Database Port"
-                        formControlName="port">
-                    </div>
-                    <div class="form-group col-md-12">
-                        <input type="text" class="form-control pipeInput" id="inputPassword4" placeholder="Enter Database Name"
-                        formControlName="database">
-                    </div>
-                </div>
-        
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4" class="pipeLable">Authentication</label>
-                        <input type="text" class="form-control pipeInput" id="inputEmail4" placeholder="Username"
-                        formControlName="username">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4" class="pipeLable"></label>
-                        <input type="password" class="form-control pipeInput marginTop" id="inputPassword4" placeholder="Password"
-                        formControlName="password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <select id="inputState" class="form-control pipeInput">
-                      <option selected>Additional Settings</option>
-                      <option>...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <div class="form-check checkDiv">
-                        <input class="form-check-input" type="checkbox" id="gridCheck" formControlName="accepted" [(ngModel)]="accepted" >
-                        <label class="form-check-label" for="gridCheck">
-                            Save DB connection details
+                <div class="content-div">
+                    <div class="form-group">
+                        <label for="pipelineName" class="p1">
+                            <!-- <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/db-connectors/pipeline.svg" alt=""> -->
+                            Pipeline Name*
                         </label>
+                        <input type="text" class="form-control input-design" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Pipeline Name"
+                        formControlName="pipelineName" [value]="fg.get('pipelineName').value" readonly>
+                    </div>
+
+                    <div class="form-group mr-b-0">
+                        <label for="pipelineName" class="p1">
+                            Existing Connection*
+                        </label>
+                        <input type="text" class="form-control input-design" id="pipelinInput" aria-describedby="pipelineHelp" placeholder="Enter Connection Name"
+                        formControlName="connectionName">
                     </div>
                 </div>
-            </form>
-            
-            <div class="btns" *ngIf="!publishedPipeline">
-                <button type="button" class="btn btn-success connectionBtns" [disabled]="!fg.valid" (click)="testConnection()">Test Connection</button>&nbsp;&nbsp;
-                <button type="button" class="btn btn-success connectionBtns" [disabled]="!connectionStatus" (click)="connect()">Continue</button>
-            </div>
 
-            <div class="btns" *ngIf="publishedPipeline">
-                <button type="button" class="btn btn-success connectionBtns" [disabled]="!fg.valid" (click)="updatePipeline()">Update</button>
-            </div>
+                <div class="content-div">
+                    <p class="pipeLable mr-b-0">Connection Attributes :</p>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4" class="p1">Server*</label>
+                            <input type="text" class="form-control input-design" id="inputEmail4" placeholder="Server"
+                            formControlName="server">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4" class="p1">Database port*</label>
+                            <input type="text" class="form-control input-design" id="inputPassword4" placeholder="Database Port"
+                            formControlName="port">
+                        </div>
+                        <div class="form-group col-md-12 mr-b-0">
+                            <label for="inputDatabase" class="p1">Database Name*</label>
+                            <input type="text" class="form-control input-design" id="inputPassword4" placeholder="Enter Database Name"
+                            formControlName="database">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-2">
+                    <p class="pipeLable mr-b-0">Authentication :</p>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4" class="p1">Username*</label>
+                            <input type="text" class="form-control input-design" id="inputEmail4" placeholder="Username"
+                            formControlName="username">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4" class="p1">Password*</label>
+                            <input type="password" class="form-control input-design " id="inputPassword4" placeholder="Password"
+                            formControlName="password">
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <select id="inputState" class="form-control input-design">
+                          <option selected>Additional Settings</option>
+                          <option>...</option>
+                        </select>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="form-check checkDiv">
+                            <input class="form-check-input" type="checkbox" id="gridCheck" formControlName="accepted" [(ngModel)]="accepted" >
+                            <label class="form-check-label check-label" for="gridCheck">
+                                Save DB connection details
+                            </label>
+                        </div>
+                        <div class="btns" *ngIf="!publishedPipeline">
+                            <button type="button" class="btn btn-design" [disabled]="!fg.valid" (click)="testConnection()">Test Connection</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-design" [disabled]="!connectionStatus" (click)="connect()">Continue</button>
+                        </div>
+            
+                        <div class="btns" *ngIf="publishedPipeline">
+                            <button type="button" class="btn btn-design" [disabled]="!fg.valid" (click)="updatePipeline()">Update</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
         </div>
     </div>
 

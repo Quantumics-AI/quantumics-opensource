@@ -10,11 +10,11 @@ export class FoldersService {
 
   constructor(private http: HttpClient) { }
 
-  // getSourceTypes(): Observable<any> {
-  //   return this.http.get('/QSCommonService/api/v1/datasourcetypes').pipe(
-  //     map((res: any) => res.result)
-  //   );
-  // }
+  getSourceTypes(): Observable<any> {
+    return this.http.get('/QSCommonService/api/v1/datasourcetypes').pipe(
+      map((res: any) => res.result)
+    );
+  }
 
   upload(formData: File, uploadModel: any): Observable<any> {
     const form = new FormData();
@@ -80,7 +80,7 @@ export class FoldersService {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/folders/${projectId}/${userId}`);
   }
 
-  getSourceTypes(): Observable<any> {
-    return this.http.get('/QSCommonService/api/v1/datasourcetypes');
+  saveChatAi(data: any): Observable<any> {
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/jarvis`, data);
   }
 }

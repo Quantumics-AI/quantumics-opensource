@@ -17,6 +17,8 @@ export class PipelineHistoryComponent implements OnInit {
   pipelineId: number;
   pipelineData: any;
 
+  public isDescending: boolean;
+
   constructor(
     public modal: NgbActiveModal,
     private snakbar: SnackbarService,
@@ -46,5 +48,37 @@ export class PipelineHistoryComponent implements OnInit {
 
   public refresh(): void {
     this.pipelineFileData();
+  }
+
+  public sortDate(): void {
+    this.isDescending = !this.isDescending;
+
+    if (this.isDescending) {
+      this.pipelineData = this.pipelineData.sort((a, b) => {
+        return new Date(a.executionDate) as any - <any>new Date(b.executionDate);
+      });
+    } else {
+      this.pipelineData = this.pipelineData.sort((a, b) => {
+        return (new Date(b.executionDate) as any) - <any>new Date(a.executionDate);
+      });
+    }
+
+  }
+
+
+  public sortStatus(): void {
+    this.isDescending = !this.isDescending;
+
+    if (this.isDescending) {
+      this.pipelineData = this.pipelineData.sort((a, b) => {
+        var name_order = a.transcationStatus.localeCompare(b.transcationStatus);
+        return name_order;
+      });
+    } else {
+      this.pipelineData = this.pipelineData.sort((a, b) => {
+        var term_order = b.transcationStatus.localeCompare(a.transcationStatus);
+        return term_order;
+      });
+    }
   }
 }

@@ -1,7 +1,208 @@
 <app-loader [loading]="loading">
-    <div class="page-content">
-        <ng-container *ngIf="!loading && !showCard">
-            <div>
+    <div class="page-header1 pd-l-20">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item">Dataset</li>
+            <li class="breadcrumb-item active" aria-current="page">Pipeline</li>
+        </ol>
+    </div>
+    <div class="page-content pd-20" *ngIf="!loading">
+        <ng-container *ngIf="pipelines.length > 0">
+            <div class="card card-d">
+                <div class="card-header ch">
+                    <div class="di mr-t-6" *ngIf="!searchDiv">
+                        <p class="card-main-text">Pipeline</p>
+                        <p class="p1 mr-b-0">Dataset imported through db connector here. To connect new source, go to import dataset.</p>
+                    </div>
+                    <div class="di" *ngIf="searchDiv">
+                        <p class="card-main-text">Search result</p>
+                    </div>
+                    <div class="pull-right">
+                        <!-- <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search term"> -->
+                        <div class="input-group mr-t-18 br-bx-a">
+                            <div class="input-group-prepend h36">
+                                <span class="input-group-text search-icon br-bx-n" id="basic-addon1">
+                                    <img src="assets/img/govern/search.svg">
+                                </span>
+                            </div>
+                            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.pipelineName"
+                                class="form-control search-input h36 br-bx-n" placeholder="Search pipeline name"
+                                aria-label="Username" aria-describedby="basic-addon1"
+                                (ngModelChange)="searchInput($event)">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body pd-0">
+                    <div class="table-responsive br-r">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="pd-l-24">Pipeline name
+                                        <span> <img (click)="sortPipeLine();" class="cp" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'"></span>
+                                    </th>
+                                    <th class="pd-l-24"><a (click)="refresh();">Job status <img src="assets/img/refresh.svg" width="18" alt="refresh"></a> </th>
+                                    <th class="pd-l-24">Connection name</th>
+                                    <th class="pd-l-24">No of table</th>
+                                    <th class="pd-l-24">Last executed</th>
+                                    <th class="pd-l-24">Date created</th>
+                                    <th class="pd-l-24">Created by</th>
+                                    <th class="pd-l-24"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container
+                                    *ngFor="let pipe of pipelines | filterBy:searchTerm | slice:startIndex:endIndex">
+                                    <tr class="td-text" [class.selected]="pipe.isExpanded"  *ngIf="!execute || executeId !== pipe.pipelineId else loader">
+                                        <td class="text-left fn pipe-n" (click)="getPipeLineFolderDetails(pipe)">
+                                            <a>
+                                                <img class="pd-r-12" *ngIf="pipe.isExpanded"
+                                                    src="assets/img/pipline/d-arrow.svg">
+                                                <img class="pd-r-12" *ngIf="!pipe.isExpanded"
+                                                    src="assets/img/pipline/r-arrow.svg">
+                                                <span class="pd-r-12"><img src="assets/img/pipline/pgsql.svg"></span>
+                                                <span title="{{pipe.pipelineName}}">{{pipe.pipelineName}}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span
+                                            [class.status-s]="pipe.transactionStatus?.toLowerCase() === 'success'"
+                                            [class.status-f]="pipe.transactionStatus?.toLowerCase() === 'failed'" 
+                                            [class.status-r]="pipe.transactionStatus?.toLowerCase() === 'running' || 
+                                            pipe.transactionStatus?.toLowerCase() === 'starting' "
+                                            >
+                                            <img *ngIf="pipe.transactionStatus?.toLowerCase() === 'success'" src="assets/img/pipline/c-dot.svg">
+                                            <img *ngIf="pipe.transactionStatus?.toLowerCase() === 'failed'" src="assets/img/pipline/f-dot.svg">
+                                            <img *ngIf="pipe.transactionStatus?.toLowerCase() === 'running' || 
+                                            pipe.transactionStatus?.toLowerCase() === 'starting'" src="assets/img/pipline/r-dot.svg">
+                                            <!-- {{pipe.transactionStatus}} -->
+                                            <span *ngIf="pipe.transactionStatus?.toLowerCase() === 'success'">Success</span>
+                                            <span *ngIf="pipe.transactionStatus?.toLowerCase() === 'failed'">Failed</span>
+                                            <span *ngIf="pipe.transactionStatus?.toLowerCase() === 'running' || 
+                                            pipe.transactionStatus?.toLowerCase() === 'starting'">Running</span>
+                                            <!-- <img class="cursor-pointer" (click)="viewLogs(h)" *ngIf="pipe.transactionStatus.toLowerCase() === 'failed'" src="assets/img/pipline/f-info.svg"> -->
+                                            </span>
+                                        </td>
+                                        <td class="pipe-n"> {{pipe.connectorDetails.connectorName}} </td>
+                                        <td>{{pipe.datasetSchema.length}}</td>
+                                        <td class="to">{{pipe.executionDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                        <td class="to">
+                                            {{pipe.createdDate | date: 'dd-MM-yy, hh:mm a'}}
+                                        </td>
+                                        <td> {{(pipe.createdBy).split(' ')[0]}} </td>
+
+                                        <td>
+                                            <div ngbDropdown container="body">
+                                                <a ngbDropdownToggle class="menu-icon">
+                                                    <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                                    <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                                </a>
+                                                <div ngbDropdownMenu class="dr-m">
+                                                    <button *ngIf="pipe.published" ngbDropdownItem class="h-37"
+                                                        (click)="executePipeline(pipe.pipelineId)">Execute
+                                                        pipeline</button>
+                                                    <button ngbDropdownItem class="h-37"
+                                                        (click)="openHistoryPipeline(pipe.pipelineId)">Execution
+                                                        history</button>
+                                                    <button ngbDropdownItem class="h-37"
+                                                        (click)="openEditPipeline(pipe)">Edit pipeline details</button>
+                                                    <button ngbDropdownItem class="h-37"
+                                                        (click)="deletePipeline(pipe.pipelineId)">Delete
+                                                        pipeline</button>
+                                                </div>
+                                            </div>
+                                            <!-- <a (click)="myDrop.open();"  class="menu-icon">
+                                                <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                                <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                            </a> -->
+                                        </td>
+                                    </tr>
+                                    <ng-container *ngIf="pipe.isExpanded">
+                                        <tr *ngFor="let item of pipeLineFolders" class="nested-row">
+                                            <td class="pipe-n pd-l-54"> <img class="pd-r-12"
+                                                    src="assets/img/pipline/pipe.svg">
+                                                <a (click)="redirectToFolder(item)"
+                                                    title="{{item.qsFolders.folderDisplayName}}">
+                                                    {{item.qsFolders.folderDisplayName}}
+                                                </a>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #loader>
+                                    <tr style="background-color: white !important;" class="pg-tr">
+                                        <td colspan="8" class="pg-pd">
+                                            <div class="spinner-center text-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    
+                                                </div>
+                                                <div class="up">Updating pipeline</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                </ng-template>
+                                <tr *ngIf="(pipelines | filterBy: searchTerm).length > 15"
+                                    style="background-color: white !important;" class="pg-tr">
+                                    <td colspan="8" class="pg-pd">
+                                        <div class="text-center">
+                                            <!-- <span class="float-left">
+                                                <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                    (click)="previousPage();"><img
+                                                        src="assets/img/govern/arrow-left.svg">Previous</button>
+                                            </span>
+                                            <span class="cp digit" *ngFor="let page of pager"
+                                                (click)="redirectToPageIndex(page);"
+                                                [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
+                                            <span class="float-right">
+                                                <button type="button" class="btn nextBtn"
+                                                    [disabled]="currnetPage === totalPages - 1 || totalPages == 1"
+                                                    (click)="nextPage();">Next
+                                                    <img src="assets/img/govern/arrow-right.svg"></button>
+                                            </span> -->
+                                            <ngb-pagination [collectionSize]="pipelines.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                                            [rotate]="true" aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious>
+                                                    <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr style="background-color: white !important;"
+                                    *ngIf="(pipelines | filterBy: searchTerm).length == 0">
+                                    <td colspan="8">
+                                        <div class="text-center s-div">
+                                            <img src="assets/img/govern/no-search.svg">
+                                            <p class="no-term">No pipeline found</p>
+                                            <p class="term-2">Your search “{{searchString}}” did not match any pipeline
+                                                name.
+                                                Please try again .</p>
+                                            <button type="button" class="btn saveBtn" (click)="clearSearhInput()">Clear
+                                                to go back</button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div>
                 <div class="floder-count">
                     Total Pipelines ({{total_pipeline_length}})
                 </div>
@@ -18,9 +219,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="table-responsive table-height">
+            </div> -->
+
+            <!-- <div class="table-responsive table-height">
                 <table class="table m-0 table-fixed">
                     <thead class="thead-light">
                         <tr class="fixed-th">
@@ -51,8 +252,7 @@
                                 <td class="text-left" (click)="getPipeLineFolderDetails(pipe)">
                                     <a>
                                         <img *ngIf="pipe.isExpanded" src="assets/img/pipline/down-arrow.svg">
-                                        <img *ngIf="!pipe.isExpanded" src="assets/img/pipline/right-arrow.svg">    
-                                        <!-- <img src="assets/img/pipeline.svg" width="18" class="icon-space"> -->
+                                        <img *ngIf="!pipe.isExpanded" src="assets/img/pipline/right-arrow.svg">
                                         {{pipe.pipelineName}}
                                     </a>
                                 </td>
@@ -100,11 +300,11 @@
                         </ng-container>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </ng-container>
-    
-        <ng-container *ngIf="showCard">
-            <div *ngIf="!loading" class="row gutters justify-content-center mt-6 rounded m-0">
+
+        <ng-container *ngIf="pipelines.length == 0">
+            <!-- <div *ngIf="!loading" class="row gutters justify-content-center mt-6 rounded m-0">
                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                     <div class="card shadow-lg">
                         <div class="card-body plus-add">
@@ -117,9 +317,26 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+            <div class="connect-source-div">
+                <div class="card card-d mr-t-16">
+                    <div class="card-header ch pd-t-b-20">
+                        <p class="card-main-text fs-18">Pipeline</p>
+                        <p class="p1 mr-b-0">Dataset imported through db connector here. To connect new source, go to import dataset.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="connect-s text-center">
+                            <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                            <p class="tp1 wm">Start by connecting a source</p>
+                            <p class="tp2 mr-b-0">Any dataset ingested through database connector will live here.</p>
+                            <p class="tp2 mr-b-24">Start creating by calling your dataset.</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']"
+                                class="btn btn-design mr-b-56">Import dataset</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </ng-container>
-        
+
     </div>
 </app-loader>
-

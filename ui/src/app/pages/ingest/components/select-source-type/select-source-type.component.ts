@@ -20,8 +20,6 @@ export class SelectSourceTypeComponent implements OnInit {
   folderName: string;
   projectName: string;
   type: 'all' | 'crm' | 'db' = 'all';
-  public sourceTypeName: string = 'api';
-  public sourceData: any;
 
   constructor(
     private router: Router,
@@ -34,14 +32,7 @@ export class SelectSourceTypeComponent implements OnInit {
     this.projectId = parseInt(this.activatedRoute.snapshot.paramMap.get('projectId'), 10);
     this.folderName = this.activatedRoute.snapshot.paramMap.get('folderName');
     this.projectName = localStorage.getItem('projectname');
-    // this.sourceTypes$ = this.foldersService.getSourceTypes();
-
-    this.foldersService.getSourceTypes().subscribe((response) => {
-      this.sourceData = response.result.filter((item) => item.dataSourceType != this.sourceTypeName);
-    }, () =>{
-      
-    })
-    
+    this.sourceTypes$ = this.foldersService.getSourceTypes();
   }
 
   public back(): void {
@@ -53,6 +44,9 @@ export class SelectSourceTypeComponent implements OnInit {
       case 'db':
         // this.openDatabaseConnector(dataSourceName);
         this.redirectToCreateDb()
+        break;
+      case 'api':
+        this.openAPIConnector();
         break;
       case 'localfile':
         // this.openFileUploader();

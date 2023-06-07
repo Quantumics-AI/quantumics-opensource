@@ -52,6 +52,8 @@ export class ViewIngestComponent implements OnInit, OnDestroy {
   isGraphVisible: boolean;
   isLoadingGraphData: boolean;
 
+  public showChat: boolean = false;
+
   public barChartLegend = false;
   public barChartPlugins = [];
   public barChartType: ChartType = 'bar';
@@ -118,9 +120,9 @@ export class ViewIngestComponent implements OnInit, OnDestroy {
   }
 
   sourceData(folderId, folderName) {
-    this.router.navigate([`../source-data`], {
-      queryParams: { folderId, name: folderName },
-      relativeTo: this.activatedRoute
+    this.router.navigate([`projects/${this.projectId}/ingest/folders/dataset`], {
+      queryParams: { folderId: folderId, name: folderName, dataSourceType: 'file' },
+      // relativeTo: this.activatedRoute
     });
   }
 
@@ -273,11 +275,19 @@ export class ViewIngestComponent implements OnInit, OnDestroy {
     return this.piiColumns.includes(columnName);
   }
 
+  public onChat(): void {
+    this.showChat = true;
+  }
+
   back(): void {
-    this.router.navigate([`projects/${this.projectId}/ingest`]);
+    this.router.navigate([`projects/${this.projectId}/ingest/folders/dataset`], {
+      queryParams: { folderId: this.folderId, name: this.folderName, dataSourceType: 'file' },
+      // relativeTo: this.activatedRoute
+    });
   }
 
   ngOnDestroy(): void {
+    localStorage.removeItem('previousChat');
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }

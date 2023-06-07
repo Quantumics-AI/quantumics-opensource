@@ -11,7 +11,7 @@
                     <div class="col-md-2 mb-3">
                         <p for="profilePhoto" class="pic-lable">Photo</p>
                         <ng-container *ngIf="imageUrl else defaultProfileImage">
-                            <img [src]="imageUrl" class="rounded-circle user-img" alt="User Profile">
+                            <img [src]="imageUrl" class="rounded-circle user-img" alt="user">
                         </ng-container>
                         <ng-template #defaultProfileImage>
                             <span class="circle">
