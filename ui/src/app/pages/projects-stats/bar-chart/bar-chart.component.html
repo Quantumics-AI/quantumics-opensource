@@ -1,5 +1,15 @@
 <ng-container *ngIf="mbarChartLabels.length else noRecords">
-    <div class="row mt-3 chart-div">
+    <div class="creation-div">
+        <div class="mr-r-50">
+            <p class="ct1 mr-b-0">{{type}} created yesterday</p>
+            <p class="ct2 mr-b-0">10</p>
+        </div>
+        <div>
+            <p class="ct1 mr-b-0">Average {{type}} created daily  (in 90 days)</p>
+            <p class="ct2 mr-b-0">2-4</p>
+        </div>
+    </div>
+    <div class="row chart-div">
         <div class="col-xl-12">
             <div class="chart-box">
                 <p class="style1 font-20 mb-0"><strong>OverView</strong></p>

@@ -1,0 +1,156 @@
+<div class="page-header1 pd-l-20">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-top pd-l-0">
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']">Dataset</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']">Pipeline</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{folderName}}</li>
+        </ol>
+    </nav>
+</div>
+<app-loader [loading]="loading">
+    <div class="pipe-dataset-div pd-20">
+        <div class="card card-d">
+            <div class="card-header ch">
+                <div class="di mr-t-6" *ngIf="!searchDiv">
+                    <a class="card-main-text mr-b-0" (click)="redirectToPipeLine();">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        Back to pipeline
+                    </a>
+                </div>
+                <div class="di" *ngIf="searchDiv">
+                    <p class="card-main-text">Search result</p>
+                </div>
+                <div class="pull-right">
+                    <!-- <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search term"> -->
+                    <div class="input-group br-bx-a">
+                        <div class="input-group-prepend h36">
+                            <span class="input-group-text search-icon br-bx-n" id="basic-addon1">
+                                <img src="assets/img/govern/search.svg">
+                            </span>
+                        </div>
+                        <input type="text" id="searchTerm" [(ngModel)]="searchTerm.fileName"
+                            class="form-control search-input h36 br-bx-n" placeholder="Search dataset name"
+                            aria-label="Username" aria-describedby="basic-addon1" (ngModelChange)="searchInput($event)">
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body pd-0">
+                <div class="table-responsive br-r">
+                    <table class="table m-0 table-fixed table-striped">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th class="pd-l-24">
+                                    Dataset name
+                                    <span> <img class="cp" (click)="sortPipeLineFiles();"
+                                            src="assets/img/govern/down-arrow.svg"></span>
+                                    <!-- <span> <img class="cp" class="cp" [src]="isDescending ?
+                                        '/assets/images/up-sort.svg'
+                                        : '/assets/images/down-sort.svg'"></span> -->
+                                </th>
+                                <th class="pd-l-24">Size</th>
+                                <th class="pd-l-24">Date created</th>
+                                <th class="pd-l-24">Created by</th>
+                                <th class="pd-l-24"></th>
+                                <th class="pd-l-24"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="filesList.length else noRecord">
+                                <tr class="td-text" *ngFor="let file of filesList | filterBy:searchTerm | slice:startIndex:endIndex; let isFirst = first;">
+                                    <td class="text-left fn pipe-n" (click)="redirectToFileView(file)">
+                                        <span class="pd-r-12"><img src="assets/img/pipline/file.svg"></span>
+                                        <a title="{{file.fileName}}">
+                                            {{file?.fileName}}</a>
+                                    </td>
+                                    <td class="cp" (click)="redirectToFileView(file)">{{formatFileSize(file?.fileSize)}}</td>
+                                    <td class="cp" (click)="redirectToFileView(file)">{{file?.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td class="cp" (click)="redirectToFileView(file)">{{(file?.ruleCreatedFrom).split(' ')[0]}}</td>
+                                    <td>
+                                        <span *ngIf="isFirst" class="pd cp" (click)="redirectToDF(file)">Profile dataset</span>
+                                    </td>
+                                    <td class="float-right">
+                                        <div ngbDropdown container="body">
+                                            <a ngbDropdownToggle class="menu-icon">
+                                                <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                                <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                            </a>
+
+                                            <div ngbDropdownMenu class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="delete(file.fileId, file.fileName)">Delete dataset</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr  *ngIf="(filesList | filterBy: searchTerm).length > 15" style="background-color: white !important;" class="pg-tr">
+                                    <td colspan="6" class="pg-pd">
+                                        <div class="text-center">
+                                            <!-- <span class="float-left">
+                                                <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                    (click)="previousPage();"><img
+                                                        src="assets/img/govern/arrow-left.svg">Previous</button>
+                                            </span>
+                                            <span class="cp digit" *ngFor="let page of pager"
+                                                (click)="redirectToPageIndex(page);"
+                                                [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
+                                            <span class="float-right">
+                                                <button type="button" class="btn nextBtn"
+                                                    [disabled]="currnetPage === totalPages - 1 || totalPages == 1" (click)="nextPage();">Next
+                                                    <img src="assets/img/govern/arrow-right.svg"></button>
+                                            </span> -->
+                                            <ngb-pagination [collectionSize]="filesList?.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                                            [rotate]="true" aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious>
+                                                    <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: white !important;"
+                                    *ngIf="(filesList | filterBy: searchTerm).length == 0">
+                                    <td colspan="6">
+                                        <div class="text-center s-div">
+                                            <img src="assets/img/govern/no-search.svg">
+                                            <p class="no-term">No dataset found</p>
+                                            <p class="term-2">Your search “{{searchString}}” did not match any dataset name.
+                                                Please try again .</p>
+                                            <button type="button" class="btn saveBtn"
+                                                (click)="clearSearhInput()">Clear to go back</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecord>
+                                <!-- <h6 *ngIf="loading">Loading...</h6>
+                                <h6 *ngIf="!loading">No files found...</h6> -->
+                                <tr class="no-dataset">
+                                    <td colspan="6" *ngIf="loading">Loading...</td>
+                                    <td colspan="6" *ngIf="!loading">
+                                        <div class="card shadow-n mr-b-0">
+                                            <div class="card-body">
+                                                <div class="no-content-div text-center">
+                                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                                    <h5 class="summary-p1">No dataset found!</h5>
+                                                    <p class="summary-p2 mr-b-0">Selected pipeline doesn’t have any dataset for analysing.</p>
+                                                    <p class="summary-p2">Please select other dataset or refresh the pipeline to fetch new table.
+                                                    </p>
+                                                    <a [routerLink]="['/projects', projectId, 'ingest', 'pipelines']"
+                                                        class="btn btn-design height-36 mr-b-20">Go to pipeline</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-loader>

@@ -1,0 +1,246 @@
+.br-r {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.td-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 36px;
+    /* identical to box height, or 143% */
+    
+    
+    /* Gray/600 */
+    
+    color: #212244;
+    border-bottom: 1px solid #E2E8F2;
+}
+  
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #F9FAFB !important;
+}
+  
+.td-text td {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.fn {
+    font-weight: 500;
+    color: #101828;
+}
+
+.pipe-n {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.pd-r-12 {
+    padding-right: 12px;
+}
+
+.h36 {
+    height: 36px;
+}
+
+.fixed-th th {
+    text-align: start;
+    padding-left: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    /* identical to box height, or 150% */
+  
+  
+    /* Gray/600 */
+  
+    color: #475467;
+    padding-right: 24px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    white-space: nowrap;
+}
+
+// profile dataset 
+.pd {
+    color: #00977C;
+    text-decoration: underline;
+}
+
+
+// Empty Search data 
+.s-div {
+    padding-top: 35px;
+    padding-bottom: 54px;
+}
+
+.no-term {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #101828;
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.term-2 {
+    width: 352px;
+    margin: auto;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #475467;
+    margin-bottom: 24px;
+}
+
+// Menu options 
+.lh-1 {
+    line-height: 1.5;
+}
+  
+.dr-m {
+    top: 36px !important;
+    left: -180px !important;
+    border: 1px solid #E2E8F2;
+    /* border-radius: 4px; */
+    box-shadow: 0px 2px 2px #e2e8f2;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    color: #202123;
+    padding: 0;
+    width: 207px;
+}
+  
+.h-37 {
+    height: 37px;
+    padding-left: 16px;
+}
+
+// no files 
+.mr-tb {
+    margin-top: 40px;
+    margin-bottom: 48px;
+}
+
+.summary-p1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+    text-align: center;
+    color: #212244;
+}
+  
+.summary-p2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    
+    text-align: center;
+    
+    color: #888C92;
+}
+
+.height-36 {
+    height: 36px;
+}
+
+.mr-b-20 {
+    margin-bottom: 20px;
+}
+
+.shadow-n {
+    box-shadow: none;
+    border: none;
+}
+
+.no-dataset td {
+    padding: 0;
+}
+
+//
+
+// table hover 
+.table-striped tbody tr:hover {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05) !important;
+    background-color: #E6FAF0 !important;
+    // cursor: pointer;
+}
+
+//
+
+// New page pagination 
+::ng-deep .pagination {
+    justify-content: space-between;
+}
+::ng-deep .page-item:first-child {
+  margin-right: auto;
+  margin-top: 0;
+}
+::ng-deep .page-item:last-child {
+  margin-left: auto;
+  margin-top: 0;
+}
+  
+::ng-deep .page-link {
+  border: none;
+  color: #000;
+}
+::ng-deep .page-link:focus {
+  box-shadow: none;
+}
+  
+::ng-deep .page-item.active .page-link {
+  background-color: #F9FAFB;
+  // background-color: #EAECF0;
+  border-radius: 8px;
+  color: #000;
+}
+  
+::ng-deep .page-link:hover {
+  background-color: #F9FAFB;
+  border-radius: 8px;
+  color: #000;
+}
+  
+::ng-deep .page-item {
+  margin-top: 10px;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+//
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+.pipe-dataset-div {
+    padding: 20px;
+}
+
+.page-header1 {
+    padding-left: 20px;
+}

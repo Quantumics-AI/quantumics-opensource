@@ -1,84 +1,110 @@
 <app-loader [loading]="loading">
-    <div class="modal-header">
-        <h5 class="modal-title">Import Local File</h5>
+    <div class="modal-header br-n pd-b-0">
+        <div class="head-text">
+            <p class="ht-1 mr-b-7">Upload dataset</p>
+            <p class="ht-2 mr-b-0">Dataset should have same column headers of the first source dataset.</p>
+        </div>
+        
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
             (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
-    <form [formGroup]="fg">
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-10" style="margin:0px auto;">
-                    <div class="form-group">
-                        <label for="sel1">Choose Folder</label>
-                        <ng-select id="folderId" [disabled]="true" #select [clearable]="false" [(ngModel)]="folderId"
-                            formControlName="folderId" [multiple]="false" placeholder="Select Folder"
-                            [dropdownPosition]="'bottom'" [closeOnSelect]="true" (change)="onSelectFolder()"
-                            [items]="folders$ | async" bindLabel="folderDisplayName" bindValue="folderId">
-                            <ng-template ng-option-tmp let-item="item">
-                                <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
-                            </ng-template>
-                        </ng-select>
-                    </div>
-                    <div class="custom-file show">
-                        <input id="file" name="file" type="file" class="custom-file-input" id="customFile" accept=".csv, text/plain, .xls, .xlsx"
-                            (change)="validate($event)" enctype="multipart/form-data" multiple #file
-                            [ngModelOptions]="{standalone: true}" title="" />
-                        <label class="custom-file-label upload-file" for="customFile">{{fileName}}</label>
-                    </div>
-
-                    <div class="list-categories">
-                        <ol class="list">
-                            <li>Spaces and special characters in column headers  will be replaced with underscore.</li>
-                        </ol>
-                    </div>
-
-                    <div *ngIf="error" style="margin-top: 8px;">
-                        <div class="alert alert-danger" role="alert">
-                            {{error}}
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-6" align="center" *ngIf="originalFileColumns.length">
-                                <table>
-                                    <tr class="first-child">
-                                        <th class="font-weight-400">Original Column Headers</th>
-                                    </tr>
-                                    <tr *ngFor="let column of originalFileColumns;">
-                                        <td>{{column}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-xl-6 text-center" *ngIf="currentFileColumns?.length">
-                                <table>
-                                    <tr class="first-child">
-                                        <th class="font-weight-400">Current File Column Headers</th>
-                                    </tr>
-                                    <tr *ngFor="let column of currentFileColumns;">
-                                        <td>{{column}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-xl-6 text-center" *ngIf="duplicateFileColumns?.length">
-                                <table>
-                                    <tr class="first-child">
-                                        <th class="font-weight-400">Column Headers</th>
-                                    </tr>
-                                    <tr *ngFor="let column of duplicateFileColumns;">
-                                        <td>{{column}}</td>
-                                    </tr>
-                                </table>
+    
+        <div class="modal-body pd-b-43 pd-t-24">
+            <form [formGroup]="fg">
+                <div class="row pd-lr-71">
+                    <div class="col-12" style="margin:0px auto;">
+                        <!-- <div class="form-group">
+                            <label for="sel1">Choose Folder</label>
+                            <ng-select id="folderId" [disabled]="true" #select [clearable]="false" [(ngModel)]="folderId"
+                                formControlName="folderId" [multiple]="false" placeholder="Select Folder"
+                                [dropdownPosition]="'bottom'" [closeOnSelect]="true" (change)="onSelectFolder()"
+                                [items]="folders$ | async" bindLabel="folderDisplayName" bindValue="folderId">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
+                                </ng-template>
+                            </ng-select>
+                        </div> -->
+                        <div class="custom-file show">
+                            <input id="file" name="file" type="file" class="custom-file-input cp" id="customFile" accept=".csv, text/plain, .xls, .xlsx"
+                                (change)="validate($event)" enctype="multipart/form-data" multiple #file
+                                [ngModelOptions]="{standalone: true}" title="" />
+                            <div class="imp-div">
+                                <img src="assets/img/pipline/import.svg" class="line-icon">
+                                <p class="mr-t-12 mr-b-0">
+                                    <span class="up-t1">Click to upload </span> <span class="up-t2">or drag and drop</span>
+                                </p>
+                                <p class="up-t3 mr-b-0">CSV, TXT & XLS</p>
                             </div>
                         </div>
+    
+                        <!-- <div class="list-categories">
+                            <ol class="list">
+                                <li>Spaces and special characters in column headers  will be replaced with underscore.</li>
+                            </ol>
+                        </div> -->
+    
+                        <div *ngIf="error" style="margin-top: 8px;">
+                            <div class="alert alert-danger" role="alert">
+                                {{error}}
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6" align="center" *ngIf="originalFileColumns.length">
+                                    <table>
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Original Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of originalFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xl-6 text-center" *ngIf="currentFileColumns?.length">
+                                    <table>
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Current File Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of currentFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-xl-6 text-center" *ngIf="duplicateFileColumns?.length">
+                                    <table>
+                                        <tr class="first-child">
+                                            <th class="font-weight-400">Column Headers</th>
+                                        </tr>
+                                        <tr *ngFor="let column of duplicateFileColumns;">
+                                            <td>{{column}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
-            </div>
+                <div class="pd-86" *ngIf="fg.invalid || file.files.length" >
+                    <div class="progress-div">
+                        <div class="d1">
+                            <img src="assets/img/pipline/file-upload.svg">
+                        </div>
+                        <div class="d2 w-100 pd-l-14">
+                            <p class="mr-b-0 pg-1">{{fileName}}
+                                <span class="float-right mrt-5"><img src="assets/img/pipline/check.svg"></span>
+                            </p>
+                            <p class="mr-b-5 pg-2">{{formatFileSize(fileSize)}}</p>
+                            <div class="progress bg-w">
+                                <div class="progress-bar mr-t-5 h8 bg-c" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                <span class="per">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="btnImport" [disabled]="fg.invalid || !file.files.length" class="btn btn-design float-right mr-b-31"
+                        (click)="import(file)">Upload</button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-footer">
-            <button type="button" id="btnImport" [disabled]="fg.invalid || !file.files.length" class="btn btn-primary"
-                (click)="import(file)">Import</button>
-        </div>
-    </form>
 </app-loader>

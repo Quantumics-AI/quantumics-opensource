@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { FoldersService } from '../../services/folders.service';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-edit-folder',
@@ -16,10 +18,13 @@ export class EditFolderComponent implements OnInit {
   @Output() close = new EventEmitter<boolean>();
   fg: FormGroup;
 
+  public loading: boolean;
+
   constructor(
     private fb: FormBuilder,
     private foldersService: FoldersService,
-    private snakbar: SnackbarService) { }
+    private snakbar: SnackbarService,
+    public modal: NgbActiveModal,) { }
 
   ngOnInit(): void {
     this.fg = this.fb.group({
@@ -37,7 +42,11 @@ export class EditFolderComponent implements OnInit {
 
     this.foldersService.updateFolder(this.projectId, this.userId, this.folder.folderId, request).subscribe((response) => {
       this.snakbar.open(response.message);
-      this.updatedFolder.emit(response?.result);
+      // this.modal.close(response.result)
+      // this.updatedFolder.emit(response?.result);
+      if (response.code === 200) {
+        this.modal.close(response.result); 
+      }
     }, (error) => {
       this.snakbar.open(error);
     });

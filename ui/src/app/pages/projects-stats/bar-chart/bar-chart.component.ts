@@ -98,7 +98,7 @@ export class BarChartComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (this.type === 'Source Data') {
+    if (this.type === 'Dataset') {
       this.barChartData = [{
         data: Object.values(this.stats?.sourceDataset?.summary ?? [])
       }];
@@ -111,13 +111,13 @@ export class BarChartComponent implements OnInit, OnChanges {
         data: [...yValues]
       }];
       this.mbarChartLabels = [...xValues];
-    } else if (this.type === 'Data Volume') {
+    } else if (this.type === 'Storage') {
       
       this.barChartData = [{
         data: Object.values(this.stats?.dataVolume?.summary ?? [])
       }];
       this.mbarChartLabels = Object.keys(this.stats?.dataVolume?.summary ?? []);
-    } else if (this.type === 'Engineering Flows') {
+    } else if (this.type === 'Data flow') {
       const yValues = Object.values(this.stats?.dataPipes?.summary);
       const xValues = Object.keys(this.stats?.dataPipes?.summary);
 
@@ -125,6 +125,21 @@ export class BarChartComponent implements OnInit, OnChanges {
         data: [...yValues] ?? []
       }];
       this.mbarChartLabels = [...xValues];
+    } else if (this.type === 'Dashboard'){
+      this.barChartData = [{
+        data: Object.values(this.stats?.sourceDataset?.summary ?? [])
+      }];
+      this.mbarChartLabels = Object.keys(this.stats?.sourceDataset?.summary ?? []);
+    } else if(this.type === 'Folder'){
+      this.barChartData = [{
+        data: Object.values(this.stats?.sourceDataset?.summary ?? [])
+      }];
+      this.mbarChartLabels = Object.keys(this.stats?.sourceDataset?.summary ?? []);
+    } else if(this.type === 'Pipeline'){
+      this.barChartData = [{
+        data: Object.values(this.stats?.sourceDataset?.summary ?? [])
+      }];
+      this.mbarChartLabels = Object.keys(this.stats?.sourceDataset?.summary ?? []);
     }
   }
 }

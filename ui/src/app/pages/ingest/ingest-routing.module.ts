@@ -15,6 +15,11 @@ import { PiiIdentificationComponent } from './components/pii-identification/pii-
 import { CompleteFolderCreationComponent } from './components/complete-folder-creation/complete-folder-creation.component';
 import { ConfigureFolderComponent } from './components/configure-folder/configure-folder.component';
 import { CreateFolderComponent } from './components/create-folder/create-folder.component';
+import { PiiIdentificationDatabaseComponent } from './components/pii-identification-database/pii-identification-database.component';
+import { CompleteDatabaseCreationComponent } from './components/complete-database-creation/complete-database-creation.component';
+import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
+import { FolderDatasetComponent } from './components/folder-dataset/folder-dataset.component';
+import { ViewIngestPipelineComponent } from './components/view-ingest-pipeline/view-ingest-pipeline.component';
 
 const routes: Routes = [
   {
@@ -33,7 +38,23 @@ const routes: Routes = [
       {
         path: 'pipelines',
         component: ListPipelinesComponent
-      }
+      },
+      { 
+        path: 'pipelines/dataset/:pipelineId/:folderId',
+        component: DatasetListComponent
+      },
+      { 
+        path: 'folders/dataset',
+        component: FolderDatasetComponent
+      },
+      { 
+        path: 'folders/view', 
+        component: ViewIngestComponent 
+      },
+      { 
+        path: 'pipelines/view', 
+        component: ViewIngestPipelineComponent 
+      },
     ]
 
   },
@@ -89,12 +110,12 @@ const routes: Routes = [
         component: SelectDbTableComponent,
       },
       {
-        path: 'pii-identification/:sourceType',
-        component: PiiIdentificationComponent,
+        path: 'pii-identification-database/:sourceType',
+        component: PiiIdentificationDatabaseComponent,
       },
       {
-        path: 'completion/:sourceType',
-        component: CompleteFolderCreationComponent,
+        path: 'database-completion/:sourceType',
+        component: CompleteDatabaseCreationComponent,
       }
     ]
   }

@@ -1,44 +1,184 @@
-<div class="main-container">
-    <ng-container *ngIf="!hasFolders; else stats">
-        <div class="text-center">
-            <div class="row d-flex justify-content-center">
-                <div class="connect-to-source">
-                    <img src="/assets/img/side-bar/user-summary.svg" class="img-fluid">
-
-                    <h5 class="summary-p1">This is where you'll see the summary of your workspace.</h5>
-                    <p class="summary-p2">KPI like dataset size, no of prepared dataset, eng flows created etc.</p>
-
-                    <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design">Connect to a source</a>
-                </div>
-            </div>
-        </div>
-    </ng-container>
-    <ng-template #stats>
+<app-loader [loading]="loading">
+    <div class="main-container bg-color">
         <div class="page-header1">
             <ol class="breadcrumb breadcrumb-top">
-                <li class="breadcrumb-item"> <a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>&nbsp; </li>
-                <li class="breadcrumb-item active" aria-current="page"> <a>Project Stats</a></li>
+                <!-- <li class="breadcrumb-item"> <a
+                        [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a>&nbsp; </li> -->
+                <li class="breadcrumb-item active" aria-current="page"> <a>Home</a></li>
             </ol>
         </div>
 
-        <div class="page-content mt-3">
-            <div class="row">
-                <div class="col-xl-10">
-                    <app-top-bar (selectedType)="selectedOption($event)" [totalfile]="totalFileData"></app-top-bar>
-                    <app-bar-chart [type]="selectedTopbarOption" [stats]="totalFileData"></app-bar-chart>
+        <ng-container *ngIf="!loading">
+            <ng-container *ngIf="!hasFolders else stats">
+                <div class="page-content main-menu">
+                    <!-- <div class="row d-flex justify-content-center"> -->
+                    <div class="workspace-box">
+                        <div class="workspace-box-p1">
+                            Give your business time to grow. Get Quantumics monthly or select a one-year plan for
+                            savings of up to 15%.
+                        </div>
+                        <div class="float-right mr-t-7 mp">
+                            <button (click)="redirectToPlan();" type="button" class="btn btn-design">
+                                Select a plan
+                            </button>
+                        </div>
+                    </div>
+        
+                    <div class="card card-shadow mr-tb-24">
+                        <div class="card-body d-flex pd-16">
+                            <div class="mr-16">
+                                <img src="/assets/img/project-stats/file.svg">
+                            </div>
+                            <div>
+                                <p class="p2 mr-t-11">This is where you’ll see the summary of your workspace.</p>
+                                <p class="p1 fs-14 mr-0">KPI like dataset, storage consumed, no of dashboard, created etc.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="card card-shadow">
+                        <div class="card-body pd-16">
+                            <div class="row">
+                                <div class="col">
+                                    <p class="p2 mr-b-8">Explore Data Menu</p>
+                                    <p class="p1 w-560 fs-14 mr-b-24 lh-20">You can connect to a source ( .csv, .txt, .xlsx are allowed for local
+                                        ingestion). <br /> 
+                                        Or download a sample dataset based on your industry to explore further.</p>
+                                    <div class="card s-card mr-b-17 cp"
+                                        [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']">
+                                        <div class="card-body d-flex pd-4">
+                                            <div>
+                                                <img src="/assets/img/project-stats/c-source.svg">
+                                            </div>
+                                            <div>
+                                                <p class="mr-0 st">Import dataset</p>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="card s-card mr-b-25 cp" (click)="sampleDataset()">
+                                        <div class="card-body d-flex pd-4">
+                                            <div>
+                                                <img src="/assets/img/project-stats/s-dataset.svg">
+                                            </div>
+                                            <div>
+                                                <p class="mr-0 st">Download a sample dataset</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col c-2">
+                                    <img class="pd-t-32" src="/assets/img/project-stats/source-menu.svg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- <div class="connect-to-source">
+                            <img src="/assets/img/side-bar/user-summary.svg" class="img-fluid">
+        
+                            <h5 class="summary-p1">This is where you'll see the summary of your workspace.</h5>
+                            <p class="summary-p2">KPI like dataset size, no of prepared dataset, eng flows created etc.</p>
+        
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design">Connect to a source</a>
+                        </div> -->
+                    <!-- </div> -->
                 </div>
-                <div class="col-xl-2">
-                    <app-right-side (selectedEValue)="selectedEffort($event)"
-                        (selectedFData)="selectedFileData($event)"></app-right-side>
+            </ng-container>
+            <ng-template #stats>
+        
+                <div class="page-content pd-0 sc-1">
+                    <div class="overview-div sc-2">
+                        <p class="mr-0">
+                            <span class="p2"><img src="/assets/img/project-stats/overview.svg"> Overview</span>
+                            <span class="float-right p1 mr-t1-7">
+                                <span class="edit-k">
+                                    <a class="d-if" #p="ngbPopover" [ngbPopover]="popEditKpi" [autoClose]="'outside'"
+                                        popoverClass="kpi-menu-width" placement="bottom-right" container="body" (hidden)="onPopoverHidden()">
+                                        <img class="mr-r-2" src="/assets/img/project-stats/edit-kpi.svg">
+                                        Edit KPI
+                                        <img class="mr-l-5" src="/assets/img/project-stats/down-arrow.svg">
+                                    </a>
+        
+                                </span>
+                                <span class="d-inline-block lh-1" placement="bottom-left" ngbDropdown #myDrop="ngbDropdown">
+                                    <a class="d-if" (click)="myDrop.open();">
+                                        <img class="mr-r-2" src="/assets/img/project-stats/eye.svg">
+                                        <span *ngIf="sortView == 'w'">Weekly</span>
+                                        <span *ngIf="sortView == 'm'">Monthly</span>
+                                        <span *ngIf="sortView == 'y'">Yearly</span>
+                                        <img class="mr-l-5" src="/assets/img/project-stats/down-arrow.svg">
+                                    </a>
+                                    <div ngbDropdownMenu aria-labelledby="dropdownManual" class="view-data-options">
+                                        <button class="sortBtn" ngbDropdownItem (click)="sortViewData('w')">Weekly
+                                            <img class="check-sort" *ngIf="sortView === 'w'"
+                                                src="assets/img/side-bar/selected-arrow.svg">
+                                        </button>
+                                        <button class="sortBtn pd-b-10" ngbDropdownItem (click)="sortViewData('m')">Monthly
+                                            <img class="check-sort" *ngIf="sortView === 'm'"
+                                                src="assets/img/side-bar/selected-arrow.svg">
+                                        </button>
+                                        <button class="sortBtn pd-b-10" ngbDropdownItem (click)="sortViewData('y')">Yearly
+                                            <img class="check-sort" *ngIf="sortView === 'y'"
+                                                src="assets/img/side-bar/selected-arrow.svg">
+                                        </button>
+                                    </div>
+                                </span>
+                            </span>
+                        </p>
+                    </div>
+                    <ng-template #popEditKpi>
+                        <div class="p-body">
+                            <p class="pop-text">Select 4 KPI &nbsp; &nbsp; <img class="cp"
+                                    src="/assets/img/project-stats/info.svg"
+                                    ngbTooltip="You can select only 4 KPI. To select any new KPI, please unselect any one of the selected one."
+                                    placement="bottom" container="body"></p>
+                            <!-- <p class="pop-sub-text">Cannot change workspace settings or invite new members to the workspace.</p>
+                            <a class="remove-wrk">Remove from workspace</a> -->
+                            <ul class="checkActions">
+                                <li class="team-drop cp" *ngFor="let option of getKpiList">
+                                    <input type="checkbox" class="form-check-input kpi-check"
+                                        (change)="changeKpiFilter($event, option)" [checked]="option.selected">
+                                    {{option.label}}
+                                </li>
+                            </ul>
+                            <button type="button" [disabled]="!applyBtn" (click)="addKpi(p);" class="btn btn-design">
+                                Apply
+                            </button>
+        
+                        </div>
+        
+                    </ng-template>
+                    <div class="data-div pd-20">
+                        <div class="card card-shadow cr-12">
+                            <div class="card-body">
+                                <app-top-bar (selectedType)="selectedOption($event)" [totalfile]="totalFileData"
+                                    [kpiData]="getKpiList" [applyKpiFilter]="applyKpiFilter" [loadingData]="loadingData"></app-top-bar>
+                                <app-line-chart [type]="selectedTopbarOption" [stats]="totalFileData"></app-line-chart>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- <div class="row pd-20">
+                        <div class="col-xl-10">
+                            <app-top-bar (selectedType)="selectedOption($event)" [totalfile]="totalFileData"></app-top-bar>
+                            <app-bar-chart [type]="selectedTopbarOption" [stats]="totalFileData"></app-bar-chart>
+                        </div>
+                        <div class="col-xl-2">
+                            <app-right-side (selectedEValue)="selectedEffort($event)"
+                                (selectedFData)="selectedFileData($event)"></app-right-side>
+                        </div>
+                    </div> -->
+        
+                    <!-- <div class="row pd-20">
+                        <div class="col-xl-12">
+                            <app-bottom-side [efforts]="selectedMannual"></app-bottom-side>
+                        </div>
+                    </div> -->
                 </div>
-            </div>
-
-            <div class="row" style="margin-top: 30px;">
-                <div class="col-xl-12">
-                    <app-bottom-side [efforts]="selectedMannual"></app-bottom-side>
-                </div>
-            </div>
-        </div>
-    </ng-template>
-
-</div>
+            </ng-template>
+        </ng-container>
+        
+    
+    </div>
+</app-loader>

@@ -30,6 +30,7 @@ export class ImportLocalFileComponent implements OnInit {
   public duplicateFileColumns: any;
   public loading: boolean;
   public folders = [];
+  public fileSize: number;
 
   private certificate$: Observable<Certificate>;
   private certificateData: Certificate;
@@ -93,6 +94,21 @@ export class ImportLocalFileComponent implements OnInit {
     }
 
     this.fileName = event.target?.files[0]?.name;
+    this.fileSize = event.target?.files[0]?.size;
+  }
+
+  public formatFileSize(bytes): string {
+    if (bytes < 1024) {
+      return bytes + " bytes";
+    } else if (bytes < 1024 * 1024) {
+      return (bytes / 1024).toFixed(2) + " KB";
+    } else if (bytes < 1024 * 1024 * 1024) {
+      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    } else if (bytes < 1024 * 1024 * 1024 * 1024) {
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+    } else {
+      return (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2) + " TB";
+    }
   }
 
   public onSelectFolder() {
@@ -116,8 +132,12 @@ export class ImportLocalFileComponent implements OnInit {
       this.modal.close();
       this.snackBar.open('Your file is being processed');
       // Redirect to ingest router.
-      this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
-        queryParams: { folderId: this.folderId, name: this.folderName }
+      // this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
+      //   queryParams: { folderId: this.folderId, name: this.folderName }
+      // });
+
+      this.router.navigate([`projects/${this.projectId}/ingest/folders/dataset`], {
+        queryParams: { folderId: this.folderId, name: this.folderName, dataSourceType: 'file' }
       });
 
     }, (error) => {
@@ -129,6 +149,8 @@ export class ImportLocalFileComponent implements OnInit {
         this.currentFileColumns = error?.CURRENT_FILE_COL_HEADERS.split(',');
       } else if (error.hasOwnProperty('INVALID_COLS')) {
         this.duplicateFileColumns = error?.INVALID_COLS.split(',');
+      } else {
+        this.snackBar.open(`${error}`);
       }
     });
   }

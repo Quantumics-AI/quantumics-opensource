@@ -119,7 +119,7 @@ export class SelectDbTableComponent implements OnInit {
         if (res?.result !== null && res?.result?.length > 0) {
           this.connectionParams.pipelineId = res?.pipelineId;
           sessionStorage.setItem('rowPii', JSON.stringify(res?.result));
-          this.router.navigate([`projects/${this.connectionParams.projectId}/ingest/pii-identification/pgsql`]);
+          this.router.navigate([`projects/${this.connectionParams.projectId}/ingest/pii-identification-database/pgsql`]);
         }
       }, (error) => {
         if (error.ERROR_MSG) {

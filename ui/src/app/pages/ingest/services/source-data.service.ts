@@ -66,4 +66,8 @@ export class SourceDataService {
       })
     );
   }
+
+  public getListData(projectId: number, userId: number, folderId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/files/${projectId}/${userId}/${folderId}`);
+  }
 }

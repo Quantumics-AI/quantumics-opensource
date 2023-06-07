@@ -20,12 +20,12 @@
 .nav-tabs > li.active > a,
 .nav-tabs > li > a:hover {
   border: none;
-  color: #52bd95 !important;
+  color: #00977C !important;
   background: transparent;
 }
 .nav-tabs > li > a::after {
   content: "";
-  background: #52bd95;
+  background: #00977C;
   height: 2px;
   float: left;
   margin: 10px 0px 0px 0px;
@@ -105,7 +105,7 @@
 }
 
 .sidenav-new a.active {
-  color: #52bd95;
+  color: #00977C;
   
 }
 

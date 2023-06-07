@@ -3,9 +3,9 @@
         <div class="row page-header1">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-top pd-l-20">
-                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']"> {{projectName}}</a>
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'ingest', 'folders']"> Dataset</a>
                     </li>
-                    <li class="breadcrumb-item"><a (click)="back()"> Datasets</a></li>
+                    <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'ingest', 'folders']"> folders</a></li>
                     <li class="breadcrumb-item"><a (click)="sourceData(folderId, folderName)">{{folderName}} </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">{{file}}</li>
@@ -41,48 +41,75 @@
         </div> -->
         </div>
 
-        <div class="page-content mr-t">
-            <div class="ingest-tbl table-responsive auto-height bx-s">
-                <table class="table m-0 table-fixed table-striped">
-                    <thead class="thead-light">
-                        <tr class="th-center fixed-th">
-                            <th *ngFor="let column of newColumns;let isFirst = first" class="th-new">
-                                <!-- Hide only for version-1 release -->
-                                <!-- <span *ngIf="isFirst">
-                                <img src="assets/img/chart-icon.svg" width="25" class="pull-left"
-                                    (click)="graphToggle()" title="Data Profile" class="cursor-pointer">
-                            </span> -->
-                                {{column.display_name}}
-                                <span class="pull-right" *ngIf="column.data_type == 'bigint'"><b><i
-                                            style="color:gray">#</i></b></span>
-                                <span class="pull-right" *ngIf="column.data_type == 'varchar'"><b><i
-                                            style="color:gray">ABC</i></b></span>
-                                <span class="pull-right" *ngIf="column.data_type == 'double'"><b><i
-                                            style="color:gray">#.#</i></b></span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="td-b" *ngFor="let d of data;let i=index;">
-                            <td *ngFor="let column of newColumns; let j=index;"
-                                [ngClass]="[j==0 ? 'gride-side1' : '', j==0 ? 'left-indicator1' : '']">
-                                <!-- <span style="cursor:pointer;">{{d[column.display_name]}}</span> -->
-                                <span *ngIf="isPIIColumn(column.column_name); else normal">
-                                    {{ d[column.display_name].slice(0,5) }}**********
-                                </span>
-                                <ng-template #normal>
-                                    {{ d[column.display_name] }}
-                                </ng-template>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="view-div">
+            <div class="card card-d mr-b-0">
+                <div class="card-header ch">
+                    <a class="card-main-text mr-b-0" (click)="back()">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        Back to dataset
+                    </a>
+                </div>
+                <div class="card-body pd-0">
+                    <div class="ingest-tbl table-responsive auto-height bx-s">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="th-center fixed-th">
+                                    <th *ngFor="let column of newColumns;let isFirst = first" class="th-new">
+                                        <!-- Hide only for version-1 release -->
+                                        <!-- <span *ngIf="isFirst">
+                                        <img src="assets/img/chart-icon.svg" width="25" class="pull-left"
+                                            (click)="graphToggle()" title="Data Profile" class="cursor-pointer">
+                                    </span> -->
+                                        {{column.display_name}}
+                                        <span class="pull-right" *ngIf="column.data_type == 'bigint'"><b><i
+                                                    style="color:gray">#</i></b></span>
+                                        <span class="pull-right" *ngIf="column.data_type == 'varchar'"><b><i
+                                                    style="color:gray">ABC</i></b></span>
+                                        <span class="pull-right" *ngIf="column.data_type == 'double'"><b><i
+                                                    style="color:gray">#.#</i></b></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="td-b" *ngFor="let d of data;let i=index;">
+                                    <td *ngFor="let column of newColumns; let j=index;"
+                                        [ngClass]="[j==0 ? 'gride-side1' : '', j==0 ? 'left-indicator1' : '']">
+                                        <!-- <span style="cursor:pointer;">{{d[column.display_name]}}</span> -->
+                                        <span *ngIf="isPIIColumn(column.column_name); else normal">
+                                            {{ d[column.display_name].slice(0,5) }}**********
+                                        </span>
+                                        <ng-template #normal>
+                                            {{ d[column.display_name] }}
+                                        </ng-template>
+        
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin:10px 5px 5px 30px">
+                        <span> <img src="../../../../assets/media/image/eye.svg" class="mr-2" /> {{columnLength}}
+                            Columns &nbsp; &nbsp; {{rowLength}} Rows</span>
+                    </div>
+                </div>
             </div>
-            <div style="margin:10px 5px 5px 30px">
-                <span> <img src="../../../../assets/media/image/eye.svg" class="mr-2" /> {{columnLength}}
-                    Columns &nbsp; &nbsp; {{rowLength}} Rows</span>
-            </div>
+            
         </div>
+        <!-- <div class="card mr-b-0 bx-s-n" *ngIf="!showChat">
+            <div class="card-body bg-g">
+                <div class="di mr-r-12">
+                    <img src="/assets/img/chatgpt/perfect-2.svg" class="mr-t-17">
+                </div>
+                <div class="di">
+                    <p class="ct1 mr-b-4">JARVIS AI is here to help you!</p>
+                    <p class="ct2 mr-b-0 mr-t-4">Write a prompt and let JARVIS do the job for you. Have Fun!</p>
+                </div>
+                <div class="pull-right mr-t-8">
+                    <button class="btn btn-design" (click)="onChat()">Get started</button>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <app-chat-content *ngIf="showChat" (close)="showChat=false"></app-chat-content> -->
     </div>
 </app-loader>

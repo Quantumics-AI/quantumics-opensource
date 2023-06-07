@@ -8,6 +8,10 @@ import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { takeUntil } from 'rxjs/operators';
 import { SourceDataService } from '../../services/source-data.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { EditFolderComponent } from '../edit-folder/edit-folder.component';
+import { FolderConfirmationComponent } from '../folder-confirmation/folder-confirmation.component';
+
+
 @Component({
   selector: 'app-list-folders',
   templateUrl: './list-folders.component.html',
@@ -31,6 +35,17 @@ export class ListFoldersComponent implements OnInit {
   folder: any;
   showCard: boolean = true;
   filteredData: any;
+
+  public searchDiv: boolean = false;
+  public searchString: string;
+  public startIndex: number = 0;
+  public pageSize: number = 15;
+  public endIndex: number = this.pageSize;
+  // public currnetPage: number = 0;
+  // public totalPages: number;
+  // public pager: Array<Pager> = [];
+
+  public page = 1;
 
   constructor(
     private router: Router,
@@ -80,42 +95,90 @@ export class ListFoldersComponent implements OnInit {
         });
       }
       this.total_folder_length = this.folders.length;
+      // this.totalPages = this.folders.length / this.pageSize;
+      // this.totalPages = Math.ceil(this.totalPages);
+
+      // for (let index = 0; index < this.totalPages; index++) {
+      //   const page = {
+      //     index,
+      //     isActive: index == 0
+      //   } as Pager;
+
+      //   this.pager.push(page);
+      // }
     }, () => {
       this.loading = false;
     });
   }
 
-  editFolderModal(folder): void {
+  editFolderModal(folder: any): void {
     // this.edit.emit(folder);
-    this.folder = folder;
-    this.editFolder = true;
+    // this.folder = folder;
+    // this.editFolder = true;
+    const modalRef = this.modalService.open(EditFolderComponent, { size: 'md' });
+    modalRef.componentInstance.folder = folder;
+    modalRef.componentInstance.projectId = this.projectId;
+    modalRef.componentInstance.userId = this.userId;
+
+    modalRef.result.then((result) => {
+      this.updatedFolder(result);
+    });
   }
 
   deleteFolder(folder: any): void {
-    if (confirm("Are you sure to delete " + folder.folderDisplayName)) {
+    // if (confirm("Are you sure to delete " + folder.folderDisplayName)) {
+    //   this.loading = true;
+    //   this.sourceDataService.deleteFolder(+this.projectId, +this.certificateData.user_id, folder.folderId).subscribe((res) => {
+    //     this.loading = false;
+    //     if (res?.code === 200) {
+    //       const idx = this.folders.findIndex(x => x.folderId === folder.folderId);
+    //       this.folders.splice(idx, 1);
+    //       this.foldersList();
+    //       this.snakbar.open(res?.message);
+    //     }
+    //   }, (error) => {
+    //     this.loading = false;
+    //     this.snakbar.open(error);
+    //   });
+    // }
+
+    const modalRef = this.modalService.open(FolderConfirmationComponent, { size: 'md modal-dialog-centered', scrollable: false });
+    modalRef.componentInstance.userId = this.userId;
+    modalRef.componentInstance.projectId = this.projectId;
+    modalRef.componentInstance.folderId = folder.folderId;
+
+    modalRef.result.then((result) => {
       this.loading = true;
-      this.sourceDataService.deleteFolder(+this.projectId, +this.certificateData.user_id, folder.folderId).subscribe((res) => {
+      this.sourceDataService.deleteFolder(+this.projectId, +this.certificateData.user_id, folder.folderId).subscribe((response: any) => {
+        this.snakbar.open(response.message);
         this.loading = false;
-        if (res?.code === 200) {
+        if (response.code === 200) {
           const idx = this.folders.findIndex(x => x.folderId === folder.folderId);
           this.folders.splice(idx, 1);
-          this.foldersList();
-          this.snakbar.open(res?.message);
+          this.foldersList()
         }
       }, (error) => {
         this.loading = false;
         this.snakbar.open(error);
       });
-    }
+      
+    }, (result) => {
+      
+     });
 
   }
 
   select(folder) {
     const folderId = folder.folderId;
     const folderName = folder.folderName;
-    this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
+    // this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
+    //   queryParams: { folderId, name: folderName, dataSourceType: 'file' }
+    // });
+
+    this.router.navigate([`projects/${this.projectId}/ingest/folders/dataset`], {
       queryParams: { folderId, name: folderName, dataSourceType: 'file' }
     });
+
   }
 
   public sort(): void {
@@ -150,6 +213,57 @@ export class ListFoldersComponent implements OnInit {
 
   }
 
+  searchInput(str) {
+    this.searchString = str;
+    if (str.length == 0) {
+      this.searchDiv = false;
+    } else {
+      this.searchDiv = true;
+    }
+  }
+
+  clearSearhInput() {
+    this.searchTerm = { folderName: '' };
+    this.searchDiv = false;
+  }
+
+  // public previousPage(): void {
+  //   this.currnetPage--;
+  //   this.pager.map(t => t.isActive = false);
+
+  //   if (this.currnetPage == 0) {
+  //     this.currnetPage = 0;
+  //     this.startIndex = 0;
+  //     this.endIndex = this.pageSize;
+  //   } else {
+  //     this.startIndex = this.pageSize * this.currnetPage;
+  //     this.endIndex = this.startIndex + this.pageSize;
+  //   }
+
+  //   this.pager[this.currnetPage].isActive = true;
+  // }
+
+  // public nextPage(): void {
+  //   this.pager.map(t => t.isActive = false);
+
+  //   this.currnetPage++;
+
+  //   if (this.totalPages != this.currnetPage) {
+  //     this.startIndex = this.endIndex;
+  //     this.endIndex = this.startIndex + this.pageSize;
+  //   }
+
+  //   this.pager[this.currnetPage].isActive = true;
+  // }
+
+  // public redirectToPageIndex(pager: Pager): void {
+  //   this.pager.map(t => t.isActive = false);
+  //   pager.isActive = true;
+  //   this.currnetPage = pager.index;
+  //   this.startIndex = this.pageSize * this.currnetPage;
+  //   this.endIndex = this.startIndex + this.pageSize;
+  // }
+
   uploadFile(folder: any): void {
     const modalRef = this.modalService.open(ImportLocalFileComponent, { size: 'lg' });
     modalRef.componentInstance.projectId = this.projectId;
@@ -170,5 +284,10 @@ export class ListFoldersComponent implements OnInit {
 
   public selectSourceType(): void {
     this.router.navigate([`projects/${this.projectId}/ingest/select-source-type`]);
+  }
+
+  public onPageChange(currentPage: number): void {
+    this.startIndex = (currentPage - 1) * this.pageSize;
+    this.endIndex = this.startIndex + this.pageSize;
   }
 }

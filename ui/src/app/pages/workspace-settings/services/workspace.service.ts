@@ -116,6 +116,10 @@ export class WorkspaceService {
     return this.http.get(`/QSUserService/api/v1/subscriptions`);
   }
 
+  getCardDetails(userId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/cardsinfo/${userId}`);
+  }
+
   getCurrentPlanDetails(userId: number, projectId: number): Observable<any> {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/plandetails/${userId}/${projectId}`);
   }
