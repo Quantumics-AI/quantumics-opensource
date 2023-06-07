@@ -905,24 +905,24 @@ BEGIN
 			CONSTRAINT qsp_folder_piidata_pk PRIMARY KEY (id)
 			)';
 
-		EXECUTE '
-        	CREATE TABLE '||schemaName||'.qsp_redash_dashboard (
-        	rd_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-        	rd_key varchar(255) NOT NULL,
-        	dashboard_name varchar(255) NULL,
-        	dashboard_id int4 NOT NULL,
-        	creation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        	active bool NULL DEFAULT true,
-        	CONSTRAINT qsp_redash_dashboard_pkey PRIMARY KEY (rd_id)
-        	)';
+        EXECUTE '
+            CREATE TABLE '||schemaName||'.qsp_redash_dashboard (
+            rd_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+            rd_key varchar(255) NOT NULL,
+            dashboard_name varchar(255) NULL,
+            dashboard_id int4 NOT NULL,
+            creation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            active bool NULL DEFAULT true,
+            CONSTRAINT qsp_redash_dashboard_pkey PRIMARY KEY (rd_id)
+            )';
 
-		EXECUTE '
-        	CREATE TABLE '||schemaName||'.qsp_home_kpi (
-        	kpi_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-        	kpi_details varchar(255) NOT NULL,
-        	user_id int4 NOT NULL,
-        	CONSTRAINT qsp_home_kpi_pkey PRIMARY KEY (kpi_id)
-        	)';
+        EXECUTE '
+            CREATE TABLE '||schemaName||'.qsp_home_kpi (
+            kpi_id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+            kpi_details varchar(255) NOT NULL,
+            user_id int4 NOT NULL,
+            CONSTRAINT qsp_home_kpi_pkey PRIMARY KEY (kpi_id)
+            )';
 
 	--- Table Creation completed..
 
