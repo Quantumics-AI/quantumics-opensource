@@ -1176,6 +1176,33 @@ INSERT INTO public.qs_product_features ("module",feature,active,subscription_typ
 "cumulative_size_bytes":"50000000",
 "max_file_size":"500000"
 }',true);
+
+INSERT INTO public.qs_metadata_reference (source_columnname_type,destination_columnname_type,source_type,target_type,active,created_by,created_date,modified_by,modified_date) VALUES
+ ('tinyint','int2','pgsql','athena',true,96,NULL,0,NULL),
+ ('smallint','int2','pgsql','athena',true,96,NULL,0,NULL),
+ ('double','float4','pgsql','athena',true,96,NULL,0,NULL),
+ ('float','float8','pgsql','athena',true,96,NULL,0,NULL),
+ ('decimal','numeric','pgsql','athena',true,96,NULL,0,NULL),
+ ('char','char','pgsql','athena',true,96,NULL,0,NULL),
+ ('string','text','pgsql','athena',true,96,NULL,0,NULL),
+ ('binary','bytea','pgsql','athena',true,96,NULL,0,NULL),
+ ('array','anyArray','pgsql','athena',true,96,NULL,0,NULL),
+ ('map','json','pgsql','athena',true,96,NULL,0,NULL);
+INSERT INTO public.qs_metadata_reference (source_columnname_type,destination_columnname_type,source_type,target_type,active,created_by,created_date,modified_by,modified_date) VALUES
+ ('struct','text','pgsql','athena',true,96,NULL,0,NULL),
+ ('string','text','pgsql','athena',true,96,NULL,0,NULL),
+ ('text','string','pgsql','athena',true,96,NULL,0,NULL),
+ ('integer','int','pgsql','athena',true,96,NULL,0,NULL),
+ ('boolean','boolean','pgsql','athena',true,96,NULL,0,NULL),
+ ('character varying','string','pgsql','athena',true,96,NULL,0,NULL),
+ ('varchar','string','pgsql','athena',true,96,NULL,0,NULL),
+ ('timestamp','string','pgsql','athena',true,96,NULL,0,NULL),
+ ('timestamp without time zone','string','pgsql','athena',true,96,NULL,0,NULL),
+ ('int4','int','pgsql','athena',true,96,NULL,96,NULL);
+INSERT INTO public.qs_metadata_reference (source_columnname_type,destination_columnname_type,source_type,target_type,active,created_by,created_date,modified_by,modified_date) VALUES
+ ('int8','int','pgsql','athena',true,96,NULL,96,NULL),
+ ('bigint','int','pgsql','athena',true,96,NULL,0,NULL),
+ ('date','string','pgsql','athena',true,96,NULL,0,NULL);
 	
 	
 	INSERT INTO public.qs_rules_catalog (created_by,created_date,modified_by,modified_date,rule_contents,rule_name,user_id) VALUES
