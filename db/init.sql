@@ -924,6 +924,7 @@ BEGIN
             CONSTRAINT qsp_home_kpi_pkey PRIMARY KEY (kpi_id)
             )';
 
+
 	--- Table Creation completed..
 	
 	--- Trigger Creation started..
