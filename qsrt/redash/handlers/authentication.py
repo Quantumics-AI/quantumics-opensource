@@ -372,6 +372,7 @@ def loginusingToken(user_token, project_id, userId, jwt_token, api_url, org_slug
                 redis_connection.set("{}-project".format(user.name), project_id)
                 redis_connection.set("{}-userId".format(user.name), userId)
                 redis_connection.set("{}-jwt_token".format(user.name), jwt_token)
+                redis_connection.set("{}-user_token".format(user.name), user_token)
                 redis_connection.set("api_url", base64.b64decode(api_url).decode('utf-8'))
 
                 # remember = "remember" in request.form

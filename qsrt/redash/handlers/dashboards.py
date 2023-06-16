@@ -113,7 +113,7 @@ class DashboardListResource(BaseResource):
         models.db.session.commit()
 
         try:
-            api_url = redis_connection.get("{}-api_url".format(self.current_user.name))
+            api_url = redis_connection.get("api_url")
             project_id = redis_connection.get("{}-project".format(self.current_user.name))
             userId = redis_connection.get("{}-userId".format(self.current_user.name))
             user_token = redis_connection.get("{}-user_token".format(self.current_user.name))
