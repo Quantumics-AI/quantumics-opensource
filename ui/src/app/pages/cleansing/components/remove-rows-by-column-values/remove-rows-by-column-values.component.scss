@@ -17,3 +17,47 @@
     opacity: 0.2;
     cursor: default;
 }
+
+.option-item:not(:last-child)::after {
+    content: '';
+    display: block;
+    border-bottom: 1px solid red;
+    margin: 5px 0;
+}
+
+.action {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.radio-btn-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.mb-15px {
+    margin-bottom: 15px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-disabled {
+    padding: 0px !important;
+}
+
+.separator {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}

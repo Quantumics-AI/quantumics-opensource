@@ -89,7 +89,7 @@ import { ViewIngestPipelineComponent } from './components/view-ingest-pipeline/v
     DatasetListComponent,
     FolderDatasetComponent,
     DeleteFolderDatasetComponent,
-    ViewIngestPipelineComponent,
+    ViewIngestPipelineComponent
   ],
   imports: [
     CommonModule,

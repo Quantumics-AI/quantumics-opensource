@@ -560,7 +560,7 @@ label {
   bottom: 0;
   height: 100%;
   width: 240px;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 1000;
   background: #FFFFFF;
   box-shadow: inset -1px 0px 0px #e4e5e7;
@@ -605,6 +605,26 @@ label {
 }
 
 .btn-design:hover {
+  background: #01745F;
+  color: #FFFFFF;
+}
+
+/* ************ Button Green *********** */
+.btn-design2 {
+  height: 36px;
+  left: 224px;
+  background: #00977C;
+  border-radius: 8px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.btn-design2:hover {
   background: #01745F;
   color: #FFFFFF;
 }
@@ -1128,3 +1148,70 @@ label {
 }
 
 /*  */
+
+
+/* Preparation rule - Side panel cancel button */
+.cancelBtn {
+  color: #888C92;
+  background-color: #ffffff;
+  border: 1px solid #888C92;
+  border-radius: 8px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  height: 36px;
+}
+
+.disableAdd {
+  color: #ffffff;
+  background-color: #888C92;
+  border: 1px solid #888C92;
+  border-radius: 8px;
+}
+
+.disableAdd:hover {
+  background: #888C92;
+  color: #FFFFFF;
+}
+
+.pd-l-15 {
+  padding-left: 15px;
+}
+
+.fs-12 {
+  font-size: 12px;
+}
+
+.ht1 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #212244;
+}
+
+.ht2 {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 16px;
+  color: #212244;
+}
+
+.label-color {
+  color: #888C92
+}
+
+.pe-none {
+  pointer-events: none;
+}
+
+.s-div {
+  padding-top: 35px;
+  padding-bottom: 54px;
+}

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild, ElementRef, SimpleChanges, } from '@angular/core';
-import {  ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Certificate } from 'src/app/models/certificate';
@@ -9,7 +9,9 @@ import { Upload } from '../../models/upload';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectParam } from 'src/app/pages/projects/models/project-param';
 import { SourceDataService } from '../../services/source-data.service';
+import { Pager } from 'src/app/pages/govern/models/pager';
 import { DeleteFolderDatasetComponent } from '../delete-folder-dataset/delete-folder-dataset.component';
+import { FilterPipe } from 'ngx-filter-pipe';
 
 @Component({
   selector: 'app-folder-dataset',
@@ -17,10 +19,11 @@ import { DeleteFolderDatasetComponent } from '../delete-folder-dataset/delete-fo
   styleUrls: ['./folder-dataset.component.scss']
 })
 export class FolderDatasetComponent implements OnInit {
-  
+
   projectId: number;
   userId: number;
   files = [];
+  public originalFiles = [];
   folderId: any;
   folderName: any;
   projectName: string;
@@ -40,7 +43,7 @@ export class FolderDatasetComponent implements OnInit {
   public searchDiv: boolean = false;
   public searchString: string;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = 10;
   public endIndex: number = this.pageSize;
   // public currnetPage: number = 0;
   // public totalPages: number;
@@ -58,7 +61,8 @@ export class FolderDatasetComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private sourceDataService: SourceDataService,
     private modalService: NgbModal,
-  ) { 
+    private filterPipe: FilterPipe
+  ) {
     this.loaded$ = this.quantumFacade.loaded$;
     this.projectSource$ = this.quantumFacade.projectSource$;
     this.sourceData$ = this.quantumFacade.sourceData$;
@@ -108,7 +112,7 @@ export class FolderDatasetComponent implements OnInit {
     this.folderId = folderId;
     this.sourceDataService.getListData(this.projectId, this.userId, this.folderId).subscribe((res) => {
       this.loading = false;
-      if(res.result){
+      if (res.result) {
         if (!Array.isArray(res.result)) {
           return;
         }
@@ -133,13 +137,15 @@ export class FolderDatasetComponent implements OnInit {
         //     index,
         //     isActive: index == 0
         //   } as Pager;
-  
+
         //   this.pager.push(page);
         // }
       } else {
         this.files = [];
       }
-    }, () =>  {
+
+      this.originalFiles = [...this.files];
+    }, () => {
       this.loading = false;
     })
   }
@@ -195,7 +201,7 @@ export class FolderDatasetComponent implements OnInit {
   cleansing(filename, fileId) {
     console.log(filename);
     this.router.navigate([`projects/${this.projectId}/ingest/folders/view`], {
-      queryParams: { 
+      queryParams: {
         folderId: this.folderId,
         folderName: this.folderName,
         file: filename,
@@ -219,14 +225,21 @@ export class FolderDatasetComponent implements OnInit {
     this.searchString = str;
     if (str.length == 0) {
       this.searchDiv = false;
+      this.files = this.originalFiles;
     } else {
       this.searchDiv = true;
+      this.files = this.filterPipe.transform(this.originalFiles, { fileName: this.searchString });
+      this.startIndex = 0;
     }
   }
 
   clearSearhInput() {
     this.searchTerm = { fileName: '' };
     this.searchDiv = false;
+    this.files = this.originalFiles;
+    this.page = 1;
+    this.startIndex = 0;
+    this.endIndex = this.pageSize;
   }
 
   delete(fileId: number, selectedFileName: string): void {
@@ -274,7 +287,7 @@ export class FolderDatasetComponent implements OnInit {
       // this.getFilesData(this.folderId, this.folderName)
     }, () => {
 
-     });
+    });
 
   }
 

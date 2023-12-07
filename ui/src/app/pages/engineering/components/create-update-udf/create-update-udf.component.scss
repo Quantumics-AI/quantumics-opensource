@@ -119,16 +119,6 @@ input:checked + .slider:before {
     color: #000000;
 }
 
-.udf-input {
-    background: #fcfcfe;
-    border: 1px solid #cccccc;
-    box-sizing: border-box;
-    border-radius: 4px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-}
 
 .table {
     background-color: #fcfcfe !important;
@@ -173,9 +163,6 @@ input:checked + .slider:before {
     color: #1e1f3e;
 }
 
-.modal-header {
-    border-bottom: none;
-}
 
 .logicText {
     font-family: "Inter";
@@ -229,10 +216,6 @@ input:checked + .slider:before {
     color: #1e1f3e;
 }
 
-.udf-body {
-    padding-left: 60px;
-    padding-right: 60px;
-}
 
 .btnStyle {
     font-family: "Inter";
@@ -247,4 +230,12 @@ input:checked + .slider:before {
 .validBtn {
     background-color: #01b798;
     color: white;
+}
+
+.tp-br {
+    border-top: 1px solid #EAECF0;
+}
+
+.mr-t-12 {
+    margin-top: 12px;    
 }

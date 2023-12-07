@@ -1,27 +1,26 @@
-<div class="main-container">
-    <div class="page-header1">
+<div class="main-container bg-color">
+    <!-- <div class="page-header1">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-top">
                 <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Governance</li>
+                <li class="breadcrumb-item active" aria-current="page">Govern</li>
             </ol>
         </nav>
-    </div>
+    </div> -->
     <div class="page-content main-menu">
-        <ul>
+        <!-- <ul>
             <li>
                 <a [routerLink]="['list']" routerLinkActive="is-active">Business Glossary</a>
             </li>
-            <!-- Hide for releas-1 -->
-            <!-- <li>
-                <a>Data Lineage</a>
+            <li>
+                <a [routerLink]="['data-dictionary']" routerLinkActive="is-active">Data Dictionary</a>
             </li>
             <li>
-                <a>Roles</a>
-            </li> -->
-        </ul>
+                <a [routerLink]="['data-quality']"  routerLinkActive="is-active">Data Quality</a>
+            </li>
+        </ul> -->
 
-        <div class="mt-3">
+        <div>
             <router-outlet></router-outlet>
         </div>
     </div>

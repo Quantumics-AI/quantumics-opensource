@@ -18,6 +18,10 @@ export class AutomationService {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/folders/${projectId}/${userId}`);
   }
 
+  public getCleansingRunJobs(projectId: number, userId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/cleanse/job/${projectId}/${userId}`);
+  }
+
   public getCleansingHistory(params: any): Observable<any> {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/history/${params.projectId}/${params.userId}/${params.folderId}`);
   }

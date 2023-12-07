@@ -1,43 +1,80 @@
-<div class="modal-header modal-popup-header">
-    <h4 class="modal-title h4-font text-white">Standardize</h4>
-    <button type="button" class="close" style="margin-top:-23px;" (click)="modal.dismiss()">&times;</button>
+<div class="modal-header">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="p2">Standardise</h4>
+        </div>
+        <div class="col-12">
+            <p class="p1 mr-b-0 mb-0">Select a column first and than change its multiple row values with a same custom
+                value.</p>
+        </div>
+    </div>
+    <button type="button" class="close" (click)="modal.dismiss()">&times;</button>
 </div>
 
-<div class="modal-body modal-height" >
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="float:left;">
-        <div class="form-group">
-            <select id="selectColumn" class="form-control" (change)="handleColumnSelection($event.target.value)" [(ngModel)]="selectedColumn">
-                <option value="" [value]="undefined" selected>--Select column--</option>
-                <option *ngFor="let col of columns" [value]="col.column_name">{{col.column_name}}</option>
-            </select>
+<div class="modal-body modal-height pd-t-0">
+    <div class="row br-b">
+        <div class="col-4" style="float:left;">
+            <div class="form-group mr-b-0 pd-b-8">
+                <label for="selectColumn" class="p2 fs-12">Column*
+                    <!-- <span><img src="assets/media/preparation/info.svg"></span> -->
+                </label>
+                <ng-select id="selectColumn" class="custom" (change)="handleColumnSelection($event)"
+                    [(ngModel)]="selectedColumn" [clearable]="false">
+                    <ng-option value="" [value]="undefined" selected>--Select column--</ng-option>
+                    <ng-option *ngFor="let col of columns" [value]="col.column_name">{{col.column_name}}</ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="col-4" style="float:left;">
+            <div class="form-group mr-b-0 pd-b-8">
+                <label for="selectColumn" class="p2 fs-12">Custom value
+                    <!-- <span><img src="assets/media/preparation/info.svg"></span> -->
+                </label>
+                <input id="new-value" type="text" [(ngModel)]="newValue" (ngModelChange)="modelChangedNewValue($event)"
+                    class="form-control cleansing-textbox" placeholder="Enter custom value to replace">
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3 mr-t-28" style="float:left;">
+            <button id="btn-apply" class="btn btn-design" [ngClass]="{'disableAdd': !selectColumn || !selectNewValue}"
+                [disabled]="!selectColumn || !selectNewValue" (click)="apply()">Apply</button>
         </div>
     </div>
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6" style="float:left;">
-        <div class="form-group">
-            <input id="new-value" type="text" [(ngModel)]="newValue" (ngModelChange)="modelChangedNewValue($event)"   class="form-control" placeholder="Input New Value">
-        </div>
-    </div>
+
     <div>
-        <div class="table-responsive" *ngIf="groupedRows.length">
-            <table class="table m-0">
+        <div *ngIf="loading" class="padding-200px">
+            <div class="pd-0 pd-t-56">
+                <div class="pd-0 pd-t-56">
+                    <div class="connect-s text-center">
+                        <app-loader [loading]="loading"></app-loader>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cleansing-tbl table-responsive auto-height br-b" *ngIf="groupedRows.length else noColumnSelected">
+
+            <table class="table table-fixed table-striped">
                 <thead>
                     <tr class="th-center" style="background:#54E7B1;">
-                        <th class="border-left"><input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll($event.target.checked)"> All</th>
-                        <th class="border-left cursor-pointer" (click)="sort('column_value')">Source Value 
+                        <th class="border-left"><input type="checkbox" [(ngModel)]="selectedAll"
+                                (change)="selectAll($event.target.checked)"> All</th>
+                        <th class="border-left cursor-pointer" (click)="sort('count')">Row Count
                             <i class="fa fa-sort" aria-hidden="true"></i>
                         </th>
-                        <th class="border-left cursor-pointer" (click)="sort('count')">Row Count 
+                        <th class="border-left cursor-pointer source-column-color" (click)="sort('column_value')">Source Value
                             <i class="fa fa-sort" aria-hidden="true"></i>
-                        </th>                        
-                        <th class="border-left">New Value</th>
+                        </th>
+                        <th class="border-left header-new-color" [class.new-column-color]="selectNewValue && selectColumn" >New Value</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="td-color" *ngFor="let item of groupedRows | sortBy: sortDirection : sortBy : updateView">
-                        <td><label><input type="checkbox" (change)="handleSelection()" [(ngModel)]="item.selected"></label></td>
-                        <td>{{item.column_value}}</td>
+                    <tr class="td-b cleansing-tr-padding"
+                        *ngFor="let item of groupedRows | sortBy: sortDirection : sortBy : updateView">
+                        <td><label><input type="checkbox" (change)="handleSelection()"
+                                    [(ngModel)]="item.selected"></label></td>
                         <td>{{item.count}}</td>
-                        <td>
+                        <td [class.selected-source-color]="item.selected">{{item.column_value}}</td>
+                        <td [class.selected-new-color]="item.selected">
                             <ng-container *ngIf="item.selected">
                                 {{newValue}}
                             </ng-container>
@@ -45,13 +82,22 @@
                     </tr>
                 </tbody>
             </table>
+
         </div>
-    </div>
-</div>
-
-
-<div class="modal-footer">
-    <div class="col-12">
-        <button id="btn-apply" class="btn btn-success pull-right" [disabled]="!selectColumn || !selectNewValue" (click)="apply()">Apply</button>
+        <ng-template #noColumnSelected>
+            <div style="display: flex; justify-content: center;align-items: center;" *ngIf="!loading">
+                <div class="d-flex flex-column">
+                    <div class="mr-t-67">
+                        <img class="mr-l-60" src="assets/media/preparation/standardise-no-column-selected.svg">
+                    </div>
+                    <div class="justify-content-center mr-t-35">
+                        <h6 class="text-css">No column selected</h6>
+                    </div>
+                    <div>
+                        <p class="text-css-2">Selected a column to add or replace a custom value</p>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
     </div>
 </div>

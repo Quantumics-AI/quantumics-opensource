@@ -1,60 +1,100 @@
 <app-loader [loading]="loading">
-    <div class="right-panel" style="width: 500px;" [class.hidden]="!isVisible">
-        <div class="p-2">
-            <div class="row pull-left">
-                <div class="col-xl-12">
-                    <button (click)="isVisible = !isVisible" type="button" class="close" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-xl-12 text-center">
-                    <h6>Raw Data</h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <ng-select id="folderId" [(ngModel)]="folderId" [multiple]="false" placeholder="Select Folder"
-                        [dropdownPosition]="'bottom'" [closeOnSelect]="true" (change)="onFolderSelect()"
-                        [items]="folders" bindLabel="folderDisplayName" bindValue="folderId">
-                        <ng-template ng-option-tmp let-item="item">
-                            <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
-                        </ng-template>
-                    </ng-select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Select File</th>
-                                <th>File Name </th>
-                                <th>Created Date </th>
-                                <th>Created By </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="td-color" *ngFor="let file of files">
-                                <td><input class="form-check-input position-static" type="radio" name="blankRadio"
-                                        id="blankRadio1" value="option1" style="cursor: pointer;" aria-label="..."
-                                        (click)="setFolderFile(file.fileName, file.fileId)">
-                                </td>
-                                <td class="text-truncate d-block" style="width: 150px;" placement="auto"
-                                    ngbTooltip="{{file.fileName}}">{{file.fileName}}</td>
-                                <td>{{file.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                                <td>{{file.ruleCreatedFrom}} </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <button type="button" class="btn btn-primary pull-right" [disabled]="selectedFileId == undefined"
-                        (click)="cleansing()">Cleanse Data</button>
+    <div class="mb-3">
+        <div class="page-content pd-0">
+            <div class="card card-shadow mr-b-0">
+                <div class="card-body pd-16">
+                    <div class="source-type-div">
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label source-type" for="inlineRadio1">Source type:</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" name="inlineRadioOptions"
+                                [(ngModel)]="isQueryFolder" [value]="false"
+                                (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label s-label" [ngClass]="{'activeText': isQueryFolder === false}"
+                                for="inlineRadio1">Local file</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input cp" type="radio" name="inlineRadioOptions"
+                                [(ngModel)]="isQueryFolder" [value]="true" (change)="onItemChange($event.target.value)">
+                            <label class="form-check-label s-label" [ngClass]="{'activeText': isQueryFolder === true}"
+                                for="inlineRadio2">Db Connector</label>
+                        </div>
+                    </div>
+
+                    <div class="row align-item">
+                        <div class="col">
+                            <ng-container *ngIf="!isQueryFolder">
+                                <div class="form-group select-display mr-r-16 mr-b-0">
+                                    <label class="select-l" for="folders">Select folder</label>
+                                    <ng-select class="select-text" id="folderId" [clearable]="false"
+                                        [(ngModel)]="folderId" [multiple]="false" placeholder="Select Folder"
+                                        [dropdownPosition]="'bottom'" [closeOnSelect]="true" (change)="onFolderSelect()"
+                                        [items]="folders" bindLabel="folderDisplayName" bindValue="folderId">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="form-group select-display mr-b-0">
+                                    <label class="select-l" for="files">Select dataset</label>
+                                    <ng-select class="select-text" id="fileId" [clearable]="false" [(ngModel)]="fileId"
+                                        [multiple]="false" placeholder="Select File" [dropdownPosition]="'bottom'"
+                                        [closeOnSelect]="true" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <span title="{{item.fileName}} {{item.createdDate | date: 'dd-MM-yy'}}">
+                                                {{item.fileName}} {{item.createdDate | date: 'dd-MM-yy'}}
+                                            </span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="isQueryFolder">
+                                <div class="form-group select-display mr-r-16 mr-b-0">
+                                    <label class="select-l" for="Pipelines">Select pipeline</label>
+                                    <ng-select class="select-text" id="folderId" [clearable]="false"
+                                        [(ngModel)]="folderId" [multiple]="false" placeholder="Select Folder"
+                                        [dropdownPosition]="'bottom'" [closeOnSelect]="true"
+                                        (change)="selectPipeline($event)" [items]="folders"
+                                        bindLabel="folderDisplayName" bindValue="folderId">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <span [title]="item.folderDisplayName">{{item.folderDisplayName}}</span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="form-group select-display mr-r-16 mr-b-0">
+                                    <label class="select-l" for="folders">Select table</label>
+                                    <ng-select class="select-text" id="fileId" [clearable]="false" [(ngModel)]="tableFileId"
+                                        [multiple]="false" placeholder="Select File" [dropdownPosition]="'bottom'"
+                                        [closeOnSelect]="true" [items]="tablesFiles" bindLabel="fileName" bindValue="fileId">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <span
+                                                [title]="item.fileName.split('.').slice(0, -1).join('.')">{{item.fileName.split('.').slice(0,
+                                                -1).join('.')}}</span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="form-group select-display mr-b-0">
+                                    <label class="select-l" for="files">Select dataset</label>
+                                    <ng-select class="select-text" id="fileId" [clearable]="false" [(ngModel)]="fileId"
+                                        [multiple]="false" placeholder="Select File" [dropdownPosition]="'bottom'"
+                                        [closeOnSelect]="true" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <span [title]="item.fileName">{{item.fileName}}</span>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                            </ng-container>
+
+                        </div>
+                        <div class="col btn-col">
+                            <button type="button" class="btn btn-design pull-right mr-3" (click)="cleansing()"
+                                [disabled]="!fileId">Prepare dataset</button>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -1,15 +1,18 @@
-<h6 class="h6-font-hading">Filter rows</h6>
+<div class="preparation-heading">
+    <h6 class="p2">Filter rows</h6>
+    <p class="p1 mr-b-0">Select the respected column from both dataset to apply different joins according to you requrement.</p>
+    <hr class="cleansing-divider">
+</div>
 
 <form [formGroup]="fg" (ngSubmit)="saveRule()">
     <div class="col-12">
         <div class="form-group">
-            <label for="filter-option">Option</label>
-            <small class="form-text text-muted pull-right">Required</small>
+            <label for="filter-option" class="p2 fs-12">Option*</label>
             <ng-select id="filter-option" [(ngModel)]="ruleInputLogic1" formControlName="ruleInputLogic1"
-                placeholder="Select option" [dropdownPosition]="'bottom'">
+                placeholder="Select option" [dropdownPosition]="'bottom'" class="custom" [clearable]="false">
                 <ng-option *ngFor="let op of options" [value]="op.value">{{op.text}}</ng-option>
             </ng-select>
-            <span class="alert-danger"
+            <span class="text-error"
                 *ngIf="fg.get('ruleInputLogic1').touched && fg.get('ruleInputLogic1').hasError('required')">
                 This field is required
             </span>
@@ -20,12 +23,11 @@
         <ng-container *ngSwitchCase="filterTypes.TopRows">
             <div class="col-12">
                 <div class="form-group">
-                    <label for="topRows">Number of rows to filter </label>
-                    <small class="form-text text-muted pull-right">Required</small>
-                    <input type="text" class="form-control" id="topRows" placeholder="Insert number of rows"
+                    <label for="topRows" class="p2 fs-12">Number of rows to filter* </label>
+                    <input type="text" class="form-control cleansing-textbox" id="topRows" placeholder="Insert number of rows"
                         [(ngModel)]="ruleInputValues" formControlName="topRows" (change)="preview()" type="number"
                         appPositiveNumberOnly min="1">
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('topRows').touched && fg.get('topRows').hasError('required')">This field is
                         required</span>
                 </div>
@@ -35,28 +37,26 @@
         <ng-container *ngSwitchCase="filterTypes.Range">
             <div class="col-12">
                 <div class="form-group">
-                    <label for="startRow">Start row </label>
-                    <small class="form-text text-muted pull-right">Required</small>
-                    <input type="text" class="form-control" id="startRow" required placeholder="Insert start index"
+                    <label for="startRow" class="p2 fs-12">Start row* </label>
+                    <input type="text" class="form-control cleansing-textbox" id="startRow" required placeholder="Insert start index"
                         [(ngModel)]="ruleInputValues" formControlName="startRow" (change)="preview()" type="number"
                         appPositiveNumberOnly min="1">
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('startRow').touched && fg.get('startRow').hasError('required')">This field is
                         required</span>
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-group">
-                    <label for="endRow">End row </label>
-                    <small class="form-text text-muted pull-right">Required</small>
-                    <input type="text" class="form-control" id="endRow" required placeholder="Insert end index"
+                    <label for="endRow" class="p2 fs-12">End row* </label>
+                    <input type="text" class="form-control cleansing-textbox" id="endRow" required placeholder="Insert end index"
                         [(ngModel)]="ruleInputValues1" formControlName="endRow" (change)="preview()" type="number"
                         appPositiveNumberOnly min="1">
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('endRow').touched && fg.get('endRow').hasError('required')">This field is
                         required
                     </span>
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('endRow').touched && fg.get('endRow').hasError('rangeValidator')">
                         This value should be greater than start row
                     </span>
@@ -67,24 +67,22 @@
         <ng-container *ngSwitchCase="filterTypes.RegularInterval">
             <div class="col-12">
                 <div class="form-group">
-                    <label for="interval">Interval </label>
-                    <small class="form-text text-muted pull-right">Required</small>
-                    <input type="text" class="form-control" id="interval" required placeholder="Interval"
+                    <label for="interval" class="p2 fs-12">Interval* </label>
+                    <input type="text" class="form-control cleansing-textbox" id="interval" required placeholder="Interval"
                         [(ngModel)]="ruleInputValues" formControlName="interval" (change)="preview()" type="number"
                         appPositiveNumberOnly min="1">
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('interval').touched && fg.get('interval').hasError('required')">This field is
                         required</span>
                 </div>
             </div>
             <div class="col-12">
                 <div class="form-group">
-                    <label for="iStartRow">Start from </label>
-                    <small class="form-text text-muted pull-right">Required</small>
-                    <input type="text" class="form-control" id="iStartRow" required placeholder="Insert end index"
+                    <label for="iStartRow" class="p2 fs-12">Start from* </label>
+                    <input type="text" class="form-control cleansing-textbox" id="iStartRow" required placeholder="Insert end index"
                         [(ngModel)]="ruleInputValues1" formControlName="iStartRow" (change)="preview()" type="number"
                         appPositiveNumberOnly min="1">
-                    <span class="alert-danger"
+                    <span class="text-error"
                         *ngIf="fg.get('iStartRow').touched && fg.get('iStartRow').hasError('required')">This field is
                         required</span>
                 </div>
@@ -95,10 +93,9 @@
 
     <div class="col-12">
         <div class="form-group">
-            <label for="sort-by">Sort rows by</label>
-            <small class="form-text text-muted pull-right">Required</small>
+            <label for="sort-by" class="p2 fs-12">Sort rows by*</label>
             <ng-select id="sort-by" [(ngModel)]="ruleInputValues4" formControlName="ruleInputValues4"
-                (change)="handleSortChange()">
+                (change)="handleSortChange()" class="custom" [clearable]="false">
                 <ng-option [value]="'default'">Default</ng-option>
                 <ng-option [value]="'columns'">Columns</ng-option>
             </ng-select>
@@ -108,11 +105,9 @@
     <ng-container *ngIf="ruleInputValues4 === 'columns'">
         <div class="col-12">
             <div class="form-group">
-                <label>Column</label>
-                <small class="form-text text-muted pull-right"> Required
-                </small>
+                <label class="p2 fs-12">Column*</label>
                 <div class="row mb-2" *ngFor="let c of sortColumns; let i=index;">
-                    <ng-select class="col-11" [id]="i" [(ngModel)]="sortColumns[i]"
+                    <ng-select class="col-11 custom" [id]="i" [(ngModel)]="sortColumns[i]"
                         [ngModelOptions]="{standalone: true}" [multiple]="false" (change)="preview()"
                         placeholder="Select column" [dropdownPosition]="'bottom'" [closeOnSelect]="true" [clearable]="false"
                         [items]="columns" bindLabel="column_name" bindValue="column_name">
@@ -128,25 +123,41 @@
             </div>
         </div>
         <div style="height: 24px;">
-            <button type="button" class="btn btn-success pull-right mr-3" (click)="addColumn()">Add more</button>
+            <button type="button" class="btn btn-design pull-right mr-3" (click)="addColumn()">Add more</button>
         </div>
     </ng-container>
     <div class="col-12">
         <div class="form-group">
-            <label>Action</label>
-            <div>
-                <div class="radio-box" [class.selected]="ruleInputValues5 === 'Keep'" (click)="setAction('Keep')">
+            <label class="p2 fs-12">Select Action</label>
+            <div class="action">
+                <div class="form-check mb-15px">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                        [value]="'Keep'" [checked]="ruleInputValues5 === 'Keep'" (change)="setAction('Keep')">
+                    <label class="form-check-label radio-btn-text" for="flexRadioDefault1">
+                        Keep matching rows
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+                        [value]="'Delete'" [checked]="ruleInputValues5 === 'Delete'" (change)="setAction('Delete')">
+                    <label class="form-check-label radio-btn-text" for="flexRadioDefault2">
+                        Delete matching rows
+                    </label>
+                </div>
+
+                <!-- <div class="radio-box" [class.selected]="ruleInputValues5 === 'Keep'" (click)="setAction('Keep')">
                     Keep matching rows
                 </div>
                 <div class="radio-box" [class.selected]="ruleInputValues5 === 'Delete'" (click)="setAction('Delete')">
                     Delete matching rows
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
-    <div class="pull-right">
-        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+    <div class="pd-l-15">
+        <button id="btn-save" type="submit" class="btn btn-design mr-3" [ngClass]="{'disableAdd': !fg.valid}" 
             [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
-        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+        <button id="btn-cancel" type="reset" class="btn cancelBtn" (click)="cancel()">Cancel</button>
     </div>
 </form>

@@ -1,4 +1,3 @@
-
 .plus-add {
     text-align: center;
     font-size: 60px;
@@ -245,7 +244,51 @@
 }
 .h6-font-hading {
     font-size: 14px;
+    /* margin: 15px 10px 10px 15px; */
+}
+
+.fz-12px {
+    font-size: 12px;
+}
+
+.preparation-heading {
     margin: 15px 10px 10px 15px;
+}
+
+.ng-select.custom .ng-select-container {
+    color: #212244 !important;
+    background: #F4F6FA !important;
+    border: 1px solid #E2E8F2 !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+}
+
+.ng-select.custom .ng-option {
+    font-size: 12px !important;
+    font-family: 'Inter' !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 16px !important;
+}
+
+.cleansing-textbox {
+    background: #F4F6FA !important;
+    border: 1px solid #E2E8F2 !important;
+    border-radius: 8px !important;
+}
+
+/* Rename above class in further commit */
+
+.textbox-color {
+    background: #F4F6FA !important;
+    border: 1px solid #E2E8F2 !important;
+    border-radius: 8px !important;
+}
+
+.cleansing-divider {
+    border-top: 1px solid #EAECF0;
+    margin-left: -15px;
+    margin-right: -10px;
 }
 
 .switch {
@@ -357,4 +400,12 @@ input:checked + .slider:before {
     text-align: center;
     font-size: 16px;
     line-height: 22px;
+}
+
+.p4 {
+    font-family: 'Inter';
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 150%;
 }

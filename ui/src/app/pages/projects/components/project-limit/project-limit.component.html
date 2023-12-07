@@ -1,0 +1,19 @@
+<app-loader [loading]="loading">
+    <div class="modal-header border-bottom-0 pd-b-0">
+        <h5 class="modal-title modal-header-text">Limit Reached</h5>
+        <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('cancel')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body pd-b-0">
+        <p class="body-text-muted">You have reached the maximum number of trial workspace. To create more workspace , kindly upgrade your trial workspace plan.</p>
+        <!-- <div class="text-center">
+            <img src="assets/img/project/create-workspace.svg" class="img-fluid">
+            <h4>Limit Reached</h4>
+        </div> -->
+    </div>
+    <div class="modal-footer justify-content-start">
+        <a [routerLink]="['/projects', projectId, 'workspace-setting', 'plans']" type="button" class="btn btn-design" (click)="modal.dismiss('cancel')">Upgrade</a>
+        <a id="custom_intercom_link" type="button" class="btn btn-contact-us" (click)="close();">Contact Us</a>
+    </div>
+</app-loader>

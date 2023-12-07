@@ -22,7 +22,7 @@
                             </ng-container>
                             <ng-template #defaultProfileImage>
                                 <span class="circle">
-                                    {{userName.substring(0,1)}}
+                                    {{userName?.substring(0,1)}}
                                 </span>
                                 <span class="stroke"> <img src="assets/img/profile/down-stroke.svg"></span>
                             </ng-template>
@@ -43,7 +43,7 @@
                 </ng-container>
                 <ng-template #defaultProfileImage>
                     <span class="dr-circle" style="padding-top: 10px;">
-                        {{userName.substring(0,1)}}
+                        {{userName?.substring(0,1)}}
                     </span>
                 </ng-template>
             </div>
@@ -54,6 +54,8 @@
         </a>
         <a [routerLink]="['account', 'profile']" class="list-group-item list-group-item-action li-text pd-l">
             <img src="assets/img/profile/acc.svg" class="img-fluid">&nbsp;Account settings</a>
+        <!-- <a id="custom_intercom_link" class="list-group-item list-group-item-action li-text pd-l">
+            <img src="assets/img/profile/chat.svg" class="img-fluid">&nbsp;Live chat</a> -->
         <a href="https://docs.quantumics.ai" target="_blank"
             class="list-group-item list-group-item-action li-text pd-l">
             <img src="assets/img/profile/docs.svg" class="img-fluid">&nbsp;Docs</a>

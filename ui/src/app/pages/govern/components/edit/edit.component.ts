@@ -3,6 +3,11 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GovernService } from '../../services/govern.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Certificate } from 'src/app/models/certificate';
+import { Quantumfacade } from 'src/app/state/quantum.facade';
 
 @Component({
   selector: 'app-edit',
@@ -10,20 +15,42 @@ import { SnackbarService } from 'src/app/core/services/snackbar.service';
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, AfterViewInit {
-  @Input() userId: number;
-  @Input() id: number;
-  @Input() projectId: number;
+
+  private certificate$: Observable<Certificate>;
+  private unsubscribe: Subject<void> = new Subject();
 
   fg: FormGroup;
   data: any = {};
   columnInfo = [];
-  loading = true;
+  public loading = true;
+  public id: number;
+  public projectId: number;
+  public userId: number;
+  public projectName: string;
 
   constructor(
     public modal: NgbActiveModal,
     private fb: FormBuilder,
     private governService: GovernService,
-    private snakbar: SnackbarService) {
+    private snakbar: SnackbarService,
+    private activatedRoute: ActivatedRoute,
+    private quantumFacade: Quantumfacade,
+    private router: Router,) {
+      this.projectName = localStorage.getItem('projectname');
+      this.projectId = +this.activatedRoute.parent.snapshot.paramMap.get('projectId');
+
+      this.certificate$ = this.quantumFacade.certificate$;
+      this.certificate$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((certificate: Certificate) => {
+        if (certificate) {
+          this.userId = +certificate.user_id;
+        }
+      });
+
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.id = +params.dataId;
+      });
   }
 
   ngOnInit(): void {
@@ -108,13 +135,19 @@ export class EditComponent implements OnInit, AfterViewInit {
 
     this.governService.update(this.userId, payload).subscribe((response) => {
       this.loading = false;
-      this.modal.close();
+      // this.modal.close();
       this.snakbar.open(response.message);
+      this.router.navigate([`projects/${this.projectId}/govern/dashboard/list`]);
     }, () => {
       this.loading = false;
-      this.modal.close();
+      // this.modal.close();
       this.snakbar.open('Error');
     });
   }
+
+  public back(): void {
+    this.router.navigate([`projects/${this.projectId}/govern/dashboard/list`]);
+  }
+  
 }
 

@@ -10,7 +10,7 @@
     </p>
 </div>
 <div class="modal-footer justify-content-start">
-    <button *ngIf="btnCancelText" type="button" class="btn cnt-us" (click)="modal.close(false);">{{ btnCancelText }}</button>
-    <button *ngIf="btnOkText" type="button" class="btn btn-design" (click)="modal.close(true);">{{ btnOkText }}</button>
+    <button *ngIf="btnCancelText" type="button" class="btn deactivate-btn" (click)="modal.close(false);" tabindex="-1">{{ btnCancelText }}</button>
+    <button *ngIf="btnOkText" type="button" class="btn btn-design" (click)="modal.close(true);" tabindex="-1">{{ btnOkText }}</button>
     <!-- <button *ngIf="btnConactUsText" type="button" class="btn btn-contact-us" (click)="accept()">{{ btnConactUsText }}</button> -->
 </div>

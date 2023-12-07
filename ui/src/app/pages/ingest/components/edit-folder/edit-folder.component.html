@@ -76,6 +76,7 @@
                         (input)="folder.value.length > 0 ? f.close() : f.open()" (blur)="f.close()" triggers="manual"
                         #f="ngbPopover" [ngbPopover]="popFolderContent" popoverClass="edit-pophover" placement="bottom">
                         <small id="workspaceNameHelp" class="form-text body-text-muted">Folder name must be between 3 and 30 characters long.</small>
+                        <small id="workspaceNameHelp" class="form-text body-text-muted">Folder name used during creation cannot be reused for a new folder</small>
                         <div
                         *ngIf="fg.get('folderName').hasError('required') && fg.get('folderName').touched">
                             <div class="text-error" *ngIf="fg.get('projectName').hasError('required')">

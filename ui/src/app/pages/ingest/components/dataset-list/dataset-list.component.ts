@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -8,19 +8,18 @@ import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { SourceDataService } from '../../services/source-data.service';
 import { DeleteFolderDatasetComponent } from '../delete-folder-dataset/delete-folder-dataset.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { FilterPipe } from 'ngx-filter-pipe';
 
 @Component({
   selector: 'app-dataset-list',
   templateUrl: './dataset-list.component.html',
   styleUrls: ['./dataset-list.component.scss']
 })
-export class DatasetListComponent implements OnInit {
+export class DatasetListComponent implements OnInit, OnDestroy {
 
   public projectId: number;
   private folderId: number;
   private userId: number;
-  private pipelineId: number;
   public folderName: string;
 
   private certificate$: Observable<Certificate>;
@@ -31,15 +30,14 @@ export class DatasetListComponent implements OnInit {
   public searchString: string;
   public searchTerm: any = { fileName: '' };
   public filesList: Array<any> = [];
+  public originalFilesList: Array<any> = [];
   public loading: boolean;
   public isDescending: boolean;
 
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = 10;
   public endIndex: number = this.pageSize;
-  // public currnetPage: number = 0;
-  // public totalPages: number;
-  // public pager: Array<Pager> = [];
+
   public page = 1;
 
   constructor(
@@ -49,10 +47,10 @@ export class DatasetListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private sourceDataService: SourceDataService,
     private modalService: NgbModal,
+    private filterPipe: FilterPipe
   ) {
     this.projectId = +this.activatedRoute.snapshot.parent.paramMap.get('projectId');
     this.folderId = +this.activatedRoute.snapshot.paramMap.get('folderId');
-    this.pipelineId = +this.activatedRoute.snapshot.paramMap.get('pipelineId');
     this.folderName = localStorage.getItem('selectedFolderName') as string;
 
     this.certificate$ = this.quantumFacade.certificate$;
@@ -74,8 +72,11 @@ export class DatasetListComponent implements OnInit {
     this.searchString = str;
     if (str.length == 0) {
       this.searchDiv = false;
+      this.filesList = this.originalFilesList;
     } else {
       this.searchDiv = true;
+      this.filesList = this.filterPipe.transform(this.originalFilesList, { fileName: this.searchString });
+      this.startIndex = 0;
     }
   }
 
@@ -93,17 +94,9 @@ export class DatasetListComponent implements OnInit {
         if (this.filesList.length > 1) {
           this.filesList.sort((a, b) => b.createdDate - a.createdDate);
         }
-        // this.totalPages = this.filesList.length / this.pageSize;
-        // this.totalPages = Math.ceil(this.totalPages);
-        // for (let index = 0; index < this.totalPages; index++) {
-        //   const page = {
-        //     index,
-        //     isActive: index == 0
-        //   } as Pager;
-  
-        //   this.pager.push(page);
-        // }
       }
+
+      this.originalFilesList = [...this.filesList];
     }, () => {
       this.loading = false;
     });
@@ -116,10 +109,6 @@ export class DatasetListComponent implements OnInit {
   public redirectToFileView(file: any) {
     this.router.navigate([`projects/${this.projectId}/ingest/pipelines/view`], {
       queryParams: {
-        // folderId: file.folderId, 
-        // name: file.fileName, 
-        // pipelineId: this.pipelineId, 
-        // dataSourceType: 'pipeline' 
         folderId: file.folderId,
         folderName: this.folderName,
         file: file.fileName,
@@ -170,30 +159,32 @@ export class DatasetListComponent implements OnInit {
 
     modalRef.result.then((result) => {
       this.loading = true;
+      // this.snakbar.open('Your delete request is in-progress.');
       this.sourceDataService.deleteFile(+this.projectId, +this.certificateData.user_id, this.folderId, fileId).subscribe((res) => {
         this.loading = false;
         if (res?.code == 200) {
           const idx = this.filesList.findIndex(x => x.fileId == fileId);
           this.filesList.splice(idx, 1);
-          this.getPipeLineFiles();
+          // this.getPipeLineFiles();
           this.snakbar.open(res?.message);
         }
       }, (error) => {
         this.loading = false;
         this.snakbar.open(error);
       });
-
-      
-    }, () => {
-
-     });
+    }, () => { });
   }
 
   clearSearhInput() {
     this.searchTerm = { fileName: '' };
     this.searchDiv = false;
+
+    this.filesList = this.originalFilesList;
+    this.page = 1;
+    this.startIndex = 0;
+    this.endIndex = this.pageSize;
   }
-  
+
   public redirectToDF(file: any): void {
     this.router.navigate([`projects/${this.projectId}/delta/data-profile`], {
       queryParams: {
@@ -204,46 +195,13 @@ export class DatasetListComponent implements OnInit {
     });
   }
 
-  // public previousPage(): void {
-  //   this.currnetPage--;
-  //   this.pager.map(t => t.isActive = false);
-
-  //   if (this.currnetPage == 0) {
-  //     this.currnetPage = 0;
-  //     this.startIndex = 0;
-  //     this.endIndex = this.pageSize;
-  //   } else {
-  //     this.startIndex = this.pageSize * this.currnetPage;
-  //     this.endIndex = this.startIndex + this.pageSize;
-  //   }
-
-  //   this.pager[this.currnetPage].isActive = true;
-  // }
-
-  // public nextPage(): void {
-  //   this.pager.map(t => t.isActive = false);
-
-  //   this.currnetPage++;
-
-  //   if (this.totalPages != this.currnetPage) {
-  //     this.startIndex = this.endIndex;
-  //     this.endIndex = this.startIndex + this.pageSize;
-  //   }
-
-  //   this.pager[this.currnetPage].isActive = true;
-  // }
-
-  // public redirectToPageIndex(pager: Pager): void {
-  //   this.pager.map(t => t.isActive = false);
-  //   pager.isActive = true;
-  //   this.currnetPage = pager.index;
-  //   this.startIndex = this.pageSize * this.currnetPage;
-  //   this.endIndex = this.startIndex + this.pageSize;
-  // }
-
   public onPageChange(currentPage: number): void {
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 }

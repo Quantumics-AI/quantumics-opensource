@@ -6,7 +6,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { FileProfileRoutingModule } from './file-profile-routing.module';
 import { LoaderModule } from 'src/app/core/components/loader/loader.module';
-// import { LockModule } from 'src/app/core/components/lock/lock.module';
 
 
 import { FileProfileComponent } from './file-profile.component';
@@ -46,7 +45,6 @@ import { ViewDatasetComponent } from './components/view-dataset/view-dataset.com
     LoaderModule,
     FormsModule,
     NgSelectModule,
-    // LockModule,
     NgbDropdownModule
   ],
   schemas: [NO_ERRORS_SCHEMA]

@@ -41,6 +41,10 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
   updateView = false;
   changeElemParam: number;
   updatedSequenceList = [];
+  selectAllCheckbox: boolean = false;
+  public isAnyRuleSelected: boolean = false;
+  public isSingleRulesSelected: boolean = false;
+  public loading: boolean;
   private unsubscribe: Subject<void> = new Subject();
 
   constructor(
@@ -61,6 +65,39 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
     this.dragged = false;
     this.projectId = +this.activatedRoute.snapshot.paramMap.get('projectId');
     this.rules.length > 0 ? this.showRulesCatelogue = true : this.showRulesCatelogue = false;
+    this.rules.map(t => t.checked = false);
+  }
+
+  public checkUnCheckAllRule(event: any): void {
+    if (event.currentTarget.checked) {
+      this.selectAllCheckbox = true;
+      this.rules.map(t => t.checked = true);
+    } else {
+      this.selectAllCheckbox = false;
+      this.rules.map(t => t.checked = false);
+    }
+
+    this.isAnyRuleSelected = this.rules.some(item => item.checked === true);
+    this.isSingleRulesSelected = this.rules.filter(item => item.checked === true)?.length === 1;
+  }
+
+  public checkUncheckRule(event: any, rule: any): void {
+    if (event.currentTarget.checked) {
+      rule.checked = true;
+    } else {
+      rule.checked = false;
+    }
+
+    if (this.selectAllCheckbox) {
+      if (!event.currentTarget.checked && this.selectAllCheckbox) {
+        this.selectAllCheckbox = false;
+      } else {
+        this.selectAllCheckbox = this.rules.every(item => item.checked);
+      }
+    }
+
+    this.isAnyRuleSelected = this.rules.some(item => item.checked === true);
+    this.isSingleRulesSelected = this.rules.filter(item => item.checked === true)?.length === 1;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,8 +107,17 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
     }
   }
 
-  goToRules(item: any) {
-    this.edit.emit(item);
+  goToRules() {
+    const items = this.rules.filter(x => x.checked === true);
+    if (items.length > 1) {
+      this.snackBar.open('Please select only onle option to edit');
+    }
+    else {
+      const item = this.rules.find(t => t.checked === true);
+      if (item) {
+        this.edit.emit(item);
+      }
+    }
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -186,24 +232,53 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
     );
   }
 
-  public deleteRule(delItem): void {
-    const dependentRules = this.getDependentRules(delItem.cleansingParamId);
-    for (const rule of dependentRules) {
-      rule.flag = true;
-      rule.errorMsg = 'One of selected columns is missing';
-    }
+  // public deleteRule(delItem): void {
+  //   const dependentRules = this.getDependentRules(delItem.cleansingParamId);
+  //   for (const rule of dependentRules) {
+  //     rule.flag = true;
+  //     rule.errorMsg = 'One of selected columns is missing';
+  //   }
 
-    if (dependentRules.length > 0) {
-      this.modalService.open(DeleteComfirmationComponent).result.then((result) => {
+  //   if (dependentRules.length > 0) {
+  //     this.modalService.open(DeleteComfirmationComponent).result.then((result) => {
+  //       this.delete(delItem.cleansingParamId);
+  //     }, (reason) => {
+  //       for (const rule of dependentRules) {
+  //         rule.flag = false;
+  //         rule.errorMsg = '';
+  //       }
+  //     });
+  //   } else {
+  //     this.delete(delItem.cleansingParamId);
+  //   }
+  // }
+
+  public deleteRule(): void {
+
+    const items = this.rules.filter(x => x.checked === true);
+    if (items.length > 1) {
+      this.snackBar.open('Please select only one option to Delete');
+    }
+    else {
+      const delItem = this.rules.find(t => t.checked === true);
+      const dependentRules = this.getDependentRules(delItem.cleansingParamId);
+      for (const rule of dependentRules) {
+        rule.flag = true;
+        rule.errorMsg = 'One of selected columns is missing';
+      }
+
+      if (dependentRules.length > 0) {
+        this.modalService.open(DeleteComfirmationComponent).result.then((result) => {
+          this.delete(delItem.cleansingParamId);
+        }, (reason) => {
+          for (const rule of dependentRules) {
+            rule.flag = false;
+            rule.errorMsg = '';
+          }
+        });
+      } else {
         this.delete(delItem.cleansingParamId);
-      }, (reason) => {
-        for (const rule of dependentRules) {
-          rule.flag = false;
-          rule.errorMsg = '';
-        }
-      });
-    } else {
-      this.delete(delItem.cleansingParamId);
+      }
     }
   }
 
@@ -212,15 +287,19 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
   }
 
   private delete(ruleId: number): void {
+    this.loading = true;
     const userId = this.certificateData.user_id;
     const deleteRule = { projectId: this.projectId, ruleId, userId };
     this.cleansingDataService.deleteRules(deleteRule).subscribe((response: any) => {
+      this.loading = false;
       if (response?.code === 200) {
         this.snackBar.open(response.message);
         this.deleted.emit(ruleId);
       } else {
         this.snackBar.open(response.message);
       }
+    }, () => {
+      this.loading = false;
     });
   }
 

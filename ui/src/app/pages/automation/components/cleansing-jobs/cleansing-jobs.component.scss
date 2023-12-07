@@ -2,8 +2,170 @@
     height: calc(100vh - 180px);
 }
 
+.table thead {
+    box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #888C92;
+    letter-spacing: normal;
+}
+
+.fixed-th th {
+    text-align: start;
+    padding-left: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: #475467;
+    padding-right: 24px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.td-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 36px;
+    color: #212244;
+    border-bottom: 1px solid #E2E8F2;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #F9FAFB;
+}
+
+.td-text td {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
 .absolute {
     position: absolute;
     top: -55px;
     right: 0;
+}
+
+.create-udf-text {
+    font-size: 16px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.inner-text {
+    display: flex;
+    justify-content: center;
+}
+
+.text-container {
+    width: 464px;
+    word-wrap: break-word;
+    font-size: 14px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.search-input:focus {
+    outline: none !important;
+    border-color: #cfd1d8 !important;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+::ng-deep .pagination {
+    justify-content: space-between;
+}
+
+::ng-deep .page-item:first-child {
+    margin-right: auto;
+    margin-top: 0;
+}
+
+::ng-deep .page-item:last-child {
+    margin-left: auto;
+    margin-top: 0;
+}
+
+::ng-deep .page-link {
+    border: none;
+    color: #000;
+}
+
+::ng-deep .page-link:focus {
+    box-shadow: none;
+}
+
+::ng-deep .page-item.active .page-link {
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    color: #000;
+}
+
+::ng-deep .page-link:hover {
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    color: #000;
+}
+
+.view {
+    color: #00977C;
+    text-decoration: underline;
+}
+
+.badge {
+    padding: 6px 8px 2px 6px;
+    border-radius: 10px;
+    font-family: 'Inter';
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+}
+
+.badge-danger {
+    background-color: #FEF3F2 !important;
+    color: #B42318;
+}
+
+.badge-running {
+    background-color: #F8F9FC !important;
+    color: #363F72;
+}
+
+.badge-completed {
+    background-color: #ECFDF3 !important;
+    color: #027A48;
+}
+
+.term-2 {
+    width: 352px;
+    margin: auto;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #475467;
+    margin-bottom: 24px;
+}
+
+.align-unset {
+    vertical-align: unset;
 }

@@ -1,143 +1,164 @@
-<form [formGroup]="fg">
-    <div class="modal-header">
-        <h5 class="modal-title">Business Glossary</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body">
-        <div class="row gutters">
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputName">Term</label>
-                    <input type="text" class="form-control" placeholder="Customer" formControlName="term" maxlength="20" (ngModelChange)="modelChangeTerm($event)">
-                    <p class="term-length" *ngIf="lengthMsg">Business term length is max 20 characters</p>
-                    <div *ngIf="fg.get('term').invalid && (fg.get('term').dirty || fg.get('term').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('term').hasError('required')">
-                            Term is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputEmail">Description</label>
-                    <input type="text" class="form-control" placeholder="Customer of the company"
-                        formControlName="description" maxlength="50" (ngModelChange)="modelChangeDescripton($event)">
-                    <p class="term-length" *ngIf="lengthDesMsg">Business description length is max 50 characters</p>
-                    <div
-                        *ngIf="fg.get('description').invalid && (fg.get('description').dirty || fg.get('description').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('description').hasError('required')">
-                            Description is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputEmail">Data Owner</label>
-                    <input type="text" class="form-control" placeholder="Joe Bloggs" formControlName="dataOwner" maxlength="20" (ngModelChange)="modelChangeDO($event)">
-                    <p class="term-length" *ngIf="lengthDataMsg">Business data owner length is max 20 characters</p>
-                    <div
-                        *ngIf="fg.get('dataOwner').invalid && (fg.get('dataOwner').dirty || fg.get('dataOwner').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('dataOwner').hasError('required')">
-                            DataOwner is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputEmail">Business Rule</label>
-                    <input type="text" class="form-control" placeholder="Must be Characters"
-                        formControlName="businessRules" maxlength="20" (ngModelChange)="modelChangeBR($event)">
-                    <p class="term-length" *ngIf="lengthBRMsg">Business rule length is max 20 characters</p>
-                    <div
-                        *ngIf="fg.get('businessRules').invalid && (fg.get('businessRules').dirty || fg.get('businessRules').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('businessRules').hasError('required')">
-                            Business Rule is required.
-                        </div>
-
-                        <div class="text-danger" *ngIf="fg.get('businessRules').hasError('pattern')">
-                            Must be Characters.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputEmail">Acronym</label>
-                    <input type="text" class="form-control" placeholder="CUS" formControlName="acronym" maxlength="20" (ngModelChange)="modelChangeAcronym($event)">
-                    <p class="term-length" *ngIf="lengthAcrMsg">Business acronym term length is max 20 characters</p>
-                    <div *ngIf="fg.get('acronym').invalid && (fg.get('acronym').dirty || fg.get('acronym').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('acronym').hasError('required')">
-                            Acronym is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4">
-                <div class="form-group">
-                    <label for="inputEmail">Synonym Term</label>
-                    <input type="text" class="form-control" placeholder="Client" formControlName="synonymTerm" maxlength="20" (ngModelChange)="modelChangeST($event)">
-                    <p class="term-length" *ngIf="lengthSTMsg">Business synonym term length is max 20 characters</p>
-                    <div
-                        *ngIf="fg.get('synonymTerm').invalid && (fg.get('synonymTerm').dirty || fg.get('synonymTerm').touched)">
-
-                        <div class="text-danger" *ngIf="fg.get('synonymTerm').hasError('required')">
-                            Synonym Term is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-12">
-                <div class="form-group">
-                    <label for="inputEmail">Related Attributes</label>
-                    <ng-select id="attributes" [clearable]="false" formControlName="relatedAttributes" [multiple]="true"
-                        placeholder="Select Attributes" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                        [items]="columnInfo">
-                        <ng-template ng-option-tmp let-item="item">
-                            <span [title]="item">{{item}}</span>
-                        </ng-template>
-                    </ng-select>
-                    <div
-                        *ngIf="fg.get('relatedAttributes').invalid && (fg.get('relatedAttributes').dirty || fg.get('relatedAttributes').touched)">
-                        <div class="text-danger" *ngIf="fg.get('relatedAttributes').hasError('required')">
-                            Related Attributes are required
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-12">
-                <div class="form-group">
-                    <label for="inputEmail">Add Tags</label>
-                    <tag-input formControlName="addTags" [placeholder]="'Tags'" [secondaryPlaceholder]="'Enter Tags'">
-                    </tag-input>
-
-                    <div *ngIf="fg.get('addTags').invalid && (fg.get('addTags').dirty || fg.get('addTags').touched)">
-                        <div class="text-danger" *ngIf="fg.get('addTags').hasError('required')">
-                            Tags are required
-                        </div>
-                    </div>
-                </div>
+<div class="page-header1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-top pd-l-0">
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'govern', 'dashboard', 'list']">Governance</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'govern', 'dashboard', 'list']">Business glossary</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add glossary</li>
+        </ol>
+    </nav>
+</div>
+<div class="add-glossary-div">
+    <button type="button" class="btn bck-btn" (click)="back();">
+        <img src="assets/img/govern/back.svg"> Back</button>
+    <div class="card card-d mr-t-16">
+        <div class="card-header ch">
+            <div>
+                <p class="card-main-text">Add business glossary</p>
+                <p class="p1 mr-b-0">Define term, data owner, business rules etc to generate data lineage chart.</p>
             </div>
         </div>
-    </div>
+        <div class="card-body pd-0 pd-t-24">
+            <form [formGroup]="fg">
+                <div class="row mr-0 br-b">
+                    <div class="col-md-6 pd-l-24 pd-r-10">
+                        <div class="form-group">
+                            <label for="inputName" class="p2">Term*</label>
+                            <input type="text" class="form-control input-design" placeholder="Customer" formControlName="term" maxlength="20" (ngModelChange)="modelChangeTerm($event)"
+                            [ngClass]="{'invalidInput' : fg.get('term').invalid && (fg.get('term').dirty || fg.get('term').touched), 'existTerm' : termname == true}">
+                            <p class="term-length" *ngIf="lengthMsg">Business term length is max 20 characters</p>
+                            <div *ngIf="fg.get('term').invalid && (fg.get('term').dirty || fg.get('term').touched)">
+                                <div class="text-error" *ngIf="fg.get('term').hasError('required')">
+                                    Term is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pd-r-24 pd-l-10">
+                        <div class="form-group">
+                            <label for="inputEmail" class="p2">Data Owner*</label>
+                            <input type="text" class="form-control input-design" placeholder="Joe Bloggs" formControlName="dataOwner" maxlength="20" (ngModelChange)="modelChangeDO($event)"
+                            [ngClass]="{'invalidInput' : fg.get('dataOwner').invalid && (fg.get('dataOwner').dirty || fg.get('dataOwner').touched)}">
+                            <p class="term-length" *ngIf="lengthDataMsg">Business data owner length is max 20 characters</p>
+                            <div
+                                *ngIf="fg.get('dataOwner').invalid && (fg.get('dataOwner').dirty || fg.get('dataOwner').touched)">
+        
+                                <div class="text-error" *ngIf="fg.get('dataOwner').hasError('required')">
+                                    DataOwner is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 pd-l-24 pd-r-24">
+                        <div class="form-group mr-pd">
+                            <label for="inputEmail" class="p2">Description*</label>
+                            <textarea type="text" class="form-control input-design" placeholder="Customer of the company" row="4"
+                                formControlName="description" maxlength="50" (ngModelChange)="modelChangeDescripton($event)"
+                                [ngClass]="{'invalidInput' : fg.get('description').invalid && (fg.get('description').dirty || fg.get('description').touched)}"></textarea>
+                            <p class="term-length" *ngIf="lengthDesMsg">Business description length is max 50 characters</p>
+                            <div
+                                *ngIf="fg.get('description').invalid && (fg.get('description').dirty || fg.get('description').touched)">
+        
+                                <div class="text-error" *ngIf="fg.get('description').hasError('required')">
+                                    Description is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mr-0 br-b pd-t-12">
+                    <div class="col-md-4 pd-l-24 pd-r-10">
+                        <div class="form-group mr-pd">
+                            <label for="inputEmail" class="p2">Business Rule*</label>
+                            <input type="text" class="form-control input-design" placeholder="Must be Characters"
+                                formControlName="businessRules" maxlength="20" (ngModelChange)="modelChangeBR($event)"
+                                [ngClass]="{'invalidInput' : fg.get('businessRules').invalid && (fg.get('businessRules').dirty || fg.get('businessRules').touched)}">
+                            <p class="term-length" *ngIf="lengthBRMsg">Business rule length is max 20 characters</p>
+                            <div
+                                *ngIf="fg.get('businessRules').invalid && (fg.get('businessRules').dirty || fg.get('businessRules').touched)">
+        
+                                <div class="text-error" *ngIf="fg.get('businessRules').hasError('required')">
+                                    Business Rule is required.
+                                </div>
+        
+                                <div class="text-error" *ngIf="fg.get('businessRules').hasError('pattern')">
+                                    Must be Characters.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-4 pd-l-10 pd-r-10">
+                        <div class="form-group mr-pd">
+                            <label for="inputEmail" class="p2">Acronym*</label>
+                            <input type="text" class="form-control input-design" placeholder="CUS" formControlName="acronym" maxlength="20" (ngModelChange)="modelChangeAcronym($event)"
+                            [ngClass]="{'invalidInput' : fg.get('acronym').invalid && (fg.get('acronym').dirty || fg.get('acronym').touched)}">
+                            <p class="term-length" *ngIf="lengthAcrMsg">Business acronym term length is max 20 characters</p>
+                            <div *ngIf="fg.get('acronym').invalid && (fg.get('acronym').dirty || fg.get('acronym').touched)">
+        
+                                <div class="text-error" *ngIf="fg.get('acronym').hasError('required')">
+                                    Acronym is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-4 pd-r-24 pd-l-10">
+                        <div class="form-group mr-pd">
+                            <label for="inputEmail" class="p2">Synonym Term*</label>
+                            <input type="text" class="form-control input-design" placeholder="Client" formControlName="synonymTerm" maxlength="20" (ngModelChange)="modelChangeST($event)"
+                            [ngClass]="{'invalidInput' : fg.get('synonymTerm').invalid && (fg.get('synonymTerm').dirty || fg.get('synonymTerm').touched)}">
+                            <p class="term-length" *ngIf="lengthSTMsg">Business synonym term length is max 20 characters</p>
+                            <div
+                                *ngIf="fg.get('synonymTerm').invalid && (fg.get('synonymTerm').dirty || fg.get('synonymTerm').touched)">
+        
+                                <div class="text-error" *ngIf="fg.get('synonymTerm').hasError('required')">
+                                    Synonym Term is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-design" [disabled]="fg.invalid" (click)="save(false)">Save</button>
-        <button type="button" class="btn btn-design" [disabled]="fg.invalid" (click)="save(true)">Publish</button>
+                <div class="row mr-0 pd-t-12">
+                    <div class="col-md-6 pd-l-24 pd-r-10">
+                        <div class="form-group">
+                            <label for="inputEmail" class="p2">Related Attributes*</label>
+                            <ng-select id="attributes" class="custom" [clearable]="false" formControlName="relatedAttributes" [multiple]="true"
+                                placeholder="Select Attributes" [dropdownPosition]="'bottom'" [closeOnSelect]="true" [items]="columnInfo"
+                                [ngClass]="{'invalidInput' : fg.get('relatedAttributes').invalid && (fg.get('relatedAttributes').dirty || fg.get('relatedAttributes').touched)}">
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span [title]="item">{{item}}</span>
+                                </ng-template>
+                            </ng-select>
+                            <div
+                                *ngIf="fg.get('relatedAttributes').invalid && (fg.get('relatedAttributes').dirty || fg.get('relatedAttributes').touched)">
+                                <div class="text-error" *ngIf="fg.get('relatedAttributes').hasError('required')">
+                                    Related Attributes are required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="col-md-6 pd-r-24 pd-l-10">
+                        <div class="form-group">
+                            <label for="inputEmail" class="p2">Add Tags*</label>
+                            <tag-input formControlName="addTags" class="customtag" [placeholder]="'Add your tags and press enter '" [secondaryPlaceholder]="'Add your tags and press enter '"
+                            [ngClass]="{'invalidInput' : fg.get('addTags').invalid && (fg.get('addTags').dirty || fg.get('addTags').touched)}">
+                            </tag-input>
+            
+                            <div *ngIf="fg.get('addTags').invalid && (fg.get('addTags').dirty || fg.get('addTags').touched)">
+                                <div class="text-error" *ngIf="fg.get('addTags').hasError('required')">
+                                    Tags are required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-pd">
+                    <button type="button" class="btn saveBtn mr-r-8" [disabled]="fg.invalid" (click)="save(false)">Save</button>
+                    <button type="button" class="btn btn-design br-8" [disabled]="fg.invalid" (click)="save(true)">Publish</button>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
+</div>

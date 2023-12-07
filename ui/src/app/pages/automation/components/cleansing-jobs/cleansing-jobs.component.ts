@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { AutomationService } from '../../services/automation.service';
-import { CleansingHistoryComponent } from '../cleansing-history/cleansing-history.component';
-import { CleansingSelectFilesComponent } from '../cleansing-select-files/cleansing-select-files.component';
+import { CleansingJobs } from '../../models/cleansing-jobs';
+import { CleansJobFolder } from '../../models/cleans-job-folder';
+import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { CleansedRunedJob } from '../../models/cleansed-runed-job';
+import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
 
 @Component({
   selector: 'app-cleansing-jobs',
@@ -18,65 +20,113 @@ export class CleansingJobsComponent implements OnInit {
 
   private certificate$: Observable<Certificate>;
   private unsubscribe: Subject<void> = new Subject();
-  loading: boolean;
-  userId: number;
-  projectId: number;
-  folderId: number;
-  searchTerm: any = { folderDisplayName: '' };
+  private userId: number;
 
-  cleansingJobs$: Observable<any>;
+  public projectId: number;
+  public loading: boolean;
+  public reset: boolean;
+  public searchTerm: any = { folderDisplayName: '' };
+  public page = 1;
+  public startIndex: number = 0;
+  public pageSize: number = 15;
+  public endIndex: number = this.pageSize;
+  public projectName: string;
+
+  public isFolderNameByDescending: boolean;
+  public isJobStatusByDescending: boolean;
+  public hasFolders: boolean;
+
+  cleansedRunedJob: Array<CleansedRunedJob> = [];
   constructor(
-    private modalService: NgbModal,
     private automationService: AutomationService,
     private quantumFacade: Quantumfacade,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute,
+    private snakbar: SnackbarService,
+    private folderService: FolderService,
+    private router: Router) {
 
     this.certificate$ = this.quantumFacade.certificate$;
     this.certificate$
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(certificate => {
-        this.userId = parseInt(certificate.user_id, 10);
+        this.userId = +certificate.user_id
       });
 
-    this.projectId = parseInt(this.activatedRoute.parent.snapshot.paramMap.get('projectId'), 10);
+    this.projectId = +this.activatedRoute.parent.snapshot.paramMap.get('projectId');
+    this.projectName = localStorage.getItem('projectname');
   }
 
   ngOnInit(): void {
-    this.loading = true;
-    this.cleansingJobs$ = this.automationService.getCleansingJobs(this.projectId, this.userId).pipe(map((res) => {
-      this.loading = false;
-      return res.result;
-    }, (error) => {
-      this.loading = false;
-    }));
+    this.foldersList();
   }
 
-  openModal(job: any): void {
-    this.folderId = job.folderId;
-    const modalRef = this.modalService.open(CleansingHistoryComponent, { size: 'lg', windowClass: 'modal-size' });
-    modalRef.componentInstance.projectId = this.projectId;
-    modalRef.componentInstance.userId = this.userId;
-    modalRef.componentInstance.folderId = job.folderId;
-
-    modalRef.result.then((result) => {
-      console.log(result);
-    }, (reason) => {
-      console.log(reason);
+  foldersList() {
+    this.loading = true;
+    this.folderService.getFolders(this.projectId, this.userId).subscribe((response: any) => {
+      this.hasFolders = response.result?.length;
+      this.loading = false;
+      if (this.hasFolders) {
+        this.getCleansingRunJobs();
+      }
+    }, () => {
+      this.hasFolders = false;
+      this.loading = false;
     });
   }
 
-  selectFiles(job: any): void {
-    this.folderId = job.folderId;
+  public getCleansingRunJobs(): void {
+    this.loading = true;
+    this.automationService.getCleansingRunJobs(this.projectId, this.userId).subscribe((response) => {
+      this.cleansedRunedJob = response.result;
+      this.loading = false;
+      return response.result;
+    }, (error) => {
+      this.loading = false;
+    });
+  }
 
-    const modalRef = this.modalService.open(CleansingSelectFilesComponent, { size: 'lg', windowClass: 'modal-size' });
-    modalRef.componentInstance.projectId = this.projectId;
-    modalRef.componentInstance.userId = this.userId;
-    modalRef.componentInstance.folderId = job.folderId;
+  public onPageChange(currentPage: number): void {
+    this.startIndex = (currentPage - 1) * this.pageSize;
+    this.endIndex = this.startIndex + this.pageSize;
+  }
 
-    modalRef.result.then((result) => {
+  public runJob(request: CleansJobFolder): void {
+    this.loading = true;
+    const params = {
+      projectId: this.projectId,
+      fileId: request.fileId
+    };
 
-    }, (reason) => {
-      console.log(reason);
+    this.automationService.runJob(params).subscribe((res) => {
+      if (res.code === 200) {
+        this.reset = !this.reset;
+        this.loading = false;
+        this.snakbar.open(res.message);
+        this.getCleansingRunJobs();
+      } else {
+        this.snakbar.open(res?.message);
+      }
+    }, (error) => {
+      this.loading = false;
+      this.snakbar.open(error);
+    });
+
+  }
+
+  public redirectToCleanseJobHistroy(job: CleansingJobs): void {
+    this.router.navigate([`projects/${this.projectId}/automation/cleansing/history/${job.folderId}/${job.folderDisplayName}`]);
+  }
+
+  public sortByProperty<T>(array: T[], property: keyof T, isDescending: boolean): void {
+    array.sort((a, b) => {
+      const propA = a[property] as unknown as string;
+      const propB = b[property] as unknown as string;
+
+      if (typeof propA === 'string' && typeof propB === 'string') {
+        return isDescending ? propB.localeCompare(propA) : propA.localeCompare(propB);
+      }
+
+      return 0;  // Return 0 if the properties are not strings
     });
   }
 }

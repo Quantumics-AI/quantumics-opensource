@@ -3,6 +3,7 @@
     top: -50px;
     right: 0px;
 }
+
 .table-height {
     height: calc(100vh - 200px);
 }
@@ -25,4 +26,253 @@
 .createBtn:hover {
     background: #009C82;
     color: #FFFFFF;
+}
+
+
+.menu-tets {
+    display: flex;
+    justify-content: center;
+}
+
+.text-container {
+    width: 360px;
+    word-wrap: break-word;
+    font-size: 14px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.create-udf-text {
+    font-size: 16px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.table thead {
+    box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #888C92;
+    letter-spacing: normal;
+}
+
+.fixed-th th {
+    text-align: start;
+    padding-left: 5px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    color: #475467;
+    padding-right: 24px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+.td-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 36px;
+    /* identical to box height, or 143% */
+
+
+    /* Gray/600 */
+
+    color: #212244;
+    border-bottom: 1px solid #E2E8F2;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #F9FAFB !important;
+}
+
+.td-text td {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+input[type=text] {
+    outline: none;
+}
+
+input[type=text]::-moz-focus-inner {
+    border: 0;
+}
+
+::ng-deep .pagination {
+    justify-content: space-between;
+}
+
+::ng-deep .page-item:first-child {
+    margin-right: auto;
+    margin-top: 0;
+}
+
+::ng-deep .page-item:last-child {
+    margin-left: auto;
+    margin-top: 0;
+}
+
+::ng-deep .page-link {
+    border: none;
+    color: #000;
+}
+
+::ng-deep .page-link:focus {
+    box-shadow: none;
+}
+
+::ng-deep .page-item.active .page-link {
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    color: #000;
+}
+
+::ng-deep .page-link:hover {
+    background-color: #F9FAFB;
+    border-radius: 8px;
+    color: #000;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+::ng-deep .page-item {
+    margin-top: 10px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.dr-m {
+    border: 1px solid #E2E8F2;
+    box-shadow: 0px 2px 2px #e2e8f2;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 150%;
+    color: #202123;
+}
+
+.circle-container {
+    display: flex;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #F0F8F4;
+    margin-top: -3px;
+    padding-left: 2px;
+    padding-top: 1px;
+    border: none;
+}
+
+.circle img {
+    width: 15px;
+    height: 15px;
+}
+
+.text {
+    margin-left: 10px;
+}
+
+.search-input:focus {
+    outline: none !important;
+    border-color: #cfd1d8 !important;
+}
+
+.mr-r-6 {
+    margin-right: 6px;
+}
+
+.fn {
+    font-weight: 500;
+    color: #101828;
+}
+
+.s-div {
+    padding-top: 35px;
+    padding-bottom: 54px;
+}
+
+.no-term {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #101828;
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.term-2 {
+    width: 352px;
+    margin: auto;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #475467;
+    margin-bottom: 24px;
+}
+
+.table-striped tbody tr:hover {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05) !important;
+    background-color: #E6FAF0 !important;
+    // cursor: pointer;
+}
+
+.tp1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #101828;
+}
+
+.tp2 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #475467;
+}
+
+.wm {
+    width: 443px;
+    margin: auto;
+    margin-top: 40px;
+}
+
+.mr-b-24 {
+    margin-bottom: 24px;
 }

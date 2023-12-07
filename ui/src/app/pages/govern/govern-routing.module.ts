@@ -5,6 +5,8 @@ import { GlossaryListComponent } from './components/glossary-list/glossary-list.
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { GovernComponent } from './govern.component';
 import { GoogleSankeyChartComponent } from './components/google-sankey-chart/google-sankey-chart.component';
+import { EditComponent } from './components/edit/edit.component';
+import { DictionaryRuleComponent } from './components/dictionary-rule/dictionary-rule.component';
 
 const routes: Routes = [
   {
@@ -21,7 +23,7 @@ const routes: Routes = [
         component: GlossaryListComponent
       },
       {
-        path: 'glossary',
+        path: 'list/glossary',
         component: BusinessGlossaryComponent
       },
       {
@@ -31,7 +33,19 @@ const routes: Routes = [
       {
         path: ':id/schart',
         component: GoogleSankeyChartComponent
-      }
+      },
+      {
+        path: 'list/update-glosssary',
+        component: EditComponent,
+      },
+      {
+        path: 'schart',
+        component: GoogleSankeyChartComponent,
+      },
+      {
+        path: 'data-quality/dictionary-rule',
+        component: DictionaryRuleComponent,
+      },
     ]
   },
   {

@@ -10,13 +10,18 @@
                             <img src="assets/img/chart-icon.svg" width="25" class="pull-left"
                                 (click)="graphToggle()" title="Data Profile" class="cursor-pointer">
                         </span> -->
+                        <div class="d-flex fix-contetnt">
                             {{column.display_name}}
                             <span class="pull-right" *ngIf="column.data_type == 'bigint'"><b><i
+                                        style="color:gray">#</i></b></span>
+                            <span class="pull-right" *ngIf="column.data_type == 'float'"><b><i
                                         style="color:gray">#</i></b></span>
                             <span class="pull-right" *ngIf="column.data_type == 'varchar'"><b><i
                                         style="color:gray">ABC</i></b></span>
                             <span class="pull-right" *ngIf="column.data_type == 'double'"><b><i
                                         style="color:gray">#.#</i></b></span>
+                        </div>
+                            
                         </th>
                     </tr>
                 </thead>

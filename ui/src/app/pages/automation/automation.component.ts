@@ -34,5 +34,10 @@ export class AutomationComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectName = localStorage.getItem('projectname');
+
+    // Remove existing key to reload the updates folders
+    localStorage.removeItem('job_cleanse_dataset_folder');
+    localStorage.removeItem('job_cleanse_local_folder');
+    localStorage.removeItem('isQueryFolder');
   }
 }

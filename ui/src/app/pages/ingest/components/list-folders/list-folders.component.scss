@@ -1,3 +1,54 @@
+
+// .sort-icon {
+//     float: right;
+//     width: 14px;
+// }
+
+// .folder-name {
+//     cursor: pointer;
+// }
+
+// .floder-count {
+//     display: inline-flex; 
+//     margin-top: 2px;
+// }
+
+.page-content {
+    padding: 0;
+}
+
+// .table td {
+//     width: 60px;
+//     max-width: 60px;
+//     overflow: hidden;
+//     white-space: nowrap;
+//     text-overflow: ellipsis;
+// }
+
+// .disableUpload {
+//     // cursor: not-allowed;
+//     pointer-events: none;
+//     padding: 11px;
+// }
+
+// .mr-l-10 {
+//     margin-left: 10px;
+// }
+
+
+// New 
+.mr-b-0 {
+  margin-bottom: 0;
+}
+
+.mr-t-6 {
+  margin-top: 6px;
+}
+
+.size-15px {
+  font-size: 15px;
+}
+
 .table-height {
   height: calc(100vh - 240px);
 }
@@ -420,4 +471,12 @@ input[type=text]::-moz-focus-inner {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
+}
+
+//Jarvis Footer
+.j-footer {
+  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+  width: -webkit-fill-available;
 }

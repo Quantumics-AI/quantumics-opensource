@@ -1,38 +1,54 @@
 <form [formGroup]="fg">
-    <div class="modal-header">
-        <h5 class="modal-title">Create A Flow</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
     <div class="modal-body">
-        <div class="col-12">
-
-            <div class="form-group">
-                <input type="text" class="form-control" id="flowName" minlength="3" maxlength="30"
-                    placeholder="Flow Name" formControlName="flowName" autocomplete="off" 
-                    #f="ngbPopover" [ngbPopover]="popFolder" popoverClass="folder-pophover"
-                    placement="bottom">
+        <div class="head-div">
+            <div class="dib">
+                <p class="mr-b-0 h1">Create data flow</p>
+                <p class="h2 mr-b-0 mr-t-8">Enter flow basic details.</p>
             </div>
-            <div class="form-group">
-                <textarea class="form-control" id="description" rows="3" maxlength="255" placeholder="Flow Description"
-                    formControlName="description"></textarea>
+            <div class="float-right">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         </div>
-        <ng-template #popFolder>
+        <div class="row mr-t-16">
             <div class="col-12">
-                <ul>
-                    <li>Flow name should not contain special characters.</li>
-                    <li>Flow name should be unique.</li>
-                </ul>
+                <div class="form-group">
+                    <label for="dataFlowName" class="p2">Data flow name*</label>
+                    <input type="text" class="form-control input-design" id="flowName" minlength="3" maxlength="20"
+                        placeholder="Flow Name" formControlName="flowName" autocomplete="off" 
+                        #f="ngbPopover" [ngbPopover]="popFolder" popoverClass="folder-pophover"
+                        placement="bottom">
+                    <small id="dataflowNameHelp" class="form-text body-text-muted">
+                        Flow name must be between 3 and 20 characters long.
+                    </small>
+                    <div *ngIf="fg.get('flowName').invalid && fg.get('flowName').dirty || fg.get('flowName').touched">
+                        <div class="text-error" *ngIf="fg.get('flowName').hasError('required')">
+                            flow name is required.
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dataFlowDescription" class="p2">Data flow description</label>
+                    <textarea class="form-control input-design resize-none" id="description" rows="3" maxlength="255" placeholder="Flow Description"
+                        formControlName="description"></textarea>
+                </div>
             </div>
-        </ng-template>
-    </div>
+            <ng-template #popFolder>
+                <div class="col-12">
+                    <ul>
+                        <li>Flow name should not contain special characters.</li>
+                        <li>Flow name should be unique.</li>
+                    </ul>
+                </div>
+            </ng-template>
 
-    <div class="modal-footer">
-        <button [disabled]="fg.invalid" id="btnSave" type="button" class="btn btn-primary"
-            (click)="save()">Save</button>
+            <div class="col-12 btn-div">
+                <button [disabled]="fg.invalid" id="btnSave" type="button" class="btn btn-design"
+                (click)="save()">Create</button>
+            </div>
+        </div>
+        
     </div>
 </form>

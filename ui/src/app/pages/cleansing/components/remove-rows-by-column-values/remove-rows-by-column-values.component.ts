@@ -34,18 +34,19 @@ export class RemoveRowsByColumnValuesComponent implements OnInit, OnChanges {
   private controls: { [type: string]: Array<string>; } = {};
 
   public options = [
-    { text: 'Is Missing', value: FilterRuleTypes.IsMissing },
-    { text: 'Type Mismatched', value: FilterRuleTypes.TypeMismatched },
-    { text: 'Is Exactly', value: FilterRuleTypes.EqualTo },
-    { text: 'Not Equal to', value: FilterRuleTypes.NotEqualTo },
-    { text: 'Is one of', value: FilterRuleTypes.IsOneOf },
-    { text: 'Less than or equal to', value: FilterRuleTypes.LessThanOrEqualTo },
-    { text: 'Greater than or equal to', value: FilterRuleTypes.GreaterThanOrEqualTo },
-
-    { text: 'Is between', value: FilterRuleTypes.IsBetween },
-    { text: 'Contains', value: FilterRuleTypes.Contains },
-    { text: 'Start with', value: FilterRuleTypes.StartsWith },
-    { text: 'End with', value: FilterRuleTypes.EndsWith }
+    { text: 'Is Missing', value: FilterRuleTypes.IsMissing, labelText: 'Filter rows with missing values' },
+    { text: 'Is mismatched', value: FilterRuleTypes.TypeMismatched, labelText: 'Filter rows with missing values' },
+    { text: 'Is exactly', value: FilterRuleTypes.EqualTo, labelText: 'Filter rows that match exactly a specified value' },
+    { text: 'Is not', value: FilterRuleTypes.NotEqualTo, labelText: 'Filter rows that do not match the specified value' },
+    { text: 'Is one of', value: FilterRuleTypes.IsOneOf, labelText: 'Filter rows that match any of the specified values' },
+    { isSeparator: true },
+    { text: 'Less than (or equal to)', value: FilterRuleTypes.LessThanOrEqualTo, labelText: 'Filter rows that match any of the specified values' },
+    { text: 'Greater than (or equal to)', value: FilterRuleTypes.GreaterThanOrEqualTo, labelText: '' },
+    { text: 'Is between', value: FilterRuleTypes.IsBetween, labelText: '' },
+    { isSeparator: true },
+    { text: 'Contains', value: FilterRuleTypes.Contains, labelText: '' },
+    { text: 'Starts with', value: FilterRuleTypes.StartsWith, labelText: '' },
+    { text: 'Ends with', value: FilterRuleTypes.EndsWith, labelText: '' }
   ];
 
   public filterTypes = FilterRuleTypes;
@@ -58,6 +59,7 @@ export class RemoveRowsByColumnValuesComponent implements OnInit, OnChanges {
   public values: Array<{ value: string }> = [];
   public submitted = false;
   public fg: FormGroup;
+  public ruleDescription: string = this.options[0].labelText;
 
   constructor(private formBuilder: FormBuilder) {
     this.controls[FilterRuleTypes.IsMissing] = [];
@@ -155,6 +157,8 @@ export class RemoveRowsByColumnValuesComponent implements OnInit, OnChanges {
   }
 
   preview(): void {
+    this.ruleDescription = this.options.find(x => x.value === this.ruleInputLogic1)?.labelText;
+
     if (!this.fg.valid) {
       return;
     }

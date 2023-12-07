@@ -1,5 +1,12 @@
-<div class="dynamic-height">
-    <div class="drag-container">
+<app-loader [loading]="loading">
+    <div class="dynamic-height">
+        <div class="preparation-heading">
+            <h6 class="p2">Rules applied</h6>
+            <p class="p1 mr-b-0">All the rules applied will appear here in order, you can edit or delete the rules.</p>
+            <hr class="cleansing-divider">
+        </div>
+
+        <!-- <div class="drag-container">
         <div cdkDropList #pendingList="cdkDropList" [cdkDropListData]="rules" class="item-list"
             (cdkDropListDropped)="drop($event)">
 
@@ -42,5 +49,33 @@
                 id="show-hide">Update sequence</button>
         </ng-container>
 
+    </div> -->
+
+        <div style="display: flex;" class="mb-3">
+            <div class="mr-3">
+                <div class="form-check applied-rule-text">
+                    <input class="form-check-input" type="checkbox" id="flexCheckDefault"
+                        [(ngModel)]="selectAllCheckbox" (click)="checkUnCheckAllRule($event);">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Select all
+                    </label>
+                </div>
+            </div>
+            <a (click)="goToRules();" [class.disabled]="!isSingleRulesSelected"><img
+                    [src]="isAnyRuleSelected && isSingleRulesSelected ? 'assets/media/preparation/edit.svg' : 'assets/media/preparation/disabled-edit.svg'"
+                    class="mr-3"></a>
+            <a (click)="deleteRule();" [class.disabled]="!isAnyRuleSelected"><img
+                    [src]="isAnyRuleSelected ? 'assets/media/preparation/delete.svg' : 'assets/media/preparation/disabled-delete.svg'"></a>
+        </div>
+
+        <ng-container *ngFor="let item of rules | sortBy: 'asc'; let i = index">
+            <div class="form-check applied-rule-text" [class.is-checked]="item.checked">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="item.checked" [id]="item.ruleSequence"
+                    (click)="checkUncheckRule($event, item)">
+                <label class="font-weight-normal fz-12px" [for]="item.ruleSequence">
+                    {{i + 1}} . <span class="mr-1">{{item.statement}}</span>
+                </label>
+            </div>
+        </ng-container>
     </div>
-</div>
+</app-loader>

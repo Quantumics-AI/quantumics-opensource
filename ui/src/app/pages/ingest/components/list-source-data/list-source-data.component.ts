@@ -91,7 +91,7 @@ export class ListSourceDataComponent implements OnInit {
       file: ''
     };
     console.log(this.projectParam);
-    if (this.folders.length === 0) {
+    if (this.folders === []) {
       this.quantumFacade.loadProjectSource(this.projectParam);
     }
 

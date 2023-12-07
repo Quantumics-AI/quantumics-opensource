@@ -1,21 +1,22 @@
-<h6 class="h6-font-hading">
-    Replace Cell
-</h6>
+<div class="preparation-heading">
+    <h6 class="p2">Replace cells</h6>
+    <p class="p1 mr-b-0">Select the respected column from the dataset and replace the text or pattern.</p>
+    <hr class="cleansing-divider">
+</div>
 
 <form [formGroup]="fg" (ngSubmit)="saveRule()">
 
     <div class="col-12">
         <div class="form-group">
-            <label for="selectColumn">Column</label>
-            <small class="form-text text-muted pull-right"> Required</small>
+            <label for="selectColumn" class="p2 fs-12">Column*</label>
             <ng-select id="selectColumn" [(ngModel)]="selectedColumns" formControlName="column" [multiple]="false"
                 (change)="change($event)" placeholder="Select column" [dropdownPosition]="'bottom'"
-                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name">
+                [closeOnSelect]="true" [items]="columns" bindLabel="column_name" bindValue="column_name" class="custom">
                 <ng-template ng-option-tmp let-item="item">
                     <span [title]="item.column_name">{{item.column_name}}</span>
                 </ng-template>
             </ng-select>
-            <span class="alert-danger" *ngIf="fg.get('column').touched && fg.get('column').hasError('required')">
+            <span class="text-error" *ngIf="fg.get('column').touched && fg.get('column').hasError('required')">
                 This field is required
             </span>
         </div>
@@ -23,11 +24,10 @@
 
     <div class="col-12">
         <div class="form-group">
-            <label for="editPattern">Find </label>
-            <small class="form-text text-muted pull-right"> Required</small>
-            <input type="text" class="form-control" id="editPattern" placeholder="Cell value to replace"
+            <label for="editPattern" class="p2 fs-12">Find* </label>
+            <input type="text" class="form-control cleansing-textbox" id="editPattern" placeholder="Enter cell value to replace"
                 formControlName="findString" (change)="preview()">
-            <span class="alert-danger"
+            <span class="text-error"
                 *ngIf="fg.get('findString').touched && fg.get('findString').hasError('required')">
                 This field is required
             </span>
@@ -36,19 +36,18 @@
 
     <div class="col-12">
         <div class="form-group">
-            <label for="replaceString">Replace with</label>
-            <small class="form-text text-muted pull-right"> Required</small>
-            <input type="text" class="form-control" id="replaceString" required placeholder="String"
+            <label for="replaceString" class="p2 fs-12">Replace with*</label>
+            <input type="text" class="form-control cleansing-textbox" id="replaceString" required placeholder="Enter a string"
                 formControlName="replaceString" (change)="preview()">
-            <span class="alert-danger"
+            <span class="text-error"
                 *ngIf="fg.get('replaceString').touched && fg.get('replaceString').hasError('required')">
                 This field is required
             </span>
         </div>
     </div>
-    <div class="pull-right">
-        <button id="btn-save" type="submit" class="btn btn-success mr-3"
+    <div class="pd-l-15">
+        <button id="btn-save" type="submit" class="btn btn-design mr-3" [ngClass]="{'disableAdd': !fg.valid}" 
             [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
-        <button id="btn-cancel" type="reset" class="btn btn-secondary mr-3" (click)="cancel()">Cancel</button>
+        <button id="btn-cancel" type="reset" class="btn cancelBtn" (click)="cancel()">Cancel</button>
     </div>
 </form>

@@ -1,21 +1,24 @@
-<div class="row page-header mb-4 mr-0">
-   <div class="col">
-       <nav aria-label="breadcrumb">
-           <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a (click)="closeCurrentWindow()">{{projectName}}</a></li>
-                <li class="breadcrumb-item active">Business Term: {{termName}}</li>
-           </ol>
-       </nav>
-   </div>
+<div class="main-container bg-color">
+    <div class="page-header1">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-top">
+                     <li class="breadcrumb-item"><a (click)="closeCurrentWindow()">{{projectName}}</a></li>
+                     <li class="breadcrumb-item active">Business Term: {{termName}}</li>
+                </ol>
+            </nav>
+     </div>
+     <button type="button" class="btn bck-btn" (click)="back();">
+        <img src="assets/img/govern/back.svg"> Back</button>
+     <google-chart *ngIf="data" #chart
+        [title]="title"
+        [type]="type"
+        [data]="data"
+        
+        [options]="options"
+        [width]="width"
+        [height]="height">
+     </google-chart>
 </div>
-<google-chart *ngIf="data" #chart
-   [title]="title"
-   [type]="type"
-   [data]="data"
-   
-   [options]="options"
-   [width]="width"
-   [height]="height">
-</google-chart>
+
 
 <!-- <app-sankey-chart></app-sankey-chart> -->

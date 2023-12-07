@@ -1,0 +1,135 @@
+<div class="page-header1">
+    <ol class="breadcrumb breadcrumb-top">
+        <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+        <li class="breadcrumb-item" aria-current="page" (click)="back();">Preparation Job</li>
+        <li class="breadcrumb-item active" aria-current="page">{{jobName}}</li>
+    </ol>
+</div>
+
+<div class="main-menu">
+    <div>
+        <h6> Job History</h6>
+        <p class="p1">Every time you run a job , each run will be saved here. Re-run job or download output from the
+            action column.</p>
+    </div>
+
+    <app-loader [loading]="loading">
+        <div class="card card-d">
+            <div class="card-header ch">
+                <div class="di mr-t-6">
+                    <a class="card-main-text mr-b-0" (click)="back();">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        {{jobName}}
+                    </a>
+                </div>
+                <div class="pull-right">
+                    <div class="input-group br-bx-a">
+                        <div class="input-group-prepend h36">
+                            <span class="input-group-text search-icon br-bx-n" id="basic-addon1">
+                                <img src="assets/img/govern/search.svg">
+                            </span>
+                        </div>
+                        <input type="text" id="searchTerm" [(ngModel)]="searchTerm.fileName"
+                            class="form-control search-input br-bx-n h36" placeholder="Search dataset name"
+                            aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body pd-0">
+                <div class="table-responsive br-r">
+                    <table class="table m-0 table-fixed table-striped">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th class="pd-l-24">S.No</th>
+                                <th class="pd-l-24">Dataset name <span> <img class="cp"
+                                            src="assets/img/govern/down-arrow.svg" (click)="sortDataSetName();"></span>
+                                </th>
+                                <th class="pd-l-24">
+                                    Job Status 
+                                    <span><img class="cp" src="assets/img/jobs/refresh.svg" width="15" alt="refresh" (click)="getCleansingHistory()"></span>
+                                    <span> <img class="cp" src="assets/img/govern/down-arrow.svg" (click)="sortByJobStatus();"></span>
+                                </th>
+                                <th class="pd-l-24">Execution time</th>
+                                <th class="pd-l-24">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="td-text"
+                                *ngFor="let history of cleansingJobHistorys | filterBy:searchTerm | slice:startIndex:endIndex">
+                                <td>{{history.index}}</td>
+                                <td>{{history.fileName}}</td>
+                                <td>
+                                    <span *ngIf="history.status === 'FAILED'" class="badge badge-danger">
+                                        <img class="align-unset" src="assets/img/jobs/failed.svg"> {{history.status}}
+                                        <img class="cp" src="assets/img/jobs/info.svg" (click)="viewLogs(history);">
+                                    </span>
+
+                                    <span *ngIf="history.status === 'RUNNING' || history.status === 'STARTING'" class="badge badge-running">
+                                        <img class="align-unset" src="assets/img/jobs/running.svg"> {{history.status}}
+                                    </span>
+
+                                    <span *ngIf="history.status === 'SUCCEEDED'" class="badge badge-completed">
+                                        <img class="align-unset" src="assets/img/jobs/completed.svg"> {{history.status}}
+                                    </span>
+                                </td>
+                                <td>{{history.jobExecutionDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                <td>
+                                    <em>
+                                        <a id="lnkRunJob" (click)="runJob(history)" placement="top"
+                                            ngbTooltip="Re-Run"><img src="assets/img/jobs/re-run.svg" width="18"
+                                                alt="run">
+                                        </a>
+                                    </em>
+
+                                    &nbsp;
+                                    <em>
+                                        <a id="lnkDownload" [class.disabled]="history.status !== 'SUCCEEDED'"
+                                            (click)="getCleanseDownloadFile(history)" placement="top"
+                                            ngbTooltip="Download">
+                                            <img src="assets/img/jobs/download.svg" width="18" alt="download">
+                                        </a>
+                                    </em>
+
+                                    &nbsp;
+                                    <em>
+                                        <a id="lnkDelete" (click)="delete(history)" placement="top" ngbTooltip="Delete">
+                                            <img src="assets/img/jobs/trash.svg" width="18" alt="delete">
+                                        </a>
+                                    </em>
+                                </td>
+                            </tr>
+
+                            <tr style="background-color: white !important;" class="pg-tr"
+                                *ngIf="(cleansingJobHistorys | filterBy: searchTerm)?.length > 15">
+                                <td colspan="6" class="pg-pd">
+                                    <div class="text-center">
+                                        <ngb-pagination [collectionSize]="cleansingJobHistorys?.length" [(page)]="page"
+                                            [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                            aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                            <ng-template ngbPaginationPrevious><span class="btn nextBtn"><img
+                                                        src="assets/img/govern/arrow-left.svg">Previous</span></ng-template>
+                                            <ng-template ngbPaginationNext><span class="btn nextBtn">Next <img
+                                                        src="assets/img/govern/arrow-right.svg"></span></ng-template>
+                                        </ngb-pagination>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="bg-white" *ngIf="(cleansingJobHistorys | filterBy:searchTerm)?.length == 0">
+                                <td colspan="6" *ngIf="!loading">
+                                    <div class="text-center s-div">
+                                        <img src="assets/img/govern/no-search.svg">
+                                        <p class="term-2">Your search “{{searchTerm.fileName}}” did not match. Please
+                                            try again .</p>
+                                        <button type="button" class="btn saveBtn"
+                                            (click)="searchTerm.fileName = '';">Clear to go back</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </app-loader>
+</div>

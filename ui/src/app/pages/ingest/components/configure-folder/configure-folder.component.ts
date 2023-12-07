@@ -96,7 +96,7 @@ export class ConfigureFolderComponent {
       }
       else {
         if (typeof (error) === typeof (String())) {
-          this.snackBar.open(error);
+          this.error = error;
         } else {
           this.error = error?.ERROR_MSG;
           if (error.hasOwnProperty('ORIGINAL_COL_HEADERS')) {

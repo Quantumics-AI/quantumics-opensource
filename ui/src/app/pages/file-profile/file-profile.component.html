@@ -35,7 +35,7 @@
                                     <ng-container *ngIf="!queryFolders" >
                                         <div class="form-group select-display mr-r-16 mr-b-0">
                                             <label class="select-l" for="folders">Select folders</label>
-                                            <ng-select class="select-text custom" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
+                                            <ng-select class="select-text" id="folderId" [clearable]="false" [(ngModel)]="folderId" [multiple]="false"
                                                 placeholder="Select Folder" [title]="selectedFolderName" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
                                                 (change)="selectFolder($event)" [items]="folders" bindLabel="folderDisplayName"
                                                 bindValue="folderId">
@@ -50,7 +50,9 @@
                                                 placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
                                                 (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
                                                 <ng-template ng-option-tmp let-item="item">
-                                                    <span [title]="item.fileName">{{item.fileName}}</span>
+                                                    <span title="{{item.fileName}} {{item.createdDate | date: 'dd-MM-yy'}}">
+                                                        {{item.fileName}} {{item.createdDate | date: 'dd-MM-yy'}}
+                                                    </span>
                                                 </ng-template>
                                             </ng-select>
                                         </div>
@@ -70,9 +72,9 @@
                                         </div>
                                         <div class="form-group select-display mr-r-16 mr-b-0">
                                             <label class="select-l" for="folders">Select table</label>
-                                            <ng-select class="select-text" id="fileId" [title]="selectedTableName" [clearable]="false" [(ngModel)]="fileId" [multiple]="false"
+                                            <ng-select class="select-text" id="fileId" [title]="selectedTableName" [clearable]="false" [(ngModel)]="tableFileId" [multiple]="false"
                                                 placeholder="Select File" [dropdownPosition]="'bottom'" [closeOnSelect]="true"
-                                                (change)="selectFile()" [items]="files" bindLabel="fileName" bindValue="fileId">
+                                                (change)="selectFile()" [items]="tablesFiles" bindLabel="fileName" bindValue="fileId">
                                                 <ng-template ng-option-tmp let-item="item">
                                                     <span [title]="item.fileName.split('.').slice(0, -1).join('.')">{{item.fileName.split('.').slice(0, -1).join('.')}}</span>
                                                 </ng-template>
@@ -139,6 +141,7 @@
                     </ng-container>
                 </div>
             </ng-container>
+    
             <ng-container *ngIf="!foldersData">
                 <div class="pd-20">
                     <div class="card card-shadow">
@@ -153,7 +156,10 @@
                         </div>
                     </div>
                 </div>
+                
             </ng-container>
+            
+    
         </div>
     </div>
 </app-loader>

@@ -87,6 +87,11 @@ const routes: Routes = [
         loadChildren: () => import('../projects-stats/projects-stats.module').then(m => m.ProjectsStatsModule)
       },
       {
+        path: 'govern',
+        canActivate: [ProjectValidityGuard],
+        loadChildren: () => import('../govern/govern.module').then(m => m.GovernModule)
+      },
+      {
         path: 'delta',
         canActivate: [ProjectValidityGuard],
         loadChildren: () => import('../file-profile/file-profile.module').then(m => m.FileProfileModule)

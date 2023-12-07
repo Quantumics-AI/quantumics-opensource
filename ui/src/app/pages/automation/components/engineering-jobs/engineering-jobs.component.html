@@ -1,60 +1,192 @@
-<div class="row">
-    <div class="col-xl-12">
-        <div class="custom-search pull-right">
-            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.engFlowName" class="search-query absolute"
-                placeholder="Search...">
-        </div>
-    </div>
-</div>
-
-
 <app-loader [loading]="loading">
-    <div class="row gutters">
-        <div class="col-xl-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
-                    <thead class="thead-light">
-                        <tr class="fixed-th">
-                            <th>Engineering Flow Name </th>
-                            <th>Created By </th>
-                            <th>Created Date </th>
-                            <th>Select Files to Run</th>
-                            <th>History</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngIf="engineeringJobs$ | async as engineeringJobs">
-                            <ng-container *ngIf="engineeringJobs?.length > 0; else noRecords">
-                                <tr class="td-color" *ngFor="let job of engineeringJobs | filterBy:searchTerm">
-                                    <td class="text-left">{{job.engFlowDisplayName}}</td>
-                                    <td>{{job.createdBy}}</td>
-                                    <td>{{job.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                                    <td>
-                                        <a id="lnkSelectEngFile" (click)="selectFiles(job)">
-                                            <em>
-                                                <img src="assets/img/file-icon.png" width="30" placement="top" alt=""
-                                                    ngbTooltip="File">
-                                            </em>
-                                        </a>
-                                    </td>
-
-                                    <td>
-                                        <a id="lnkEngJobHistory" (click)="openModal(job)">
-                                            <em>
-                                                <img src="assets/img/history-icon.svg" width="20" placement="top"
-                                                    alt="history" ngbTooltip="History">
-                                            </em>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </ng-container>
-                            <ng-template #noRecords>
-                                <h6>No result found</h6>
-                            </ng-template>
-                        </ng-container>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item">Jobs</li>
+                <li class="breadcrumb-item active" aria-current="page">Engineering job</li>
+            </ol>
+        </nav>
     </div>
+    <ng-container *ngIf="!loading">
+        <ng-container *ngIf="hasFolders; else noFile">
+            <ng-container *ngIf="engineeringJobs?.length > 0; else noRecords">
+                <div class="card card-d">
+                    <div class="card-header ch">
+                        <div class="di" *ngIf="searchTerm.engFlowName?.length === 0">
+                            <p class="card-main-text">Select Data flow jobs</p>
+                            <p class="p1 mr-b-0">Select the respected data flow to run job on different dataset. </p>
+                        </div>
+                        <div class="di" *ngIf="searchTerm.engFlowName?.length > 0">
+                            <p class="card-main-text">Search result</p>
+                        </div>
+                        <div class="pull-right">
+                            <div class="input-group mr-t-10">
+                                <div class="input-group-prepend h36">
+                                    <span class="input-group-text search-icon" id="basic-addon1">
+                                        <img src="assets/img/govern/search.svg">
+                                    </span>
+                                </div>
+                                <input type="text" id="searchTerm" [(ngModel)]="searchTerm.engFlowName"
+                                    class="form-control search-input h36" placeholder="Search flow name"
+                                    aria-label="Username" aria-describedby="basic-addon1"
+                                    [class.pe-none]="!engineeringJobs?.length">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pd-0">
+                        <div class="table-responsive br-r">
+                            <table class="table m-0 table-fixed table-striped">
+                                <!-- Table Header -->
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Flow name
+                                            <span class="mr-r-6"><img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                    (click)="sortByProperty(engineeringJobs, 'engFlowDisplayName', isDescendingFlowName = !isDescendingFlowName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Recent job
+                                            <span class="mr-1"><img class="cp" src="assets/img/jobs/refresh.svg"
+                                                    width="15" (click)="getEngineeringJobs();"></span>
+                                            <span class="mr-1"><img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                    (click)="sortByProperty(engineeringJobs, 'jobStatus', isDescendingFlowStatu = !isDescendingFlowStatu);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Last executed</th>
+                                        <th class="pd-l-24">Date created</th>
+                                        <th class="pd-l-24">Created by</th>
+                                        <th class="pd-l-24">Job history</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container
+                                        *ngFor="let job of engineeringJobs | filterBy:searchTerm | slice:startIndex:endIndex">
+                                        <tr class="td-text" *ngIf="!execute || flowid !== job.engFlowId else loader">
+                                            <td class="fn cp" (click)="selectJob(job)">
+                                                <span class="mr-r-6"><img src="assets/img/engg/engg-job.svg"></span>
+                                                {{job.engFlowDisplayName}}
+                                            </td>
+                                            <td class="cp" (click)="selectJob(job)">
+                                                <span class="badge badge-completed"
+                                                    *ngIf="job.jobStatus === 'SUCCEEDED'">
+                                                    <img src="/assets/img/jobs/completed-dot.svg"
+                                                        class="align-unset mr-1 ml-1"> {{job.jobStatus}}
+                                                </span>
+                                                <span class="badge badge-danger" *ngIf="job.jobStatus === 'FAILED'">
+                                                    <img src="/assets/img/jobs/failure-dot.svg"
+                                                        class="align-unset mr-1"> {{job.jobStatus}}
+                                                </span>
+                                                <span class="badge badge-running"
+                                                    *ngIf="job.jobStatus === 'RUNNING' || job.jobStatus === 'STARTING'">
+                                                    <img src="/assets/img/jobs/running-dot.svg"
+                                                        class="align-unset mr-1"> {{job.jobStatus}}
+                                                </span>
+                                            </td>
+                                            <td class="cp" (click)="selectJob(job)">{{job.jobRunDate | date: 'dd-MM-yy,
+                                                hh:mm a'}}</td>
+                                            <td class="cp" (click)="selectJob(job)">{{job.createdDate | date: 'dd-MM-yy,
+                                                hh:mm a'}}</td>
+                                            <td class="cp" (click)="selectJob(job)">{{(job.createdBy?.split(' ')[0])}}</td>
+                                            <td>
+                                                <a (click)="openHistory(job)" class="view cp">
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <ng-template #loader>
+                                        <tr class="pg-tr">
+                                            <td colspan="8" class="pg-pd">
+                                                <div class="spinner-center text-center">
+                                                    <div class="spinner-border text-primary" role="status">
+
+                                                    </div>
+                                                    <div class="up">Updating job</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+
+                                    <tr *ngIf="(engineeringJobs | filterBy: searchTerm)?.length >= 15" class="pg-tr"
+                                        style="background-color: white !important;">
+                                        <td colspan="6" class="pg-pd">
+                                            <div class="text-center">
+                                                <ngb-pagination [collectionSize]="engineeringJobs?.length"
+                                                    [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                    aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                    <ng-template ngbPaginationPrevious>
+                                                        <span class="btn nextBtn">
+                                                            <img src="assets/img/govern/arrow-left.svg">Previous
+                                                        </span></ng-template>
+                                                    <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                            Next <img src="assets/img/govern/arrow-right.svg">
+                                                        </span></ng-template>
+                                                </ngb-pagination>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white" *ngIf="(engineeringJobs | filterBy:searchTerm)?.length == 0">
+                                        <td colspan="6">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="no-term">No flow found</p>
+                                                <p class="term-2">Your search “{{searchTerm.engFlowName}}” did not match
+                                                    any
+                                                    flow
+                                                    name.
+                                                    Please try again .</p>
+                                                <button type="button" class="btn saveBtn"
+                                                    (click)="clearSearhInput()">Clear
+                                                    to go back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noRecords>
+                <div *ngIf="!loading">
+                    <div class="card card-d mr-t-16">
+                        <div class="card-header ch pd-t-b-20">
+                            <p class="card-main-text fs-18">Select Data flow jobs</p>
+                            <p class="p1 mr-b-0">Select the respected data flow to run job on different dataset.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="connect-s text-center mt-50">
+                                <img src="assets/img/jobs/no-jobs-run.svg" class="img-fluid">
+                                <p class="no-term">Start by creating a flow</p>
+                                <div class="term-2">
+                                    Play with raw and prepared dataset in the flow. 
+                                    Use functions like join and aggregate.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+        <ng-template #noFile>
+            <div class="card card-d mr-t-16">
+                <div class="card-header ch">
+                    <div>
+                        <p class="card-main-text">Engineering job</p>
+                        <p class="p1 mr-b-0">
+                            After applying preparation rules in preparation module. Automate it for new dataset.
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="connect-s text-center">
+                        <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                        <p class="tp1 wm">Start by importing a dataset</p>
+                        <p class="tp2 mr-b-0 mr-t-8">Any dataset ingested locally will live here. </p>
+                        <p class="tp2 mr-b-24">Start creating by uploading your dataset.</p>
+                        <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']"
+                            class="btn btn-design mr-b-28">Connect to source</a>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+
 </app-loader>

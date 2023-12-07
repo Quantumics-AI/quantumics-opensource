@@ -1,53 +1,180 @@
 <app-loader [loading]="loading">
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="custom-search pull-right">
-                <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search..">
-                <!-- <a (click)="onAddPopup()" class="btn btn-primary ml-1 create-gl">Create</a> -->
-                <button type="button" class="btn btn-design ml-1 create-gl" (click)="onAddPopup()">Create</button>
-            </div>
-        </div>
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item">Governance</li>
+                <li class="breadcrumb-item active" aria-current="page">Business glossary</li>
+            </ol>
+        </nav>
     </div>
-    <div class="row gutters mt-3">
-        <div class="col-xl-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
-                    <thead class="thead-light">
-                        <tr class="fixed-th">
-                            <th>Term</th>
-                            <th>Data Owner</th>
-                            <th>Description</th>
-                            <th>Created Date</th>
-                            <th>Updated Date</th>
-                            <th width="100">Status</th>
-                            <th width="100">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="td-color"
-                            *ngFor="let data of glossary | filterBy: 'term, dataOwner, definition, creationDate, modifiedDate': searchTerm">
-                            <td class="text-left">{{data?.term}}</td>
-                            <td>{{data?.dataOwner}}</td>
-                            <td>{{data?.definition}}</td>
-                            <td>{{data?.creationDate}}</td>
-                            <td>{{data?.modifiedDate}}</td>
-                            <td [ngClass]="data?.published ? 'published-status' : 'draft-status'">
-                                {{data?.published ? 'Published' : 'Draft'}}</td>
-                            <td>
-                                <a id="lnkEdit" (click)="open(data)">
-                                    <em><img src="assets/img/edit.svg" width="18" placement="top" ngbTooltip="Edit"></em>
-                                </a>&nbsp;&nbsp;
-                                <a id="lnkDelete" (click)="delete(data?.id, data?.term)">
-                                    <em><img src="assets/img/delete.svg" width="18" placement="top" ngbTooltip="Delete"></em>
-                                </a>&nbsp;&nbsp;
-                                <a id="lnkSankey" [routerLink]="['../..', data.id, 'schart']" target="_blank">
-                                    <em><img src="assets/img/new-pro-img.png" width="18" placement="top" ngbTooltip="Chart"></em>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <ng-container  *ngIf="!loading">
+        <ng-container *ngIf="hasFolders; else noFile" >
+            <ng-container *ngIf="!hasGlossary; else list">
+                <div class="connect-source-div">
+                    <div class="card card-d mr-t-16">
+                        <div class="card-header ch">
+                            <div>
+                                <p class="card-main-text">Business glossary</p>
+                                <p class="p1 mr-b-0">It is a collection of data related terms applied on the dataset according
+                                    to business.</p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="connect-s text-center">
+                                <img src="assets/img/govern/add-g.svg" class="img-fluid">
+                                <p class="tp2 mr-b-24 wm">You do not have any business terms. Create one by clicking "Create"
+                                    button & get outputs like data lineage.</p>
+                                <a (click)="redirectToCreate()" class="btn btn-design mr-b-56">Add glossary</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #list>
+                <div class="card card-d">
+                    <div class="card-header ch">
+                        <div class="di" *ngIf="!searchDiv">
+                            <p class="card-main-text">Business glossary</p>
+                            <p class="p1 mr-b-0">It is a collection of data related terms applied on the dataset according to
+                                business.</p>
+                        </div>
+                        <div class="di" *ngIf="searchDiv">
+                            <p class="card-main-text">Search result</p>
+                        </div>
+                        <div class="pull-right">
+                            <!-- <input type="text" id="query" [(ngModel)]="searchTerm" class="search-query" placeholder="Search term"> -->
+                            <div class="input-group mr-t-10">
+                                <div class="input-group-prepend h36">
+                                    <span class="input-group-text search-icon" id="basic-addon1">
+                                        <img src="assets/img/govern/search.svg">
+                                    </span>
+                                </div>
+                                <input type="text" id="query" [(ngModel)]="searchTerm" class="form-control search-input h36"
+                                    placeholder="Search term" aria-label="Username" aria-describedby="basic-addon1"
+                                    (ngModelChange)="searchInput($event)">
+                                <button type="button" class="btn btn-design mr-l-16" (click)="onAddPopup()">Add
+                                    glossary</button>
+                            </div>
+        
+                        </div>
+                    </div>
+                    <div class="card-body pd-0">
+                        <div class="table-responsive br-r">
+                            <table class="table m-0 table-fixed table-striped">
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Term
+                                            <span> <img (click)="sortTerm();" class="cp"
+                                                    src="assets/img/govern/down-arrow.svg"></span>
+                                        </th>
+                                        <th class="pd-l-24">Status
+                                            <span> <img (click)="sortStatus();" class="cp"
+                                                    src="assets/img/govern/down-arrow.svg"></span>
+                                        </th>
+                                        <th class="pd-l-24">Description</th>
+                                        <th class="pd-l-24">Last updated</th>
+                                        <th class="pd-l-24">Created Date</th>
+                                        <th class="pd-l-24">Data Owner</th>
+                                        <!-- According to Shen, the data lineage option should be hidden for now -->
+                                        <!-- <th class="pd-l-24">Data lineage</th> -->
+                                        <th class="pd-l-24">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="td-text"
+                                        *ngFor="let data of glossary | slice:startIndex:endIndex">
+                                        <td>{{data?.term}}</td>
+                                        <td>
+                                            <span [ngClass]="data?.published ? 'publish' : 'draft'">
+                                                <img *ngIf="data?.published" src="assets/img/govern/publish.svg">
+                                                <img *ngIf="!data?.published" src="assets/img/govern/draft.svg">
+                                                {{data?.published ? 'Published' : 'Draft'}}
+                                            </span>
+                                        </td>
+                                        <td>{{data?.definition}}</td>
+                                        <td>
+                                            <span *ngIf="data?.modifiedDate">{{data?.modifiedDate }}</span>
+                                            <span *ngIf="!data?.modifiedDate">{{data?.creationDate }}</span>
+                                        </td>
+                                        <td>{{data?.creationDate }}</td>
+                                        <td>{{data?.dataOwner}}</td>
+                                        <!-- <td>
+                                            <a id="lnkSankey" (click)="view(data)"  class="view cp" container="body"
+                                            ngbTooltip="Click to see data lineage chart." placement="top">View</a>
+                                        </td> -->
+                                        <td>
+                                            <a id="lnkEdit" (click)="open(data)" class="pointer">
+                                                <em><img src="assets/img/govern/edit.svg" placement="top"
+                                                        ngbTooltip="Edit glossary"></em>
+                                            </a>&nbsp;&nbsp;
+                                            <!-- <a id="lnkDelete" (click)="openDeleteGlossary(data?.id, data?.term)" class="pointer">
+                                                <em><img src="assets/img/govern/delete.svg" placement="top"
+                                                        ngbTooltip="Delete glossary"></em>
+                                            </a> -->
+        
+                                        </td>
+                                    </tr>
+                                    <tr  *ngIf="(glossary | filterBy: 'term': searchTerm).length != 0" style="background-color: white !important;" class="pg-tr">
+                                        <td colspan="7" class="pg-pd">
+                                            <div class="text-center">
+                                                <span class="float-left">
+                                                    <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                        (click)="previousPage();"><img
+                                                            src="assets/img/govern/arrow-left.svg">Previous</button>
+                                                </span>
+                                                <span class="cp digit" *ngFor="let page of pager"
+                                                    (click)="redirectToPageIndex(page);"
+                                                    [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
+                                                <span class="float-right">
+                                                    <button type="button" class="btn nextBtn"
+                                                        [disabled]="currnetPage === totalPages - 1 || totalPages == 1" (click)="nextPage();">Next
+                                                        <img src="assets/img/govern/arrow-right.svg"></button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr style="background-color: white !important;"
+                                        *ngIf="(glossary | filterBy: 'term': searchTerm).length == 0">
+                                        <td colspan="7">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="no-term">No term found</p>
+                                                <p class="term-2">Your search “{{searchString}}” did not match any term name.
+                                                    Please try again .</p>
+                                                <button type="button" class="btn saveBtn"
+                                                    (click)="clearSearhInput()">Clear to go back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+        <ng-template #noFile>
+            <div class="connect-source-div">
+                <div class="card card-d mr-t-16">
+                    <div class="card-header ch">
+                        <div>
+                            <p class="card-main-text">Business glossary</p>
+                            <p class="p1 mr-b-0">It is a collection of data related terms applied on the dataset according
+                                to business.</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="connect-s text-center">
+                            <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                            <p class="tp1  wm">Start by connecting a source</p>
+                            <p class="tp2 mr-b-24">You can create your business term for recurring dataset .</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']" class="btn btn-design mr-b-56">Connect to source</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        </ng-template>
+    </ng-container>
+    
+
 </app-loader>

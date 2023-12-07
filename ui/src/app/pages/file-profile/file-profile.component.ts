@@ -21,6 +21,7 @@ export class FileProfileComponent implements OnInit, OnDestroy {
 
   public folderId: number;
   public fileId: number;
+  public tableFileId: number;
   public projectName: string;
   public userId: number;
   public projectId: number;
@@ -33,6 +34,7 @@ export class FileProfileComponent implements OnInit, OnDestroy {
   public folders = [];
   public pipelines = [];
   public files = [];
+  public tablesFiles = [];
   public loading: boolean;
 
   public sourceData: boolean = false;
@@ -70,91 +72,106 @@ export class FileProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.projectName = localStorage.getItem('projectname');
     // get inital data
-    if(this.sourceType == 'pipeline'){
+    if (this.sourceType == 'pipeline') {
       this.getPipelinesData();
     } else {
       this.getFolderPipelineData();
     }
-    
+
   }
 
   public getFolderPipelineData(): void {
     this.loading = true;
     this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders)
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe((res) => {
-     
-      this.folders = res?.result;
-      if (this.folders.length) {
-        this.noData = false;
-        this.foldersData = true;
-        this.loading = false;
-        const folder = this.folders.find(x => x.folderId == this.folderId) ?? this.folders[0];
-        this.folderId = folder.folderId;
-        this.folderName = folder.folderDisplayName;
-        this.selectedDisplayFolderName = folder.folderDisplayName;
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((res) => {
 
-        this.folderService.getFiles(this.projectId, this.userId, this.folderId)
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-          this.files = res?.result;
-          // Sorting files list in descending order (sort by createdDate)
-          if (this.files.length > 1) {
-            this.files.sort((val1, val2) => {
-              return (
-                (new Date(val2.createdDate) as any) -
-                (new Date(val1.createdDate) as any)
-              );
+        this.folders = res?.result;
+        if (this.folders.length) {
+          this.noData = false;
+          this.foldersData = true;
+          this.loading = false;
+          const folder = this.folders.find(x => x.folderId == this.folderId) ?? this.folders[0];
+          this.folderId = folder.folderId;
+          this.folderName = folder.folderDisplayName;
+          this.selectedDisplayFolderName = folder.folderDisplayName;
+
+          this.folderService.getFiles(this.projectId, this.userId, this.folderId)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+              this.files = res?.result;
+              // Sorting files list in descending order (sort by createdDate)
+              if (this.files.length > 1) {
+                this.files.sort((val1, val2) => {
+                  return (
+                    (new Date(val2.createdDate) as any) -
+                    (new Date(val1.createdDate) as any)
+                  );
+                });
+              }
+
+              if (this.files.length) {
+                const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
+                this.fileId = file.fileId;
+                this.fileName = file.fileName;
+              }
+              this.redirectToDataProfile();
             });
-          }
-
-          if (this.files.length) {
-            const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
-            this.fileId = file.fileId;
-            this.fileName = file.fileName;
-          }
-          this.redirectToDataProfile();
-        });
-      } else {
-        this.noData = true;
-        this.loading = false;
-      }
-    });
+        } else {
+          this.noData = true;
+          this.loading = false;
+        }
+      });
   }
 
   public getFolders(): void {
     this.folderService.getFolders(this.projectId, this.userId)
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe((res) => {
-      this.folders = res?.result;
-    });
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((res) => {
+        this.folders = res?.result;
+      });
   }
 
   public getFiles(): void {
     this.folderService.getFiles(this.projectId, this.userId, this.folderId)
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe((res) => {
-      this.files = res?.result;
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((res) => {
+        this.files = res?.result;
 
-      // Sorting files list in descending order (sort by createdDate)
-      if (this.files.length > 1) {
-        this.files.sort((val1, val2) => {
-          return (
-            (new Date(val2.createdDate) as any) -
-            (new Date(val1.createdDate) as any)
-          );
-        });
-      }
+        // Sorting files list in descending order (sort by createdDate)
+        if (this.files.length > 1) {
+          this.files.sort((val1, val2) => {
+            return (
+              (new Date(val2.createdDate) as any) -
+              (new Date(val1.createdDate) as any)
+            );
+          });
+        }
 
-      if (this.files.length) {
-        this.fileId = this.files[0].fileId;
-      }
-      this.selectFile();
-    });
+        this.tablesFiles = this.files;
+
+        if (this.queryFolders) {
+          this.tablesFiles = this.tablesFiles.reduce((result, file) => {
+            if (!result.some(item => item.fileName === file.fileName)) {
+              result.push(file);
+            }
+            return result;
+          }, []);
+        }
+
+        if (this.files.length) {
+          this.fileId = this.files[0].fileId;
+          this.tableFileId = this.fileId;
+        }
+        this.selectFile();
+      });
   }
 
   public selectFolder(event: any): void {
     this.files = [];
+    this.tablesFiles = [];
+
+    this.tableFileId = null;
     this.fileId = null;
     this.folderName = this.folders.find(x => x.folderId === this.folderId)?.folderDisplayName;
     this.selectedDisplayFolderName = this.folderName;
@@ -165,7 +182,10 @@ export class FileProfileComponent implements OnInit, OnDestroy {
 
   public selectPipeline(event: any): void {
     this.files = [];
+    this.tablesFiles = [];
+
     this.fileId = null;
+    this.tableFileId = null;
     this.folderName = this.pipelines.find(x => x.folderId === this.folderId)?.folderDisplayName;
     this.selectedDisplayFolderName = this.folderName;
 
@@ -225,59 +245,77 @@ export class FileProfileComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.queryFolders = true;
     this.folderService.getFoldersPipelines(this.projectId, this.userId, this.queryFolders)
-    .pipe(takeUntil(this.unsubscribe))
-    .subscribe((res) => {
-      this.loading = false;
-      this.pipelines = res?.result;
-      if (this.pipelines.length) {
-        this.noData = false;
-        this.foldersData = true;
-        const pipeline =  this.pipelines.find(x => x.folderId === this.folderId) ?? this.pipelines[0];
-        this.folderId = pipeline.folderId;
-        this.folderName = pipeline.folderDisplayName;
-        this.selectedDisplayFolderName = pipeline.folderDisplayName;
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((res) => {
+        this.loading = false;
+        this.pipelines = res?.result;
+        if (this.pipelines.length) {
+          this.noData = false;
+          this.foldersData = true;
+          const pipeline = this.pipelines.find(x => x.folderId === this.folderId) ?? this.pipelines[0];
+          this.folderId = pipeline.folderId;
+          this.folderName = pipeline.folderDisplayName;
+          this.selectedDisplayFolderName = pipeline.folderDisplayName;
 
-        this.folderService.getFiles(this.projectId, this.userId, this.folderId)
-        .pipe(takeUntil(this.unsubscribe))
-        .subscribe((res) => {
-          this.files = res?.result;
-          // Sorting files list in descending order (sort by createdDate)
-          if (this.files.length > 1) {
-            this.files.sort((val1, val2) => {
-              return (
-                (new Date(val2.createdDate) as any) -
-                (new Date(val1.createdDate) as any)
-              );
+          this.folderService.getFiles(this.projectId, this.userId, this.folderId)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((res) => {
+              this.files = res?.result;
+
+              // Sorting files list in descending order (sort by createdDate)
+              if (this.files.length > 1) {
+                this.files.sort((val1, val2) => {
+                  return (
+                    (new Date(val2.createdDate) as any) -
+                    (new Date(val1.createdDate) as any)
+                  );
+                });
+              }
+
+              this.tablesFiles = this.files;
+
+              if (this.queryFolders) {
+                this.tablesFiles = this.tablesFiles.reduce((result, file) => {
+                  if (!result.some(item => item.fileName === file.fileName)) {
+                    result.push(file);
+                  }
+                  return result;
+                }, []);
+              }
+
+              if (this.files.length) {
+                const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
+                this.fileId = file.fileId;
+                this.tableFileId = file.fileId;
+                this.fileName = file.fileName;
+              }
+              this.redirectToDataProfile();
             });
-          }
-
-          if (this.files.length) {
-            const file = this.files.find(x => x.fileId === this.fileId) ?? this.files[0];
-            this.fileId = file.fileId;
-            this.fileName = file.fileName;
-          }
-          this.redirectToDataProfile();
-        });
-      } else {
-        this.noData = true;
-        this.folderId = null;
-        this.fileId = null;
-      }
-    });
+        } else {
+          this.noData = true;
+          this.folderId = null;
+          this.fileId = null;
+          this.tableFileId = null;
+        }
+      });
   }
 
   public onItemChange(value: string): void {
-    if(this.queryFolders === true){
+    if (this.queryFolders === true) {
       this.files = [];
+      this.tablesFiles = [];
       this.queryFolders = true;
       this.fileId = null;
+      this.tableFileId = null;
       this.folderId = null;
       this.getPipelinesData();
 
     } else {
       this.files = [];
+      this.tablesFiles = [];
       this.queryFolders = false;
       this.fileId = null;
+      this.tableFileId = null;
       this.folderId = null;
       this.getFolderPipelineData();
     }

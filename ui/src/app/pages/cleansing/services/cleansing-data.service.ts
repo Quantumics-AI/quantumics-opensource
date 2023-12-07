@@ -105,7 +105,7 @@ export class CleansingDataService {
   }
 
   public getAddedCleansingFiles(projectId: number, userId: number, folderId: number): Observable<any> {
-    return this.http.get(`/QuantumSparkServiceAPI/api/v1/history/${projectId}/${userId}/${folderId}`).pipe(
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/success-history/${projectId}/${userId}/${folderId}`).pipe(
       map(response => {
         return response;
       })

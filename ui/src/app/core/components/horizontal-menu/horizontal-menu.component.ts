@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { interval, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +13,7 @@ declare let window: any;
   templateUrl: './horizontal-menu.component.html',
   styleUrls: ['./horizontal-menu.component.scss']
 })
-export class HorizontalMenuComponent implements OnInit {
+export class HorizontalMenuComponent implements OnInit, OnDestroy {
 
   private certificate$: Observable<Certificate>;
   private unsubscribe: Subject<void> = new Subject();
@@ -54,6 +54,9 @@ export class HorizontalMenuComponent implements OnInit {
 
   public logout() {
 
+    // clear intercom session
+    window.Intercom('shutdown');
+
     const email = localStorage.getItem('email');
     localStorage.clear();
 
@@ -87,6 +90,10 @@ export class HorizontalMenuComponent implements OnInit {
         this.notificationCount = 0;
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   
 }

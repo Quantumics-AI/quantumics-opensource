@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Certificate } from 'src/app/models/certificate';
@@ -94,7 +94,8 @@ export class GoogleSankeyChartComponent implements OnInit {
   constructor(
     private quantumFacade: Quantumfacade,
     private activatedRoute: ActivatedRoute,
-    private governService: GovernService) {
+    private governService: GovernService,
+    private router: Router,) {
     this.certificate$ = this.quantumFacade.certificate$;
     this.certificate$
       .pipe(takeUntil(this.unsubscribe))
@@ -104,7 +105,11 @@ export class GoogleSankeyChartComponent implements OnInit {
 
     this.projectId = parseInt(this.activatedRoute.parent.snapshot.paramMap.get('projectId'), 10);
 
-    this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
+    // this.id = parseInt(this.activatedRoute.snapshot.paramMap.get('id'), 10);
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.id = +params.dataId;
+    });
 
   }
 
@@ -123,4 +128,9 @@ export class GoogleSankeyChartComponent implements OnInit {
   closeCurrentWindow(): void {
     window.close();
   }
+
+  public back(): void {
+    this.router.navigate([`projects/${this.projectId}/govern/dashboard/list`]);
+  }
+  
 }

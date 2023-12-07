@@ -14,10 +14,13 @@ export class MergeComponent implements OnInit, OnChanges {
   @Output() addRule = new EventEmitter<any>();
   @Input() columns: any;
   @Input() rule: any;
+  @Input() ruleInputValues1: number = ColumnSelectionType.Multiple;
 
   selectionType = ColumnSelectionType;
-  ruleInputValues1: any;
-  selectionTypes: any;
+  selectionTypes = [
+    { value: '1', title: 'Multiple' },
+    { value: '2', title: 'Range' }
+  ];
   ruleButtonLabel = 'Add';
   form: FormGroup;
   ruleInputValues2: string;
@@ -25,19 +28,16 @@ export class MergeComponent implements OnInit, OnChanges {
   public submitted = false;
   isError = false;
 
-
-
   public ruleInputValues: string;
   public ruleDelimiter: string;
   public ruleImpactedCols: any = [];
 
   constructor(private formBuilder: FormBuilder) {
-    this.setSelectionTypes();
   }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      ruleInputValues1: [this.selectionType.Multiple],
+      ruleInputValues1: [+this.ruleInputValues1],
       ruleImpactedCols: [''],
       ruleInputValues2: [''],
       ruleInputValues3: [''],
@@ -84,7 +84,7 @@ export class MergeComponent implements OnInit, OnChanges {
       this.ruleButtonLabel = 'Update';
       this.ruleDelimiter = this.rule.ruleDelimiter;
       this.ruleInputValues = this.rule.ruleInputValues;
-      this.ruleInputValues1 = this.rule.ruleInputValues1;
+      this.ruleInputValues1 = +this.rule.ruleInputValues1;
       this.ruleInputValues2 = this.rule.ruleInputValues2;
       this.ruleInputValues3 = this.rule.ruleInputValues3;
     }
@@ -93,14 +93,6 @@ export class MergeComponent implements OnInit, OnChanges {
   private columnNameValidator = (control: FormControl) => {
     const isDuplicateName = this.columns.some(c => c.column_name.toLowerCase() === control.value?.toLowerCase());
     return isDuplicateName ? { unique: true } : null;
-  }
-
-  private setSelectionTypes(): any {
-    this.selectionTypes = Object.keys(this.selectionType)
-      .filter(Number)
-      .map(key => ({ value: +key, title: this.selectionType[key] }));
-
-    this.ruleInputValues1 = +this.selectionType.Multiple;
   }
 
   get f() { return this.form.controls; }
@@ -148,7 +140,7 @@ export class MergeComponent implements OnInit, OnChanges {
       ruleImpactedCols: this.getSelectedColumns(),
       ruleInputLogic: RuleTypes.Merge,
       ruleInputValues: this.ruleInputValues,
-      ruleInputValues1: this.ruleInputValues1,
+      ruleInputValues1: +this.ruleInputValues1,
       ruleInputValues2: this.ruleInputValues2,
       ruleInputValues3: this.ruleInputValues3,
       ruleDelimiter: this.ruleDelimiter,

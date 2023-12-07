@@ -1,12 +1,18 @@
-<h6 class="h6-font-hading">Remove Duplicate Rows</h6>
+<div class="preparation-heading">
+    <h6 class="p2">Remove Duplicate Rows</h6>
+    <hr class="cleansing-divider">
+</div>
 
 <form (ngSubmit)="saveRule()">
     <div class="col-12 mb-64">
-        <p>Remove duplicate rows(All cells matching)</p>
+        <p class="p1 mr-b-0">Remove duplicate rows(All cells matching)</p>
     </div>
 
-
-    <button id="btn-cancel" type="reset" class="btn btn-secondary pull-right mr-3" (click)="cancel()">Cancel</button>
-    <button id="btn-save" type="submit" class="btn btn-success pull-right mr-3">{{ruleButtonLabel}}</button>
-    <button id="btn-preview" type="button" class="btn btn-success pull-right mr-3" (click)="preview()">Preview</button>
+    <div class="pd-l-15">
+        <button id="btn-save" type="submit" class="btn btn-design mr-3">{{ruleButtonLabel}}</button>
+        <button id="btn-preview" type="button" class="btn btn-design mr-3" (click)="preview()">Preview</button>
+        <button id="btn-cancel" type="reset" class="btn cancelBtn" (click)="cancel()">Cancel</button>
+        
+    </div>
+    
 </form>

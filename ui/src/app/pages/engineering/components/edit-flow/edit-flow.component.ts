@@ -14,6 +14,8 @@ export class EditFlowComponent implements OnInit {
   @Input() flow: any;
   fg: FormGroup;
 
+  public loading: boolean;
+
   constructor(
     public modal: NgbActiveModal,
     private fb: FormBuilder,
@@ -23,7 +25,7 @@ export class EditFlowComponent implements OnInit {
 
   ngOnInit(): void {
     this.fg = this.fb.group({
-      flowName: new FormControl(this.flow?.engFlowDisplayName, [Validators.required, Validators.pattern(/^([A-Za-z0-9_]).([A-Za-z0-9_]+\s)*[A-Za-z0-9_]+$/)]),
+      flowName: new FormControl(this.flow?.engFlowDisplayName, [Validators.required, Validators.maxLength(20), Validators.pattern(/^([A-Za-z0-9_]).([A-Za-z0-9_]+\s)*[A-Za-z0-9_]+$/)]),
       description: new FormControl(this.flow?.engFlowDesc, Validators.max(255))
     });
   }
@@ -39,13 +41,21 @@ export class EditFlowComponent implements OnInit {
       engFlowId: this.flow.engFlowId
     };
 
+    this.loading = true;
+
     this.engService.editFlow(flow).subscribe((response) => {
+      this.loading = false;
       this.snakbar.open(`${response.message}`);
       if (response.code === 200) {
-        this.modal.close(response.result);
+        this.modal.close({
+          engFlowDesc: this.fg.value.description,
+          engFlowName: this.fg.value.flowName,
+          engFlowId: this.flow.engFlowId
+        });
       }
     }, (error) => {
       this.modal.close(`${error}`);
+      this.loading = false;
     });
   }
 }
