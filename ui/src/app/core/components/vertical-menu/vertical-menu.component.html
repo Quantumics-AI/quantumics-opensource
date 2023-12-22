@@ -47,6 +47,26 @@
                 </span>
             </a>
             <ul *ngIf="menus['datasets'].collapse">
+                <li routerLinkActive="active" #rlid="routerLinkActive">
+                    <img *ngIf="rlid.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects',projectId,'ingest', 'select-source-type']">
+                        <span class="w-30px">
+                            <img [src]="rlid.isActive ? 'assets/img/side-bar/active-impd.svg' : 'assets/img/side-bar/impd.svg'"
+                                alt="Home">
+                        </span>
+                        <span>Data Source</span>
+                    </a>
+                </li>
+                <li routerLinkActive="active" #rla="routerLinkActive">
+                    <img *ngIf="rla.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects',projectId,'ingest', 'aws']" >
+                        <span class="w-30px">
+                            <img [src]="rla.isActive ? 'assets/img/side-bar/dashboard-active.svg' : 'assets/img/side-bar/new-dash.svg'"
+                                alt="aws">
+                        </span>
+                        <span>AWS</span>
+                    </a>
+                </li>
                 <li routerLinkActive="active" #rlf="routerLinkActive">
                     <img *ngIf="rlf.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
                     <a class="pd-l-40" [routerLink]="['projects',projectId,'ingest', 'folders']">
@@ -67,17 +87,18 @@
                         <span>Pipeline</span>
                     </a>
                 </li>
-                <li routerLinkActive="active" #rlid="routerLinkActive">
-                    <img *ngIf="rlid.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
-                    <a class="pd-l-40" [routerLink]="['projects',projectId,'ingest', 'select-source-type']">
-                        <span class="w-30px">
-                            <img [src]="rlid.isActive ? 'assets/img/side-bar/active-impd.svg' : 'assets/img/side-bar/impd.svg'"
-                                alt="Home">
-                        </span>
-                        <span>Import dataset</span>
-                    </a>
-                </li>
+                
             </ul>
+        </li>
+
+        <li routerLinkActive="active" #rladq="routerLinkActive">
+            <img *ngIf="rladq.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+            <a [routerLink]="['projects', projectId, 'data-quality']">
+                <span class="w-30px">
+                    <img [src]="rladq.isActive ? 'assets/img/side-bar/active-dq.svg' : 'assets/img/side-bar/dq-c.svg'">
+                </span>
+                <span>Rules</span>
+            </a>
         </li>
 
         <li routerLinkActive="active" #rlap="routerLinkActive">

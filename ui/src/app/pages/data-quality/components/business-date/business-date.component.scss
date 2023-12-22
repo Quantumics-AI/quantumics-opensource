@@ -1,0 +1,27 @@
+.gr-color {
+    color: #00977C;
+}
+
+.btn:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+::ng-deep {
+    .modal-content {
+        border-radius: 8px;
+    } 
+}
+
+.wid {
+    width: fit-content;
+}
+
+.br-d {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.bg-w {
+    background: #ffffff !important;
+}

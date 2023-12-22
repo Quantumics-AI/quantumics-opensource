@@ -1,0 +1,14 @@
+.gr-color {
+    color: #00977C;
+}
+
+.btn:focus{
+    outline: none;
+    box-shadow: none;
+}
+
+::ng-deep {
+    .modal-content {
+        border-radius: 8px;
+    } 
+}

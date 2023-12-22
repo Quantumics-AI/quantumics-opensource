@@ -1,0 +1,107 @@
+<div class="modal-header">
+    <h5 class="modal-title">Edit</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="fg">
+        <div class="form-group">
+            <label for="inputName" class="p2">
+                <!-- <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/folder-name.svg" alt=""> -->
+                Connection Name*
+            </label>
+            <input type="text" class="form-control input-design" id="sourceName" #source
+                formControlName="dataSourceName" autocomplete="off" placeholder="Input connection name" 
+                minlength="3" maxlength="50" (ngModelChange)="modelChangeDataSourceName($event)"
+                (focus)="f.open()" (input)="checkIfNameExists(); source.value.length > 0 ? f.close() : f.open()" (blur)="f.close()"
+                triggers="manual" #f="ngbPopover" [ngbPopover]="popFolderContent"
+                popoverClass="folder-pophover" placement="bottom">
+            <small id="workspaceNameHelp" class="form-text body-text-muted">Connection name must be
+                    between 3 and 50 characters long.</small>
+            <div *ngIf="fg.get('dataSourceName').invalid && fg.get('dataSourceName').dirty || fg.get('dataSourceName').touched">
+                <div class="text-error" *ngIf="fg.get('dataSourceName').hasError('required')">
+                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                    Connection name is mandatory
+                </div>
+            </div>
+            <div class="text-error" *ngIf="invalidPattern">
+                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                Connection name should have Alphabates, Numbers and Special characters (Colon, Hypen and Underscore).
+            </div>
+            <div class="text-error" *ngIf="invalidCapitalPattern">
+                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                Connection name must start with capital letter.
+            </div>
+            <div class="text-error" *ngIf="alreadyExist">
+                <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp;
+                Entered Connection name is already used. Please enter a different name
+            </div>
+        </div>
+        <ng-template #popFolderContent>
+            <div class="col-12">
+                <ul>
+                    <li>Connection name is mandatory.</li>
+                    <li>Connection name must be between 3 and 30 characters long.</li>
+                    <li>Connection name should have Alphabets,Numbers, and Special characters ( Colon, Hypen and Underscore ).
+                    </li>
+                    <li>Connection name must start with capital letter</li>
+                    <li>Data source name must be unique.</li>
+                </ul>
+            </div>
+        </ng-template>
+
+        <div class="form-group">
+            <label for="inputName" class="p2">
+                <!-- <img class="img-fluid" alt="Responsive image" alt="Responsive image" src="assets/img/pii/folder-name.svg" alt=""> -->
+                Sub Data Source*
+            </label>
+            <input type="text" class="form-control input-design" id="sourceName" #subdataSource
+                formControlName="subDataSource" autocomplete="off" placeholder="Sub data source name" [value]="'S3'">
+            
+        </div>
+
+        <div class="form-group">
+            <label for="inputName" class="p2">
+                Bucket Name*
+            </label>
+            <input type="text" class="form-control input-design" id="bucketName" #bucketname
+                formControlName="bucketName" autocomplete="off" placeholder="Bucket name" >
+            
+        </div>
+
+        <div class="form-group">
+            <label for="inputName" class="p2">
+                Region*
+            </label>
+            <input type="text" class="form-control input-design" id="sourceName" #region
+                formControlName="region" placeholder="Region name" readonly>
+            
+        </div>
+
+        <!-- <div class="form-group">
+            <label for="inputName" class="p2">
+                Access type*
+            </label>
+            <select class="form-control input-design" formControlName="connectionType" #connectionType
+                >
+                <option *ngFor="let item of transformedData" [value]="item.type">
+                    {{item.type}}
+                </option>
+            </select>
+        </div> -->
+        <!-- <div class="form-group">
+            <label for="inputName" class="p2">
+                Role name
+            </label>
+            <input type="text" class="form-control input-design" id="role" #role
+                formControlName="roleName" autocomplete="off" placeholder="Role Name" disabled>
+        </div> -->
+
+        <div class="text-center">
+            <button type="button" class="btn btn-outline-success connectionBtns" 
+            [ngClass]="{'validBtn': !fg.invalid}" [disabled]="fg.invalid || alreadyExist || !editable" (click)="checkExistName()"
+            >Update</button>
+        </div>
+    </form>
+</div>

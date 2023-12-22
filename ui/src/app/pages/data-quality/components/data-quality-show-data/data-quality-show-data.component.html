@@ -1,0 +1,53 @@
+<div class="close-icon" (click)="close.emit();">
+    <img src="assets/img/profile/cancel.svg">
+</div>
+<div class="s-t-btn">
+    <button class="btn mr-r-20 btn-outline-success cancel-b connectionBtns" (click)="source()"
+    [ngClass]="{'validBtn': validBtn}" *ngIf="sourceTargetType === 'sourceAndTarget'">Source</button>
+    <button class="btn btn-outline-success cancel-b connectionBtns"
+    [ngClass]="{'validBtn': !validBtn}" (click)="target()">Target</button>
+</div>
+<ngb-tabset class="tabs-custom">
+    <ngb-tab title="Table1">
+        <ng-template ngbTabContent>
+            <div class="table-responsive br-r table-h">
+                <table class="table m-0 table-fixed table-striped">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th class="" *ngFor="let column of tableDataColumn1  ">{{column}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="td-text" *ngFor="let item of tableData1">
+                            <td class="text-center" *ngFor="let column of tableDataColumn1">{{ item[column] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-template>
+    </ngb-tab>
+
+    <ngb-tab title="Table2" *ngIf="sourceTargetType === 'sourceAndTarget'">
+        <ng-template ngbTabContent>
+            <div class="table-responsive br-r table-h">
+                <table class="table m-0 table-fixed table-striped">
+                    <thead class="thead-light">
+                        <tr class="fixed-th">
+                            <th class="" *ngFor="let column of tableDataColumn2">{{column}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="td-text" *ngFor="let item of tableData2">
+                            <td class="text-center" *ngFor="let column of tableDataColumn2">{{ item[column] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-template>
+    </ngb-tab>
+</ngb-tabset>
+
+<div class="btn-div text-center">
+    <button class="btn btn-design mr-r-20">Okay</button>
+    <button class="btn btn-outline-dark cancel-b" (click)="close.emit();">Cancel</button>
+</div>

@@ -838,7 +838,7 @@ label {
 }
 
 .pd-r-0 {
-  padding-right: 0;
+  padding-right: 0 !important;
 }
 
 .pointer-events-none {
@@ -1214,4 +1214,96 @@ label {
 .s-div {
   padding-top: 35px;
   padding-bottom: 54px;
+}
+
+/* Added css - natwest  */
+
+.tp2 {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #475467;
+}
+
+
+/* Text overflow - wrap  */
+.text-over {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+/* Status color */
+
+.greenStatus {
+  color: #00977C;
+  font-weight: 500;
+}
+
+.orangeStatus {
+  color: #ffc107;
+  font-weight: 500;
+}
+
+.redStatus {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Search buttons */
+.search-success-btn {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #00977C;
+  border-color: #00977C;
+}
+
+.search-disable-btn {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #667085;
+  border-color: #ced4da;
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+  background-color: #f7f7f7;
+}
+
+/* Radio n checkbox */
+input[type=radio]{
+  accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+  accent-color: #00977C;
+}
+
+input[type=checkbox]{
+  accent-color: #00977C;
+}
+
+input[type=checkbox]:checked{
+  accent-color: #00977C;
+}
+
+/* removed white spaces from the tables - (List of rules) */
+
+.w-80 {
+  width: 80px;
+}
+
+.w-155 {
+  width: 155px;
 }

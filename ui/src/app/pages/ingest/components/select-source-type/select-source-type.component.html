@@ -1,11 +1,16 @@
-<div class="main-container">
+<!-- <div class="main-container"> -->
     <div class="page-header1">
         <ol class="breadcrumb">
             <li class="breadcrumb-item breadcrumb-top">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type' ]">Dataset</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Import dataset</li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span style="position: relative;">
+                            <img src="../../../../../assets/img/arrow.svg" alt="Arrow" style="width: 16px; vertical-align: middle;">
+                            Data Source
+                        </span>
+                    </li>
                 </ol>
             </li>
         </ol>
@@ -19,7 +24,7 @@
             <span class="breadcrumb-item active">Ingest</span>
         </p>
     </nav> -->
-    <nav class="navbar navbar-light src-nav">
+    <nav class="navbar navbar-light src-nav bg-w">
         <div class="bck">
             <a class="navbar-brand back-func" (click)="back()">
                 <img src="assets/img/db-connectors/back-arrow.svg" alt="">&nbsp;
@@ -30,25 +35,40 @@
         <div class="navbar-collapse src-type" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    Select Source Type
+                    Select Data Source
                 </li>
             </ul>
         </div>
     </nav>
 
-    <div class="page-content fx">
-        <div class="row gutters">
-            <img class="img-fluid source-img" alt="Responsive image" src="assets/img/db-connectors/animation.svg">
-            <p class="source-content">Bring data from multiple Sources in near real-time and analyze it using your favorite DataOps tool.</p>
-            <div class="source-div">
+    <div class="page-content">
+        <!-- <div class="row gutters"> -->
+            <div class="text-center">
+                <img class="img-fluid source-img" alt="Responsive image" src="assets/img/db-connectors/animation.svg">
+            </div>
+            <div>
+                <p class="source-content">Bring data from multiple Sources in near real-time and analyze it using your favorite DataOps tool.</p>
+            </div>
+           
+            <div class="source-div text-center">
                 <ng-container>
-                    <div class="card source-card" style="width: 13rem;" *ngFor="let sourceType of  sourceTypes$ | async | filter:searchBy:type">
+                    <div class="card source-card" *ngFor="let sourceType of  sourceTypes$ | async | filter:searchBy:type">
                         <div class="card-body" style="cursor: pointer;" (click)="handleSelection(sourceType?.dataSourceName, sourceType.dataSourceType)">
                             <p style="text-align:center;">
                                 <img class="img-fluid" alt="Responsive image" src="assets/img/{{sourceType.dataSourceImage}}" alt="">
                             </p>
                             
                             <p class="source-text">{{sourceType.dataSourceName}}</p>
+                        </div>
+                    </div>
+
+                    <div class="card source-card" >
+                        <div class="card-body" style="cursor: pointer;" (click)="redirectToCloud()">
+                            <p style="text-align:center;">
+                                <img class="img-fluid img-wh" alt="Responsive image" src="assets/img/aws_logo.svg" alt="">
+                            </p>
+                            
+                            <p class="source-text">AWS</p>
                         </div>
                     </div>
                 </ng-container>
@@ -101,6 +121,6 @@
                     </div>
                 </div>
             </div> -->
-        </div>
+        <!-- </div> -->
     </div>
-</div>
+<!-- </div> -->

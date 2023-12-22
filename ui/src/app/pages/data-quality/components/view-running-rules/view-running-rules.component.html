@@ -1,0 +1,130 @@
+<app-loader [loading]="loading">
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item active">
+                    <!-- <a [routerLink]="['/projects', projectId, 'data-quality']"> -->
+                        View Running Rules
+                    <!-- </a> -->
+                </li>
+                <!-- <li class="breadcrumb-item active" aria-current="page">
+                    <span style="position: relative;">
+                        <img src="../../../../../assets/img/arrow.svg" alt="Arrow" style="width: 16px; vertical-align: middle;">
+                        Rule Status
+                    </span>
+                </li> -->
+            </ol>
+        </nav>
+    </div>
+    
+    <div class="pipe-dataset-div">
+        <div class="card card-d">
+            <div class="card-header ch">
+                <div class="di mr-t-6" >
+                    <a class="card-main-text mr-b-0" (click)="back()">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        Back to Rules
+                    </a>
+                </div>
+            </div>
+            <ng-container *ngIf="runningList.length else noJobs">
+                <div class="card-body pd-0">
+                    <div class="table-responsive br list-height">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="pd-l-24">Rule Name</th>
+                                    <th class="pd-l-24">Job Status
+                                        <em>
+                                            <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
+                                                <img src="assets/img/refresh.svg" width="18" alt="refresh" (click)="refresh()">
+                                            </a>
+                                        </em>
+                                    </th>
+                                    <th class="pd-l-24">Submitted Date</th>
+                                    <th class="pd-l-24">Finished Date</th>
+                                    <th class="pd-l-24">Business Date</th>
+                                    <th class="pd-l-24">Result</th>
+                                    <th class="pd-l-24">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="td-text" *ngFor="let view of runningList">
+                                    <td>
+                                        <input type="checkbox" (change)="selectRule($event, view)" [checked]="view.isChecked" 
+                                        *ngIf="view.jobStatus === 'Not Started' || view.jobStatus === 'Inprocess'">
+                                        <!-- <span *ngIf="view.ruleStatus == 'Active'">
+                                            <input type="checkbox" (change)="selectReRule($event, view)"
+                                            *ngIf="view.jobStatus === 'Failed' || view.jobStatus === 'Cancelled'">
+                                        </span> -->
+                                        <!-- <a placement="top" (click)="reRun(view)" ngbTooltip="Re-Run"
+                                        *ngIf="view.jobStatus === 'Failed' || view.jobStatus === 'Cancelled'">
+                                            <img src="/assets/img/project/re-run.svg" >
+                                        </a> -->
+                                        <span class="mr-l-10">{{view?.ruleName}}</span>
+                                        
+                                    </td>
+                                    <td [ngClass]="{'redStatus': view?.jobStatus === 'Failed' || view?.jobStatus === 'Cancelled'}">
+                                        {{view?.jobStatus}}
+                                    </td>
+                                    <td>
+                                        <!-- {{view?.jobSubmittedDate | date: 'dd-MM-yy, hh:mm a'}} -->
+                                        {{convertToUKTimeZone(view?.jobSubmittedDate)}}
+                                    </td>
+                                    <td>
+                                        <!-- {{view?.jobFinishedDate | date: 'dd-MM-yy, hh:mm a'}} -->
+                                        {{convertToUKTimeZone(view?.jobFinishedDate)}}
+                                    </td>
+                                    <td>{{view?.businessDate}}</td>
+                                    <td [ngClass]="{'greenStatus': parseJobOutput(view?.jobOutput) === 'Match', 'redStatus': parseJobOutput(view?.jobOutput) === 'MisMatch'}">
+                                        {{ view?.jobOutput ? parseJobOutput(view?.jobOutput) : '' }}
+                                    </td>
+                                    <td>
+                                        <span *ngIf="view?.jobOutput" class="cp vr" (click)="viewResult(view)">View Result</span>
+                                        <span *ngIf="view?.jobStatus === 'Failed'" class="cp vl" (click)="viewLog(view)">View Logs</span>
+                                    </td>
+                                </tr>
+                                <!-- <tr  *ngIf="(runningList).length > 10" style="background-color: white !important;" class="pg-tr">
+                                    <td colspan="6" class="pg-pd">
+                                        <div class="text-center">
+                                            <ngb-pagination [collectionSize]="runningList.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                                            [rotate]="true" aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious>
+                                                    <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noJobs>
+                <div class="card-body pd-0">
+                    <div class="connect-s text-center mr-t-16">
+                        <!-- <p class="tp1 fs-26">Running rules</p> -->
+                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid">
+                        <!-- <p class="tp1 mr-b-0 wm">Set business related rules for your dataset.</p> -->
+                        <p class="tp1 mr-b-24 mr-t-40">Currently No rule is running</p>
+                        <a [routerLink]="['/projects', projectId, 'data-quality']" 
+                            class="btn btn-design mr-b-56">Run rule</a>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="btn-div text-center">
+            <!-- <button class="btn btn-design mr-r-20" (click)="back()">Okay</button> -->
+            <button class="btn btn-design mr-r-20" *ngIf="cancelBtn" (click)="cancelInprocess()"
+            [disabled]="selectedJobIds.length === 0">Cancel</button>
+
+            <!-- <button class="btn btn-design" *ngIf="reRunStatus" (click)="reRunRuleFunction()"
+            [disabled]="selectedRules.length === 0">Rerun</button> -->
+        </div>
+    </div>
+</app-loader>

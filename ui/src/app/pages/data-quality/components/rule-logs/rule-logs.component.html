@@ -1,0 +1,25 @@
+<div class="page-header1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-top">
+            <li class="breadcrumb-item active">Logs</li>
+            <!-- <li class="breadcrumb-item " aria-current="page">
+                <span style="position: relative;">
+                    <img src="../../../../../assets/img/arrow.svg" alt="Arrow" style="width: 16px; vertical-align: middle;">
+                    Rule Status
+                </span>
+            </li> -->
+        </ol>
+    </nav>
+</div>
+<div class="main-container">
+    <div class="page-content">
+        <ng-container *ngIf="batchJobLog?.length else noLogs">
+            <div *ngFor="let log of batchJobLog">
+                <p> {{log}}</p>
+            </div>
+        </ng-container>
+        <ng-template #noLogs>
+            <h6>No job log</h6>
+        </ng-template>
+    </div>
+</div>

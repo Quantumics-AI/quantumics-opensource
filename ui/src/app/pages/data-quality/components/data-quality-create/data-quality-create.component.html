@@ -1,0 +1,656 @@
+<form [formGroup]="fg">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item breadcrumb-top">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Rules</li>
+            </ol>
+        </li>
+    </ol>
+
+    <!-- <div style="position: absolute;top: 10%; left: 15px;">
+        <a class="btn" [routerLink]="['..']">Go Back</a>
+    </div> -->
+    <nav class="navbar navbar-light src-nav">
+        <div class="bck">
+            <a class="navbar-brand back-func" (click)="back()">
+                <img src="assets/img/db-connectors/back-arrow.svg" alt="">&nbsp;
+                GO BACK
+            </a>
+        </div>
+    </nav>
+    <div class="row justify-content-center rounded-lg mr-t-35">
+        
+        <div class="col-9">
+            <p class="local-file">
+                Create Rule
+            </p>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="inputName" class="p2">Rule Name*</label>
+                                <input type="text" class="form-control input-design" formControlName="ruleName" #rulename
+                                    autocomplete="off" minlength="3" maxlength="50" (ngModelChange)="modelChangeRuleName($event)"
+                                    (focus)="f.open()" (input)="checkIfNameExists();rulename.value.length > 0 ? f.close() : f.open()" 
+                                    (blur)="checkExistName(); f.close()" triggers="manual" #f="ngbPopover" [ngbPopover]="popRuleNameContent"
+                                    popoverClass="folder-pophover" placement="bottom">
+                                <!-- <small id="workspaceNameHelp" class="form-text body-text-muted">Rule name must be
+                                        between 3 and 50 characters long.</small> -->
+                                <div *ngIf="fg.get('ruleName').invalid && fg.get('ruleName').dirty || fg.get('ruleName').touched">
+                                    <div class="text-error" *ngIf="fg.get('ruleName').hasError('required')">
+                                        <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                        Rule name is mandatory
+                                    </div>
+                                    <div class="text-error" *ngIf="fg.get('ruleName').hasError('minlength') && !invalidCapitalPattern">
+                                        <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; Rule name must be between 3 and 50 characters long.
+                                    </div>
+                                </div>
+                                <div class="text-error" *ngIf="invalidPattern">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                    Rule name should have Alphabates, Numbers and Special characters (Colon, Hypen and Underscore).
+                                </div>
+                                <div class="text-error" *ngIf="invalidCapitalPattern">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                    Rule name must start with capital letter.
+                                </div>
+                                <div class="text-error" *ngIf="alreadyExist">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                    Entered rule name is already used. Please enter a different name.
+                                </div>
+                            </div>
+                            <ng-template #popRuleNameContent>
+                                <div class="col-12">
+                                    <ul>
+                                        <li>Rule name is mandatory.</li>
+                                        <li>Rule name must be between 3 and 50 characters long.</li>
+                                        <li>Rule name should have Alphabets,Numbers, and Special characters ( Colon, Hypen and Underscore ).</li>
+                                        <li>Rule name must start with capital letter</li>
+                                        <li>Rule name must be unique.</li>
+                                    </ul>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="inputName" class="p2">Rule Description*</label>
+                                <textarea class="form-control input-design" formControlName="ruleDescription" #description
+                                autocomplete="off" minlength="10" maxlength="150" (ngModelChange)="modelChangeDescription($event)"
+                                    (focus)="d.open()" (input)="description.value.length > 0 ? d.close() : d.open()" (blur)="d.close()"
+                                    triggers="manual" #d="ngbPopover" [ngbPopover]="popRuleDesContent"
+                                    popoverClass="folder-pophover" placement="bottom">
+                                </textarea>
+                                <!-- <small id="workspaceNameHelp" class="form-text body-text-muted">Rule description must be
+                                    between 10 and 150 characters long.</small> -->
+                                <div *ngIf="fg.get('ruleDescription').invalid && fg.get('ruleDescription').dirty || fg.get('ruleDescription').touched">
+                                    <div class="text-error" *ngIf="fg.get('ruleDescription').hasError('required')">
+                                        <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                        Rule description is mandatory
+                                    </div>
+                                </div>
+                                <div class="text-error" *ngIf="invalidDesPattern">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                    Rule description should have Alphabets, Numbers and special characters.
+                                </div>
+                                <div class="text-error" *ngIf="fg.get('ruleDescription').hasError('minlength')">
+                                    <span><img src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                    Rule description must be between 10 and 150 characters long.
+                                </div>
+                            </div>
+                            <ng-template #popRuleDesContent>
+                                <div class="col-12">
+                                    <ul>
+                                        <li>Rule description is mandatory.</li>
+                                        <li>Rule description must be between 10 and 150 characters long.</li>
+                                        <li>Rule description should have Alphabets, Numbers and Special characters.</li>
+                                    </ul>
+                                </div>
+                            </ng-template>
+                        </div>
+                        <div class="col-12 text-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" id="sourceAndTarget"
+                                    formControlName="sourceAndTarget" [value]="true" [(ngModel)]="sourceTargetType"
+                                    (change)="selectedType(true)">
+                                <label class="form-check-label p2" for="sourceAndTarget">Source 1 Vs Source 2</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" formControlName="sourceAndTarget"
+                                    [value]="false" id="target" [(ngModel)]="sourceTargetType"
+                                    (change)="selectedType(false)">
+                                <label class="form-check-label p2" for="target">Source</label>
+                            </div>
+                        </div>
+                        <div class="row col-12 pd-mr mt-3">
+                            <ng-container *ngIf="!sourceTargetType; else sourceAndTarget">
+                                <div class="col-12 mt-3">
+                                    <div class="form-group">
+                                        <label for="inputName" class="p2">Select Data Source*</label>
+                                        <select class="form-control input-design" formControlName="sourceDataSource">
+                                            <option value="aws" selected> AWS</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label for="inputName" class="p2">Select Sub Data Source*</label>
+                                    <select class="form-control input-design"
+                                        formControlName="subDataSourceOne">
+                                        <option value="s3"> S3</option>
+                                    </select>
+                                </div>
+    
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="p2">Select Data Connection*</label>
+                                        <select class="form-control input-design" formControlName="sourceDataConnection" #dc
+                                        [(ngModel)]="selectedDataConnections1" (change)="onSelectDataConnections1(dc.value)">
+                                            <option value="" [value]="undefined" disabled selected>Select data connection</option>
+                                            <option *ngFor="let item of dataConnectionList" [value]="item.id" >
+                                                {{item.connectionName}}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="fg.get('sourceDataConnection').invalid && fg.get('sourceDataConnection').dirty || fg.get('sourceDataConnection').touched">
+                                            <div class="text-error fs-12" *ngIf="fg.get('sourceDataConnection').hasError('required')">
+                                                <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                Select Data Connection is mandatory
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+    
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="p2">Select Bucket*</label>
+                                        <select class="form-control input-design" formControlName="sourceBucketOne" #bl
+                                        [(ngModel)]="selectedBucketOne" (change)="onSelectBucketOne(bl.value)">
+                                            <option value="" [value]="undefined" disabled selected>Select bucket</option>
+                                            <option *ngFor="let item of bucketSourceOne" [value]="item" >
+                                                {{item}}
+                                            </option>
+                                        </select>
+                                        <div *ngIf="fg.get('sourceBucketOne').invalid && fg.get('sourceBucketOne').dirty || fg.get('sourceBucketOne').touched">
+                                            <div class="text-error fs-12" *ngIf="fg.get('sourceBucketOne').hasError('required')">
+                                                <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                Select Bucket is mandatory
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="p2">Region Name*</label>
+                                        <input type="text" class="form-control input-design" placeholder="Region name" 
+                                        formControlName="region" #region readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="inputName" class="p2">File Pattern*</label>
+                                        <!-- <input type="text" class="form-control input-design" placeholder="s3://BUCKET_NAME/FEED_NAME/DDMMYYYY/FILENAME" 
+                                        formControlName="sourcePatternPath" #patternPath readonly> -->
+                                        <p class="p2 fs-12 mr-b-0">s3://BUCKET_NAME/FEED_NAME/YYYYMMDD/FILENAME</p>
+                                        <div class="text-error fs-12" *ngIf="isPattern"> 
+                                            Please check, the selected file is not aligned with the File Pattern
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="filePath" class="p2">File Path*</label>
+                                        <div class="input-group mr">
+                                            <div class="custom-file">
+                                                <input type="text" formControlName="sourceFolderPath" [(ngModel)]="selectedSourcePathOne"
+                                                class="form-control input-design br-r-0" 
+                                                id="inputGroupFile04" placeholder="No file chosen" [title]="selectedSourcePathOne" readonly>
+                                                <div class="err-div" *ngIf="fg.get('sourceFolderPath').invalid && fg.get('sourceFolderPath').dirty || fg.get('sourceFolderPath').touched">
+                                                    <div class="text-error fs-12" *ngIf="fg.get('sourceFolderPath').hasError('required')">
+                                                        <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                        File path is mandatory
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-design pos-u br-l-0 br-r-8" type="button" 
+                                                (click)="browseSourceOne('source-1')" [disabled]="!selectedBucketOne">Choose File</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </ng-container>
+                            <ng-template #sourceAndTarget>
+                                <div class="col-6 mt-3">
+                                    <div class="source-type">
+                                        <h6 class="ml-3 mt-1">Source 1</h6>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Data Source*</label>
+                                                <select class="form-control input-design"
+                                                    formControlName="sourceDataSource">
+                                                    <option value="aws"> AWS</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Sub Data Source*</label>
+                                                <select class="form-control input-design"
+                                                    formControlName="subDataSourceOne">
+                                                    <option value="s3"> S3</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Data Connection*</label>
+                                                <select class="form-control input-design" #dcs1 formControlName="sourceDataConnection"
+                                                [(ngModel)]="selectedDataConnections1" (change)="onSelectDataConnections1(dcs1.value)">
+                                                    <option value="" [value]="undefined" disabled selected>Select data connection</option>
+                                                    <option *ngFor="let item of dataConnectionList" [value]="item.id" >
+                                                        {{item.connectionName}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="fg.get('sourceDataConnection').invalid && fg.get('sourceDataConnection').dirty || fg.get('sourceDataConnection').touched">
+                                                    <div class="text-error fs-12" *ngIf="fg.get('sourceDataConnection').hasError('required')">
+                                                        <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                        Select Data Connection is mandatory
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Bucket*</label>
+                                                <select class="form-control input-design" formControlName="sourceBucketOne" #bi
+                                                [(ngModel)]="selectedBucketOne" (change)="onSelectBucketOne(bi.value)">
+                                                    <option value="" [value]="undefined" disabled selected>Select bucket</option>
+                                                    <option *ngFor="let item of bucketSourceOne" [value]="item" >
+                                                        {{item}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="fg.get('sourceBucketOne').invalid && fg.get('sourceBucketOne').dirty || fg.get('sourceBucketOne').touched">
+                                                    <div class="text-error fs-12" *ngIf="fg.get('sourceBucketOne').hasError('required')">
+                                                        <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                        Select Bucket is mandatory
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Region Name*</label>
+                                                <input type="text" class="form-control input-design" placeholder="Region name" 
+                                                formControlName="region" #region readonly>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">File Pattern*</label>
+                                                <!-- <input type="text" class="form-control input-design" placeholder="s3://BUCKET_NAME/FEED_NAME/DDMMYYYY/FILENAME" 
+                                                formControlName="sourcePatternPath" #patternPath readonly> -->
+                                                <p class="p2 fs-12 mr-b-0">s3://BUCKET_NAME/FEED_NAME/YYYYMMDD/FILENAME</p>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filePath" class="p2">File Path*</label>
+                                                <div class="input-group mr">
+                                                
+                                                    <div class="custom-file">
+                                                        <input type="text" formControlName="sourceFolderPath" [(ngModel)]="selectedSourcePathOne"
+                                                        class="form-control input-design br-r-0" 
+                                                        id="inputGroupFile04" placeholder="No file chosen" [title]="selectedSourcePathOne" readonly>
+                                                        <div class="err-div" *ngIf="fg.get('sourceFolderPath').invalid && fg.get('sourceFolderPath').dirty || fg.get('sourceFolderPath').touched">
+                                                            <div class="text-error fs-12" *ngIf="fg.get('sourceFolderPath').hasError('required')">
+                                                                <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                                File path is mandatory
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-design pos-u br-l-0 br-r-8" type="button" 
+                                                        (click)="browseSourceOne('source-1')" [disabled]="!selectedBucketOne">Choose File</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <div class="source-type">
+                                        <h6 class="ml-3 mt-1">Source 2</h6>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Data Source*</label>
+                                                <select class="form-control input-design"
+                                                    formControlName="sourceDataSourceTwo">
+                                                    <option value="aws" selected> AWS</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Sub Data Source*</label>
+                                                <select class="form-control input-design"
+                                                    formControlName="subDataSourceTwo">
+                                                    <option value="s3"> S3</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Data Connection*</label>
+                                                <select class="form-control input-design" #dcs2 formControlName="sourceDataConnectionTwo"
+                                                [(ngModel)]="selectedDataConnections2" (change)="onSelectDataConnections2(dcs2.value)">
+                                                    <option value="" [value]="undefined" disabled selected>Select data connection</option>
+                                                    <option *ngFor="let item of dataConnectionList" [value]="item.id" >
+                                                        {{item.connectionName}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="fg.get('sourceDataConnectionTwo').invalid && fg.get('sourceDataConnectionTwo').dirty || fg.get('sourceDataConnectionTwo').touched">
+                                                    <div class="text-error fs-12" *ngIf="fg.get('sourceDataConnectionTwo').hasError('required')">
+                                                        <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                        Select Data Connection is mandatory
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Select Bucket*</label>
+                                                <select class="form-control input-design" formControlName="sourceBucketTwo" #bii
+                                                [(ngModel)]="selectedBucketTwo" (change)="onSelectBucketTwo(bii.value)">
+                                                    <option value="" [value]="undefined" disabled selected>Select bucket</option>
+                                                    <option *ngFor="let item of bucketSourceTwo" [value]="item" >
+                                                        {{item}}
+                                                    </option>
+                                                </select>
+                                                <div *ngIf="fg.get('sourceBucketTwo').invalid && fg.get('sourceBucketTwo').dirty || fg.get('sourceBucketTwo').touched">
+                                                    <div class="text-error fs-12" *ngIf="fg.get('sourceBucketTwo').hasError('required')">
+                                                        <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp; 
+                                                        Select Bucket is mandatory
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">Region Name*</label>
+                                                <input type="text" class="form-control input-design" placeholder="Region name" 
+                                                formControlName="regionTwo" #regionTwo readonly>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="inputName" class="p2">File Pattern*</label>
+                                                <!-- <input type="text" class="form-control input-design" placeholder="s3://BUCKET_NAME/FEED_NAME/DDMMYYYY/FILENAME" 
+                                                formControlName="sourcePatternPathTwo" #patternPathTwo readonly> -->
+                                                <p class="p2 fs-12 mr-b-0">s3://BUCKET_NAME/FEED_NAME/YYYYMMDD/FILENAME</p>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="filePath" class="p2">File Path*</label>
+                                                <div class="input-group mr">
+                                                    <div class="custom-file">
+                                                        <input type="text" formControlName="sourceFolderPathTwo" class="form-control input-design br-r-0" 
+                                                        id="inputGroupFile04" placeholder="No file chosen" [(ngModel)]="selectedSourcePathTwo" 
+                                                        [title]="selectedSourcePathTwo" readonly>
+                                                        <div class="err-div" *ngIf="fg.get('sourceFolderPathTwo').invalid && fg.get('sourceFolderPathTwo').dirty || fg.get('sourceFolderPathTwo').touched">
+                                                            <div class="text-error fs-12" *ngIf="fg.get('sourceFolderPathTwo').hasError('required')">
+                                                                <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                                File path is mandatory
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-design pos-u br-l-0 br-r-8" type="button" 
+                                                        (click)="browseSourceTwo('source-2')" [disabled]="!selectedBucketTwo">Choose File</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <!-- <div class="showdataBtn mt-3 pd-15">
+                                <button type="button" class="btn btn-outline-success mr-3 connectionBtns" (click)="showData();"
+                                    [ngClass]="{'validBtn': !fg.invalid}" [disabled]="fg.invalid">Show Data</button>
+                            </div> -->
+                        </div>
+                    </div>
+                    
+                    <!-- Rule Types -->
+                    <p class="rule-t p2">Rule Types*:</p>
+
+                    <ng-container *ngFor="let item of ruleTypesData; let i = index;">
+                        <div class="form-group" 
+                        [ngClass]="{'mr-t-40': item.ruleTypeName == 'Duplicate Value' && fg.get('selectColumnAttribute').hasError('required'),
+                            'mr-t-0': selectedMainRuleType == 'Duplicate Value'}">
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input cp"
+                              type="radio"
+                              (change)="onChangeRuleTypes(item.ruleTypeName)"
+                              [(ngModel)]="selectedMainRuleType"
+                              [value]="item.ruleTypeName"
+                              formControlName="ruleType"
+                            />
+                            <label class="form-check-label p2" for="inlineRadio1">{{ item.ruleTypeName }}</label>
+                          </div>
+                          <div *ngIf="selectedMainRuleType === item.ruleTypeName" class="mr-l-60">
+                            <!-- For not Zero Row Check -->
+                            <ng-container *ngIf="selectedMainRuleType != 'Zero Row Check'; else zeroRow">
+                                <!-- for not null value -->
+                                <ng-container *ngIf="selectedMainRuleType != 'Null Value'; else nullValue">
+                                    <!-- Sub-level radio buttons -->
+                                    <div *ngFor="let level of item.level; let j = index;">
+                                        <div class="form-group dif"
+                                        [ngClass]="{'mr-b-55': level.levelName == 'Single Column' && fg.get('selectColumnAttribute').hasError('required'),
+                                        'mr-b-10': selectedSubLevel != 'Single Column'}">
+                                            <div class="form-check form-check-inline">
+                                                <input
+                                                    class="form-check-input cp"
+                                                    type="radio"
+                                                    [(ngModel)]="selectedSubLevel"
+                                                    (change)="onChangeSubLevel(level.levelName)"
+                                                    [value]="level.levelName"
+                                                    formControlName="subLavelRadio"
+                                                />
+                                                <label class="form-check-label p2" for="inlineRadio1">{{ level.levelName }}</label>
+                                            </div>
+                                            <!-- Conditionally display input and select elements based on columnLevel -->
+                                            <ng-container *ngIf="selectedSubLevel === level.levelName">
+                                                <div *ngIf="!level.columnLevel">
+                                                    <ng-container *ngIf="selectedSubLevel != 'Table Level'">
+                                                        <div class="dif">
+                                                            <input type="text" pattern="^[0-9]+$" class="form-control input-design" placeholder="Acceptance Percentage"
+                                                            formControlName="acceptancePercentage" (input)="validateInput($event)">
+                                                            <span class="pr">%</span>
+                                                        </div>
+                                                        <div *ngIf="fg.get('acceptancePercentage').hasError('invalidPercentage')" class="text-error fs-12">
+                                                            Please enter a number between 0 and 20
+                                                        </div>
+                                                        <div *ngIf="fg.get('acceptancePercentage').hasError('emptyPercentage')" class="text-error fs-12">
+                                                            Please enter value inside Acceptance Percentage Field
+                                                        </div>
+                                                    </ng-container>
+                                                    
+                                                </div>
+                                                
+                                                <div *ngIf="level.columnLevel" class="dif">
+                                                    <!-- for single column -->
+                                                    <ng-container  *ngIf="selectedSubLevel != 'Multiple Columns'">
+                                                        <div class="dif">
+                                                            <div style="position: relative; display: flex;">
+                                                                <select id="ab" class="form-control input-design in-text mr-r-20" 
+                                                                formControlName="selectColumnAttribute" [(ngModel)]="selectedAttributeName" placeholder="Select Attributes">
+                                                                    <option [value]="undefined" disabled selected> Select Attributes </option>
+                                                                    <option *ngFor="let i of columnDataType" [value]="i.columnName">
+                                                                        {{i.columnName}}
+                                                                    </option>
+                                                                </select>
+                                                                <!-- <div class="err-div" *ngIf="fg.get('selectColumnAttribute').invalid && fg.get('selectColumnAttribute').dirty || fg.get('selectColumnAttribute').touched"> -->
+                                                                    <div class="text-error fs-12 err-div-acc" *ngIf="fg.get('selectColumnAttribute').hasError('required')">
+                                                                        <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                                        Please choose Column {{selectedSubColumn}}
+                                                                    </div>
+                                                                <!-- </div> -->
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </ng-container>
+                                                    
+
+                                                    <!-- for multi column  -->
+                                                    <ng-container *ngIf="selectedSubLevel === 'Multiple Columns'" >
+                                                        <div class="dif">
+                                                            <div style="position: relative; display: flex;">
+                                                                <ng-select id="dpt" class="custom mr-r-20 wid" formControlName="selectColumnAttribute" 
+                                                                    [multiple]="true" placeholder="Select Attributes" bindLabel="name" groupBy="item" 
+                                                                    [selectableGroup]="true" bindValue="id" [(ngModel)]="selectedAttributeName"
+                                                                    [closeOnSelect]="false" [items]="columnData">
+
+                                                                    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                                                        <input id="item-{{index}}" type="checkbox" [(ngModel)]="item$.selected" [ngModelOptions]="{ standalone : true }"/> 
+                                                                        <span [title]="item" class="mr-l-8">{{item}}</span>
+                                                                    </ng-template>
+                                                                </ng-select>
+                                                                <!-- <small id="workspaceNameHelp" class="form-text body-text-muted">
+                                                                    Please select up to 5 columns for comparison.
+                                                                </small> -->
+                                                                <div *ngIf="fg.get('selectColumnAttribute').hasError('maxlength')" class="text-error fs-12 err-div">
+                                                                    Please select up to 5 columns for comparison.
+                                                                </div>
+                                                                <div *ngIf="fg.get('selectColumnAttribute').hasError('minlength')" class="text-error fs-12 err-div-acc">
+                                                                    Please choose atleast 2 columns in the Duplicate-Multiple Columns Value Rule Type
+                                                                </div>
+                                                                <!-- <div class="err-div" *ngIf="fg.get('selectColumnAttribute').invalid && fg.get('selectColumnAttribute').dirty || fg.get('selectColumnAttribute').touched"> -->
+                                                                    <div class="text-error fs-12 err-div-acc" *ngIf="fg.get('selectColumnAttribute').hasError('required')">
+                                                                        <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                                        Please choose Column in the Duplicate - Multiple Columns Value Rule Type
+                                                                    </div>
+                                                                <!-- </div> -->
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
+                                                    </ng-container>
+                                                    <!-- <input type="text" class="form-control input-design" placeholder="Acceptance Percentage"
+                                                        formControlName="acceptancePercentage" autocomplete="off">
+                                                    <span class="pr">%</span> -->
+                                                    <ng-container *ngIf="selectedSubLevel != 'Column level'">
+                                                        <div class="dif">
+                                                            <div style="position: relative; display: flex;">
+                                                                <input type="text" pattern="^[0-9]+$" class="form-control input-design" placeholder="Acceptance Percentage"
+                                                                formControlName="acceptancePercentage" (input)="validateInput($event)">
+                                                                <span class="pr">%</span>
+                                                            
+                                                                <div *ngIf="fg.get('acceptancePercentage').hasError('invalidPercentage')" class="text-error fs-12 err-div-acc">
+                                                                    Please enter a number between 0 and 20.
+                                                                </div>
+                                                                <div *ngIf="fg.get('acceptancePercentage').hasError('emptyPercentage')" class="text-error fs-12 err-div-acc">
+                                                                    Please enter value inside Acceptance Percentage Field
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    
+                                                    
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #nullValue>
+                                    <div class="form-group mr-b-0 dif">
+                                        <div class="dif">
+                                            <div style="position: relative; display: flex;">
+                                                <select id="cd" class="form-control input-design in-text mr-r-20" formControlName="selectColumnAttribute" 
+                                                [(ngModel)]="selectedNullName" placeholder="Select Attributes">
+                                                    <option [value]="undefined" disabled selected> Select Attributes </option>
+                                                    <option *ngFor="let i of columnDataType" [value]="i.columnName">
+                                                        {{i.columnName}}
+                                                    </option>
+                                                </select>
+                                                <!-- <div class="err-div" *ngIf="fg.get('selectColumnAttribute').invalid && fg.get('selectColumnAttribute').dirty || fg.get('selectColumnAttribute').touched"> -->
+                                                    <div class="text-error fs-12 err-div-acc" *ngIf="fg.get('selectColumnAttribute').hasError('required')">
+                                                        <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                                        Please choose column in the Null Value rule type
+                                                    </div>
+                                                <!-- </div> -->
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="dif">
+                                            <div style="position: relative; display: flex;">
+                                                <input type="text" pattern="^[0-9]+$" class="form-control input-design" placeholder="Acceptance Percentage"
+                                                formControlName="acceptancePercentage" (input)="validateInput($event)">
+                                                <span class="pr">%</span>
+
+                                                <div *ngIf="fg.get('acceptancePercentage').hasError('invalidPercentage')" class="text-error fs-12 err-div left-12">
+                                                    Please enter a number between 0 and 20.
+                                                </div>
+                                                <div *ngIf="fg.get('acceptancePercentage').hasError('emptyPercentage')" class="text-error fs-12 err-div left-12">
+                                                    Please enter value inside Acceptance Percentage Field
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>                                
+                            </ng-container>
+                            <ng-template #zeroRow>
+                                <!-- <div class="form-group mr-b-0 dif">
+                                    <div class="dif">
+                                        <div style="position: relative; display: flex;">
+                                            <input type="text" pattern="^[0-9]+$" class="form-control input-design" placeholder="Acceptance Percentage"
+                                            formControlName="acceptancePercentage" (input)="validateInput($event)">
+                                            <span class="pr">%</span>
+
+                                            <div *ngIf="fg.get('acceptancePercentage').hasError('invalidPercentage')" class="text-error fs-12 err-div left-12">
+                                                Please enter a number between 0 and 20.
+                                            </div>
+                                            <div *ngIf="fg.get('acceptancePercentage').hasError('emptyPercentage')" class="text-error fs-12 err-div left-12">
+                                                Please enter value inside Acceptance Percentage Field
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </ng-template>
+                            
+                            <div class="text-error fs-12" *ngIf="fg.get('subLavelRadio').hasError('required')">
+                                <!-- <span><img class="h-14" src="assets/img/side-bar/alert.svg"></span>&nbsp;  -->
+                                Please choose appropriate option Under {{selectedMainRuleType}} Check
+                            </div>
+                          </div>
+                        </div>
+                    </ng-container>
+                    <p class="rule-t p2">Run Rule Configuration*:</p>
+                    <div class="form-check form-check-inline">
+                        <label class="form-check-label p2 fw-500" for="inlineCheckbox1">Day</label>
+                    </div>
+                    <ng-container *ngFor="let d of ruleDays">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="{{d.day}}" [checked]="d.isChecked"
+                            [value]="d.day" (change)="checkedDays($event, d.day)">
+                            <label class="form-check-label p2" for="{{d.day}}">{{d.label}}</label>
+                        </div>
+                    </ng-container>
+                    <!-- Display error message if no checkbox is selected -->
+                    <div *ngIf="!anyCheckboxSelected()">
+                        <p class="text-error mr-b-0">Please select atleast one day for running the rule</p>
+                    </div>
+                    
+                    <div class="mt-40">
+                        <div class="text-center">
+                            <button type="button" class="btn btn-outline-success connectionBtns"
+                                (click)="saveRuleFunction();" [ngClass]="{'validBtn': !fg.invalid}" 
+                                [disabled]="fg.invalid || alreadyExist || isPattern || !anyCheckboxSelected()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div *ngIf="isShowData"
+    style="position: absolute; bottom: 0px; border: 1px solid #888C98;width: 100%;height: 400px;background: #fff; z-index: 999;">
+    <app-data-quality-show-data [sourceTargetType]="sourceTargetType"
+        (close)="isShowData = !isShowData"></app-data-quality-show-data>
+</div>

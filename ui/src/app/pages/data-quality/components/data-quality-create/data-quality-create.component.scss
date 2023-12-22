@@ -1,0 +1,308 @@
+.source-type {
+    border-radius: 4px;
+    border: 1px solid #F2F2F2;
+}
+
+// nav 
+.src-nav {
+    padding: 20px;
+    position: fixed;
+    width: -webkit-fill-available;
+    margin-top: -31px;
+    z-index: 2;
+    background-color: #ffffff;
+}
+
+.bck {
+    position: absolute;
+}
+
+.back-func {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #0A0A15;
+    display: inline-flex;
+}
+
+.navbar-light {
+    border-bottom: 1px solid #eee;
+}
+//
+
+.mr-t-35 {
+    margin-top: 35px;
+}
+
+.local-file {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.connectionBtns {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #009C82;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+.mr-t-25 {
+    margin-top: 25px;
+}
+
+.max-w {
+    max-width: fit-content !important;
+}
+
+
+.mr-t-70 {
+    margin-top: 70px;
+}
+
+.mr-b-5 {
+    margin-bottom: 5px;
+}
+
+.dif {
+    display: inline-flex;
+}
+
+.pr {
+    line-height: 34px;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.mr-t-25 {
+    margin-top: 25px;
+}
+
+.mr-t-100 {
+    margin-top: 100px;
+}
+
+//select input
+.ng-select.custom {
+    border:0px;
+    min-height: 0px;
+    border-radius: 0;
+}
+.ng-select.custom ::ng-deep .ng-select-container  {            
+    min-height: 0px;
+    border-radius: 0;
+    background: #F4F6FA;
+    /* Grey */
+
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+}
+
+.ng-select.custom ::ng-deep .ng-value  {            
+    color: rgba(0, 151, 124, 0.87);
+    border: 0.728972px solid rgba(0, 151, 124, 0.2);
+    border-radius: 11px !important;
+    background-color: transparent !important;
+}
+
+.rule-t {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.pd-col {
+    padding-right: 0;
+    padding-left: 25px;
+}
+
+.pd-l-0 {
+    padding-left: 0;
+}
+
+.pd-mr {
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.form-div {
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+}
+
+.pd-15 {
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.mr-l-50 {
+    margin-left: -50px;
+    margin-top: 10px;
+}
+
+.mr-l-8 {
+    margin-left: 8px;
+}
+
+input[type=checkbox]{
+    accent-color: #00977C;
+  }
+  
+input[type=checkbox]:checked{
+    accent-color: #00977C;
+}
+
+//browse file
+.mr {
+    margin: 0 0 1rem 0;
+}
+
+.pos-u {
+    position: unset !important;
+}
+
+.br-r-0 {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.br-l-0 {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.br-r-8 {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}
+
+
+::ng-deep {
+    .popover .arrow {
+        display: none;
+    }
+
+    .folder-pophover {
+        max-width: 700px !important;
+        width: auto !important;
+        transform: translate(0, 64px) !important;
+        // left: 0 !important;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+
+    .popover {
+        z-index: 1;
+    }
+}
+
+.mr-l-60 {
+    margin-left: 60px;
+}
+
+.mr-r-20 {
+    margin-right: 20px;
+}
+
+input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+/* Webkit browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.wid {
+    width: -webkit-fill-available;
+}
+
+.err-div {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: max-content;
+}
+
+.err-div-acc {
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+.fs-12 {
+    font-size: 12px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.fs-12 {
+    font-size: 12px;
+}
+
+.h-14 {
+    height: 14px;
+}
+
+.left-12 {
+    left: 12px;
+}
+
+.mr-t-40 {
+    margin-top: 40px;
+}
+
+.mr-b-55 {
+    margin-bottom: 55px;
+}
+
+.mr-t-0 {
+    margin-top: 0px;
+}
+
+.mr-b-10 {
+    margin-bottom: 10px;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.hidden {
+    visibility: hidden;
+}

@@ -1,0 +1,109 @@
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}
+
+::ng-deep {
+    .popover .arrow {
+        display: none;
+    }
+
+    .folder-pophover {
+        max-width: 550px !important;
+        width: auto !important;
+    }
+
+    ul {
+        padding-left: 0;
+    }
+}
+
+.local-file {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    // text-align: center;
+    letter-spacing: -0.02em;
+    color: #1E1F3E;
+}
+
+.file-card {
+    background: #FCFCFE;
+    border: 1px solid #B1B2BE;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+.pii-card-body {
+    padding: 40px;
+}
+
+.term-length {
+    font-size: 11px;
+    color: red;
+    margin-left: 2px;
+}
+
+.mr-l-10 {
+    margin-left: 10px;
+}
+
+.connectionBtns {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #009C82;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+// nav 
+.src-nav {
+    padding: 20px;
+    position: fixed;
+    width: -webkit-fill-available;
+    margin-top: -31px;
+    z-index: 1;
+    background-color: #ffffff;
+}
+
+.bck {
+    position: absolute;
+}
+
+.back-func {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #0A0A15;
+    display: inline-flex;
+}
+
+.navbar-light {
+    border-bottom: 1px solid #eee;
+}
+//
+
+.aws-div {
+    margin-top: 55px;
+}

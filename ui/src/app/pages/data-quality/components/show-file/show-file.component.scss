@@ -1,0 +1,142 @@
+/* Custom styles for the ngb tabs */
+.tabs-custom .nav-item {
+    border: none;
+}
+
+.tabs-custom .nav-link {
+    border: none;
+    background-color: transparent;
+    color: #333;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0;
+    position: relative;
+}
+
+.tabs-custom .nav-link.active {
+    background-color: #f8f9fa;
+    border: none;
+    color: #007bff;
+    /* Change the color of the active tab text */
+}
+
+.tabs-custom .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007bff;
+}
+
+.tabs-custom .tab-content {
+    border: 1px solid #dee2e6;
+    padding: 1rem;
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+::ng-deep {
+    .nav-tabs {
+        border: none !important;
+    }
+}
+
+.close-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+.table-h {
+    overflow: auto;
+    height: 270px;
+}
+
+.mr-r-20 {
+    margin-right: 20px;
+}
+
+.cancel-b {
+    height: 36px;
+    border-radius: 4px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.s-t-btn {
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+.connectionBtns {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    color: #009C82;
+}
+
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+.pd {
+    padding: 20px 0 0 20px;
+}
+
+//no data
+.shadow-n {
+    box-shadow: none;
+    border: none;
+}
+
+.mr-b-20 {
+    margin-bottom: 20px;
+}
+
+.no-dataset {
+    background-color: #ffffff !important;
+}
+
+.pd-l-20 {
+    padding-left: 20px;
+}
+
+.up {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 8px;
+    line-height: 150%;
+    /* identical to box height, or 15px */
+    
+    
+    /* Green */
+    
+    color: #00977C;
+}
+  
+.text-primary {
+    color: #00977C !important;
+}
+
+.dif {
+    display: inline-flex;
+}
+
+.wh-1rem {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+.mr-l-10 {
+    margin-left: 10px;
+}

@@ -1,0 +1,146 @@
+// nav 
+.src-nav {
+    padding: 20px;
+    position: fixed;
+    width: -webkit-fill-available;
+    margin-top: -31px;
+    z-index: 1;
+    background-color: #ffffff;
+}
+
+.bck {
+    position: absolute;
+}
+
+.back-func {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #0A0A15;
+    display: inline-flex;
+}
+
+.navbar-light {
+    border-bottom: 1px solid #eee;
+}
+//
+
+// radio button 
+input[type=radio]{
+    accent-color: #00977C;
+}
+
+input[type=radio]:checked{
+    accent-color: #00977C;
+}
+//
+
+.mr-b-8 {
+    margin-bottom: 8px;
+}
+
+.rules-div {
+    margin-top: 55px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+//select input
+.ng-select.custom {
+    border:0px;
+    min-height: 0px;
+    border-radius: 0;
+}
+.ng-select.custom ::ng-deep .ng-select-container  {            
+    min-height: 0px;
+    border-radius: 0;
+    background: #F4F6FA;
+    /* Grey */
+
+    border: 1px solid #E2E8F2;
+    border-radius: 8px;
+}
+
+.ng-select.custom ::ng-deep .ng-value  {            
+    color: rgba(0, 151, 124, 0.87);
+    border: 0.728972px solid rgba(0, 151, 124, 0.2);
+    border-radius: 11px !important;
+    background-color: transparent !important;
+}
+
+//buttons
+.validBtn {
+    background-color: #01B798;
+    color: white;
+}
+
+.connectionBtns {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    /* font-size: 18px; */
+    line-height: 22px;
+    letter-spacing: -0.015em;
+    // color: #009C82;
+    background-color: #01B798;
+    color: white;
+}
+
+.mr-l-10 {
+    margin-left: 10px;
+}
+
+
+//row mr
+
+.row-mr {
+    // margin-left: 0;
+    // margin-right: 0;
+    margin-bottom: 25px;
+}
+//
+
+.mr-t-30 {
+    margin-top: 30px;
+}
+
+.mx-w-140 {
+    width: 140px;
+    max-width: 140px;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.mr-t-66 {
+    margin-top: 66px;
+}
+
+.mr-b-5 {
+    margin-bottom: 5px;
+}
+
+.dif {
+    display: inline-flex;
+}
+
+.pr {
+    line-height: 34px;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.mr-t-25 {
+    margin-top: 25px;
+}
+
+.mr-t-10 {
+    margin-top: 10px;
+    
+}

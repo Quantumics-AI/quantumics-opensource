@@ -1,0 +1,101 @@
+<app-loader [loading]="loading">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item breadcrumb-top pd-l-20">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a [routerLink]="['/projects', projectId, 'data-quality']">Rules</a></li>
+            <li class="breadcrumb-item active" aria-current="page">
+              <span style="position: relative;">
+                <img src="../../../../../assets/img/arrow.svg" alt="Arrow" style="width: 16px; vertical-align: middle;">
+                Folders
+              </span>
+            </li>
+        </ol>
+    </li>
+  </ol>
+  <nav class="navbar navbar-light src-nav">
+    <div class="bck">
+        <a class="navbar-brand back-func" (click)="back()">
+            <img src="assets/img/db-connectors/back-arrow.svg" alt="">&nbsp;
+            GO BACK
+        </a>
+    </div>
+  </nav>
+  <div class="page-content pd-20">
+      <div class="card card-d">
+          <div class="card-header ch">
+              <div class="di mr-t-6">
+                  <p class="card-main-text">Tables</p>
+                  <!-- <p class="p1 mr-b-0">Dataset imported through db connector here. To connect new source, go to import dataset.</p> -->
+              </div>
+          </div>
+          <div class="card-body pd-0">
+              <div class="table-responsive br-r t-height">
+                  <table class="table m-0 table-fixed table-striped">
+                      <thead class="thead-light">
+                          <tr class="fixed-th">
+                              <th class="pd-l-24">Table name
+                                  <!-- <span> <img (click)="sortPipeLine();" class="cp" [src]="isDescending ?
+                                  '/assets/images/up-sort.svg'
+                                  : '/assets/images/down-sort.svg'"></span> -->
+                              </th>
+                              <th class="pd-l-24">Date</th>
+                              <th class="pd-l-24">Type</th>
+                              <th class="pd-l-24">Size</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <ng-template #recursiveList let-node let-indentLevel="indentLevel">
+                            <tr class="td-text">
+                              <td [ngClass]="{'child-node': indentLevel > 0}" [style.padding-left.px]="indentLevel > 0 ? indentLevel * 35 : 20">
+                                <span (click)="toggleNode(node.key, indentLevel)" class="cp">
+                                  <img class="pd-r-12" src="assets/img/pipline/r-arrow.svg">
+                                </span>
+                                <span class="pd-r-12"><img src="assets/img/project-stats/folder-i.svg"></span>
+                                <span [style.padding-left.px]="indentLevel * 10">{{ node.key }}</span>
+                              </td>
+                              <td [ngClass]="{'child-node': indentLevel > 0}"> <!-- Hardcoded createdDateTime for main node -->
+                                <!-- 2023-09-30 10:00 AM -->
+                              </td>
+                              <td [ngClass]="{'child-node': indentLevel > 0}"> <!-- Hardcoded createdBy for main node -->
+                                <!-- John Doe -->
+                              </td>
+                              <td></td>
+                            </tr>
+                            <ng-container *ngIf="isNodeOpen(node.key)">
+                              <ng-container *ngFor="let key of getObjectKeys(node.value)">
+                                <ng-container *ngIf="isObject(node.value[key])">
+                                  <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: { key: key, value: node.value[key] }, indentLevel: indentLevel + 1 }"></ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="isArray(node.value[key])">
+                                  <tr *ngFor="let file of node.value[key]; let i = index" class="td-text">
+                                    <!-- [style.padding-left.px]="indentLevel * 55" pd-l-55-->
+                                    <td class="child-node pipe-n cp " [style.padding-left.px]="indentLevel > 0 ? indentLevel * 65 : 50" (click)="showTable(file)">
+                                      <span class="pd-r-12"><img src="assets/img/pipline/file.svg"></span>
+                                      <span title="{{file.fileName}}" >{{ file.fileName }}</span>
+                                    </td>
+                                    <td class="child-node">{{file?.fileLastModified | date: 'dd-MM-yy, hh:mm a'}}</td> <!-- Empty cell for createdDateTime for child nodes -->
+                                    <td class="child-node">File</td>
+                                    <!-- <td class="child-node">{{convertKBtoMB(file.fileSize) | number: '1.2-2'}} MB</td> -->
+                                    <td class="child-node">{{formatFileSize(file.fileSize)}}</td> <!-- Empty cell for createdBy for child nodes -->
+                                  </tr>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </ng-template>
+                          <ng-container *ngFor="let key of getObjectKeys(fileStructure)">
+                            <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: { key: key, value: fileStructure[key] }, indentLevel: 0 }"></ng-container>
+                          </ng-container>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div *ngIf="isShowTable"
+      style="position: absolute; bottom: 0px; border: 1px solid rgba(0, 0, 0, 0.125);width: 100%;height: 400px;background: #fff; z-index: 999;">
+      <app-show-file (close)="isShowTable = !isShowTable" [file]="selectedFile" [rowCount]="rowCount" 
+      [filePath]="filePath" [patternPath]="patternPath" [fileContent]="fileContent" [headers]="headers" [columnType]="columnType" [totalRowCount]="totalRowCount"></app-show-file>
+  </div>
+  
+</app-loader>

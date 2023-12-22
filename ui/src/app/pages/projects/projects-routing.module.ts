@@ -72,6 +72,11 @@ const routes: Routes = [
         loadChildren: () => import('../ingest/ingest.module').then(m => m.IngestModule)
       },
       {
+        path: 'data-quality',
+        canActivate: [ProjectValidityGuard],
+        loadChildren: () => import('../data-quality/data-quality.module').then(m => m.DataQualityModule)
+      },
+      {
         path: 'automation',
         canActivate: [ProjectValidityGuard],
         loadChildren: () => import('../automation/automation.module').then(m => m.AutomationModule)

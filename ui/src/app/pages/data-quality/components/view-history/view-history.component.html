@@ -1,0 +1,307 @@
+<app-loader [loading]="loading">
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item active">
+                    <!-- <a [routerLink]="['/projects', projectId, 'data-quality']"> -->
+                        View Run History
+                    <!-- </a> -->
+                </li>
+            </ol>
+        </nav>
+    </div>
+    
+    <div class="pipe-dataset-div">
+        <div class="card card-d mr-b-0">
+            <div class="ch br-b">
+                <div class="mr-t-6" >
+                    <a class="card-main-text mr-b-0" (click)="back()">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        Back to Rules
+                    </a>
+                </div>
+                <div class="mt-3 bg-c pd-5">
+                    <div class="p2 mr-b-5 fw-600">Filter By
+                        <span class="mr-l-17">
+                            <span *ngIf="filterCollapse">
+                                <img class="cp h-10" (click)="collapseFilter(false)"
+                                src="/assets/img/data-profile/downArrow.svg">
+                            </span>
+                            <span *ngIf="!filterCollapse">
+                                <img class="cp h-10" (click)="collapseFilter(true)"
+                                src="/assets/img/data-profile/upArrow.svg">
+                            </span>
+                        </span>
+                    </div>
+                    <div class="row" *ngIf="!filterCollapse">
+                        <div class="col mx-w pd-l-15">
+                            <div class="df">
+                                <div class="form-check form-check-inline align-start">
+                                    <label class="form-check-label rules fw-500" for="inlineCheckbox1">Rule Type:</label>
+                                </div>
+                                <ul class="list-group mr-t-3">
+                                    <li class="list-group-item pd-0 br-n bg-c" *ngFor="let item of ruleTypeList; let i = index">
+                                        <div class="form-group dif mr-b-5">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox{{i}}" 
+                                                [(ngModel)]="item.checked" (change)="onCheckboxChange(item)">
+                                                <label class="form-check-label rules" for="inlineCheckbox{{i}}">{{item.ruleTypeName}}</label>
+                                            </div>
+                                                <div class="form-check form-check-inline" 
+                                                *ngIf="item.ruleTypeName != 'Null Value' && item.ruleTypeName != 'Zero Row Check' && item.checked">
+                                                    <select class="form-control input-design bg-w h-32 rules rule-select" #dc [(ngModel)]="selectedLevels[item.ruleTypeName]"
+                                                    (change)="onSelectLevelName(dc.value)" title="{{selectedLevels[item.ruleTypeName]}}">
+                                                        <option value="All">All</option>
+                                                        <option *ngFor="let level of item.level" [value]="level.levelName">{{level.levelName}}</option>
+                                                    </select>
+                                                </div>
+                                            <!-- </div> -->
+                                            <!-- <div *ngIf="item.ruleTypeName == 'Zero Row Check'" class="mr-l-50">
+                                                <button class="btn btn-design" [disabled]="!isButtonEnabled()"
+                                                (click)="applyFilter()">Okay</button>
+                                            </div> -->
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col mx-w">
+                            <div class="df">
+                                <div class="form-check form-check-inline align-start">
+                                    <label class="form-check-label rules fw-500" for="inlineCheckbox1">Status:</label>
+                                </div>
+                                <ul class="list-group mr-t-3">
+                                    <li class="list-group-item pd-0 br-n bg-c" *ngFor="let item of statusFilterList; let i = index">
+                                        <div class="form-group dif mr-b-5">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="inlineCheckbox{{i}}" 
+                                                [(ngModel)]="item.checked" (change)="onCheckboxChangeStatus(item)">
+                                                <label class="form-check-label rules" for="inlineCheckbox{{i}}">{{item.status}}</label>
+                                            </div>
+                                            <div class="form-check form-check-inline mr-0" 
+                                            *ngIf="item.status == 'Complete' && item.checked">
+                                                <select class="form-control input-design bg-w h-32 rules rule-status" #ds [(ngModel)]="selectedStatusLevels[item.status]"
+                                                (change)="onSelectStatusLevelName(item.status, ds.value)">
+                                                    <option value="All">All</option>
+                                                    <option *ngFor="let level of item.level" [value]="level.value">{{level.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label rules fw-500" for="inlineCheckbox1">Business Date:</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <select class="form-control input-design bg-w h-32 rules" #bd [(ngModel)]="selectedbusinessDate"
+                                    (change)="onSelectBusinesDate(bd.value)">
+                                    <option *ngFor="let i of businessDate" [value]="i.name">{{i.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-check form-check-inline" *ngIf="selectedbusinessDate == 'Custom'">
+                                <!-- From date -->
+                                <div class="input-group br-d w-105">
+                                    <input class="form-control c-input br-bx-n h-28 z-0 bg-w cal-input" placeholder="dd-mm-yyyy"
+                                        [(ngModel)]="selectedFromBusinessDate" name="dp" ngbDatepicker #d="ngbDatepicker"
+                                        [maxDate]="maxDate" [value]="getFormattedFromDate()"
+                                        (ngModelChange)="onDateChange()" readonly style="--placeholder-font-size: 11px;">
+                                    <div class="input-group-append bg-w">
+                                    <button class="btn calendar pd-i" (click)="d.toggle()" type="button">
+                                        <img src="assets/img/workspace-icons/calendar.svg" class="img-fluid">
+                                    </button>
+                                    </div>
+                                </div><span class="mr-t--24">*</span>
+                                <label class="form-check-label pd-rl-5" for="inlineCheckbox2">To</label>
+                                <!-- To date -->
+                                <div class="input-group br-d w-105">
+                                    <input class="form-control c-input br-bx-n h-28 z-0 bg-w cal-input" placeholder="dd-mm-yyyy"
+                                        [(ngModel)]="selectedToBusinessDate" name="dp" ngbDatepicker #t="ngbDatepicker"
+                                        [maxDate]="maxDate" [value]="getFormattedToDate()"
+                                        (ngModelChange)="onDateChange()" readonly style="--placeholder-font-size: 11px;">
+                                    <div class="input-group-append bg-w">
+                                    <button class="btn calendar pd-i" (click)="t.toggle()" type="button">
+                                        <img src="assets/img/workspace-icons/calendar.svg" class="img-fluid">
+                                    </button>
+                                    </div>
+                                </div><span class="mr-t--24">*</span>
+                                <!-- Error message -->
+                                <div *ngIf="!areDatesSelected" class="text-error fs-10 err">
+                                    From date and To date are required
+                                </div>
+
+                                <div *ngIf="!isValidDateRange" class="text-error fs-10 err lh-12">
+                                    Difference between 'From' date and 'To' date in Business date field should not be more than 3 months (90 Days)
+                                </div>
+
+                                <div *ngIf="!isValidFromDate" class="text-error fs-10 err lh-12">
+                                    Please check 'From' date can't be bigger than 'To' dates in Business Date field
+                                </div>
+                            </div>
+                            
+                            <!-- <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="inlineCheckbox2">To</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <div class="input-group br-d w-140">
+                                    <input class="form-control c-input br-bx-n h-28 z-0" placeholder="dd-mm-yyyy" [(ngModel)]="selectedToBusinessDate"
+                                           name="dp" ngbDatepicker #t="ngbDatepicker" [maxDate]="maxDate"
+                                            [value]="getFormattedDate()" (ngModelChange)="selectedToBusinessDate = $event"
+                                      >
+                                    <div class="input-group-append bg-w">
+                                      <button class="btn calendar pd-i" (click)="t.toggle()" type="button">
+                                          <img src="assets/img/workspace-icons/calendar.svg" class="img-fluid">
+                                      </button>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div [formGroup]="fg" class="mt-3" [ngClass]="{'mr-t-40': !isValidDateRange || !isValidFromDate}">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label rules fw-500" for="inlineCheckbox1">Feed Name:</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-l-15">
+                                    <input type="text" class="form-check-input form-control input-design h-32 bg-w w-140 br-4" [(ngModel)]="selectedFeedName"
+                                    maxlength="100" formControlName="feedName" #feedName (input)="feedNameData()">
+                                </div>
+                            </div>
+                            <div class="mr-t-24 pull-right">
+                                <button class="btn btn-design" [disabled]="!areDatesSelected || !isValidDateRange || !isValidFromDate || disableButton" 
+                                (click)="applyFilter(); disableButton = true;">Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="historyList.length else noJobs">
+                <div class="card-body pd-0">
+                    <div class="table-responsive br list-height"
+                    [ngClass]="{'reTableHight': filterCollapse}">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="pd-l-24">Rule Name</th>
+                                    <th class="pd-l-24">Rule Type</th>
+                                    <th class="pd-l-24">Job Status
+                                        <em>
+                                            <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
+                                                <img src="assets/img/refresh.svg" width="18" alt="refresh" (click)="refresh()">
+                                            </a>
+                                        </em>
+                                    </th>
+                                    <th class="pd-l-24">Finished Date</th>
+                                    <th class="pd-l-24">Submitted Date</th>
+                                    <th class="pd-l-24">Business Date</th>
+                                    <th class="pd-l-24">Result</th>
+                                    <th class="pd-l-24">Action</th>
+                                    <th class="pd-l-24">Rule Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="td-text" *ngFor="let view of historyList">
+                                    <td class="text-over">
+                                        <!-- <input type="checkbox" (change)="selectRule($event, view)" [checked]="view.isChecked" 
+                                        *ngIf="view.jobStatus === 'Not Started' || view.jobStatus === 'Inprocess'"> -->
+                                        <span *ngIf="view.ruleStatus == 'Active'">
+                                            <input type="checkbox" class="mr-r-10" (change)="selectReRule($event, view)"
+                                            *ngIf="view.jobStatus === 'Failed' || view.jobStatus === 'Cancelled'">
+                                        </span>
+                                        
+                                        <!-- <input type="checkbox" (change)="selectReRule($event, view)" [checked]="isSelected(view.jobId)" 
+                                        *ngIf="view.jobStatus === 'Failed' || view.jobStatus === 'Cancelled'"> -->
+                                        <!-- <a placement="top" (click)="reRun(view)" ngbTooltip="Re-Run"
+                                        *ngIf="view.jobStatus === 'Failed' || view.jobStatus === 'Cancelled'">
+                                            <img src="/assets/img/project/re-run.svg" >
+                                        </a> -->
+                                        <span title="{{view?.ruleName}}">{{view?.ruleName}}</span>
+                                        
+                                    </td>
+                                    <td class="text-over">
+                                        <span *ngIf="view?.ruleTypeName != 'Null Value' && view?.ruleTypeName != 'Zero Row Check'" 
+                                        title="{{view?.ruleTypeName}} - {{view?.ruleLevelName}}">
+                                            {{view?.ruleTypeName}} - {{view?.ruleLevelName}}
+                                        </span>
+                                        <span *ngIf="view?.ruleTypeName == 'Null Value' || view?.ruleTypeName == 'Zero Row Check'" 
+                                        title="{{view?.ruleTypeName}}">
+                                            {{view?.ruleTypeName}}
+                                        </span> 
+                                    </td>
+                                    <td [ngClass]="{'redStatus': view?.jobStatus === 'Failed' || view?.jobStatus === 'Cancelled'}">
+                                        {{view?.jobStatus}}
+                                    </td>
+                                    <td class="text-over">
+                                        <!-- {{view?.jobFinishedDate | date: 'dd-MM-yy, hh:mm a'}} -->
+                                        <span title="{{convertToUKTimeZone(view?.jobFinishedDate)}}">
+                                            {{convertToUKTimeZone(view?.jobFinishedDate)}}
+                                        </span>
+                                        
+                                    </td>
+                                    <td class="text-over">
+                                        <!-- {{view?.jobSubmittedDate | date: 'dd-MM-yy, hh:mm a'}} -->
+                                        <span title="{{convertToUKTimeZone(view?.jobSubmittedDate)}}">
+                                            {{convertToUKTimeZone(view?.jobSubmittedDate)}}
+                                        </span>
+                                        
+                                    </td>
+                                    <td>{{view?.businessDate}}</td>
+                                    <td [ngClass]="{'greenStatus': parseJobOutput(view?.jobOutput) === 'Match', 'redStatus': parseJobOutput(view?.jobOutput) === 'Mismatch'}">
+                                        {{ view?.jobOutput ? parseJobOutput(view?.jobOutput) : '' }}
+                                    </td>
+                                    <td class="vr-l">
+                                        <span *ngIf="view?.jobOutput" class="cp vr" (click)="viewResult(view)">View Result</span>
+                                        <span *ngIf="view?.jobStatus === 'Failed'" class="cp vl" (click)="viewLog(view)">View Logs</span>
+                                    </td>
+                                    <td [ngClass]="{
+                                        'greenStatus': view?.ruleStatus === 'Active',
+                                        'orangeStatus': view?.ruleStatus === 'Inactive',
+                                        'redStatus': view?.ruleStatus === 'Deleted'
+                                      }">{{view?.ruleStatus}}</td>
+                                </tr>
+                                <!-- <tr  *ngIf="(runningList).length > 10" style="background-color: white !important;" class="pg-tr">
+                                    <td colspan="6" class="pg-pd">
+                                        <div class="text-center">
+                                            <ngb-pagination [collectionSize]="runningList.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"
+                                            [rotate]="true" aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious>
+                                                    <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noJobs>
+                <div class="card-body pd-0">
+                    <div class="connect-s text-center mr-t-16">
+                        <!-- <p class="tp1 fs-26">Running rules</p> -->
+                        <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid">
+                        <!-- <p class="tp1 mr-b-0 wm">Set business related rules for your dataset.</p> -->
+                        <p class="tp1 mr-t-40 mr-b-56" *ngIf="!filtered">Currently no rule or set of rule is in history.</p>
+                        <h5 class="tp1 mr-t-40 " *ngIf="filtered">There is no matching record found!</h5>
+                        <button *ngIf="filtered" type="button" class="btn saveBtn mr-b-20"
+                                                        (click)="clearFilterData()">Clear filter</button>
+                        <!-- <a [routerLink]="['/projects', projectId, 'data-quality']" 
+                            class="btn btn-design mr-b-56">Run rule</a> -->
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="btn-div text-center mt-3">
+            <!-- <button class="btn btn-design mr-r-20" (click)="back()">Okay</button> -->
+            <!-- <button class="btn btn-design mr-r-20" *ngIf="cancelBtn" (click)="cancelInprocess()"
+            [disabled]="selectedJobIds.length === 0">Cancel</button> -->
+
+            <button class="btn btn-design" *ngIf="reRunStatus" (click)="reRunRuleFunction()"
+            [disabled]="selectedRules.length === 0">Rerun</button>
+        </div>
+    </div>
+</app-loader>

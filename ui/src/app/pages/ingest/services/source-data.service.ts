@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Upload } from '.././models/upload';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { Folder } from '../../models/folder';
+import { AwsData } from '../models/awsdata';
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +70,71 @@ export class SourceDataService {
 
   public getListData(projectId: number, userId: number, folderId: number): Observable<any> {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/files/${projectId}/${userId}/${folderId}`);
+  }
+
+  // Source connection 
+
+  saveSourceData(data: AwsData): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/aws/save`, data, { headers }).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
+  public getSourceData(projectId: number, userId: number,  pageNumber: number, sizeLength: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/getConnections/${projectId}/${userId}?page=${pageNumber}&size=${sizeLength}`);
+  }
+
+  updateSourceData(sourceId: number, data: any): Observable<any> {
+    return this.http.put(`/QuantumSparkServiceAPI/api/v1/aws/update/${sourceId}`, data);
+  }
+
+  deleteSourceData(projectId: number, userId: number, sourceId: number): Observable<any> {
+    return this.http.delete(`/QuantumSparkServiceAPI/api/v1/aws/delete/${projectId}/${userId}/${sourceId}`)
+      .pipe(
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+
+  public getAccessTypes(): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/getAwsAccessTypes`);
+  }
+
+  public getBucketList(userId: number, projectId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/buckets/${userId}/${projectId}`);
+  }
+
+  // http://localhost:8080/QuantumSparkServiceAPI/api/v1/aws/testConnection/1/1
+  public testConnection(userId: number, projectId: number, data: any): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/aws/testConnection/${userId}/${projectId}`, data, { headers }).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
+  // Search functionality - connection
+  public getSearchConnection(projectId: number, userId: number, connectionName: string, filter: boolean,  pageNumber: number, sizeLength: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/getConnectionByName/${projectId}/${userId}/${connectionName}?filter=${filter}&page=${pageNumber}&size=${sizeLength}`);
+  }
+
+  // connnection is-exist 
+  public getIsExistConnection(projectId: number, userId: number, connectionName: string,  pageNumber: number, sizeLength: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/getConnectionByName/${projectId}/${userId}/${connectionName}?page=${pageNumber}&size=${sizeLength}`);
+  }
+
+  // bucket list with region
+  public getBucketData(userId: number, projectId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/bucketregions/${userId}/${projectId}`);
+  }
+
+  // region list
+  public getRegionList(userId: number, projectId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/aws/regions/${userId}/${projectId}`);
   }
 }

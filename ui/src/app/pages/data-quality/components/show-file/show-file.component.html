@@ -1,0 +1,58 @@
+<div class="close-icon" (click)="close.emit();">
+    <img src="assets/img/profile/cancel.svg">
+</div>
+<!-- <div class="s-t-btn">
+    <button class="btn mr-r-20 btn-outline-success cancel-b connectionBtns" (click)="source()"
+    [ngClass]="{'validBtn': validBtn}" *ngIf="sourceTargetType === 'sourceAndTarget'">Source</button>
+    <button class="btn btn-outline-success cancel-b connectionBtns"
+    [ngClass]="{'validBtn': !validBtn}" (click)="target()">Target</button>
+</div> -->
+<div class="pd p1 mr-b-0 dif">Total Number Of Rows: <span *ngIf="totalRowCount">{{totalRowCount}}</span>
+    <div *ngIf="!totalRowCount" class="spinner-center mr-l-10">
+        <div class="spinner-border text-primary wh-1rem" role="status">
+            
+        </div>
+        <div class="up">Counting Rows...</div>
+    </div>
+</div>
+<p class="pd-l-20 p1 mr-b-0">No. of Rows Displayed: {{rowCount}}</p>
+<div class="table-responsive br-r table-h">
+    <table class="table m-0 table-fixed table-striped">
+        <thead class="thead-light">
+            <tr class="fixed-th">
+                <th class="" *ngFor="let column of columnType; let isFirst = first">
+                    {{column.columnName}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="fileContent.length else noContent">
+                <tr class="td-text" *ngFor="let item of fileContent;let i=index;">
+                    <td class="text-center" *ngFor="let column of columnType; let j=index;">
+                        {{ item[column.columnName] }}
+                    </td>
+                </tr>
+            </ng-container>
+            <ng-template #noContent>
+                <tr class="no-dataset">
+                    <td>
+                        <div class="card shadow-n mr-b-0">
+                            <div class="card-body">
+                                <div class="no-content-div text-center">
+                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-b-20">
+                                    <h5 class="summary-p1">The selected file doesn't have any rows.</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            
+        </tbody>
+    </table>
+</div>
+
+<div class="btn-div text-center mt-3" *ngIf="fileContent.length">
+    <button class="btn btn-design mr-r-20" (click)="submitFile()">Ok</button>
+    <!-- <button class="btn btn-outline-dark cancel-b" (click)="close.emit();">Cancel</button> -->
+</div>

@@ -1,0 +1,15 @@
+<div class="modal-header border-bottom-0 pd-b-0">
+    <h5 class="modal-title modal-header-text">Confirmation</h5>
+    <!-- <button type="button" class="close" aria-describedby="modal-title" (click)="modal.dismiss('cancel')">
+        <span aria-hidden="true">&times;</span>
+    </button> -->
+</div>
+<div class="modal-body pd-b-0">
+    <p class="body-text-muted">
+        Are you sure to stop processing the remaining rules?
+    </p>
+</div>
+<div class="modal-footer justify-content-start">
+    <button type="button" class="btn deactivate-btn" (click)="deleteSource();">Yes</button>
+    <button type="button" class="btn up-btn" (click)="modal.dismiss('cancel')">No</button>
+</div>

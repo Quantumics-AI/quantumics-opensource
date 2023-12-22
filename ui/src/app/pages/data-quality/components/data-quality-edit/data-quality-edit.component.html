@@ -1,0 +1,220 @@
+<form [formGroup]="fg">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item breadcrumb-top">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">AWS</li>
+            </ol>
+        </li>
+    </ol>
+
+    <div style="position: absolute;top: 10%; left: 15px;">
+        <a class="btn" [routerLink]="['..']">Go Back</a>
+    </div>
+    <div class="row m-0 justify-content-center rounded-lg">
+        <div [class.col-7]="sourceTargetType === 'sourceAndTarget'" class="col-5">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="inputName" class="p2">Rule Name</label>
+                                <input type="text" class="form-control input-design" formControlName="ruleName"
+                                    autocomplete="off">
+                                <span class="alert-danger"
+                                    *ngIf="fg.get('ruleName').touched && fg.get('ruleName').hasError('required')">
+                                    This field is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="inputName" class="p2">Rule Description</label>
+                                <textarea class="form-control input-design"
+                                    formControlName="ruleDescription"></textarea>
+                                <span class="alert-danger"
+                                    *ngIf="fg.get('ruleDescription').touched && fg.get('ruleDescription').hasError('required')">
+                                    This field is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 text-center">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" id="sourceAndTarget"
+                                    formControlName="type" value="sourceAndTarget" [(ngModel)]="sourceTargetType"
+                                    (change)="selectedType($event.target.value)">
+                                <label class="form-check-label" for="sourceAndTarget">Source & Target</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" formControlName="type"
+                                    value="target" id="target" [(ngModel)]="sourceTargetType"
+                                    (change)="selectedType($event.target.value)">
+                                <label class="form-check-label" for="target">Target</label>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="sourceTargetType === 'target' else sourceAndTarget">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="inputName" class="p2">Select Data source</label>
+                                    <select class="form-control input-design" formControlName="targetDataSource">
+                                        <option value="aws" selected> AWS</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="inputName" class="p2">Select Data Connection</label>
+                                    <select class="form-control input-design" formControlName="targetDataConnection">
+                                        <option value="aws1" selected>AWS1</option>
+                                        <option value="aws2">AWS2</option>
+                                        <option value="aws3">AWS3</option>
+                                        <option value="aws4">AWS4</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="inputName" class="p2">Select Bucket</label>
+                                    <select class="form-control input-design" formControlName="targetBucket">
+                                        <option value="bucket1" selected>Bucket 1</option>
+                                        <option value="bucket2">Bucket 2</option>
+                                        <option value="bucket3">Bucket 3</option>
+                                        <option value="bucket4">Bucket 4</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="inputName" class="p2">Select Folder</label>
+                                    <select class="form-control input-design" formControlName="targetFolder">
+                                        <option value="folder1" selected>Folder 1</option>
+                                        <option value="folder2" selected>Folder 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #sourceAndTarget>
+                            <div class="col-6 mt-3">
+                                <div class="source-type">
+                                    <h6 class="ml-3 mt-1">Source</h6>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Data source</label>
+                                            <select class="form-control input-design"
+                                                formControlName="sourceDataSource">
+                                                <option value="aws"> AWS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Data Connection</label>
+                                            <select class="form-control input-design"
+                                                formControlName="sourceDataConnection">
+                                                <option value="aws1">AWS1</option>
+                                                <option value="aws2">AWS2</option>
+                                                <option value="aws3">AWS3</option>
+                                                <option value="aws4">AWS4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Bucket</label>
+                                            <select class="form-control input-design" formControlName="sourceBucket">
+                                                <option value="bucket1">Bucket 1</option>
+                                                <option value="bucket2">Bucket 2</option>
+                                                <option value="bucket3">Bucket 3</option>
+                                                <option value="bucket4">Bucket 4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Folder</label>
+                                            <select class="form-control input-design" formControlName="sourceFolder">
+                                                <option value="folder1" selected>Folder 1</option>
+                                                <option value="folder2" selected>Folder 2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <div class="source-type">
+                                    <h6 class="ml-3 mt-1">Target</h6>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Data source</label>
+                                            <select class="form-control input-design"
+                                                formControlName="targetDataSource">
+                                                <option value="aws" selected> AWS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Data Connection</label>
+                                            <select class="form-control input-design"
+                                                formControlName="targetDataConnection">
+                                                <option value="aws1" selected>AWS1</option>
+                                                <option value="aws2">AWS2</option>
+                                                <option value="aws3">AWS3</option>
+                                                <option value="aws4">AWS4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Bucket</label>
+                                            <select class="form-control input-design" formControlName="targetBucket">
+                                                <option value="bucket1" selected>Bucket 1</option>
+                                                <option value="bucket2">Bucket 2</option>
+                                                <option value="bucket3">Bucket 3</option>
+                                                <option value="bucket4">Bucket 4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="inputName" class="p2">Select Folder</label>
+                                            <select class="form-control input-design" formControlName="targetFolder">
+                                                <option value="folder1" selected>Folder 1</option>
+                                                <option value="folder2" selected>Folder 2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <div class="col-12 mt-2">
+                            <div class="text-center">
+                                <button type="button" class="btn btn-outline-success mr-3" (click)="showData();">Show
+                                    Data</button>
+                                <button type="button" class="btn btn-outline-success"
+                                    (click)="continue();">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div *ngIf="isShowData"
+    style="position: absolute; bottom: 0px; border: 1px solid #888C98;width: 100%;height: 500px;background: #fff;">
+    <app-data-quality-show-data [sourceTargetType]="sourceTargetType"
+        (close)="isShowData = !isShowData"></app-data-quality-show-data>
+</div>
