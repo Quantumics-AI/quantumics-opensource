@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 
+declare let window: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,10 +28,15 @@ export class LoginComponent implements OnInit {
     });
 
     const email = localStorage.getItem('email');
+    localStorage.clear();
+
     if (email) {
       this.rememberMe = true;
       this.fg.controls.email.setValue(email);
     }
+
+    // clear intercom session
+    window.Intercom('shutdown');
   }
 
   toggleShow() {

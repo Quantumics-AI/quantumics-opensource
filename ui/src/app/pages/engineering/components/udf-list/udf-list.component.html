@@ -62,7 +62,7 @@
                                 </tr>
 
                                 <tr style="background-color: white !important;" class="pg-tr"
-                                    *ngIf="(udfList | filterBy: searchTerm)?.length > 10">
+                                    *ngIf="(udfList | filterBy: searchTerm)?.length > pageSize">
                                     <td colspan="5" class="pg-pd">
                                         <div class="text-center">
                                             <ngb-pagination [collectionSize]="udfList?.length" [(page)]="page"

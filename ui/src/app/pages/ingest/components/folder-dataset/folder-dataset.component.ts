@@ -12,6 +12,7 @@ import { SourceDataService } from '../../services/source-data.service';
 import { Pager } from 'src/app/pages/govern/models/pager';
 import { DeleteFolderDatasetComponent } from '../delete-folder-dataset/delete-folder-dataset.component';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-folder-dataset',
@@ -43,9 +44,10 @@ export class FolderDatasetComponent implements OnInit {
   public searchDiv: boolean = false;
   public searchString: string;
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   // public currnetPage: number = 0;
+  private currentPage: number;
   // public totalPages: number;
   // public pager: Array<Pager> = [];
 
@@ -275,7 +277,13 @@ export class FolderDatasetComponent implements OnInit {
           const idx = this.files.findIndex(x => x.fileId == fileId);
           this.files.splice(idx, 1);
           this.snakbar.open(res?.message);
-          this.getFilesData(this.folderId, this.folderName)
+          const noOfPages = this.files.length / this.pageSize;
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
+          // this.getFilesData(this.folderId, this.folderName)
         }
       }, (error) => {
         this.loading = false;
@@ -338,43 +346,44 @@ export class FolderDatasetComponent implements OnInit {
   }
 
   // public previousPage(): void {
-  //   this.currnetPage--;
+  //   this.currentPage--;
   //   this.pager.map(t => t.isActive = false);
 
-  //   if (this.currnetPage == 0) {
-  //     this.currnetPage = 0;
+  //   if (this.currentPage == 0) {
+  //     this.currentPage = 0;
   //     this.startIndex = 0;
   //     this.endIndex = this.pageSize;
   //   } else {
-  //     this.startIndex = this.pageSize * this.currnetPage;
+  //     this.startIndex = this.pageSize * this.currentPage;
   //     this.endIndex = this.startIndex + this.pageSize;
   //   }
 
-  //   this.pager[this.currnetPage].isActive = true;
+  //   this.pager[this.currentPage].isActive = true;
   // }
 
   // public nextPage(): void {
   //   this.pager.map(t => t.isActive = false);
 
-  //   this.currnetPage++;
+  //   this.currentPage++;
 
-  //   if (this.totalPages != this.currnetPage) {
+  //   if (this.totalPages != this.currentPage) {
   //     this.startIndex = this.endIndex;
   //     this.endIndex = this.startIndex + this.pageSize;
   //   }
 
-  //   this.pager[this.currnetPage].isActive = true;
+  //   this.pager[this.currentPage].isActive = true;
   // }
 
   // public redirectToPageIndex(pager: Pager): void {
   //   this.pager.map(t => t.isActive = false);
   //   pager.isActive = true;
-  //   this.currnetPage = pager.index;
-  //   this.startIndex = this.pageSize * this.currnetPage;
+  //   this.currentPage = pager.index;
+  //   this.startIndex = this.pageSize * this.currentPage;
   //   this.endIndex = this.startIndex + this.pageSize;
   // }
 
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

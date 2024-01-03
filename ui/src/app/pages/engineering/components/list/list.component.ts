@@ -12,6 +12,7 @@ import { AddComponent } from '../add/add.component';
 import { EditFlowComponent } from '../edit-flow/edit-flow.component';
 import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-list',
@@ -36,9 +37,11 @@ export class ListComponent {
   public searchString: string;
   public isDescending: boolean;
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   public page = 1;
+
+  private currentPage: number;
 
   constructor(
     private sharedService: SharedService,
@@ -138,6 +141,14 @@ export class ListComponent {
           const index = this.flowsData.findIndex(x => x.engFlowId === flowId);
           this.flowsData.splice(index, 1);
           this.hasFlowList = this.flowsData.length;
+
+          const noOfPages = this.flowsData.length / this.pageSize;
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
+
         }, () => {
           this.loading = false;
         });
@@ -183,6 +194,7 @@ export class ListComponent {
   }
 
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

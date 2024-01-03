@@ -62,7 +62,7 @@
                                                         src="assets/img/edit.svg" width="18" alt=""></a></i>
                                         </td> -->
                                     </tr>
-                                    <tr *ngIf="(files | filterBy: searchTerm).length > 10" style="background-color: white !important;" class="pg-tr">
+                                    <tr *ngIf="(files | filterBy: searchTerm).length > pageSize" style="background-color: white !important;" class="pg-tr">
                                         <td colspan="4" class="pg-pd">
                                             <div class="text-center">
                                                 <ngb-pagination [collectionSize]="files.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"

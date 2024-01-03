@@ -79,10 +79,12 @@
                                                         class="align-unset mr-1"> {{job.jobStatus}}
                                                 </span>
                                             </td>
-                                            <td class="cp" (click)="selectJob(job)">{{job.jobRunDate | date: 'dd-MM-yy,
-                                                hh:mm a'}}</td>
-                                            <td class="cp" (click)="selectJob(job)">{{job.createdDate | date: 'dd-MM-yy,
-                                                hh:mm a'}}</td>
+                                            <td class="cp" (click)="selectJob(job)">
+                                                {{job.jobRunDate | date: 'dd-MM-yy,hh:mm a'}}
+                                            </td>
+                                            <td class="cp" (click)="selectJob(job)">
+                                                {{job.createdDate | date: 'dd-MM-yy,hh:mm a'}}
+                                            </td>
                                             <td class="cp" (click)="selectJob(job)">{{(job.createdBy?.split(' ')[0])}}</td>
                                             <td>
                                                 <a (click)="openHistory(job)" class="view cp">
@@ -104,7 +106,7 @@
                                         </tr>
                                     </ng-template>
 
-                                    <tr *ngIf="(engineeringJobs | filterBy: searchTerm)?.length >= 15" class="pg-tr"
+                                    <tr *ngIf="(engineeringJobs | filterBy: searchTerm)?.length >= pageSize" class="pg-tr"
                                         style="background-color: white !important;">
                                         <td colspan="6" class="pg-pd">
                                             <div class="text-center">
@@ -127,14 +129,13 @@
                                             <div class="text-center s-div">
                                                 <img src="assets/img/govern/no-search.svg">
                                                 <p class="no-term">No flow found</p>
-                                                <p class="term-2">Your search “{{searchTerm.engFlowName}}” did not match
-                                                    any
-                                                    flow
-                                                    name.
-                                                    Please try again .</p>
+                                                <p class="term-2">
+                                                    Your search “{{searchTerm.engFlowName}}” did not match any
+                                                    flow name. Please try again.
+                                                </p>
                                                 <button type="button" class="btn saveBtn"
-                                                    (click)="clearSearhInput()">Clear
-                                                    to go back</button>
+                                                    (click)="clearSearhInput()">Clearto go back
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>

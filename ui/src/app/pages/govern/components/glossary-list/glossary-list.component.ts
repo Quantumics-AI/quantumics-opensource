@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { Pager } from '../../models/pager';
 import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class GlossaryListComponent implements OnInit {
   glossary: any;
   originalGlossary: any;
   projectId: number;
-  searchTerm: any;
+  searchTerm: any = { term: '' };
   loading: boolean;
   certificate$: Observable<Certificate>;
   userId: number;
@@ -36,9 +37,9 @@ export class GlossaryListComponent implements OnInit {
   public projectName: string;
 
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
-  public currnetPage: number = 0;
+  public currentPage: number = 0;
   public totalPages: number;
   public pager: Array<Pager> = [];
   public hasFolders: boolean;
@@ -116,6 +117,10 @@ export class GlossaryListComponent implements OnInit {
       }
 
       this.originalGlossary = [...this.glossary];
+      if (Math.ceil(this.totalPages) <= this.currentPage) {
+        this.startIndex = (this.currentPage - 1) * this.pageSize;
+        this.endIndex = this.startIndex + this.pageSize;
+      }
     }, () => {
       this.loading = false;
       this.hasGlossary = false;
@@ -195,18 +200,18 @@ export class GlossaryListComponent implements OnInit {
   }
 
   searchInput(str) {
-    this.searchString = str;
     if (str.length == 0) {
       this.searchDiv = false;
+      this.glossary = this.originalGlossary;
     } else {
       this.searchDiv = true;
-      this.glossary = this.filterPipe.transform(this.originalGlossary, { term: this.searchString });
+      this.glossary = this.filterPipe.transform(this.originalGlossary, { term: str });
       this.startIndex = 0;
     }
   }
 
   clearSearhInput() {
-    this.searchTerm = '';
+    this.searchTerm = { term: '' };
     this.searchDiv = false;
     this.glossary = this.originalGlossary;
     this.startIndex = 0;
@@ -218,39 +223,39 @@ export class GlossaryListComponent implements OnInit {
   }
 
   public previousPage(): void {
-    this.currnetPage--;
+    this.currentPage--;
     this.pager.map(t => t.isActive = false);
 
-    if (this.currnetPage == 0) {
-      this.currnetPage = 0;
+    if (this.currentPage == 0) {
+      this.currentPage = 0;
       this.startIndex = 0;
       this.endIndex = this.pageSize;
     } else {
-      this.startIndex = this.pageSize * this.currnetPage;
+      this.startIndex = this.pageSize * this.currentPage;
       this.endIndex = this.startIndex + this.pageSize;
     }
 
-    this.pager[this.currnetPage].isActive = true;
+    this.pager[this.currentPage].isActive = true;
   }
 
   public nextPage(): void {
     this.pager.map(t => t.isActive = false);
 
-    this.currnetPage++;
+    this.currentPage++;
 
-    if (this.totalPages != this.currnetPage) {
+    if (this.totalPages != this.currentPage) {
       this.startIndex = this.endIndex;
       this.endIndex = this.startIndex + this.pageSize;
     }
 
-    this.pager[this.currnetPage].isActive = true;
+    this.pager[this.currentPage].isActive = true;
   }
 
   public redirectToPageIndex(pager: Pager): void {
     this.pager.map(t => t.isActive = false);
     pager.isActive = true;
-    this.currnetPage = pager.index;
-    this.startIndex = this.pageSize * this.currnetPage;
+    this.currentPage = pager.index;
+    this.startIndex = this.pageSize * this.currentPage;
     this.endIndex = this.startIndex + this.pageSize;
   }
 }

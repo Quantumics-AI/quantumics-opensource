@@ -56,6 +56,10 @@ export class FoldersService {
     return this.http.post(`/QuantumSparkServiceAPI/api/v1/uploadapidataasfile`, data);
   }
 
+  testDownloadAPIFiles(data: any): Observable<any> {
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/uploadapidataasfile?testConn=true`, data);
+  }
+
   validateFileUpload(formData: File, projectId: number, userId: number, folderId: number): Observable<any> {
     const form = new FormData();
     form.append('file', new Blob([formData], { type: 'text/csv;charset=utf-8;' }), formData.name);

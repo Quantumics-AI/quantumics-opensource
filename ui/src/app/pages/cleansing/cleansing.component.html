@@ -46,15 +46,21 @@
                                     (click)="onColumnSelect(column.column_name)">
                                     <div class="d-flex fix-contetnt">
                                         <span class="mr-1"
-                                            *ngIf="column.data_type === 'int' || column.data_type === 'bigint'">
+                                        *ngIf="column.data_type === 'int' || column.data_type === 'bigint' || column.data_type === 'serial' ">
                                             <img src="assets/img/preparation/number-icon.svg" class="align-bottom" />
                                         </span>
-                                        <span class="mr-1" *ngIf="column.data_type === 'string'">
+                                        <span class="mr-1" *ngIf="column.data_type === 'string' || column.data_type === 'varchar'">
                                             <img src="assets/img/preparation/string-icon.svg" class="align-bottom" />
                                         </span>
                                         <span class="mr-1"
                                             *ngIf="column.data_type === 'double' || column.data_type === 'float'">
                                             <img src="assets/img/preparation/number-icon.svg" class="align-bottom" />
+                                        </span>
+                                        <span class="mr-1" *ngIf="column.data_type === 'bool'">
+                                            <img src="assets/img/preparation/boolean.svg" width="23" class="align-text-bottom" />
+                                        </span>
+                                        <span class="mr-1" *ngIf="column.data_type === 'timestamp'">
+                                            <img src="assets/img/preparation/time-stamp.svg" width="17" class="align-text-bottom" />
                                         </span>
 
                                         <span role="button">

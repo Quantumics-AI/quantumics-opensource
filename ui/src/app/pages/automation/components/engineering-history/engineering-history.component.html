@@ -93,7 +93,7 @@
                                     </a>
                                 </td>
                             </tr>
-                            <tr *ngIf="(jobHistory | filterBy: searchTerm)?.length >= 15" class="pg-tr" style="background-color: white !important;">
+                            <tr *ngIf="(jobHistory | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
                                 <td colspan="6" class="pg-pd">
                                     <div class="text-center">
                                         <ngb-pagination [collectionSize]="jobHistory?.length" [(page)]="page"

@@ -11,6 +11,7 @@ import { UpdatePipelineComponent } from "../update-pipeline/update-pipeline.comp
 import { PipelineHistoryComponent } from "../pipeline-history/pipeline-history.component";
 import { PipelineConfirmationComponent } from '../pipeline-confirmation/pipeline-confirmation.component';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-list-pipelines',
@@ -37,12 +38,14 @@ export class ListPipelinesComponent implements OnInit {
   public searchDiv: boolean = false;
   public searchString: string;
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
 
   public page = 1;
   public Jheader: boolean = true;
   public Jfooter: boolean = false;
+
+  private currentPage: number;
 
   constructor(
     private router: Router,
@@ -190,6 +193,13 @@ export class ListPipelinesComponent implements OnInit {
           this.snakbar.open(response.massage);
           const idx = this.pipelines.findIndex(x => x.pipelineId === d);
           this.pipelines.splice(idx, 1);
+
+          const noOfPages = this.pipelines.length / this.pageSize;
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
         }
       }, (error) => {
         this.loading = false;
@@ -230,6 +240,7 @@ export class ListPipelinesComponent implements OnInit {
   }
 
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

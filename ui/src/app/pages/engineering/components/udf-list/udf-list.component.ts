@@ -10,6 +10,7 @@ import { CreateUpdateUdfComponent } from '../create-update-udf/create-update-udf
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { FilterPipe } from 'ngx-filter-pipe';
 import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-udf-list',
@@ -29,10 +30,10 @@ export class UdfListComponent implements OnInit {
 
   public page = 1;
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
 
-  private currnetPage: number;
+  private currentPage: number;
 
   public isDescending: boolean;
 
@@ -102,6 +103,12 @@ export class UdfListComponent implements OnInit {
         this.udfList = response.result;
         this.udfList.sort((a, b) => b.udfId - a.udfId);
         this.originalUdfList = [...this.udfList];
+
+        this.page = 0;
+        // this.currentPage = 0;
+        // this.startIndex = 0;
+        // this.endIndex = this.startIndex + this.pageSize;
+        
       }, (error) => {
         this.loading = false;
         this.udfList = [];
@@ -140,9 +147,9 @@ export class UdfListComponent implements OnInit {
               this.udfList.splice(index, 1); // remove the element.
               const noOfPages = this.udfList.length / this.pageSize;
 
-              if (Math.ceil(noOfPages) < this.currnetPage) {
-                this.currnetPage = this.currnetPage - 1;
-                this.startIndex = (this.currnetPage - 1) * this.pageSize;
+              if (Math.ceil(noOfPages) < this.currentPage) {
+                this.currentPage = this.currentPage - 1;
+                this.startIndex = (this.currentPage - 1) * this.pageSize;
                 this.endIndex = this.startIndex + this.pageSize;
               }
             }
@@ -159,7 +166,7 @@ export class UdfListComponent implements OnInit {
   }
 
   public onPageChange(currentPage: number): void {
-    this.currnetPage = currentPage;
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

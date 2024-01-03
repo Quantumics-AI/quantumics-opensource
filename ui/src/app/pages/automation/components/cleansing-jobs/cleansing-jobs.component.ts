@@ -10,6 +10,7 @@ import { CleansJobFolder } from '../../models/cleans-job-folder';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { CleansedRunedJob } from '../../models/cleansed-runed-job';
 import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-cleansing-jobs',
@@ -28,7 +29,7 @@ export class CleansingJobsComponent implements OnInit {
   public searchTerm: any = { folderDisplayName: '' };
   public page = 1;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   public projectName: string;
 

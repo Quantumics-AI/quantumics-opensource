@@ -37,6 +37,7 @@ import { CleansedFilesComponent } from './components/cleansed-files/cleansed-fil
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { ColumnAnalysisComponent } from './components/column-analysis/column-analysis.component';
+import { RowIdComponent } from './components/row-id/row-id.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { ColumnAnalysisComponent } from './components/column-analysis/column-ana
     QsMaxLengthDirective,
     PositiveNumberOnlyDirective,
     CleansedFilesComponent,
-    ColumnAnalysisComponent
+    ColumnAnalysisComponent,
+    RowIdComponent
   ],
   imports: [
     CommonModule,

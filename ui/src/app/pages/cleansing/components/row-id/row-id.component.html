@@ -1,0 +1,80 @@
+<div class="preparation-heading">
+    <h6 class="p2">RowID</h6>
+    <p class="p1 mr-b-0">Use Row ID to assign a unique identifier to each row in a dataset.</p>
+    <hr class="cleansing-divider">
+</div>
+
+<form [formGroup]="fg" (ngSubmit)="saveRule()">
+   
+    <div class="col-12">
+        <div class="form-group">
+            <label for="selectedOption" class="p2 fs-12">Select Position*</label>
+            <div class="form-check-inline-container">
+                <div  class="form-check form-check-inline"  *ngFor="let option of options">
+                    <input
+                    type="radio"
+                    name="position"
+                    [value]="option?.value"
+                    [(ngModel)]="selectedOption"
+                    formControlName="selectedOption"
+                    (change)="preview()"
+                    class="form-check-input cp"
+                    />
+                    <label class="p2 fs-12 mr-l-4 mt-1">{{ option?.label }}</label>
+                </div>
+            </div>
+            <span class="text-error"
+                *ngIf="fg.get('selectedOption').touched && fg.get('selectedOption').hasError('required')">
+                This field is required
+            </span>
+        </div>
+    </div>
+
+    <ng-container>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="column-name" class="p2 fs-12">Start from*</label>
+                <input type="text" class="form-control cleansing-textbox" id="column-name" placeholder="Enter start from"
+                [pattern]="'^-?[0-9]{1,15}$'" [(ngModel)]="startFromValues" formControlName="startFromValues"
+                    (change)="preview()"  maxlength="15" >
+                <ng-container *ngIf="fg.get('startFromValues').touched">
+                    <span class="text-error" *ngIf="fg.get('startFromValues').hasError('required')">
+                        This field is required
+                    </span>
+                    <span class="text-error" *ngIf="fg.get('startFromValues').hasError('pattern')">
+                        Not valid start from
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container>
+        <div class="col-12">
+            <div class="form-group">
+                <label for="column-name" class="p2 fs-12">Column name*</label>
+                <input type="text" class="form-control cleansing-textbox" id="column-name" placeholder="Enter column name"
+                    [pattern]="'^[a-zA-Z0-9]+$'" [(ngModel)]="columnNameValues" formControlName="columnNameValues"
+                    (change)="preview()" maxlength="15">
+                <ng-container *ngIf="fg.get('columnNameValues').touched">
+                    <span class="text-error" *ngIf="fg.get('columnNameValues').hasError('required')">
+                        This field is required
+                    </span>
+                    <span class="text-error" *ngIf="fg.get('columnNameValues').hasError('unique')">
+                        Column name should be unique
+                    </span>
+                    <span class="text-error" *ngIf="fg.get('columnNameValues').hasError('pattern')">
+                        Not valid column name
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+
+
+    <div class="pd-l-15">
+        <button id="btn-save" type="submit" class="btn btn-design mr-3" [ngClass]="{'disableAdd': !fg.valid}" 
+            [disabled]="!fg.valid || submitted">{{ruleButtonLabel}}</button>
+        <button id="btn-cancel" type="reset" class="btn cancelBtn" (click)="cancel()">Cancel</button>
+    </div>
+</form>

@@ -9,6 +9,7 @@ import { SourceDataService } from '../../services/source-data.service';
 import { DeleteFolderDatasetComponent } from '../delete-folder-dataset/delete-folder-dataset.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-dataset-list',
@@ -35,8 +36,10 @@ export class DatasetListComponent implements OnInit, OnDestroy {
   public isDescending: boolean;
 
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
+
+  private currentPage: number;
 
   public page = 1;
 
@@ -167,6 +170,15 @@ export class DatasetListComponent implements OnInit, OnDestroy {
           this.filesList.splice(idx, 1);
           // this.getPipeLineFiles();
           this.snakbar.open(res?.message);
+
+          const noOfPages = this.filesList.length / this.pageSize;
+          
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
+
         }
       }, (error) => {
         this.loading = false;
@@ -196,6 +208,7 @@ export class DatasetListComponent implements OnInit, OnDestroy {
   }
 
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

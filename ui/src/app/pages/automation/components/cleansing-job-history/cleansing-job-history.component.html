@@ -101,7 +101,7 @@
                             </tr>
 
                             <tr style="background-color: white !important;" class="pg-tr"
-                                *ngIf="(cleansingJobHistorys | filterBy: searchTerm)?.length > 15">
+                                *ngIf="(cleansingJobHistorys | filterBy: searchTerm)?.length > pageSize">
                                 <td colspan="6" class="pg-pd">
                                     <div class="text-center">
                                         <ngb-pagination [collectionSize]="cleansingJobHistorys?.length" [(page)]="page"

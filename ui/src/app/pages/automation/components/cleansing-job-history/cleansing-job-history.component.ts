@@ -7,6 +7,7 @@ import { Certificate } from 'src/app/models/certificate';
 import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-cleansing-job-history',
@@ -32,10 +33,10 @@ export class CleansingJobHistoryComponent implements OnInit {
 
   public page = 1;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
 
-  private currnetPage: number;
+  private currentPage: number;
 
   constructor(
     private quantumFacade: Quantumfacade,
@@ -86,7 +87,7 @@ export class CleansingJobHistoryComponent implements OnInit {
   }
 
   public onPageChange(currentPage: number): void {
-    this.currnetPage = currentPage;
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }
@@ -132,9 +133,9 @@ export class CleansingJobHistoryComponent implements OnInit {
 
         const noOfPages = this.cleansingJobHistorys.length / this.pageSize;
 
-        if (Math.ceil(noOfPages) < this.currnetPage) {
-          this.currnetPage = this.currnetPage - 1;
-          this.startIndex = (this.currnetPage - 1) * this.pageSize;
+        if (Math.ceil(noOfPages) < this.currentPage) {
+          this.currentPage = this.currentPage - 1;
+          this.startIndex = (this.currentPage - 1) * this.pageSize;
           this.endIndex = this.startIndex + this.pageSize;
         }
 

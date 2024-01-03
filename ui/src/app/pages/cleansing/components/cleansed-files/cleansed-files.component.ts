@@ -8,6 +8,7 @@ import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-cleansed-files',
@@ -33,7 +34,7 @@ export class CleansedFilesComponent implements OnInit {
   public searchString: string;
   searchTerm: any = { fileName: '' };
   public startIndex: number = 0;
-  public pageSize: number = 10;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   public page = 1;
 

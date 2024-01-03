@@ -203,7 +203,6 @@ export class CleansingComponent implements OnInit, OnDestroy {
     this.piiColumns = temp ? temp : [];
     this.originalContent = data.map(r => ({ ...r }));
     this.columnsMetadata = metadata.map(r => ({ ...r }));
-
     const columnsMetadata = metadata;
     if (this.rules && this.rules?.length > 0) {
       const res = this.cleansingService.apply(this.rules, data, columnsMetadata);
@@ -331,7 +330,6 @@ export class CleansingComponent implements OnInit, OnDestroy {
     rule.cleansingParamId = rule.cleansingParamId ? rule.cleansingParamId : 0;
     rule.cleansingRuleId = 0;
     rule.userId = this.certificateData.user_id;
-
     const apiResponse = rule.update ? this.cleansingDataService.updateRules(rule) : this.cleansingDataService.addRules(rule);
 
     apiResponse.subscribe((response: any) => {
@@ -374,7 +372,9 @@ export class CleansingComponent implements OnInit, OnDestroy {
   previewRuleNew(rule: any): void {
     this.removePreviewColumns();
 
-    rule.ruleImpactedCols = rule.ruleImpactedCols.join(',');
+    if(rule && rule.ruleImpactedCols && Array.isArray(rule.ruleImpactedCols)){
+      rule.ruleImpactedCols = rule.ruleImpactedCols.join(',');
+    }
     const res = this.cleansingService.preview(rule, this.data, this.newColumns);
 
     this.showPreview = true;

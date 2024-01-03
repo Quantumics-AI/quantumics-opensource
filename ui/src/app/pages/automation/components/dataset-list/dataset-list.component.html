@@ -108,7 +108,7 @@
                                         <td>{{rfile.fileName}}</td>
                                         <td>{{rfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
                                     </tr>
-                                    <tr *ngIf="(rawFiles | filterBy: searchTerm)?.length >= 15" class="pg-tr" style="background-color: white !important;">
+                                    <tr *ngIf="(rawFiles | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
                                         <td colspan="6" class="pg-pd">
                                             <div class="text-center">
                                                 <ngb-pagination [collectionSize]="rawFiles?.length" [(page)]="page"
@@ -191,7 +191,7 @@
                                         <td>{{cfile.fileName}}</td>
                                         <td>{{cfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
                                     </tr>
-                                    <tr *ngIf="(cleansedFiles | filterBy: searchTerm)?.length >= 15"
+                                    <tr *ngIf="(cleansedFiles | filterBy: searchTerm)?.length >= pageSize"
                                         class="pg-tr" style="background-color: white !important;">
                                         <td colspan="6" class="pg-pd">
                                             <div class="text-center">
@@ -271,7 +271,7 @@
                                         </td>
                                         <td>{{efile.flowCreationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
                                     </tr>
-                                    <tr *ngIf="(engFiles | filterBy: searchTerm)?.length >= 15" class="pg-tr" style="background-color: white !important;">
+                                    <tr *ngIf="(engFiles | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
                                         <td colspan="2" class="pg-pd">
                                             <div class="text-center">
                                                 <ngb-pagination [collectionSize]="engFiles?.length" [(page)]="page"

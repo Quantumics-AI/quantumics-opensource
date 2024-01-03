@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { SnackbarService } from 'src/app/core/services/snackbar.service';
   templateUrl: './projects-stats.component.html',
   styleUrls: ['./projects-stats.component.scss']
 })
-export class ProjectsStatsComponent implements OnInit {
+export class ProjectsStatsComponent implements OnInit, OnDestroy {
   public projectId: number;
   public userId: number;
   public requestType: string;
@@ -262,6 +262,10 @@ export class ProjectsStatsComponent implements OnInit {
     }, (reason) => {
       this.snackBar.open(reason)
     });
+  }
+
+  ngOnDestroy(): void {
+    localStorage.setItem('reachedToProjectStats', 'true');
   }
 
 }

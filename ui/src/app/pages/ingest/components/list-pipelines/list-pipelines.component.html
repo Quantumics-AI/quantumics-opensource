@@ -149,12 +149,12 @@
                                         </tr>
                                         
                                     </ng-template>
-                                    <tr *ngIf="(pipelines | filterBy: searchTerm).length > 10"
+                                    <tr *ngIf="(pipelines | filterBy: searchTerm).length > pageSize"
                                         style="background-color: white !important;" class="pg-tr">
                                         <td colspan="8" class="pg-pd">
                                             <div class="text-center">
                                                 <!-- <span class="float-left">
-                                                    <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                    <button type="button" class="btn nextBtn" [disabled]="currentPage === 0"
                                                         (click)="previousPage();"><img
                                                             src="assets/img/govern/arrow-left.svg">Previous</button>
                                                 </span>
@@ -163,7 +163,7 @@
                                                     [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
                                                 <span class="float-right">
                                                     <button type="button" class="btn nextBtn"
-                                                        [disabled]="currnetPage === totalPages - 1 || totalPages == 1"
+                                                        [disabled]="currentPage === totalPages - 1 || totalPages == 1"
                                                         (click)="nextPage();">Next
                                                         <img src="assets/img/govern/arrow-right.svg"></button>
                                                 </span> -->

@@ -123,7 +123,7 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
   drop(event: CdkDragDrop<string[]>) {
     const isValid = this.validateDrop(event.previousIndex, event.currentIndex);
     if (!isValid) {
-      this.snackBar.open('This drop sequence is not valld');
+      this.snackBar.open('This drop sequence is not valid');
       return;
     }
 
@@ -377,6 +377,9 @@ export class RulesCatelogueComponent implements OnInit, OnChanges {
         break;
       case 'standardize':
         stmnt = `Standardize values for column ${rule.ruleImpactedCols}`;
+        break;
+      case RuleTypes.RowId:
+        stmnt = `RowId with Column Name ${rule?.ruleInputValues} created at ${rule?.ruleInputValues1}` ;
         break;
       default:
         stmnt = '';

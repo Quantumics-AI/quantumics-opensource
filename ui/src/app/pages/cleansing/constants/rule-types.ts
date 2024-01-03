@@ -12,4 +12,5 @@ export class RuleTypes {
     public static readonly Merge = 'mergeRule';
     public static readonly Standardize = 'standardize';
     public static readonly CountMatch = 'countMatch';
+    public static readonly RowId= 'rowId';
 }

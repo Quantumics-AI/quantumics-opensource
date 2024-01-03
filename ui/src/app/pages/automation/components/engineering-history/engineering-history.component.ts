@@ -6,6 +6,7 @@ import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { AutomationService } from '../../services/automation.service';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-engineering-history',
@@ -28,7 +29,7 @@ export class EngineeringHistoryComponent implements OnInit {
 
   public curentPage: number;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   public page = 1;
 

@@ -222,6 +222,11 @@
                 (click)="setEditorComponent('countMatch', countMatchRuleTypes.Delimiter); activeMenuIndex = 8;">Between
                 delimiters</button>
         </mat-menu>
+        <button class="border-0 bg-white br-last ml-4 mt-1"
+        (click)="setEditorComponent('rowId'); activeMenuIndex = 9;">
+            <img src="{{ activeMenuIndex === 9 ? activeImages[9] : inActiveImages[9] }}" height="45"
+                alt="RowId Rule">
+        </button>
     </div>
 
     <div class="cleansing-toolbar applied-count mr-l-r-6 col mw-61" (click)="setEditorComponent('rules')" role="button" [class.disabled]="!appliedRuleCount">

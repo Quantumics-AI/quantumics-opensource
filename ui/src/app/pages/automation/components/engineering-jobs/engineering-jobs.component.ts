@@ -9,6 +9,7 @@ import { AutomationService } from '../../services/automation.service';
 import { EngineeringHistoryComponent } from '../engineering-history/engineering-history.component';
 import { SelectFilesComponent } from '../select-files/select-files.component';
 import { FolderService } from 'src/app/pages/file-profile/services/folder.service';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-engineering-jobs',
@@ -30,7 +31,7 @@ export class EngineeringJobsComponent implements OnInit {
   public isDescendingFlowName: boolean;
   public isDescendingFlowStatu: boolean;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
   public page = 1;
 

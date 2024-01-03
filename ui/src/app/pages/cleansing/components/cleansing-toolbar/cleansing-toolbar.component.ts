@@ -43,6 +43,7 @@ export class CleansingToolbarComponent implements OnChanges {
     'assets/media/preparation/standardise-inactive.svg',
     'assets/media/preparation/manageColumns-inactive.svg',
     'assets/media/preparation/countMatches-inactive.svg',
+    'assets/media/preparation/rowId-inactive.svg',
   ];
 
   public activeImages: string[] = [
@@ -55,6 +56,7 @@ export class CleansingToolbarComponent implements OnChanges {
     'assets/media/preparation/standardise-active.svg',
     'assets/media/preparation/manageColumns-active.svg',
     'assets/media/preparation/countMatches-active.svg',
+    'assets/media/preparation/rowId-active.svg',
   ];
 
   constructor(

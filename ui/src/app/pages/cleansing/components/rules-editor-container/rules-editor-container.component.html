@@ -63,4 +63,11 @@
             (cancelPreview)="handleCancelPreview($event)">
         </app-extract-column-values>
     </div>
+
+    <div *ngSwitchCase="'rowId'">
+        <app-row-id [rule]="selectedRule" [columns]="columns" (addRule)="handleAddRule($event)"
+            [ruleInputLogic1]="ruleInputLogic1" (previewRule)="handlePreviewRule($event)"
+            (cancelPreview)="handleCancelPreview($event)">
+        </app-row-id>
+    </div>
 </div>
