@@ -8,26 +8,6 @@
 
 package ai.quantumics.api.controller;
 
-import java.sql.SQLException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import ai.quantumics.api.constants.QsConstants;
 import ai.quantumics.api.helper.ControllerHelper;
 import ai.quantumics.api.model.CleansingParam;
@@ -54,15 +34,38 @@ import ai.quantumics.api.vo.CleanseFilesRedashResponse;
 import ai.quantumics.api.vo.CleanseFilesResponse;
 import ai.quantumics.api.vo.CleanseFolderResponse;
 import ai.quantumics.api.vo.CleanseHistoryResponse;
+import ai.quantumics.api.vo.CleansedJobResponse;
 import ai.quantumics.api.vo.EngFileInfo;
 import ai.quantumics.api.vo.EngineeredFilesRedashResponse;
 import ai.quantumics.api.vo.RawFilesResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.spring.web.json.Json;
+
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -230,7 +233,70 @@ public class AwsMetaDataController {
 			final ObjectMapper mapper = new ObjectMapper();
 			cleanseFilesByProjectId.forEach(runJobStatus -> {
 				if (fileMapInfo.containsKey(runJobStatus.getFileId())) {
-					CleanseHistoryResponse responseObject = getCleanseHistoryRespose(fileMapInfo, mapper, runJobStatus);
+					CleanseHistoryResponse responseObject = getCleanseHistoryResponse(fileMapInfo, mapper, runJobStatus);
+
+					cleanseHistory.add(responseObject);
+				}
+			});
+
+			if (cleanseHistory != null && !cleanseHistory.isEmpty()) {
+				Collections.sort(cleanseHistory, new Comparator<CleanseHistoryResponse>() {
+					@Override
+					public int compare(CleanseHistoryResponse o1, CleanseHistoryResponse o2) {
+						Integer i1 = Integer.valueOf(o1.getRunJobId());
+						Integer i2 = Integer.valueOf(o2.getRunJobId());
+
+						return i2.compareTo(i1);
+					}
+				});
+			}
+
+			log.info("History Final :: {}", cleanseHistory.size());
+			Instant end = Instant.now();
+			log.info("Total Time taken :: {}", Duration.between(start, end));
+			response = helper.createSuccessMessage(200, "cleansed Files", cleanseHistory);
+		} catch (Exception exception) {
+			response = helper.failureMessage(500, "Error " + exception.getMessage());
+			log.error("Error - {}", exception.getMessage());
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@ApiOperation(value = "History of successful cleanse runs for a file", response = Json.class)
+	@GetMapping("/api/v1/success-history/{projectId}/{userId}/{folderId}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "History of cleanse runs for a file") })
+	public ResponseEntity<Object> getPreparationCleanseHistory(@PathVariable(value = "projectId") final int projectId,
+											 @PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			Projects projects = helper.getProjects(projectId, userId);
+			if (projects == null) {
+				response.put("code", HttpStatus.BAD_REQUEST);
+				response.put("message",
+						"Requested project with Id: " + projectId + " for User with Id: " + userId + " not found.");
+
+				return ResponseEntity.ok().body(response);
+			}
+
+			Instant start = Instant.now();
+			List<RunJobStatus> cleanseFilesByProjectId = runJobService.getSuccessCleanseFilesHistory(projects.getProjectId(),
+					folderId);
+			log.info("Found {} files history for the projectId - {} and folderId - {} ", cleanseFilesByProjectId.size(),
+					projectId, folderId);
+			HashMap<Integer, String> fileMapInfo;
+
+			fileMapInfo = cleanseFilesByProjectId.stream()
+					.map(runJobStatus -> fileService.getFileById(runJobStatus.getFileId())).filter(Optional::isPresent)
+					.map(Optional::get)
+					.collect(Collectors.toMap(QsFiles::getFileId, QsFiles::getFileName, (a, b) -> b, HashMap::new));
+
+			log.info("No. of active files :: {}", fileMapInfo.size());
+
+			List<CleanseHistoryResponse> cleanseHistory = new ArrayList<>();
+			final ObjectMapper mapper = new ObjectMapper();
+			cleanseFilesByProjectId.forEach(runJobStatus -> {
+				if (fileMapInfo.containsKey(runJobStatus.getFileId())) {
+					CleanseHistoryResponse responseObject = getCleanseHistoryResponse(fileMapInfo, mapper, runJobStatus);
 
 					cleanseHistory.add(responseObject);
 				}
@@ -265,14 +331,16 @@ public class AwsMetaDataController {
 	 * @param runJobStatus
 	 * @return
 	 */
-	private CleanseHistoryResponse getCleanseHistoryRespose(HashMap<Integer, String> fileMapInfo,
+	private CleanseHistoryResponse getCleanseHistoryResponse(HashMap<Integer, String> fileMapInfo,
 			final ObjectMapper mapper, RunJobStatus runJobStatus) {
 		CleanseHistoryResponse responseObject = new CleanseHistoryResponse();
 		responseObject.setFileId(runJobStatus.getFileId());
 		responseObject.setRunJobId(runJobStatus.getRunJobId());
 		responseObject.setProjectId(runJobStatus.getProjectId());
 		responseObject.setStatus(runJobStatus.getStatus());
-		responseObject.setCreatedDate(runJobStatus.getCreatedDate());
+		Optional<QsFiles> fileById = fileService.getFileById(runJobStatus.getFileId());
+		responseObject.setFileCreatedDate(fileById.get().getCreatedDate());
+		responseObject.setJobExecutionDate(runJobStatus.getCreatedDate());
 		responseObject.setFolderId(runJobStatus.getFolderId());
 		responseObject.setFileName(fileMapInfo.get(runJobStatus.getFileId()));
 
@@ -295,16 +363,83 @@ public class AwsMetaDataController {
 	public ResponseEntity<Object> getCleanseFoldersOnly(@PathVariable(value = "projectId") final int projectId,
 			@PathVariable(value = "userId") final int userId) {
 		Map<String, Object> response;
+		List<CleanseFolderResponse> cleanseRuleFoldersResponse = new ArrayList<>();
 		try {
 			helper.getProjects(projectId);
-			List<CleansingParam> cleansingParamFolders = getCleanseParamFolders();
-			List<CleanseFolderResponse> cleanseResponse = new ArrayList<>();
-			getRefinedFolderNames(cleanseResponse, cleansingParamFolders, projectId, userId);
-			log.info("Total folders: {}", cleanseResponse.size());
-			response = helper.createSuccessMessage(200, "cleansed Files", cleanseResponse);
+			/* folders which have set rule*/
+			List<CleansingParam> cleansingRuleFolders = getCleanseParamFolders();
+			cleanseRuleFoldersResponse = getPreparationScreenFolders(cleansingRuleFolders, projectId, userId);
+			/* Folder which have not set any rule and having cleansed jobs history */
+			List<RunJobStatus> allCleanseJobFolders = getRunJobFolders(projectId);
+			if(allCleanseJobFolders != null && !allCleanseJobFolders.isEmpty() && cleanseRuleFoldersResponse != null) {
+				List<CleansingParam> folderIds = new ArrayList<>();
+				for (RunJobStatus runJobStatus : allCleanseJobFolders) {
+					int folderId = runJobStatus.getFolderId();
+					boolean isPresentInCleanse = false;
+					for (CleanseFolderResponse temp : cleanseRuleFoldersResponse) {
+						if (temp.getFolderId() == folderId) {
+							isPresentInCleanse = true;
+							break;
+						}
+					}
+					if (!isPresentInCleanse) {
+						CleansingParam param = new CleansingParam();
+						param.setFolderId(folderId);
+						param.setFileId(runJobStatus.getFileId());
+						folderIds.add(param);
+					}
+				}
+				List<CleanseFolderResponse> cleanseResponse = getPreparationScreenFolders(folderIds, projectId, userId);
+				if(cleanseResponse != null && !cleanseResponse.isEmpty()) {
+					cleanseRuleFoldersResponse.addAll(cleanseResponse);
+				}
+				log.info("Total folders: {}", cleanseRuleFoldersResponse==null?0:cleanseRuleFoldersResponse.size());
+			}
+			else if(allCleanseJobFolders != null && !allCleanseJobFolders.isEmpty() && cleanseRuleFoldersResponse == null) {
+				List<CleansingParam> folderIds = new ArrayList<>();
+				for (RunJobStatus runJobStatus : allCleanseJobFolders) {
+					int folderId = runJobStatus.getFolderId();
+					CleansingParam param = new CleansingParam();
+					param.setFolderId(folderId);
+					param.setFileId(runJobStatus.getFileId());
+					folderIds.add(param);
+					cleanseRuleFoldersResponse = getPreparationScreenFolders(folderIds, projectId, userId);
+					log.info("Total Job only folders: {}", cleanseRuleFoldersResponse==null?0:cleanseRuleFoldersResponse.size());
+				}
+			}
+			if(cleanseRuleFoldersResponse == null)
+				cleanseRuleFoldersResponse = new ArrayList<>();
+			response = helper.createSuccessMessage(200, "cleansed Files", cleanseRuleFoldersResponse);
 		} catch (Exception exception) {
-			response = helper.failureMessage(500, "Error " + exception.getMessage());
-			log.error("Error - {}", exception.getMessage());
+			response = helper.failureMessage(500, "Error " + exception.getLocalizedMessage());
+			log.error("Error - {}", exception);
+		}
+		return ResponseEntity.ok().body(response);
+	}
+
+	@ApiOperation(value = "folders for cleanse which has atleast one job", response = Json.class)
+	@GetMapping("/api/v1/cleanse/job/{projectId}/{userId}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List Files for the project cleansed jobs run") })
+	public ResponseEntity<Object> getCleanseJobs(@PathVariable(value = "projectId") final int projectId,
+														@PathVariable(value = "userId") final int userId) {
+		Map<String, Object> response=null;
+		List<CleansedJobResponse> distinctCleansedJobResponses = null;
+		try {
+			helper.getProjects(projectId);
+			List<CleansedJobResponse> cleansedJobResponses = runJobService.getPreparationJobFolders(userId, projectId);
+			if(CollectionUtils.isNotEmpty(cleansedJobResponses)){
+				distinctCleansedJobResponses = cleansedJobResponses.stream()
+						.collect(Collectors.toMap(CleansedJobResponse::getFolderId, loop -> loop, (existing, replacement) -> existing))
+						.values()
+						.stream()
+						.collect(Collectors.toList());
+
+			}
+
+			response = helper.createSuccessMessage(200, "cleansed Files", distinctCleansedJobResponses);
+		} catch (Exception exception) {
+			response = helper.failureMessage(500, "Error " + exception.getLocalizedMessage());
+			log.error("Error - {}", exception);
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -442,56 +577,78 @@ public class AwsMetaDataController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	private void getRefinedFolderNames(List<CleanseFolderResponse> cleanseResponse,
+	private List<CleanseFolderResponse> getPreparationScreenFolders(
 			List<CleansingParam> finalListFolders, int projectId, int userId) {
-		for (CleansingParam cleansingParam : finalListFolders) {
-			QsFolders folder1 = folderService.getActiveFolder(cleansingParam.getFolderId(), projectId, userId);
-			if (folder1 != null) {
-				CleanseFolderResponse responseObj = new CleanseFolderResponse();
-				responseObj.setFolderId(folder1.getFolderId());
-				responseObj.setUserId(folder1.getUserId());
-				responseObj.setProjectId(folder1.getProjectId());
-				responseObj.setFolderName(folder1.getFolderName());
-				responseObj.setFolderDisplayName((folder1.getFolderDisplayName() == null) ? folder1.getFolderName()
-						: folder1.getFolderDisplayName());
+		List<CleanseFolderResponse> cleanseResponse = null;
+		if(finalListFolders != null && finalListFolders.size() > 0) {
+			cleanseResponse = new ArrayList<>();
+			for (CleansingParam cleansingParam : finalListFolders) {
+				QsFolders folder1 = folderService.getActiveFolder(cleansingParam.getFolderId(), projectId, userId);
+				if (folder1 != null) {
+					CleanseFolderResponse responseObj = new CleanseFolderResponse();
+					responseObj.setFolderId(folder1.getFolderId());
+					responseObj.setUserId(folder1.getUserId());
+					responseObj.setProjectId(folder1.getProjectId());
+					responseObj.setFolderName(folder1.getFolderName());
+					responseObj.setFolderDisplayName((folder1.getFolderDisplayName() == null) ? folder1.getFolderName()
+							: folder1.getFolderDisplayName());
+					responseObj.setPipeline(folder1.isExternal());
+					//set createdBy to dataOwner to fix bug-6323
+					responseObj.setCreatedBy(folder1.getDataOwner());
 
-				try {
-					String createdByCurr = folder1.getCreatedBy();
-					int id = Integer.parseInt(createdByCurr);
-					String createdBy = helper.getUserName(id);
-
-					responseObj.setCreatedBy(createdBy);
-				} catch (Exception e) {
-					// Exception can occur for the folders created initially, where, the created by
-					// field is the actual string and not User Id (Integer)
-					responseObj.setCreatedBy(folder1.getCreatedBy());
-				}
-
-				responseObj.setCreateDate(folder1.getCreatedDate());
-				responseObj.setModifiedDate(folder1.getModifiedDate());
-				
-				helper.getProjectAndChangeSchema(projectId);
-				try {
-					responseObj.setFilesCount(fmAwsRef.getAllByFileId(cleansingParam.getFileId()).size());
-				} catch (Exception e) {
-					responseObj.setFilesCount(0);
-				}
-				List<FileMetaDataAwsRef> distinctFileDesc = fmAwsRef.getDistinctFileDesc(cleansingParam.getFileId());
-
-				if (distinctFileDesc != null && !distinctFileDesc.isEmpty()) {
-					Optional<QsFiles> latestFileInFolder = fileService.getFileById(distinctFileDesc.get(0).getFileId());
-					if (latestFileInFolder.isPresent()) {
-						responseObj.setLatestFileName(latestFileInFolder.get().getFileName());
-					} else {
-						responseObj.setLatestFileName("");
-					}
-				} else {
+					responseObj.setCreateDate(folder1.getCreatedDate());
+					responseObj.setModifiedDate(folder1.getModifiedDate());
 					responseObj.setLatestFileName("");
-				}
+					helper.getProjectAndChangeSchema(projectId);
+					try {
+						responseObj.setFilesCount(fmAwsRef.getAllByFileId(cleansingParam.getFileId()).size());
+					} catch (Exception e) {
+						responseObj.setFilesCount(0);
+					}
+					List<RunJobStatus> cleanseFilesByProjectId = runJobService.getSuccessCleanseFilesHistory(projectId,
+							folder1.getFolderId());
+					log.info("Found {} files history for the projectId - {} and folderId - {} ", cleanseFilesByProjectId.size(),
+							projectId, folder1.getFolderId());
+					HashMap<Integer, String> fileMapInfo;
 
-				cleanseResponse.add(responseObj);
+					fileMapInfo = cleanseFilesByProjectId.stream()
+							.map(runJobStatus -> fileService.getFileById(runJobStatus.getFileId())).filter(Optional::isPresent)
+							.map(Optional::get)
+							.collect(Collectors.toMap(QsFiles::getFileId, QsFiles::getFileName, (a, b) -> b, HashMap::new));
+
+					log.info("No. of active files :: {}", fileMapInfo.size());
+
+					List<CleanseHistoryResponse> cleanseHistory = new ArrayList<>();
+					final ObjectMapper mapper = new ObjectMapper();
+					cleanseFilesByProjectId.forEach(runJobStatus -> {
+						if (fileMapInfo.containsKey(runJobStatus.getFileId())) {
+							CleanseHistoryResponse responseObject = getCleanseHistoryResponse(fileMapInfo, mapper, runJobStatus);
+
+							cleanseHistory.add(responseObject);
+						}
+					});
+
+					if (cleanseHistory != null && !cleanseHistory.isEmpty()) {
+						Collections.sort(cleanseHistory, new Comparator<CleanseHistoryResponse>() {
+							@Override
+							public int compare(CleanseHistoryResponse o1, CleanseHistoryResponse o2) {
+								Integer i1 = Integer.valueOf(o1.getRunJobId());
+								Integer i2 = Integer.valueOf(o2.getRunJobId());
+
+								return i2.compareTo(i1);
+							}
+						});
+						Optional<QsFiles> latestFileInFolder = fileService.getFileById(cleanseHistory.get(0).getFileId());
+						if (latestFileInFolder.isPresent()) {
+							responseObj.setLatestFileName(latestFileInFolder.get().getFileName());
+						}
+					}
+					log.info("History Final :: {}", cleanseHistory.size());
+					cleanseResponse.add(responseObj);
+				}
 			}
 		}
+		return cleanseResponse;
 	}
 
 	private List<RawFilesResponse> getFilesDetails(Projects projects, List<QsFolders> folders, boolean redashReq)

@@ -57,13 +57,6 @@ public class AwsResourceHandler {
     log.info("Database created ::: {}", createDatabase.getSdkResponseMetadata().getRequestId());
   }
 
-  private void createAthenaDatabaseOperation(final String name) throws AmazonServiceException {
-    CreateNamedQueryRequest request = new CreateNamedQueryRequest()
-            .withDatabase(name);
-    athenaClient.createNamedQuery(request);
-    //log.info("Database created ::: {}", createDatabase.getSdkResponseMetadata().getRequestId());
-  }
-
   public boolean createProjectSequence(final Projects project) throws AmazonServiceException {
     final String hyphen = "-";
     final String bucketNameTemp = project.getBucketName();

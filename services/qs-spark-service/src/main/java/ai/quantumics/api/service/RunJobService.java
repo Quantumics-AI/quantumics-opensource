@@ -9,6 +9,7 @@
 package ai.quantumics.api.service;
 
 import ai.quantumics.api.model.RunJobStatus;
+import ai.quantumics.api.vo.CleansedJobResponse;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,6 +27,8 @@ public interface RunJobService {
 
   List<RunJobStatus> getAllFilesHistory(int projectId, int folderId);
 
+  List<RunJobStatus> getSuccessCleanseFilesHistory(int projectId, int folderId);
+
   List<RunJobStatus> getCleanseFilesByProjectId(int projectId) throws SQLException;
 
   int getSucceededJobsOnly(int userId, int projectId) throws SQLException;
@@ -33,5 +36,8 @@ public interface RunJobService {
   int getSucceededJobsOnlyInFolder(int userId, int projectId, int folderId) throws SQLException;
   
   List<RunJobStatus> getSucceededJobsInFolder(int userId, int projectId, int folderId) throws SQLException;
-  
+
+  List<RunJobStatus> findLatestRunJobStatusPerFolderForUserAndProjectId(int userId, int projectId) throws SQLException;
+
+  List<CleansedJobResponse> getPreparationJobFolders(int userId, int projectId) throws SQLException;
 }
