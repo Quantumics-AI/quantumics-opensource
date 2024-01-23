@@ -15,9 +15,9 @@ import java.sql.SQLException;
 
 public interface HomeKPIService {
 
-    QsHomeKPI updateHomeKPI(QsHomeKPI qsHomeKPI) throws SQLException;
+  QsHomeKPI updateHomeKPI(QsHomeKPI qsHomeKPI) throws SQLException;
 
-    QsHomeKPI getHomeKPIForUser(int userId) throws SQLException;
+  QsHomeKPI getHomeKPIForUser(int userId) throws SQLException;
 
 
 }

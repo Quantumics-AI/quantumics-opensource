@@ -15,13 +15,13 @@ import java.util.List;
 
 public interface RedashDashboardService {
 
-    QsRedashDashboard saveDashboard(QsRedashDashboard qsRedashDashboard) throws SQLException;
+  QsRedashDashboard saveDashboard(QsRedashDashboard qsRedashDashboard) throws SQLException;
 
-    QsRedashDashboard getDashboardForDashboardIdAndRdKey(int dashboardId, String rdKey) throws SQLException;
+  QsRedashDashboard getDashboardForDashboardIdAndRdKey(int dashboardId, String rdKey) throws SQLException;
 
-    List<QsRedashDashboard> getAllDashboardsForUserRedashKey(String rdKey) throws SQLException;
+  List<QsRedashDashboard> getAllDashboardsForUserRedashKey(String rdKey) throws SQLException;
 
-    List<QsRedashDashboard> getAllDashboards() throws SQLException;
+  List<QsRedashDashboard> getAllDashboards() throws SQLException;
 
 
 }

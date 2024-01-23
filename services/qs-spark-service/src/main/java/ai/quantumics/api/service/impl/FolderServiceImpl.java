@@ -107,11 +107,11 @@ public class FolderServiceImpl implements FolderService {
 	}
 
 	@Override
-	public boolean isFolderNameAvailable(String folderdisplayName) throws SQLException {
+	public boolean isFolderNameAvailable(String folderdisplayName, int folderId) throws SQLException {
 		boolean available = false;
 		List<QsFolders> folders = folderRepo.findByFolderDisplayNameIgnoreCaseOrFolderNameIgnoreCaseAndActive(
 				folderdisplayName, folderdisplayName, true);
-		Optional<QsFolders> folder = folders.stream().filter((folderP) -> folderP.isActive()).findFirst();
+		Optional<QsFolders> folder = folders.stream().filter((folderP) -> folderP.isActive() && folderP.getFolderId() != folderId).findFirst();
 		available = folder.isPresent() && folder.get().isActive() ? false : true;
 		return available;
 	}

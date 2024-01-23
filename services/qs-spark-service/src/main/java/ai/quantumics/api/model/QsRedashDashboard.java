@@ -17,17 +17,17 @@ import java.util.Date;
 @Table(name = "qsp_redash_dashboard")
 @Data
 public class QsRedashDashboard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int rdId;
-    private String rdKey;
-    private String dashboardName;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int rdId;
+  private String rdKey;
+  private String dashboardName;
 
-    private int dashboardId;
+  private int dashboardId;
 
-    private Date creationDate;
+  private Date creationDate;
 
-    private boolean active;
+  private boolean active;
 
 
 }

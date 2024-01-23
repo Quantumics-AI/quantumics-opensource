@@ -460,7 +460,7 @@ public class RunJobHelper {
   // Filter Rules related helper methods.
   
   public void qsTopRows(StringBuilder cleanseRuleInvocation, String ruleInputValues, String ruleInputValues5) {
-    cleanseRuleInvocation.append("df = topRows(");
+    cleanseRuleInvocation.append("df = topRowsByDefault(");
     cleanseRuleInvocation.append(Integer.parseInt(ruleInputValues));
     cleanseRuleInvocation.append(comma);
     cleanseRuleInvocation.append(singleQuote);
@@ -645,7 +645,7 @@ public class RunJobHelper {
     cleanseRuleInvocation.append(singleQuote);
     cleanseRuleInvocation.append(comma);
     cleanseRuleInvocation.append(singleQuote);
-    cleanseRuleInvocation.append(ruleInputValues.toLowerCase());
+    cleanseRuleInvocation.append(ruleInputValues);
     cleanseRuleInvocation.append(singleQuote);
     cleanseRuleInvocation.append(comma);
     cleanseRuleInvocation.append(singleQuote);
@@ -669,7 +669,7 @@ public class RunJobHelper {
     cleanseRuleInvocation.append(singleQuote);
     cleanseRuleInvocation.append(comma);
     cleanseRuleInvocation.append(singleQuote);
-    cleanseRuleInvocation.append(ruleInputValues.toLowerCase());
+    cleanseRuleInvocation.append(ruleInputValues);
     cleanseRuleInvocation.append(singleQuote);
     cleanseRuleInvocation.append(")\n");
   }
@@ -893,5 +893,20 @@ public class RunJobHelper {
     
     return output;
   }
-  
+  public void qsRowIdColumnsCreate(StringBuilder cleanseRuleInvocation, String ruleImpactedCols, String ruleInputValues, String ruleInputValues1) {
+    cleanseRuleInvocation.append("df = createRowIdColumn(");
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(ruleImpactedCols);
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(comma);
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(ruleInputValues);
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(comma);
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(ruleInputValues1);
+    cleanseRuleInvocation.append(singleQuote);
+    cleanseRuleInvocation.append(")\n");
+  }
+
 }

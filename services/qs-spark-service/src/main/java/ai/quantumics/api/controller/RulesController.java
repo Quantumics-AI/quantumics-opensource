@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
+import ai.quantumics.api.util.ValidatorUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -58,20 +59,22 @@ public class RulesController {
   private final CleansingRuleParamService cleanseRuleParamService;
   private final ControllerHelper controllHelper;
   private final FileService fileService;
+  private final ValidatorUtils validatorUtils;
 
   public RulesController(
-      final DbSessionUtil dbUtilCi,
-      final ProjectService projectServiceCi,
-      final CleansingRuleService cleanseRuleServiceCi,
-      final CleansingRuleParamService cleanseRuleParamServiceCi,
-      final ControllerHelper controllHelperCi,
-      final FileService fileServiceCi) {
+          final DbSessionUtil dbUtilCi,
+          final ProjectService projectServiceCi,
+          final CleansingRuleService cleanseRuleServiceCi,
+          final CleansingRuleParamService cleanseRuleParamServiceCi,
+          final ControllerHelper controllHelperCi,
+          final FileService fileServiceCi, ValidatorUtils validatorUtils) {
     dbUtil = dbUtilCi;
     projectService = projectServiceCi;
     cleanseRuleService = cleanseRuleServiceCi;
     cleanseRuleParamService = cleanseRuleParamServiceCi;
     controllHelper = controllHelperCi;
     fileService = fileServiceCi;
+    this.validatorUtils = validatorUtils;
   }
 
   @ApiOperation(value = "Delete Rules", response = Json.class)
@@ -90,6 +93,7 @@ public class RulesController {
     try {
       dbUtil.changeSchema("public");
       final Projects project = projectService.getProject(projectId, userId);
+      String userName = validatorUtils.returnUserName(userId);
       if(project == null) {
         response.put("code", HttpStatus.SC_BAD_REQUEST);
         response.put("message", "Requested project with Id: "+ projectId +" for User with Id: " + userId +" not found.");
@@ -98,6 +102,7 @@ public class RulesController {
       }
       
       dbUtil.changeSchema(project.getDbSchemaName());
+
       Optional<CleansingParam> ruleById = cleanseRuleParamService.getRuleById(ruleId);
       if (ruleById.isPresent()) {
         cleansingParam = ruleById.get();
@@ -122,14 +127,17 @@ public class RulesController {
             return ResponseEntity.status(HttpStatus.SC_OK).body(response);
           }
         }*/
-        
+        int folderId = cleansingParam.getFolderId();
+
         final int ruleSequence = cleansingParam.getRuleSequence();
         cleansingParam.setActive(false);
         cleansingParam.setRuleSequence(0);        
         cleansingParam = cleanseRuleParamService.saveRuleWithParam(cleansingParam);
+
+        validatorUtils.updateFolderDataOwner(folderId, userName);
+
         final int fileId = cleansingParam.getFileId();
         sortSequence(cleanseRuleParamService.getSeqGreaterThan(fileId, ruleSequence));
-        
         Optional<QsFiles> fileOp = fileService.getFileById(fileId);
         if(fileOp.isPresent()) {
           String auditMessage = controllHelper.getAuditMessage(AuditEventType.CLEANSE, AuditEventTypeAction.DELETE);
@@ -137,7 +145,7 @@ public class RulesController {
               String.format(auditMessage, fileOp.get().getFileName()), 
               null, userId, project.getProjectId());
         }
-        
+
         response.put("code", 200);
         response.put("message", "Rule Deleted Successfully");
       } else {
@@ -220,8 +228,11 @@ public class RulesController {
       final CleansingParam cleanseRuleParam,
       final int ruleSequence, final boolean createFlag)
       throws Exception {
-    cleanseRuleParam.setRuleImpactedCols(
-        joinListWithComma(cleanseRuleParamReq.getRuleImpactedCols()));
+    List<String> ruleImpactedColsList = cleanseRuleParamReq.getRuleImpactedCols();
+    if (ruleImpactedColsList != null && !ruleImpactedColsList.isEmpty()) {
+      cleanseRuleParam.setRuleImpactedCols(
+              joinListWithComma(cleanseRuleParamReq.getRuleImpactedCols()));
+    }
     cleanseRuleParam.setRuleInputValues(cleanseRuleParamReq.getRuleInputValues());
     cleanseRuleParam.setRuleInputLogic(cleanseRuleParamReq.getRuleInputLogic());
     cleanseRuleParam.setRuleOutputValues(cleanseRuleParamReq.getRuleOutputValues());
@@ -334,6 +345,8 @@ public class RulesController {
     try {
       dbUtil.changeSchema("public");
       final Projects project = projectService.getProject(projectId, userId);
+      String userName = validatorUtils.returnUserName(userId);
+
       if(project == null) {
         response.put("code", HttpStatus.SC_BAD_REQUEST);
         response.put("message", "Requested project with Id: "+ projectId +" for User with Id: " + userId +" not found.");
@@ -351,6 +364,7 @@ public class RulesController {
       impactedColumns(cleanseRuleParamReq, cleanseRuleParam, ruleSequence, true);
       cleanseRuleParam.setFileId(fileId);
       cleanseRuleParamService.saveRuleWithParam(cleanseRuleParam);
+      validatorUtils.updateFolderDataOwner(folderId, userName);
       
       String auditMessage = controllHelper.getAuditMessage(AuditEventType.CLEANSE, AuditEventTypeAction.CREATE);
       Optional<QsFiles> fileOp = fileService.getFileById(fileId);
@@ -408,6 +422,7 @@ public class RulesController {
     }
     dbUtil.changeSchema("public");
     final Projects project = projectService.getProject(projectId, userId);
+    String userName = validatorUtils.returnUserName(userId);
     
     if(project == null) {
       response.put("code", HttpStatus.SC_BAD_REQUEST);
@@ -422,10 +437,12 @@ public class RulesController {
           cleanseRuleParamService.getRuleById(cleanseRuleParamReq.getCleansingParamId());
       if (ruleById.isPresent()) {
         final CleansingParam cleanseRuleParam = ruleById.get();
+        int folderId = cleanseRuleParam.getFolderId();
         cleanseRuleParam.setCleansingRuleId(cleanseRuleParamReq.getCleansingRuleId());
         impactedColumns(cleanseRuleParamReq, cleanseRuleParam, ruleSequence, false);
         cleanseRuleParam.setFileId(cleanseRuleParamReq.getFileId());
         cleanseRuleParamService.saveRuleWithParam(cleanseRuleParam);
+        validatorUtils.updateFolderDataOwner(folderId, userName);
         String auditMessage = controllHelper.getAuditMessage(AuditEventType.CLEANSE, AuditEventTypeAction.UPDATE);
         Optional<QsFiles> fileOp = fileService.getFileById(cleanseRuleParamReq.getFileId());
         controllHelper.recordAuditEvent(AuditEventType.CLEANSE, AuditEventTypeAction.UPDATE, 

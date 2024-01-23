@@ -28,12 +28,10 @@ public class AwsResourceHandler {
 
   private final AmazonS3 amazonS3Client;
   private final AWSGlue awsGlueClient;
-  private final AmazonAthena athenaClient;
 
-  public AwsResourceHandler(AmazonS3 amazonS3ClientCi, AWSGlue awsGlueClientCi, AmazonAthena athenaClientCi) {
+  public AwsResourceHandler(AmazonS3 amazonS3ClientCi, AWSGlue awsGlueClientCi) {
     amazonS3Client = amazonS3ClientCi;
     awsGlueClient = awsGlueClientCi;
-    athenaClient = athenaClientCi;
   }
 
   private void createBucketInS3(final String s3BucketName) throws AmazonServiceException {

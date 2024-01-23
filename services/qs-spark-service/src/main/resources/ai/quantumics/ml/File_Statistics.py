@@ -7,7 +7,7 @@ import sys
 import os
 
 from smart_open import smart_open
-
+pythonVersion= sys.version_info[0]
 if sys.version_info[0] < 3:
     from StringIO import StringIO # Python 2.x
 else:
@@ -57,7 +57,7 @@ def getColumnDTypeAsString(colDType):
         columnDataType = 'int64'
     elif colDType == np.float64:
         columnDataType = 'float64'
-    elif colDType == np.object:
+    elif pythonVersion<3 and colDType == np.object or colDType == object:
         columnDataType = 'string'
     else:
         columnDataType = 'string'

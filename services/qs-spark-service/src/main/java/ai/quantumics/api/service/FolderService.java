@@ -38,7 +38,7 @@ public interface FolderService {
 
   List<QsFolders> saveFolderCollection(List<QsFolders> foldersList) throws SQLException;
   
-  boolean isFolderNameAvailable(String folderdisplayName) throws SQLException;
+  boolean isFolderNameAvailable(String folderdisplayName,int folderId) throws SQLException;
   
   QsFolders getActiveFolder(int folderId, int projectId, int userId);
   

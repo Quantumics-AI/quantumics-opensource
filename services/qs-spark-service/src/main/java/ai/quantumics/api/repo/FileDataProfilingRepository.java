@@ -7,9 +7,9 @@ import ai.quantumics.api.model.FileDataProfilingInfo;
 
 @Repository
 public interface FileDataProfilingRepository extends JpaRepository<FileDataProfilingInfo, Integer> {
-
-    FileDataProfilingInfo findByDataProfileId(int dataProfileId) throws SQLException;
-
-    FileDataProfilingInfo findByProjectIdAndFolderIdAndFileId(int projectId, int folderId, int fileId) throws SQLException;
-
+  
+  FileDataProfilingInfo findByDataProfileId(int dataProfileId) throws SQLException;
+  
+  FileDataProfilingInfo findByProjectIdAndFolderIdAndFileId(int projectId, int folderId, int fileId) throws SQLException;
+  
 }
