@@ -59,15 +59,20 @@ $table-cell-padding: 5px !default;
 }
 
 // Required
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-
-@import "~bootstrap/scss/buttons";
-@import "~bootstrap/scss/breadcrumb";
-@import "~bootstrap/scss/tables";
-@import "~bootstrap/scss/card";
-
+// @import "~bootstrap/scss/functions";
+// @import "~bootstrap/scss/variables";
+// @import "~bootstrap/scss/mixins";
+// @import "~bootstrap/scss/buttons";
+// @import "~bootstrap/scss/breadcrumb";
+// @import "~bootstrap/scss/tables";
+// @import "~bootstrap/scss/card";
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/buttons";
+@import "../node_modules/bootstrap/scss/breadcrumb";
+@import "../node_modules/bootstrap/scss/tables";
+@import "../node_modules/bootstrap/scss/card";
 // finally, import Bootstrap to set the changes!
 @import "bootstrap";
 
