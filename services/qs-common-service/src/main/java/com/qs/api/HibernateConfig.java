@@ -37,7 +37,7 @@ public class HibernateConfig {
         // Hbm2ddl
         properties.put(Environment.HBM2DDL_AUTO, "none");
         properties.put(Environment.FORMAT_SQL, "true");
-        properties.put(Environment.SHOW_SQL, "true");
+        //properties.put(Environment.SHOW_SQL, "true");
         properties.put(Environment.USE_SQL_COMMENTS, "true");
         properties.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
         properties.put(Environment.CONNECTION_HANDLING, "DELAYED_ACQUISITION_AND_HOLD");
