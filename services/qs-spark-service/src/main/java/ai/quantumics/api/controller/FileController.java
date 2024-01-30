@@ -192,7 +192,7 @@ public class FileController {
 
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
-		QsUserV2 user = validatorUtils.checkUser(userId);
+		//QsUserV2 user = validatorUtils.checkUser(userId);
 		Projects project = validatorUtils.checkProject(projectId);
 		dbUtil.changeSchema(project.getDbSchemaName());
 		try {
@@ -449,143 +449,14 @@ public class FileController {
 		return ResponseEntity.ok().body(response);
 	}
 
-	@ApiOperation(value = "files", response = Json.class)
-	@GetMapping("/{projectId}/{userId}/{folderId}")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "List All QsFiles for Project ID & Folder ID") })
-	public ResponseEntity<Object> getFiles(@PathVariable(value = "projectId") final int projectId,
-			@PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId) throws Exception{
-		dbUtil.changeSchema("public");
-		QsUserV2 user = validatorUtils.checkUser(userId);
-		Projects project = validatorUtils.checkProject(projectId);
-		controllerHelper.getProjects(projectId, userId);
-		dbUtil.changeSchema(project.getDbSchemaName());
-		final Map<String, Object> response = new HashMap<>();
-		log.info("projectId = {} and folderId {}", projectId, folderId);
-		response.put("code", HttpStatus.SC_OK);
-		response.put("result", fileService.getFiles(projectId, userId, folderId));
-		return ResponseEntity.ok().body(response);
-	}
-
-	@ApiOperation(value = "update a File", response = Json.class, notes = "update a file")
-	@PutMapping("{projectId}/{fileId}")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "File updated successfully"),
-			@ApiResponse(code = 404, message = "File Not Found") })
-	public ResponseEntity<Object> updateFile(@RequestBody final UpdateFileReq updateFile,
-			@PathVariable(value = "projectId") final int projectId, @PathVariable(value = "fileId") final int fileId) throws Exception{
-		final Map<String, Object> genericResponse = new HashMap<>();
-		dbUtil.changeSchema("public");
-		//QsUserV2 user = validatorUtils.checkUser(userId);
-		Projects project = validatorUtils.checkProject(projectId);
-		dbUtil.changeSchema(project.getDbSchemaName());
-		genericResponse.put("code", HttpStatus.SC_NOT_IMPLEMENTED);
-		genericResponse.put("message", "Not Implemented");
-		return ResponseEntity.status(HttpStatus.SC_NOT_IMPLEMENTED).body(genericResponse);
-	}
-
-	/* S3 based approach */
-	@PostMapping("/downloadfile/{userId}")
-	public ResponseEntity<Object> downloadFile(@RequestBody DownloadFileRequest downloadFileRequest,
-			@PathVariable(value = "userId") final int userId) throws Exception{
-		dbUtil.changeSchema("public");
-		QsUserV2 user = validatorUtils.checkUser(userId);
-		Projects project = validatorUtils.checkProject(downloadFileRequest.getProjectId());
-		dbUtil.changeSchema(project.getDbSchemaName());
-		Map<String, Object> response = null;
-		String auditMessage = null;
-		AuditEventTypeAction auditEventTypeAction = AuditEventTypeAction.DOWNLOADED;
-		AuditEventType auditEventType = null;
-		S3Object s3Object = null;
-
-		try {
-			String bucketName = project.getBucketName() + "-" + downloadFileRequest.getType();
-			String objectKey = null;
-
-			if (QsConstants.RAW.equals(downloadFileRequest.getType())) {
-				// TODO: Not yet implemented..
-
-			} else if (QsConstants.PROCESSED.equals(downloadFileRequest.getType())) {
-				Optional<RunJobStatus> runJobStatusOp = runJobService.getRunJob(downloadFileRequest.getJobId());
-				if (runJobStatusOp.isPresent()) {
-					RunJobStatus runJobStatus = runJobStatusOp.get();
-					QsFolders folder = folderService.getFolder(runJobStatus.getFolderId());
-					objectKey = String.format("%s/%s", folder.getFolderName(), downloadFileRequest.getJobId());
-
-					log.info("Object Key to searched in the bucket: {} is: {}", bucketName, objectKey);
-					s3Object = awsAdapter.fetchObject(bucketName, objectKey);
-					log.info("Object found in S3 and its key is: {}", s3Object.getKey());
-					Optional<QsFiles> filesOp = fileService.getFileById(runJobStatus.getFileId());
-					auditEventType = AuditEventType.CLEANSE;
-					if (filesOp.isPresent()) {
-						auditMessage = controllerHelper.getAuditMessage(auditEventType, auditEventTypeAction);
-						auditMessage = String.format(auditMessage, filesOp.get().getFileName());
-					}
-				}
-			} else if (QsConstants.ENG.equals(downloadFileRequest.getType())) {
-				Optional<EngFlowJob> engFlowJobOp = engFlowJobService.getThisJob(downloadFileRequest.getJobId());
-				EngFlowJob engFlowJob = null;
-				if (engFlowJobOp.isPresent()) {
-					engFlowJob = engFlowJobOp.get();
-
-					log.info("Eng flow Job found: {}", engFlowJob.getEngFlowId());
-					Optional<EngFlow> engFlowOp = engFlowService
-							.getFlowsForProjectAndId(downloadFileRequest.getProjectId(), engFlowJob.getEngFlowId());
-					EngFlow engFlow = null;
-					if (engFlowOp.isPresent()) {
-						engFlow = engFlowOp.get();
-						EngFlowMetaDataAwsRef engFlowMetaAwsRef = engFlowMetaDataService
-								.getByFlowId(engFlow.getEngFlowId());
-						if (engFlowMetaAwsRef != null) {
-							log.info("Eng flow found: {} and Folder Name: {}", engFlow.getEngFlowName(),
-									engFlowMetaAwsRef.getAthenaTable());
-							objectKey = String.format("%s/%s", engFlowMetaAwsRef.getAthenaTable(),
-									engFlow.getEngFlowName());
-							log.info("Object Key to searched in the bucket: {} is: {}", bucketName, objectKey);
-							s3Object = awsAdapter.fetchObject(bucketName, objectKey);
-							log.info("Object found in S3 and its key is: {}", s3Object.getKey());
-							auditEventType = AuditEventType.ENGINEER;
-							auditMessage = controllerHelper.getAuditMessage(auditEventType, auditEventTypeAction);
-							auditMessage = String.format(auditMessage, engFlow.getEngFlowName());
-						}
-					}
-				}
-			}
-
-			if (s3Object != null) {
-				String key = s3Object.getKey();
-				log.info("S3 Object Key which will be downloaded is: {}", key);
-				String preSignedUrl = awsAdapter.generatePresignedUrl(bucketName, key);
-				controllerHelper.recordAuditEvent(auditEventType, auditEventTypeAction, auditMessage, null, userId,
-						project.getProjectId());
-
-				response = createSuccessMessage(200, "Download request processed.", preSignedUrl);
-			} else {
-				response = createSuccessMessage(404, "Requested S3 Object '{}' not found.", null);
-			}
-
-		} catch (Exception e) {
-			log.error("Error downloading the file: {}", e.getMessage());
-			response = createSuccessMessage(500, "Download request failed. Internal server error.", null);
-		} finally {
-			if (s3Object != null) {
-				try {
-					s3Object.close();
-				} catch (IOException e) {
-
-				}
-			}
-		}
-
-		return ResponseEntity.ok().body(response);
-	}
-
 	@ApiOperation(value = "Analyze file for data profiling", response = Json.class)
 	@GetMapping("/dataprofiling/{projectId}/{userId}/{folderId}/{fileId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "File analyzed successfully"),
 			@ApiResponse(code = 400, message = "File was not readable !"),
 			@ApiResponse(code = 404, message = "File Not found!") })
 	public ResponseEntity<Object> getFileDataProfilingInfo(@PathVariable(value = "projectId") final int projectId,
-														   @PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId,
-														   @PathVariable(value = "fileId") final int fileId) throws Exception {
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId,
+			@PathVariable(value = "fileId") final int fileId) throws Exception {
 
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -679,9 +550,9 @@ public class FileController {
 			@ApiResponse(code = 400, message = "File was not readable!"),
 			@ApiResponse(code = 404, message = "File Not found!") })
 	public ResponseEntity<Object> getColumnValueFrequency(@PathVariable(value = "projectId") final int projectId,
-														  @PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId,
-														  @PathVariable(value = "fileId") final int fileId,
-														  @PathVariable(value = "columnName") final String columnName) throws Exception {
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId,
+			@PathVariable(value = "fileId") final int fileId,
+			@PathVariable(value = "columnName") final String columnName) throws Exception {
 
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -739,6 +610,135 @@ public class FileController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@ApiOperation(value = "files", response = Json.class)
+	@GetMapping("/{projectId}/{userId}/{folderId}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "List All QsFiles for Project ID & Folder ID") })
+	public ResponseEntity<Object> getFiles(@PathVariable(value = "projectId") final int projectId,
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "folderId") final int folderId) throws Exception{
+		dbUtil.changeSchema("public");
+		//QsUserV2 user = validatorUtils.checkUser(userId);
+		Projects project = validatorUtils.checkProject(projectId);
+		controllerHelper.getProjects(projectId, userId);
+		dbUtil.changeSchema(project.getDbSchemaName());
+		final Map<String, Object> response = new HashMap<>();
+		log.info("projectId = {} and folderId {}", projectId, folderId);
+		response.put("code", HttpStatus.SC_OK);
+		response.put("result", fileService.getFiles(projectId, userId, folderId));
+		return ResponseEntity.ok().body(response);
+	}
+
+	@ApiOperation(value = "update a File", response = Json.class, notes = "update a file")
+	@PutMapping("{projectId}/{fileId}")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "File updated successfully"),
+			@ApiResponse(code = 404, message = "File Not Found") })
+	public ResponseEntity<Object> updateFile(@RequestBody final UpdateFileReq updateFile,
+			@PathVariable(value = "projectId") final int projectId, @PathVariable(value = "fileId") final int fileId) throws Exception{
+		final Map<String, Object> genericResponse = new HashMap<>();
+		dbUtil.changeSchema("public");
+		//QsUserV2 user = validatorUtils.checkUser(userId);
+		Projects project = validatorUtils.checkProject(projectId);
+		dbUtil.changeSchema(project.getDbSchemaName());
+		genericResponse.put("code", HttpStatus.SC_NOT_IMPLEMENTED);
+		genericResponse.put("message", "Not Implemented");
+		return ResponseEntity.status(HttpStatus.SC_NOT_IMPLEMENTED).body(genericResponse);
+	}
+
+	/* S3 based approach */
+	@PostMapping("/downloadfile/{userId}")
+	public ResponseEntity<Object> downloadFile(@RequestBody DownloadFileRequest downloadFileRequest,
+			@PathVariable(value = "userId") final int userId) throws Exception{
+		dbUtil.changeSchema("public");
+		//QsUserV2 user = validatorUtils.checkUser(userId);
+		Projects project = validatorUtils.checkProject(downloadFileRequest.getProjectId());
+		dbUtil.changeSchema(project.getDbSchemaName());
+		Map<String, Object> response = null;
+		String auditMessage = null;
+		AuditEventTypeAction auditEventTypeAction = AuditEventTypeAction.DOWNLOADED;
+		AuditEventType auditEventType = null;
+		S3Object s3Object = null;
+
+		try {
+			String bucketName = project.getBucketName() + "-" + downloadFileRequest.getType();
+			String objectKey = null;
+
+			if (QsConstants.RAW.equals(downloadFileRequest.getType())) {
+				// TODO: Not yet implemented..
+
+			} else if (QsConstants.PROCESSED.equals(downloadFileRequest.getType())) {
+				Optional<RunJobStatus> runJobStatusOp = runJobService.getRunJob(downloadFileRequest.getJobId());
+				if (runJobStatusOp.isPresent()) {
+					RunJobStatus runJobStatus = runJobStatusOp.get();
+					QsFolders folder = folderService.getFolder(runJobStatus.getFolderId());
+					objectKey = String.format("%s/%s", folder.getFolderName(), downloadFileRequest.getJobId());
+
+					log.info("Object Key to searched in the bucket: {} is: {}", bucketName, objectKey);
+					s3Object = awsAdapter.fetchObject(bucketName, objectKey);
+					log.info("Object found in S3 and its key is: {}", s3Object.getKey());
+					Optional<QsFiles> filesOp = fileService.getFileById(runJobStatus.getFileId());
+					auditEventType = AuditEventType.CLEANSE;
+					if (filesOp.isPresent()) {
+						auditMessage = controllerHelper.getAuditMessage(auditEventType, auditEventTypeAction);
+						auditMessage = String.format(auditMessage, filesOp.get().getFileName());
+					}
+				}
+			} else if (QsConstants.ENG.equals(downloadFileRequest.getType())) {
+				Optional<EngFlowJob> engFlowJobOp = engFlowJobService.getThisJob(downloadFileRequest.getJobId());
+				EngFlowJob engFlowJob = null;
+				if (engFlowJobOp.isPresent()) {
+					engFlowJob = engFlowJobOp.get();
+
+					log.info("Eng flow Job found: {}", engFlowJob.getEngFlowId());
+					Optional<EngFlow> engFlowOp = engFlowService
+							.getFlowsForProjectAndId(downloadFileRequest.getProjectId(), engFlowJob.getEngFlowId());
+					EngFlow engFlow = null;
+					if (engFlowOp.isPresent()) {
+						engFlow = engFlowOp.get();
+						EngFlowMetaDataAwsRef engFlowMetaAwsRef = engFlowMetaDataService
+								.getByFlowId(engFlow.getEngFlowId());
+						if (engFlowMetaAwsRef != null) {
+							log.info("Eng flow found: {} and Folder Name: {}", engFlow.getEngFlowName(),
+									engFlowMetaAwsRef.getAthenaTable());
+							objectKey = String.format("%s/%s", engFlowMetaAwsRef.getAthenaTable(),
+									engFlow.getEngFlowName());
+							log.info("Object Key to searched in the bucket: {} is: {}", bucketName, objectKey);
+							s3Object = awsAdapter.fetchObject(bucketName, objectKey);
+							log.info("Object found in S3 and its key is: {}", s3Object.getKey());
+							auditEventType = AuditEventType.ENGINEER;
+							auditMessage = controllerHelper.getAuditMessage(auditEventType, auditEventTypeAction);
+							auditMessage = String.format(auditMessage, engFlow.getEngFlowName());
+						}
+					}
+				}
+			}
+
+			if (s3Object != null) {
+				String key = s3Object.getKey();
+				log.info("S3 Object Key which will be downloaded is: {}", key);
+				String preSignedUrl = awsAdapter.generatePresignedUrl(bucketName, key);
+				controllerHelper.recordAuditEvent(auditEventType, auditEventTypeAction, auditMessage, null, userId,
+						project.getProjectId());
+
+				response = createSuccessMessage(200, "Download request processed.", preSignedUrl);
+			} else {
+				response = createSuccessMessage(404, "Requested S3 Object '{}' not found.", null);
+			}
+
+		} catch (Exception e) {
+			log.error("Error downloading the file: {}", e.getMessage());
+			response = createSuccessMessage(500, "Download request failed. Internal server error.", null);
+		} finally {
+			if (s3Object != null) {
+				try {
+					s3Object.close();
+				} catch (IOException e) {
+
+				}
+			}
+		}
+
+		return ResponseEntity.ok().body(response);
+	}
+
 	@ApiOperation(value = "Download decrypted file.", response = Json.class)
 	@GetMapping("/download/{projectId}/{userId}/{folderId}/{fileId}/{jobId}/{fileType}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Downloaded file successfully"),
@@ -749,7 +749,7 @@ public class FileController {
 			@PathVariable(value = "fileType") final String fileType) throws Exception{
 		Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
-		QsUserV2 user = validatorUtils.checkUser(userId);
+		//QsUserV2 user = validatorUtils.checkUser(userId);
 		Projects project = validatorUtils.checkProject(projectId);
 		dbUtil.changeSchema(project.getDbSchemaName());
 		BufferedWriter bw = null;
@@ -791,8 +791,12 @@ public class FileController {
 						Resource resource = null;
 
 						if (additionalInfo != null) {
-							JsonNode additionalInfoNode = mapper.readValue(additionalInfo, JsonNode.class);
-							piiCols = additionalInfoNode.get("encryptPiiColumns").asText();
+							try {
+								JsonNode additionalInfoNode = mapper.readValue(additionalInfo, JsonNode.class);
+								piiCols = additionalInfoNode.get("encryptPiiColumns").asText();
+							} catch (Exception e) {
+								log.info("this file does not have additional info in json format. it has only s3 url in it");
+							}
 							if (piiCols != null && !piiCols.isEmpty()) {
 								CsvSchema csvSchema = CsvSchema.builder().setUseHeader(true).build();
 								CsvMapper csvMapper = new CsvMapper();
@@ -870,7 +874,7 @@ public class FileController {
 			@PathVariable(value = "fileType") final String fileType) throws Exception{
 		Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
-		QsUserV2 user = validatorUtils.checkUser(userId);
+		//QsUserV2 user = validatorUtils.checkUser(userId);
 		Projects project = validatorUtils.checkProject(projectId);
 		dbUtil.changeSchema(project.getDbSchemaName());
 		BufferedWriter bw = null;
@@ -951,6 +955,12 @@ public class FileController {
 									bw = new BufferedWriter(new FileWriter(csvFileTmp));
 									csvMapper.writer(schema).writeValues(bw).writeAll(readAllLines);
 
+									bw.flush();
+								}
+								else{
+									bw = new BufferedWriter(new FileWriter(csvFileTmp));
+									String value = colStr.substring(1, colStr.length() - 1).replaceAll("\\s+", "");
+									bw.write(value);
 									bw.flush();
 								}
 

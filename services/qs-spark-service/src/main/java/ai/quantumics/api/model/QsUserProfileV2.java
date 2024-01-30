@@ -30,7 +30,7 @@ public class QsUserProfileV2 {
   
   private String userImage;
   
-  @OneToOne(mappedBy = "qsUserProfile")
-  private QsUserV2 qsUser;
+  //@OneToOne(mappedBy = "qsUserProfile")
+  //private QsUserV2 qsUser;
 
 }

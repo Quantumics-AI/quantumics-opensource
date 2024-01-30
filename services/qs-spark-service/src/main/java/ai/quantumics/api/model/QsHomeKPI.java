@@ -16,9 +16,9 @@ import javax.persistence.*;
 @Table(name = "qsp_home_kpi")
 @Data
 public class QsHomeKPI {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int kpiId;
-    private String kpiDetails;
-    private int userId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int kpiId;
+  private String kpiDetails;
+  private int userId;
 }

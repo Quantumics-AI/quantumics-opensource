@@ -68,10 +68,10 @@ public class ProjectStatisticsController {
 	private final HomeKPIService homeKPIService;
 
 	public ProjectStatisticsController(FolderService folderServiceCi, FileService fileServiceCi, ControllerHelper helperCi,
-									   EngFlowService engFlowServiceCi, RunJobService runJobServiceCi, EngFlowJobService engFlowJobServiceCi,
-									   FileMetaDataAwsService fileMetaDataAwsServiceCi, UserProjectsService userProjectsServiceCi,
-									   RedashDashboardService redashDashboardServiceCi,
-									   SubscriptionService subscriptionServiceCi, UserServiceV2 userServiceV2Ci, HomeKPIService homeKPIServiceCi) {
+			EngFlowService engFlowServiceCi, RunJobService runJobServiceCi, EngFlowJobService engFlowJobServiceCi,
+			FileMetaDataAwsService fileMetaDataAwsServiceCi, UserProjectsService userProjectsServiceCi,
+			RedashDashboardService redashDashboardServiceCi,
+			SubscriptionService subscriptionServiceCi, UserServiceV2 userServiceV2Ci, HomeKPIService homeKPIServiceCi) {
 		folderService = folderServiceCi;
 		fileService = fileServiceCi;
 		helper = helperCi;
@@ -91,7 +91,7 @@ public class ProjectStatisticsController {
 			@ApiResponse(code = 404, message = "Statistics found!") })
 	@GetMapping(value = "/api/v1/project-stats/{userId}/{projectId}")
 	public ResponseEntity<Object> getStatistics(@PathVariable(value = "userId") final int userId,
-												@PathVariable(value = "projectId") final int projectId) {
+			@PathVariable(value = "projectId") final int projectId) {
 		HashMap<String, Object> message = new HashMap<>();
 		try {
 			helper.swtichToPublicSchema();
@@ -147,8 +147,8 @@ public class ProjectStatisticsController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 404, message = "Not found") })
 	@GetMapping(value = "/api/v2/project-stats/{requestType}/{userId}/{projectId}")
 	public ResponseEntity<Object> getStatistics(@PathVariable("requestType") final String requestType,
-												@PathVariable(value = "userId") final int userId, @PathVariable(value = "projectId") final int projectId,
-												@RequestParam(value = "kpi", required = false) String kpi) {
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "projectId") final int projectId,
+		@RequestParam(value = "kpi", required = false) String kpi) {
 		log.info("ProjectStatistics : getStatistics : started");
 		List<QsFiles> activeFiles = null;
 		List<QsFiles> sourceDataset = null;
@@ -186,11 +186,11 @@ public class ProjectStatisticsController {
 			Predicate<QsUserProjects> findByUserId = (userProject) -> helper.isActiveUser(userProject.getUserId());
 			List<QsUserProjects> userProjects = userProjectsService.getProjectUsersByProjectId(projectId);
 			userProjects = userProjects.stream()
-					.filter(findByUserId)
-					.collect(Collectors.toList());
+										.filter(findByUserId)
+										.collect(Collectors.toList());
 			int numberOfUsers = isAdmin
 					? userProjects.stream().filter(findByUserId)
-					.collect(Collectors.toList()).size()
+							.collect(Collectors.toList()).size()
 					: 1;
 			double otherDataOpsPrice = 1000;
 			int subscriptionId = subscriptionService.getProjectSubscriptionDetails(projectId)
@@ -202,13 +202,13 @@ public class ProjectStatisticsController {
 				projectStartDate = QsUtil.convertToLocalDate(projects.getCreatedDate());
 			} else {
 				Optional<QsUserProjects> qsUserProjectsOptional = userProjects.stream()
-						.filter((userProject) -> userId == userProject.getUserId())
-						.findFirst();
+																				.filter((userProject) -> userId == userProject.getUserId())
+																				.findFirst();
 				if(qsUserProjectsOptional.isPresent()) {
 					projectStartDate = QsUtil.convertToLocalDate(qsUserProjectsOptional.get().getCreationDate());
 				} else {
 					throw new QsRecordNotFoundException("The user is not active");
-				}
+				}						
 			}
 			LocalDate yesterday = LocalDate.now().minusDays(1);
 			LocalDate threeMonth = LocalDate.now().minusDays(90);
@@ -388,7 +388,7 @@ public class ProjectStatisticsController {
 					projectStatitcs.setDataVolume(weeklyVolumeOverview);
 				}
 
-			} else if ("M".equalsIgnoreCase(requestType)) {
+			} else if ("M".equalsIgnoreCase(requestType)) {						
 				LocalDate projectStartDateLocal = projectStartDate;
 				LocalDate startDate = LocalDate.now().withDayOfMonth(1);
 				LocalDate endDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
@@ -515,7 +515,7 @@ public class ProjectStatisticsController {
 			savings.setMoney(money);
 
 			projectStatitcs.setSavings(savings);
-
+			
 			// Starting the Livy Sesssion
 			helper.initializeLivySilently(projects.getProjectId());
 
@@ -554,7 +554,7 @@ public class ProjectStatisticsController {
 		Map<String, Double> montlyVolumeGroupByBytes = sourceDataset.stream().filter((qsfile) -> {
 			LocalDate creationDate = QsUtil.convertToLocalDate(qsfile.getCreatedDate());
 			return (creationDate.isEqual(startDate) || creationDate.isEqual(endDate))
-					|| (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
+					  || (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
 		}).collect(Collectors.groupingBy((qsFile) -> {
 			LocalDate creationDate = QsUtil.convertToLocalDate(qsFile.getCreatedDate());
 			int monthDay = MonthDay.from(creationDate).getDayOfMonth();
@@ -565,8 +565,8 @@ public class ProjectStatisticsController {
 		LocalDate start = LocalDate.now().withDayOfMonth(1);
 		LocalDate end = LocalDate.now().plusMonths(1).withDayOfMonth(1);
 		Map<String, Double> ovarAllDaysOfMonth = IntStream.range(1, (Stream.iterate(start, date -> date.plusDays(1))
-						.limit(ChronoUnit.DAYS.between(start, end))
-						.collect(Collectors.toList()).size()+1))
+				.limit(ChronoUnit.DAYS.between(start, end))
+				.collect(Collectors.toList()).size()+1))
 				.collect(LinkedHashMap<String, Double>::new, (m, v) -> m.put(String.valueOf(v), 0.00), (m, m2) -> {});
 		ovarAllDaysOfMonth.putAll(montlyVolumeGroupByBytes);
 
@@ -578,7 +578,7 @@ public class ProjectStatisticsController {
 
 	private DataVolumeOverview buildVolumeOverviewWeekly(List<QsFiles> sourceDataset, double yesterdayStorageInMB, String averageStorageRange) {
 		Map<String, Double> weeklyVolumeGroupByBytes = sourceDataset.stream().filter(
-						(qsfile) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(qsfile.getCreatedDate())))
+				(qsfile) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(qsfile.getCreatedDate())))
 				.collect(Collectors.groupingBy((qsFile) -> QsUtil.getDay(qsFile.getCreatedDate()),
 						Collectors.summingDouble((qsFile) -> Double.parseDouble(qsFile.getFileSize()))));
 
@@ -713,7 +713,7 @@ public class ProjectStatisticsController {
 		Map<String, Long> monthlyDataPipesSummary = dataPipes.stream().filter((engFlow) -> {
 			LocalDate creationDate = QsUtil.convertToLocalDate(engFlow.getCreatedDate());
 			return (creationDate.isEqual(startDate) || creationDate.isEqual(endDate))
-					|| (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
+					  || (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
 		}).collect(Collectors.groupingBy((engFlow) -> {
 			LocalDate creationDate = QsUtil.convertToLocalDate(engFlow.getCreatedDate());
 			int monthDay = MonthDay.from(creationDate).getDayOfMonth();
@@ -730,7 +730,7 @@ public class ProjectStatisticsController {
 
 	private static StatisticsOverview buildDataPipeOverviewWeekly(List<EngFlow> dataPipes, long yesterdayDataPipeCount, String averageDataPipeRange) {
 		Map<String, Long> datapipesWeeklySummary = dataPipes.stream().filter(
-						(engFlow) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(engFlow.getCreatedDate())))
+				(engFlow) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(engFlow.getCreatedDate())))
 				.collect(Collectors.groupingBy((engFlow) -> QsUtil.getDay(engFlow.getCreatedDate()),
 						Collectors.counting()));
 		StatisticsOverview dataPipesOverview = new StatisticsOverview();
@@ -763,7 +763,7 @@ public class ProjectStatisticsController {
 				.filter((fileMetaDataAwsRef) -> {
 					LocalDate creationDate = QsUtil.convertToLocalDate(fileMetaDataAwsRef.getCreatedDate());
 					return (creationDate.isEqual(startDate) || creationDate.isEqual(endDate))
-							|| (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
+							  || (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
 				}).collect(Collectors.groupingBy((fileMetaDataAwsRef) -> {
 					LocalDate creationDate = QsUtil.convertToLocalDate(fileMetaDataAwsRef.getCreatedDate());
 					int monthDay = MonthDay.from(creationDate).getDayOfMonth();
@@ -817,7 +817,7 @@ public class ProjectStatisticsController {
 			LocalDate creationDate = QsUtil.convertToLocalDate(qsfile.getCreatedDate());
 
 			return (creationDate.isEqual(startDate) || creationDate.isEqual(endDate))
-					|| (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
+					  || (creationDate.isBefore(endDate) && creationDate.isAfter(startDate));
 
 		}).collect(Collectors.groupingBy((qsFile) -> {
 			LocalDate creationDate = QsUtil.convertToLocalDate(qsFile.getCreatedDate());
@@ -836,7 +836,7 @@ public class ProjectStatisticsController {
 
 	private static StatisticsOverview buildSourceDSOverviewWeekly(List<QsFiles> sourceDataset, long yestSourceDataSetCount, String averageSourceDataSet) {
 		Map<String, Long> weeklySummary = sourceDataset.stream().filter(
-						(qsfile) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(qsfile.getCreatedDate())))
+				(qsfile) -> QsUtil.isWithInWeeklyWindow(QsUtil.convertToLocalDate(qsfile.getCreatedDate())))
 				.collect(Collectors.groupingBy((qsFile) -> QsUtil.getDay(qsFile.getCreatedDate()),
 						Collectors.counting()));
 
@@ -850,7 +850,7 @@ public class ProjectStatisticsController {
 	}
 
 	/**
-	 * This prepares the data volume object with unit
+	 * This prepares the data volume object with unit 
 	 * @param dataVolumeGroupByBytes
 	 * @return
 	 */
@@ -863,7 +863,7 @@ public class ProjectStatisticsController {
 		DataVolumeOverview weeklyVolumeOverview = prepareDataVolumeOverview(totalVolume, weeklyVolumeSummary);
 		return weeklyVolumeOverview;
 	}
-
+	
 	/**
 	 * This prepares the data volume in MB
 	 * @param dataVolumeGroupByBytes
@@ -877,10 +877,10 @@ public class ProjectStatisticsController {
 		DataVolumeOverview weeklyVolumeOverview = prepareDataVolumeOverview(totalVolume, dataVolumeSummary);
 		return weeklyVolumeOverview;
 	}
-
-
+	
+	
 	private DataVolumeOverview prepareDataVolumeOverview(ValueUnitPair totalVolume,
-														 Map<String, ? extends Object> dataVolumeSummary) {
+			Map<String, ? extends Object> dataVolumeSummary) {
 		DataVolumeOverview dataVolumeOverview = new DataVolumeOverview();
 		dataVolumeOverview.setTotal(totalVolume.getValue());
 		dataVolumeOverview.setUnit(totalVolume.getUnit());
@@ -892,7 +892,7 @@ public class ProjectStatisticsController {
 		return dataVolumeGroupByBytes.entrySet().stream()
 				.collect(Collectors.toMap(Entry::getKey, (entryMap) -> QsUtil.calculateVolume(entryMap.getValue())));
 	}
-
+	
 	private Map<String, Double> getVolumeSummaryInMB(Map<String, Double> dataVolumeGroupByBytes) {
 		return dataVolumeGroupByBytes.entrySet().stream()
 				.collect(Collectors.toMap(Entry::getKey, (entryMap) -> QsUtil.convertBytesToMB(entryMap.getValue()), (k, v) -> k, LinkedHashMap<String, Double>::new));
@@ -904,7 +904,7 @@ public class ProjectStatisticsController {
 		ValueUnitPair totalVolume = QsUtil.calculateVolume(totalVolumeInBytes);
 		return totalVolume;
 	}
-
+	
 	private ValueUnitPair getTotalVolumeInMB(Map<String, Double> dataVolumeGroupByBytes) {
 		double totalVolumeInBytes = dataVolumeGroupByBytes.values().stream().reduce(0.00, Double::sum);
 		double totalVoulumeInMB = QsUtil.convertBytesToMB(totalVolumeInBytes);

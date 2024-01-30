@@ -28,12 +28,10 @@ public class AwsResourceHandler {
 
   private final AmazonS3 amazonS3Client;
   private final AWSGlue awsGlueClient;
-  private final AmazonAthena athenaClient;
 
-  public AwsResourceHandler(AmazonS3 amazonS3ClientCi, AWSGlue awsGlueClientCi, AmazonAthena athenaClientCi) {
+  public AwsResourceHandler(AmazonS3 amazonS3ClientCi, AWSGlue awsGlueClientCi) {
     amazonS3Client = amazonS3ClientCi;
     awsGlueClient = awsGlueClientCi;
-    athenaClient = athenaClientCi;
   }
 
   private void createBucketInS3(final String s3BucketName) throws AmazonServiceException {
@@ -55,13 +53,6 @@ public class AwsResourceHandler {
     createDatabaseRequest.setDatabaseInput(databaseInput);
     final CreateDatabaseResult createDatabase = awsGlueClient.createDatabase(createDatabaseRequest);
     log.info("Database created ::: {}", createDatabase.getSdkResponseMetadata().getRequestId());
-  }
-
-  private void createAthenaDatabaseOperation(final String name) throws AmazonServiceException {
-    CreateNamedQueryRequest request = new CreateNamedQueryRequest()
-            .withDatabase(name);
-    athenaClient.createNamedQuery(request);
-    //log.info("Database created ::: {}", createDatabase.getSdkResponseMetadata().getRequestId());
   }
 
   public boolean createProjectSequence(final Projects project) throws AmazonServiceException {

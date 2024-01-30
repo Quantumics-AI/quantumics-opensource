@@ -9,6 +9,8 @@
 package ai.quantumics.api.service.impl;
 
 import ai.quantumics.api.model.EngFlow;
+import ai.quantumics.api.model.EngFlowInfoView;
+import ai.quantumics.api.repo.EngFlowInfoViewRepository;
 import ai.quantumics.api.repo.EngFlowRepository;
 import ai.quantumics.api.service.EngFlowService;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,11 @@ import java.util.Optional;
 @Service
 public class EngFlowServiceImpl implements EngFlowService {
   private final EngFlowRepository engFlowRepo;
+  private final EngFlowInfoViewRepository engFlowInfoViewRepo;
 
-  public EngFlowServiceImpl(EngFlowRepository engFlowRepo) {
+  public EngFlowServiceImpl(EngFlowRepository engFlowRepo, EngFlowInfoViewRepository engFlowInfoViewRepo) {
     this.engFlowRepo = engFlowRepo;
+    this.engFlowInfoViewRepo = engFlowInfoViewRepo;
   }
 
   @Override
@@ -61,11 +65,17 @@ public class EngFlowServiceImpl implements EngFlowService {
   public List<EngFlow> getFlowNames(int projectId, int userId) throws SQLException {
     return engFlowRepo.findByProjectIdAndUserIdAndParentEngFlowIdAndActiveTrue(projectId, userId, 0);
   }
+
+  @Override
+  public List<EngFlowInfoView> getFlowNamesWithJobStatus(int projectId, int userId) throws SQLException {
+    return engFlowInfoViewRepo.findByProjectIdAndUserIdAndActiveTrueOrderByCreatedDateDesc(projectId, userId);
+  }
   
   @Override
   public List<EngFlow> getFlowNames(int projectId) throws SQLException {
     return engFlowRepo.findByProjectIdAndParentEngFlowId(projectId, 0);
   }
+
 
   @Override
   public List<EngFlow> getFlowNamesDescOrder(int projectId) throws SQLException {
@@ -106,4 +116,5 @@ public class EngFlowServiceImpl implements EngFlowService {
   public boolean isExists(String engFlowName) throws SQLException {
     return engFlowRepo.existsByEngFlowNameIgnoreCaseAndActive(engFlowName, true);
   }
+
 }

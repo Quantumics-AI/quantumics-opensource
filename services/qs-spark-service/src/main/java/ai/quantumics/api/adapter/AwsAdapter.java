@@ -10,11 +10,30 @@ package ai.quantumics.api.adapter;
 
 import ai.quantumics.api.constants.QsConstants;
 import ai.quantumics.api.exceptions.QsRecordNotFoundException;
-import ai.quantumics.api.model.*;
+import ai.quantumics.api.model.CleansingParam;
+import ai.quantumics.api.model.FileMetaDataAwsRef;
+import ai.quantumics.api.model.MetadataReference;
+import ai.quantumics.api.model.ProjectCumulativeSizeInfo;
+import ai.quantumics.api.model.Projects;
+import ai.quantumics.api.model.QsFiles;
+import ai.quantumics.api.model.QsFolders;
+import ai.quantumics.api.model.QsPartition;
+import ai.quantumics.api.model.RunJobStatus;
 import ai.quantumics.api.req.ColumnMetaData;
 import ai.quantumics.api.req.UploadFileRequest;
-import ai.quantumics.api.service.*;
-import ai.quantumics.api.util.*;
+import ai.quantumics.api.service.CleansingRuleParamService;
+import ai.quantumics.api.service.FileMetaDataAwsService;
+import ai.quantumics.api.service.FileService;
+import ai.quantumics.api.service.PartitionService;
+import ai.quantumics.api.service.ProjectCumulativeSizeService;
+import ai.quantumics.api.service.ProjectService;
+import ai.quantumics.api.service.RunJobService;
+import ai.quantumics.api.util.DbSessionUtil;
+import ai.quantumics.api.util.JobRunState;
+import ai.quantumics.api.util.MetadataHelper;
+import ai.quantumics.api.util.QsUtil;
+import ai.quantumics.api.util.RegexPatterns;
+import ai.quantumics.api.util.RegexUtils;
 import ai.quantumics.api.vo.QsFileContent;
 import ai.quantumics.api.vo.S3FileUploadResponse;
 import com.amazonaws.AmazonClientException;
@@ -24,41 +43,95 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.athena.AmazonAthena;
-import com.amazonaws.services.athena.model.*;
+import com.amazonaws.services.athena.model.ColumnInfo;
+import com.amazonaws.services.athena.model.Datum;
+import com.amazonaws.services.athena.model.GetQueryExecutionRequest;
+import com.amazonaws.services.athena.model.GetQueryExecutionResult;
+import com.amazonaws.services.athena.model.GetQueryResultsRequest;
+import com.amazonaws.services.athena.model.GetQueryResultsResult;
+import com.amazonaws.services.athena.model.QueryExecutionContext;
+import com.amazonaws.services.athena.model.QueryExecutionState;
+import com.amazonaws.services.athena.model.ResultConfiguration;
+import com.amazonaws.services.athena.model.ResultSet;
+import com.amazonaws.services.athena.model.Row;
+import com.amazonaws.services.athena.model.StartQueryExecutionRequest;
+import com.amazonaws.services.athena.model.StartQueryExecutionResult;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
-import com.amazonaws.services.cloudwatch.model.*;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.GetMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.GetMetricDataResult;
+import com.amazonaws.services.cloudwatch.model.ListMetricsRequest;
+import com.amazonaws.services.cloudwatch.model.ListMetricsResult;
+import com.amazonaws.services.cloudwatch.model.Metric;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.BucketAccelerateConfiguration;
+import com.amazonaws.services.s3.model.BucketAccelerateStatus;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.GetBucketAccelerateConfigurationRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.SetBucketAccelerateConfigurationRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.io.File;
-import java.io.FileInputStream;
 
-import static ai.quantumics.api.constants.QsConstants.*;
+import static ai.quantumics.api.constants.QsConstants.ENG;
+import static ai.quantumics.api.constants.QsConstants.PROCESSED;
+import static ai.quantumics.api.constants.QsConstants.RAW;
 
 @Slf4j
 @Component
@@ -78,6 +151,11 @@ public class AwsAdapter {
 	private final ProjectService projectService;
 	private final CleansingRuleParamService cleanseRuleParamService;
 	private final ProjectCumulativeSizeService projectSizeService;
+
+	private static final String[] DATE_FORMATS = {"yyyy-MM-dd", "MM/dd/yyyy", "MMM dd, yyyy", "dd MMM yyyy", "dd-MM-yyyy"};
+	private static final String[] DATE_TIME_FORMATS = {"yyyy-MM-dd HH:mm:ss","MM-dd-yyyy HH:mm:ss","dd-MM-yyyy HH:mm:ss",
+			"yyyy-MM-dd HH:mm","MM-dd-yyyy HH:mm","dd-MM-yyyy HH:mm", "yyyy-dd-MM HH:mm:ss"
+	};
 
 	@Autowired private QsUtil qsUtil;
 
@@ -109,7 +187,7 @@ public class AwsAdapter {
 			ProjectService projectServiceCi,
 			CleansingRuleParamService cleanseRuleParamServiceCi,
 			ProjectCumulativeSizeService projectSizeServiceCi
-			) {
+	) {
 		amazonS3Client = amazonS3ClientCi;
 		fileHelper = fileHelperCi;
 		athenaClient = athenaClientCi;
@@ -185,6 +263,8 @@ public class AwsAdapter {
 		try {
 			amazonS3Client.deleteObject(bucketName, key);
 		} catch (final AmazonServiceException serviceException) {
+			log.error("Error1 - {}",serviceException.getMessage());
+			log.error("Error2 - {}",serviceException.getRawResponseContent());
 			log.error("Error - {}", serviceException.getErrorMessage());
 		} catch (final AmazonClientException exception) {
 			log.error("Error while deleting file {}", exception.getMessage());
@@ -345,21 +425,34 @@ public class AwsAdapter {
 			columnDetails.add(colMetadata.getColumnName());
 			metaDataArrayNode.add(globalObjectMapper.createObjectNode().
 					put("column_name", colMetadata.getColumnName()).
-					put("data_type", colMetadata.getDataType())
+					put("data_type", formatColumnDataType(colMetadata.getDataType()))
 					);
 		});
-
 		prepareDataV2(dataRowsList, globalObjectMapper, dataArrayNode, columnDetails);
-
 		log.info("Elapsed time to fetch data rows: {} msecs", (Duration.between(now, Instant.now()).toMillis()));
-
 		final ArrayNode analyticsArrayNode = globalObjectMapper.createArrayNode();
 		final ArrayNode finalJson = globalObjectMapper.createArrayNode();
 		finalJson.add(dataArrayNode);
 		finalJson.add(metaDataArrayNode);
 		finalJson.add(analyticsArrayNode); // This node will be removed after the integration in the UI.
-
+		//log.info("final json:"+finalJson);
 		return finalJson;
+	}
+
+	public String formatColumnDataType(String dataType){
+		String formatDataType = null;
+		if(dataType.contains("character") || dataType.contains("text"))
+			formatDataType = "string";
+		else if(dataType.contains("boolean"))
+			formatDataType = "bool";
+		else if(dataType.contains("integer"))
+			formatDataType = "int";
+		else if(dataType.contains("timestamp"))
+			formatDataType = "timestamp";
+		else
+			return dataType;
+
+		return formatDataType;
 	}
 
 	public ArrayNode getRawFileColumnAnalytics(final QsFileContent detailsObj) throws Exception{
@@ -412,9 +505,11 @@ public class AwsAdapter {
 
 		ColumnMetaData cm = new ColumnMetaData(columnName, "string");
 		List<ColumnMetaData> columnMetadata = Arrays.asList(cm);
+		//added quotes around dbname and tablename for bug 4795
+		String tableName = "\""+project.getRawDb()+"\".\""+folderName.toLowerCase()+"\"";
 
 		final String prepareAnalyticsQuery =
-				prepareAnalyticsQuery(columnMetadata, project.getRawDb()+"."+folderName.toLowerCase(), partitionName);
+				prepareAnalyticsQuery(columnMetadata, tableName, partitionName);
 		final String athenaQueryId = athenaPrepareQuery(queryContext, prepareAnalyticsQuery);
 		final GetQueryResultsResult athenaRunQuery = athenaRunQuery(athenaQueryId);
 		final ResultSet analyticsDataResultSet = athenaRunQuery.getResultSet();
@@ -591,30 +686,81 @@ public class AwsAdapter {
 		return runExternalCommand(commands);
 	}
 
+	public String getFileStatistics(final String bucketNameLocal, final String fileObjKey) throws Exception{
+		/*
+		URL url = getClass().getClassLoader().getResource(QsConstants.FILE_STATS_PYTHON_FILE_REL_LOC);
+
+		File detectionPyFile = null;
+		if(url != null) {
+			detectionPyFile = new File(url.toURI());
+		} else {
+			log.info("Couldn't locate the Python script.");
+
+			return null;
+		}
+		*/
+
+		String detectionPyFile = "./"+QsConstants.FILE_STATS_PYTHON_FILE_REL_LOC;
+		List<String> commands = new ArrayList<>();
+
+		if(isWindows()) {
+			commands.add("cmd.exe");
+			commands.add("/c");
+			commands.add("python");
+		} else {
+			commands.add("python3");
+		}
+
+		commands.add(detectionPyFile);
+		commands.add(bucketNameLocal);
+		commands.add(fileObjKey);
+		commands.add(s3AccessKey);
+		commands.add(s3SecretKey);
+
+		return runExternalCommand(commands);
+	}
+
+	public String getFileColumnValueFreq(final String  bucketNameLocal, final String fileObjKey, final String columnName) throws Exception{
+		/*
+		URL url = getClass().getClassLoader().getResource(QsConstants.COLUMN_VAL_FREQ_PYTHON_FILE_REL_LOC);
+
+		File detectionPyFile = null;
+		if(url != null) {
+			detectionPyFile = new File(url.toURI());
+		} else {
+			log.info("Couldn't locate the Python script.");
+
+			return null;
+		}
+		*/
+		String detectionPyFile = "./"+QsConstants.COLUMN_VAL_FREQ_PYTHON_FILE_REL_LOC;
+
+		List<String> commands = new ArrayList<>();
+
+		if(isWindows()) {
+			commands.add("cmd.exe");
+			commands.add("/c");
+			commands.add("python");
+		} else {
+			commands.add("python3");
+		}
+
+		commands.add(detectionPyFile);
+		commands.add(bucketNameLocal);
+		commands.add(fileObjKey);
+		commands.add(columnName);
+		commands.add(s3AccessKey);
+		commands.add(s3SecretKey);
+
+		return runExternalCommand(commands);
+	}
+
 	public String getPiiColumnInfo(final String inputFileWithPath) throws Exception{
 		List<String> commands = new ArrayList<>();
 		log.info("get PII column info :{}",inputFileWithPath);
 		try {
-			/*URL url = getClass().getClassLoader().getResource(QsConstants.PII_COL_DETECTION_PYTHON_FILE_REL_LOC);
-			log.info("get PII column info url:{}",url);
-			File detectionPyFile = null;
-			if(url != null) {
-				try {
-					detectionPyFile = new File(url.toURI());
-				} catch (Exception e) {
-					e.printStackTrace();
-					log.error("Exception while converting URI..{}",e);
-				}
-
-			} else {
-				log.info("Couldn't locate the Python script.");
-
-				return null;
-			}
-
-			log.info("get PII column info detectionPyFile.getAbsolutePath :{}",detectionPyFile.getAbsolutePath());*/
 			String detectionPyFile = "./"+QsConstants.PII_COL_DETECTION_PYTHON_FILE_REL_LOC;
-			System.out.println("Working Directory = " + System.getProperty("user.dir"));
+			
 			log.info("get PII column info detectionPyFile.getAbsolutePath :{}",detectionPyFile);
 			
 			/*
@@ -670,6 +816,19 @@ public class AwsAdapter {
 
 	private String runExternalCommand(List<String> commands) throws IOException, InterruptedException{
 		ProcessBuilder pb = new ProcessBuilder();
+		String osName = System.getProperty("os.name");
+		if (osName.contains("Windows")) {
+			URL url = getClass().getClassLoader().getResource(QsConstants.QS_LIVY_TEMPLATE_ENG_NAME);
+			if (url != null) {
+				File contentSource = null;
+				try {
+					contentSource = new File(url.toURI());
+					pb.directory(contentSource.getParentFile().getParentFile().getParentFile().getParentFile());
+				} catch (URISyntaxException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 		String jsonResponse="";
 		try {
 			pb.command(commands);
@@ -680,20 +839,21 @@ public class AwsAdapter {
 				br.lines().forEach((line) -> {
 					sb.append(line);
 				});
-
 				jsonResponse = sb.toString();
 			}
 
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-				br.lines().forEach((line) -> System.out.println(line));
+				br.lines().forEach((line) -> {
+					System.out.println(line);
+					log.info("Error Message: " + line);
+				}
+				);
 			}
 
 			process.waitFor();
-
-	
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("Excdeption in runExternalCommand ..."+e);
+			log.error("Exception in runExternalCommand ..."+e);
 		}
 		return jsonResponse;
 	}
@@ -946,7 +1106,7 @@ public class AwsAdapter {
 	 */
 	public S3FileUploadResponse storeObjectInS3Async(final String bucketNameLocal,
 			final Object inputFile, final String partitionName, final String dbName, 
-			final String folderName, final String fileName, final String contentType) throws Exception{
+			final String folderName, final String fileName, final String contentType, QsFiles oldestFile) throws Exception{
 
 		log.info("\nReceived file upload request for the file: {}", fileName);
 
@@ -1044,6 +1204,28 @@ public class AwsAdapter {
 			}
 
 			columnMetadata = readMetadata(lines);
+
+			if(oldestFile != null && StringUtils.isNotEmpty(oldestFile.getQsMetaData())) {
+
+				ObjectMapper mapper = new ObjectMapper();
+				ArrayNode nodes = mapper.readValue(oldestFile.getQsMetaData(), ArrayNode.class);
+				if (nodes != null) {
+					List<String> cols = new ArrayList<>();
+					Iterator<JsonNode> iter = nodes.iterator();
+					while (iter.hasNext()) {
+						JsonNode jsonNode = iter.next();
+						if(!columnMetadata.get(jsonNode.get("column_name").asText()).equals(jsonNode.get("data_type").asText())) {
+							cols.add(jsonNode.get("column_name").asText());
+						}
+
+					}
+
+					if(CollectionUtils.isNotEmpty(cols)) {
+						throw new Exception("Column has invalid records as per the datatype : " + cols.toString());
+					}
+
+				}
+			}
 			s3FileUploadResp.setColumnMetaData(columnMetadata);
 			String s3FileLocation = "s3://"+bucketNameLocal + "/" + folderName+"/"+partitionName;
 
@@ -1054,6 +1236,11 @@ public class AwsAdapter {
 
 			if(partitionName != null) {
 				addPartitionToTableInAthena(bucketNameLocal, dbName, folderName, partitionName);
+			}
+
+			List<Row> rows = fetchAthenaData(dbName, folderName, partitionName);
+			if(CollectionUtils.isEmpty(rows)) {
+				System.out.println("No records ");
 			}
 
 		} catch (AmazonClientException | IOException | InterruptedException exception) {
@@ -1074,6 +1261,22 @@ public class AwsAdapter {
 
 		//return columnMetadata;
 		return s3FileUploadResp;
+	}
+
+	private List<Row> fetchAthenaData(String dbName, String tableName, String partition) throws Exception{
+		final QueryExecutionContext queryContext = new QueryExecutionContext();
+		queryContext.setDatabase(dbName);
+
+		final String queryString = selectQuery(tableName, partition);
+		// TODO EncryptionConfiguration
+		log.info("Query to athena : {}", queryString);
+		final String queryExecutionId = athenaPrepareQuery(queryContext, queryString);
+		final GetQueryResultsResult queryResults = athenaRunQuery(queryExecutionId);
+
+		final ResultSet dataResultSet = queryResults.getResultSet();
+		final List<Row> dataRowsList = dataResultSet.getRows();
+
+		return dataRowsList;
 	}
 
 	public String storeUdfDefInS3Async(final String udfBucketName, 
@@ -1385,6 +1588,10 @@ public class AwsAdapter {
 	}
 
 	private void createTableInAthena(Map<String, String> columns, String dbName, String partitionName, String folderName, String s3FileLocation) {
+		if (columns.isEmpty()) {
+			log.warn("Athena create query is empty. No records in the table. Skipping table creation.");
+			return;
+		}
 		String athenaTableName = normalizeAthenaTableName(folderName);
 		String athenaCreateQuery = prepareAthenaCreateQuery(partitionName, athenaTableName, s3FileLocation, columns);
 
@@ -1485,9 +1692,10 @@ public class AwsAdapter {
 		StringBuilder sb = new StringBuilder();
 
 		// Table is present in the DB, so execute an alter query to add new partition to the existing table.
+		//6870-Added IF EXISTS clause to not throw exception if partition or table does not exists
 		sb.append("ALTER TABLE ");
 		sb.append(folderName.toLowerCase());
-		sb.append(" DROP PARTITION (partition_0='");
+		sb.append(" DROP PARTITION IF EXISTS (partition_0='");
 		sb.append(partitionName);
 		sb.append("'); ");
 
@@ -1496,7 +1704,7 @@ public class AwsAdapter {
 
 			final QueryExecutionContext queryContext = new QueryExecutionContext();
 			queryContext.setDatabase(dbName);
-			log.info("Alter query to add new partition is: {}", dropPartitionQuery);
+			log.info("Alter query to drop new partition is: {}", dropPartitionQuery);
 			final String dropPartQueryExeId = athenaPrepareQuery(queryContext, dropPartitionQuery);
 			final GetQueryResultsResult dropPartQueryResults = athenaRunQuery(dropPartQueryExeId);
 
@@ -1679,7 +1887,7 @@ public class AwsAdapter {
 		return url.toString();
 	}
 
-	public Map<String, String> readMetadata(List<String> lines) {
+	public Map<String, String> readMetadata(List<String> lines) throws Exception {
 		if (lines != null && !lines.isEmpty() && lines.size() == 2) {
 			String headerLine = lines.get(0);
 			log.info("Header line is: {}", headerLine);
@@ -1688,6 +1896,10 @@ public class AwsAdapter {
 			Map<String, String> columnMetadata = getDataTypes(headerLine, dataLine);
 			log.info("Column Metadata is: {}", columnMetadata);
 
+			return columnMetadata;
+		}else if(lines != null && !lines.isEmpty() && lines.size() == 1){
+			String headerLine = lines.get(0);
+			Map<String, String> columnMetadata = getDataTypes(headerLine);
 			return columnMetadata;
 		}
 		return Collections.emptyMap();
@@ -1699,23 +1911,43 @@ public class AwsAdapter {
 	 * @param dataLine
 	 * @return
 	 */
-	public static Map<String, String> getDataTypes(final String headerLine, final String dataLine) {
+	public static Map<String, String> getDataTypes(final String headerLine, final String dataLine) throws Exception {
 		Map<String, String> columnMetadata = new LinkedHashMap<>();
 		String[] headers = headerLine.split(QsConstants.DELIMITER_SPLIT_PATTERN);
 		String[] dataValues = dataLine.split(QsConstants.DELIMITER_SPLIT_PATTERN);
-		if (headerLine != null && headerLine.indexOf(QsConstants.DELIMITER) != -1 && dataLine != null 
-				&& dataLine.indexOf(QsConstants.DELIMITER) != -1) {   
+		if(headers == null || headers.length == 0 || dataValues == null || dataValues.length ==0){
+			throw new Exception("File does not have header or first row is empty");
+		}
+		if(headers.length != dataValues.length){
+			throw new Exception("Size of Header and values are not matched");
+		}
+		//if (headerLine != null && headerLine.indexOf(QsConstants.DELIMITER) != -1 && dataLine != null
+		//		&& dataLine.indexOf(QsConstants.DELIMITER) != -1) {
 			for (int i = 0; i < dataValues.length; i++) {
-				//columnMetadata.put(headers[i], getDataType(dataValues[i]));
-				columnMetadata.put(headers[i], "string");
+				columnMetadata.put(headers[i], getDataType(dataValues[i]));
+				//columnMetadata.put(headers[i], "string");
 			}
 			return columnMetadata;
-		}else if(headers.length == 1 && dataValues.length == 1){ //Added  condition  for Single column for PII
+		/*}else if(headers.length == 1 && dataValues.length == 1){ //Added  condition  for Single column for PII
 			columnMetadata.put(headerLine, "string");
 			return columnMetadata;
+		}*/
+
+		//return Collections.emptyMap();
+	}
+
+	public static Map<String, String> getDataTypes(final String headerLine) throws Exception {
+		Map<String, String> columnMetadata = new LinkedHashMap<>();
+		String[] headers = headerLine.split(QsConstants.DELIMITER_SPLIT_PATTERN);
+		if(headers == null || headers.length == 0){
+			throw new Exception("File does not have header or first row is empty");
 		}
 
-		return Collections.emptyMap();
+		for (int i = 0; i < headers.length; i++) {
+			columnMetadata.put(headers[i], "string");
+		}
+		return columnMetadata;
+
 	}
 
 	/**
@@ -1727,17 +1959,15 @@ public class AwsAdapter {
 		String dataType = "string"; // default type
 
 		if(value != null && !value.isEmpty()) {
-			if (RegexUtils.isInteger(value)) {
-				dataType = "int";
-			} else if (RegexUtils.isLong(value)) {
+			if (RegexUtils.isInteger(value) || RegexUtils.isLong(value)) {
 				dataType = "bigint";
-			} else if (RegexUtils.isDouble(value)) {
-				dataType = "double";
-			} else if (ValidatorUtils.isDate(value)) {
+			} else if (isDouble(value)) {
+				dataType = "float";
+			} /*else if (isValidFormat(value,DATE_FORMATS)) {
+				dataType = "date";
+			} else if (isValidFormat(value,DATE_TIME_FORMATS)) {
 				dataType = "timestamp";
-			} else if (RegexUtils.isAlphaNumeric(value)) {
-				dataType = "string";
-			} else {
+			} */else {
 				dataType = "string";
 			}
 		}
@@ -1748,6 +1978,29 @@ public class AwsAdapter {
 		//}
 
 		return dataType;
+	}
+
+	public static boolean isDouble(String value) {
+		try {
+			Double.parseDouble(value);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private static boolean isValidFormat(String dateString, String[] formats) {
+		for (String format : formats) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+			dateFormat.setLenient(false);
+			try {
+				dateFormat.parse(dateString);
+				return true;
+			} catch (ParseException e) {
+				// Date parsing failed for the current format, continue to the next format
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -1768,7 +2021,7 @@ public class AwsAdapter {
 	 * 
 	 * @param tableName
 	 * @param s3FileLocation
-	 * @param columnMetadata
+	 * @param columns
 	 * @return
 	 */
 	private String prepareAthenaCreateQuery(String partitionName, String tableName, String s3FileLocation,
@@ -1786,7 +2039,7 @@ public class AwsAdapter {
 				sb.append("`");
 				sb.append(column.toLowerCase());
 				//sb.append("` " + column.getValue() + ",");
-				sb.append("` string,");
+				sb.append("`" + columns.get(column) + ",");
 			});
 
 			// Remove the last comma that is appended above..
@@ -2010,7 +2263,7 @@ public class AwsAdapter {
 				List<String> columnNames = new ArrayList<>();
 				columnMetadata.keySet().stream().forEach((me) -> {
 					cols.add(new ColumnMetaData(me, "string"));
-					columnNames.add(me);
+					columnNames.add(me.toLowerCase());
 				});
 
 				ObjectMapper mapper = new ObjectMapper();
@@ -2039,7 +2292,6 @@ public class AwsAdapter {
 					for(Row row : dataRows) {
 						row.getData().stream().forEach((data) -> {
 							String cn = data.getVarCharValue().trim();
-							log.info("Column Name: {}", cn);
 							if(!"partition_0".equals(cn)) {
 								athenaTableColNames.add(cn);
 							}
@@ -2157,17 +2409,33 @@ public class AwsAdapter {
 	public void handlePostFileDeleteActions(Projects project, int folderId, String folderName, boolean emptyFolder, String partitionName, String fileName) throws Exception{
 		String bucketName = project.getBucketName()+"-"+QsConstants.RAW;
 		String objectKey = String.format("%s/%s/%s", folderName, partitionName, fileName);
+		if(org.apache.commons.lang.StringUtils.isEmpty(fileName))
+			objectKey = String.format("/%s/%s/", folderName, partitionName);
 		log.info("Object Key to be deleted: {}", objectKey);
 
 		// Delete the Raw file from the S3 bucket.
 		deleteObject(bucketName, objectKey);
 
-		// Drop the partition from Athena now.
-		deletePartitionForTableInAthena(project.getRawDb(), folderName, partitionName);
+		final QueryExecutionContext queryContext = new QueryExecutionContext();
+		queryContext.setDatabase(project.getRawDb());
 
-		if(emptyFolder) {
-			// Since there are no partitions in this Athena table, delete the Athena table..
-			athenaDropTableQuery(project.getRawDb(), folderName.toLowerCase());
+		String athenaCheckQuery = "SHOW TABLES IN "+ project.getRawDb().toLowerCase() +" '"+folderName.toLowerCase()+"'";
+
+		log.info("Query to athena to check whether table is present in database '{}' or not", athenaCheckQuery);
+		final String checkQueryExeId = athenaPrepareQuery(queryContext, athenaCheckQuery);
+		final GetQueryResultsResult checkQueryResults = athenaRunQuery(checkQueryExeId);
+		final ResultSet dataResultSet = checkQueryResults.getResultSet();
+		final List<Row> dataRowsList = dataResultSet.getRows();
+
+		if(CollectionUtils.isNotEmpty(dataRowsList)) {
+
+			// Drop the partition from Athena now.
+			deletePartitionForTableInAthena(project.getRawDb(), folderName, partitionName);
+
+			if (emptyFolder) {
+				// Since there are no partitions in this Athena table, delete the Athena table..
+				athenaDropTableQuery(project.getRawDb(), folderName.toLowerCase());
+			}
 		}
 	}
 
@@ -2550,75 +2818,6 @@ public class AwsAdapter {
 		catch (AmazonClientException | InterruptedException exception) {
 			throw new RuntimeException("Error while uploading udf file." + exception.getMessage());
 		}
-	}
-
-	public String getFileColumnValueFreq(final String  bucketNameLocal, final String fileObjKey, final String columnName) throws Exception{
-		/*
-		URL url = getClass().getClassLoader().getResource(QsConstants.COLUMN_VAL_FREQ_PYTHON_FILE_REL_LOC);
-
-		File detectionPyFile = null;
-		if(url != null) {
-			detectionPyFile = new File(url.toURI());
-		} else {
-			log.info("Couldn't locate the Python script.");
-
-			return null;
-		}
-		*/
-		String detectionPyFile = "./"+QsConstants.COLUMN_VAL_FREQ_PYTHON_FILE_REL_LOC;
-
-		List<String> commands = new ArrayList<>();
-
-		if(isWindows()) {
-			commands.add("cmd.exe");
-			commands.add("/c");
-			commands.add("python");
-		} else {
-			commands.add("python3");
-		}
-
-		commands.add(detectionPyFile);
-		commands.add(bucketNameLocal);
-		commands.add(fileObjKey);
-		commands.add(columnName);
-		commands.add(s3AccessKey);
-		commands.add(s3SecretKey);
-
-		return runExternalCommand(commands);
-	}
-
-	public String getFileStatistics(final String bucketNameLocal, final String fileObjKey) throws Exception{
-		/*
-		URL url = getClass().getClassLoader().getResource(QsConstants.FILE_STATS_PYTHON_FILE_REL_LOC);
-
-		File detectionPyFile = null;
-		if(url != null) {
-			detectionPyFile = new File(url.toURI());
-		} else {
-			log.info("Couldn't locate the Python script.");
-
-			return null;
-		}
-		*/
-
-		String detectionPyFile = "./"+QsConstants.FILE_STATS_PYTHON_FILE_REL_LOC;
-		List<String> commands = new ArrayList<>();
-
-		if(isWindows()) {
-			commands.add("cmd.exe");
-			commands.add("/c");
-			commands.add("python");
-		} else {
-			commands.add("python3");
-		}
-
-		commands.add(detectionPyFile);
-		commands.add(bucketNameLocal);
-		commands.add(fileObjKey);
-		commands.add(s3AccessKey);
-		commands.add(s3SecretKey);
-
-		return runExternalCommand(commands);
 	}
 
 }

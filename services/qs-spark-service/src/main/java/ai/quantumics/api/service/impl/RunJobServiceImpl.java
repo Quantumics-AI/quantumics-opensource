@@ -11,6 +11,7 @@ package ai.quantumics.api.service.impl;
 import ai.quantumics.api.model.RunJobStatus;
 import ai.quantumics.api.repo.RunJobRepository;
 import ai.quantumics.api.service.RunJobService;
+import ai.quantumics.api.vo.CleansedJobResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +55,11 @@ public class RunJobServiceImpl implements RunJobService {
   }
 
   @Override
+  public List<RunJobStatus> getSuccessCleanseFilesHistory(int projectId, int folderId) {
+    return runJobRepo.findByProjectIdAndFolderIdAndStatus(projectId, folderId,"SUCCEEDED");
+  }
+
+  @Override
   @Transactional
   public List<RunJobStatus> getCleanseFilesByProjectId(int projectId) throws SQLException {
     return runJobRepo.findByProjectId(projectId);
@@ -75,5 +81,15 @@ public class RunJobServiceImpl implements RunJobService {
   public List<RunJobStatus> getSucceededJobsInFolder(int userId, int projectId, int folderId)
       throws SQLException {
     return runJobRepo.findByUserIdAndProjectIdAndFolderIdAndStatus(userId, projectId, folderId, SUCCEEDED);
+  }
+
+  @Override
+  public List<RunJobStatus> findLatestRunJobStatusPerFolderForUserAndProjectId(int userId, int projectId) throws SQLException {
+    return runJobRepo.findLatestRunJobStatusPerFolderForUserAndProjectId(userId, projectId);
+  }
+
+  @Override
+  public List<CleansedJobResponse> getPreparationJobFolders(int userId, int projectId) throws SQLException {
+    return runJobRepo.getPreparationJobFolders(userId, projectId);
   }
 }

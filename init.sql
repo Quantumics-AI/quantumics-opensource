@@ -971,8 +971,8 @@ BEGIN
 
 	EXECUTE '
 	GRANT SELECT ON '||schemaName||'.qsp_eng_flow_view TO postgres';
-
-	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date)
+	
+	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date) 
 	    values (%L,%L,true,now());', schemaName, schemaName, 'qsp_folder_view');
 
 	EXECUTE format('INSERT INTO %I.qsp_redash_view_info(schema_name, view_name, active, creation_date)

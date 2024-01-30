@@ -14,17 +14,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "qsp_file_data_profiling_info")
 public class FileDataProfilingInfo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dataProfileId;
-
-    private int projectId;
-    private int folderId;
-    private int fileId;
-    private String fileProfilingInfo;
-    private String statsType;
-    private boolean active;
-    private Date creationDate;
-    private Date modifiedDate;
+  
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int dataProfileId;
+  
+  private int projectId;
+  private int folderId;
+  private int fileId;
+  private String fileProfilingInfo;  
+  private String statsType;
+  private boolean active;
+  private Date creationDate;
+  private Date modifiedDate;
 }

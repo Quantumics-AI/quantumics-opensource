@@ -13,12 +13,44 @@ import ai.quantumics.api.constants.AuditEventTypeAction;
 import ai.quantumics.api.constants.QsConstants;
 import ai.quantumics.api.helper.ControllerHelper;
 import ai.quantumics.api.helper.EngHelper;
-import ai.quantumics.api.model.*;
-import ai.quantumics.api.req.*;
-import ai.quantumics.api.service.*;
+import ai.quantumics.api.model.EngFlow;
+import ai.quantumics.api.model.EngFlowEvent;
+import ai.quantumics.api.model.EngFlowInfoView;
+import ai.quantumics.api.model.EngFlowJob;
+import ai.quantumics.api.model.EngFlowMetaDataAwsRef;
+import ai.quantumics.api.model.EngRunFlowRequest;
+import ai.quantumics.api.model.Projects;
+import ai.quantumics.api.model.QsFiles;
+import ai.quantumics.api.model.QsFolders;
+import ai.quantumics.api.model.QsUdf;
+import ai.quantumics.api.model.RunJobStatus;
+import ai.quantumics.api.req.AggregateRequest;
+import ai.quantumics.api.req.DataFrameRequest;
+import ai.quantumics.api.req.EngFileOperationRequest;
+import ai.quantumics.api.req.EngFinalRequest;
+import ai.quantumics.api.req.EngFlowConfigRequest;
+import ai.quantumics.api.req.EngFlowRequest;
+import ai.quantumics.api.req.EngGraphRequest;
+import ai.quantumics.api.req.FileJoinColumnMetadata;
+import ai.quantumics.api.req.JoinOperationRequest;
+import ai.quantumics.api.req.UdfOperationRequest;
+import ai.quantumics.api.service.DatabaseSessionManager;
+import ai.quantumics.api.service.EngFlowEventService;
+import ai.quantumics.api.service.EngFlowJobService;
+import ai.quantumics.api.service.EngFlowService;
+import ai.quantumics.api.service.EngGraphService;
+import ai.quantumics.api.service.FileService;
+import ai.quantumics.api.service.FolderService;
+import ai.quantumics.api.service.RunJobService;
+import ai.quantumics.api.service.UdfService;
 import ai.quantumics.api.util.JobRunState;
 import ai.quantumics.api.util.MetadataHelper;
-import ai.quantumics.api.vo.*;
+import ai.quantumics.api.vo.AutoRunFileInfo;
+import ai.quantumics.api.vo.BatchJobInfo;
+import ai.quantumics.api.vo.DataLineageInfo;
+import ai.quantumics.api.vo.EngFileInfo;
+import ai.quantumics.api.vo.EngFlowInfo;
+import ai.quantumics.api.vo.EngineeredFilesRedashResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -31,7 +63,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.spring.web.json.Json;
 
 import javax.persistence.EntityManager;
@@ -39,7 +77,19 @@ import javax.persistence.FlushModeType;
 import javax.persistence.Query;
 import javax.validation.Valid;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static ai.quantumics.api.constants.QsConstants.SERVICE_SERVER_URL_PREFIX;
 import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
@@ -388,8 +438,9 @@ public class EngineeringController {
 						engFileInfo.setTableName(completedFlow.getAthenaTable());
 						engFileInfo.setFileName(engFlow.getEngFlowName());
 					} else {
+						//added quotes around dbname and tablename for bug 4795
 						engFileInfo.setTableName(
-								(project.getEngDb() + "." + completedFlow.getAthenaTable()).toLowerCase());
+								("\"" + project.getEngDb() + "\".\"" + completedFlow.getAthenaTable()).toLowerCase() + "\"");
 						engFileInfo.setFileName((project.getEngDb() + "." + engFlow.getEngFlowName()).toLowerCase());
 					}
 
@@ -418,30 +469,9 @@ public class EngineeringController {
 		Map<String, Object> response;
 		try {
 			helper.getProjectAndChangeSchema(projectId);
-			List<EngFlow> flows = engFlowService.getFlowNames(projectId, userId);
-			List<EngFlow> collect = new ArrayList<>();
-			for (EngFlow engFlow : flows) {
-				if (engFlow.getParentEngFlowId() == 0) {
-					engFlow.setEngFlowMetaData("");
-					engFlow.setEngFlowConfig("");
+			List<EngFlowInfoView> flows = engFlowService.getFlowNamesWithJobStatus(projectId, userId);
 
-					collect.add(engFlow);
-				}
-			}
-
-			if (collect != null && !collect.isEmpty()) {
-				Collections.sort(collect, new Comparator<EngFlow>() {
-					@Override
-					public int compare(EngFlow o1, EngFlow o2) {
-						Integer i1 = Integer.valueOf(o1.getEngFlowId());
-						Integer i2 = Integer.valueOf(o2.getEngFlowId());
-
-						return i2.compareTo(i1);
-					}
-				});
-			}
-
-			response = helper.createSuccessMessage(200, "Flow Objects", collect);
+			response = helper.createSuccessMessage(200, "Flow Objects", flows);
 		} catch (SQLException exception) {
 			response = helper.failureMessage(500, exception.getMessage());
 			log.error("Exception reading Eng Flows {}", exception.getMessage());
@@ -566,7 +596,7 @@ public class EngineeringController {
 									String.format(auditMessage, engFlow.getEngFlowDisplayName()),
 									String.format(notificationMessage, engFlow.getEngFlowDisplayName(), userName),
 									engFlowId.getUserId(), engFlow.getProjectId());
-							return helper.createSuccessMessage(HttpStatus.OK.value(), "Eng Flow name Updated!",
+							return helper.createSuccessMessage(HttpStatus.OK.value(), "Flow description updated Successfully!",
 									engFlowId);
 						} catch (Exception exception) {
 							log.info(" Exception {}", exception);

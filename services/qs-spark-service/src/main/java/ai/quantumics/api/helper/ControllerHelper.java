@@ -8,15 +8,39 @@
 
 package ai.quantumics.api.helper;
 
+import ai.quantumics.api.adapter.AwsAdapter;
 import ai.quantumics.api.constants.AuditEventType;
 import ai.quantumics.api.constants.AuditEventTypeAction;
 import ai.quantumics.api.constants.QsConstants;
 import ai.quantumics.api.exceptions.QuantumsparkUserNotFound;
 import ai.quantumics.api.exceptions.SchemaChangeException;
 import ai.quantumics.api.livy.LivyActions;
-import ai.quantumics.api.model.*;
-import ai.quantumics.api.req.*;
-import ai.quantumics.api.service.*;
+import ai.quantumics.api.model.AuditEvents;
+import ai.quantumics.api.model.EngFlow;
+import ai.quantumics.api.model.EngFlowDatalineage;
+import ai.quantumics.api.model.EngFlowEvent;
+import ai.quantumics.api.model.EngFlowJob;
+import ai.quantumics.api.model.Projects;
+import ai.quantumics.api.model.QsUserProfileV2;
+import ai.quantumics.api.model.QsUserV2;
+import ai.quantumics.api.req.AggReqColumn;
+import ai.quantumics.api.req.AggregateRequest;
+import ai.quantumics.api.req.DataFrameRequest;
+import ai.quantumics.api.req.EngFileOperationRequest;
+import ai.quantumics.api.req.EngFlowConfigRequest;
+import ai.quantumics.api.req.FileJoinColumnMetadata;
+import ai.quantumics.api.req.JoinOperationRequest;
+import ai.quantumics.api.req.Metadata;
+import ai.quantumics.api.req.UdfOperationRequest;
+import ai.quantumics.api.req.UploadFileRequest;
+import ai.quantumics.api.service.AuditEventsService;
+import ai.quantumics.api.service.EngFlowDatalineageService;
+import ai.quantumics.api.service.EngFlowEventService;
+import ai.quantumics.api.service.EngFlowJobService;
+import ai.quantumics.api.service.EngFlowService;
+import ai.quantumics.api.service.FolderService;
+import ai.quantumics.api.service.ProjectService;
+import ai.quantumics.api.service.UserServiceV2;
 import ai.quantumics.api.util.CipherUtils;
 import ai.quantumics.api.util.DbSessionUtil;
 import ai.quantumics.api.util.JobRunState;
@@ -31,17 +55,30 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONValue;
 import org.springframework.core.env.Environment;
-//import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ai.quantumics.api.constants.QsConstants.*;
+import static ai.quantumics.api.constants.QsConstants.AGG;
+import static ai.quantumics.api.constants.QsConstants.DB_NAME;
+import static ai.quantumics.api.constants.QsConstants.PUBLIC;
 
 @Slf4j
 @Component
@@ -60,20 +97,24 @@ public class ControllerHelper {
   private final Environment applicationProperties;
   private final EngFlowService engFlowService;
   private final EngFlowDatalineageService datalineageService;
-  
+  private final FolderService folderService;
+  private final AwsAdapter awsAdapter;
+
   public ControllerHelper(
-      DbSessionUtil dbUtilCi,
-      ProjectService projectServiceCi,
-      UserServiceV2 userServiceCi,
-      LivyActions livyActionsCi,
-      EngFlowEventService engFlowEventServiceCi,
-      //SimpMessageSendingOperations messagingTemplateCi,
-      MetadataHelper metadataHelperCi,
-      EngFlowJobService flowJobServiceCi,
-      AuditEventsService auditEventsServiceCi,
-      Environment applicationPropertiesCi,
-      EngFlowService engFlowServiceCi,
-      EngFlowDatalineageService datalineageServiceCi) {
+          DbSessionUtil dbUtilCi,
+          ProjectService projectServiceCi,
+          UserServiceV2 userServiceCi,
+          LivyActions livyActionsCi,
+          EngFlowEventService engFlowEventServiceCi,
+          //SimpMessageSendingOperations messagingTemplateCi,
+          MetadataHelper metadataHelperCi,
+          EngFlowJobService flowJobServiceCi,
+          AuditEventsService auditEventsServiceCi,
+          Environment applicationPropertiesCi,
+          EngFlowService engFlowServiceCi,
+          EngFlowDatalineageService datalineageServiceCi,
+          FolderService folderServiceCi,
+          AwsAdapter awsAdapterCi) {
     dbUtil = dbUtilCi;
     projectService = projectServiceCi;
     userService = userServiceCi;
@@ -86,6 +127,8 @@ public class ControllerHelper {
     applicationProperties = applicationPropertiesCi;
     engFlowService = engFlowServiceCi;
     datalineageService = datalineageServiceCi;
+    folderService = folderServiceCi;
+    awsAdapter = awsAdapterCi;
   }
 
   private static String joinListWithCustomDelimiter(final ArrayList<String> tempData) {
@@ -126,7 +169,7 @@ public class ControllerHelper {
   }
 
   /**
-   * @param userById
+   * @param userProfile
    * @return
    */
   public String getFullName(QsUserProfileV2 userProfile) {
@@ -705,12 +748,24 @@ public class ControllerHelper {
     queryBuilder.append(")");
     return queryBuilder.toString();
   }
-  
-  public void readLinesFromTemplate(StringBuilder fileContents) throws Exception {
-    File contentSource = ResourceUtils.getFile("./"+QsConstants.QS_LIVY_TEMPLATE_ENG_NAME);
-    log.info("File in classpath Found {} : ", contentSource.exists());
-    fileContents.append(new String(Files.readAllBytes(contentSource.toPath())));
-  }
+
+    public void readLinesFromTemplate(StringBuilder fileContents) throws Exception {
+        try{
+            String osName = System.getProperty("os.name");
+            File contentSource = null;
+            if(osName.contains("Windows")) {
+                URL url = null;
+                url = getClass().getClassLoader().getResource(QsConstants.QS_LIVY_TEMPLATE_ENG_NAME);
+                contentSource = new File(url.toURI());
+            } else {
+                contentSource = ResourceUtils.getFile("./" + QsConstants.QS_LIVY_TEMPLATE_ENG_NAME);
+                log.info("File in classpath Found {} :  ", contentSource.exists());
+            }
+            fileContents.append(new String(Files.readAllBytes(contentSource.toPath())));
+        } catch (IOException e) {
+            log.info("An error ocurred while reading the file: " + e.getMessage());
+        }
+    }
   
   public void etlScriptVarsInit(StringBuilder fileContents, String engDb) {
     fileContents.toString().replace(DB_NAME, String.format("'%s'", engDb));
@@ -1083,5 +1138,21 @@ public class ControllerHelper {
 	}
 	  return active;
   }
-  
+
+  public void deleteFile(String folderName,String finalFileName,String partitionRef,QsUserV2 user,String dbSchemaName,Projects project ) throws Exception {
+      String userName = user.getQsUserProfile().getUserFirstName() + " "
+              + user.getQsUserProfile().getUserLastName();
+      // Now delete the Raw file from S3 and Athena partition as well..
+      awsAdapter.handlePostFileDeleteActions(project, 0, folderName, false,
+              partitionRef, "");
+      String auditMessage = getAuditMessage(AuditEventType.INGEST,
+              AuditEventTypeAction.DELETE);
+      String notification = getNotificationMessage(AuditEventType.INGEST,
+              AuditEventTypeAction.DELETE);
+      recordAuditEvent(AuditEventType.INGEST, AuditEventTypeAction.DELETE,
+              String.format(auditMessage, finalFileName),
+              String.format(notification, finalFileName, userName), user.getUserId(),
+              project.getProjectId());
+  }
 }
+

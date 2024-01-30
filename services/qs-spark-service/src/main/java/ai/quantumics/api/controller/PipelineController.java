@@ -52,7 +52,7 @@ public class PipelineController {
 	@GetMapping("/all/{projectId}/{userId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ingested all piplines") })
 	public ResponseEntity<Object> getAllIngestedPipelines(@PathVariable(value = "projectId") final int projectId,
-														  @PathVariable(value = "userId") final int userId) throws Exception {
+			@PathVariable(value = "userId") final int userId) throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		List<Pipeline> ingestPipeline = null;
 		dbUtil.changeSchema("public");
@@ -87,7 +87,7 @@ public class PipelineController {
 	@GetMapping("/connector/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Connected pipline details") })
 	public ResponseEntity<Object> getConnectedPipeline(@PathVariable(value = "projectId") final int projectId,
-													   @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		Pipeline ingestPipeline = null;
@@ -113,7 +113,7 @@ public class PipelineController {
 	@DeleteMapping("/delete/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Delete Pipline") })
 	public ResponseEntity<Object> deletePipeline(@PathVariable(value = "projectId") final int projectId,
-												 @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -152,7 +152,7 @@ public class PipelineController {
 	@PostMapping("/executepipeline/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Process pipline details") })
 	public ResponseEntity<Object> processPipeline(@PathVariable(value = "projectId") final int projectId,
-												  @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 
 		final Map<String, Object> response = new HashMap<>();
@@ -160,7 +160,7 @@ public class PipelineController {
 		dbUtil.changeSchema("public");
 		QsUserV2 userObj = validatorUtils.checkUser(userId);
 		Projects project = validatorUtils.checkProject(projectId);
-
+		
 		dbUtil.changeSchema(project.getDbSchemaName());
 		Pipeline pipeline = validatorUtils.checkPipeline(pipelineId);
 		PipelineTranscationDetails trans = new PipelineTranscationDetails();
@@ -197,7 +197,7 @@ public class PipelineController {
 	@GetMapping("/transcationdetails/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pipline transcation details") })
 	public ResponseEntity<Object> getPipelineTranscationDetails(@PathVariable(value = "projectId") final int projectId,
-																@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -222,7 +222,7 @@ public class PipelineController {
 	@GetMapping("/folderDetails/{projectId}/{userId}/{pipelineId}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pipline folder details") })
 	public ResponseEntity<Object> getPipelineFolderDetails(@PathVariable(value = "projectId") final int projectId,
-														   @PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
+			@PathVariable(value = "userId") final int userId, @PathVariable(value = "pipelineId") final int pipelineId)
 			throws Exception {
 		final Map<String, Object> response = new HashMap<>();
 		dbUtil.changeSchema("public");
@@ -235,7 +235,7 @@ public class PipelineController {
 			dataSetSchema.getQsFolders().setFilesCount(fileService.getFileCount(dataSetSchema.getQsFolders().getFolderId()));
 		});
 
-
+		
 		if (schemaList != null && schemaList.size() > 0) {
 			response.put("code", 200);
 			response.put("result", schemaList);

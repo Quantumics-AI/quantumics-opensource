@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonPropertyOrder({
-		"requestType", "sourceDataset", "preparedDataset", "dataPipes", "folders", "datapipe", "dashboard", "dataVolume", "pii", "savings"
+  "requestType", "sourceDataset", "preparedDataset", "dataPipes", "folders", "datapipe", "dashboard", "dataVolume", "pii", "savings"
 })
 public class ProjectStatistics {
-
+	
 	@JsonProperty
 	private String requestType;
-
+	
 	@JsonProperty
 	private StatisticsOverview sourceDataset;
-
+	
 	@JsonProperty
 	private StatisticsOverview preparedDataset;
-
+	
 	@JsonProperty
 	private StatisticsOverview dataPipes;
 
@@ -33,16 +33,16 @@ public class ProjectStatistics {
 
 	@JsonProperty
 	private StatisticsOverview dashboard;
-
+	
 	@JsonProperty
 	private DataVolumeOverview dataVolume;
-
+	
 	@JsonProperty
 	private StatisticsOverview pii;
-
+	
 	@JsonProperty
 	private Savings savings;
-
+	
 	@Data
 	@NoArgsConstructor
 	public class Savings {
@@ -50,7 +50,7 @@ public class ProjectStatistics {
 		private ValueUnitPair time;
 		private ValueUnitPair money;
 	}
-
+	
 	@Data
 	@NoArgsConstructor
 	public class Effort {
@@ -58,7 +58,7 @@ public class ProjectStatistics {
 		private int qsai;
 		private String unit;
 	}
-
+	
 	@Data
 	@NoArgsConstructor
 	public class ValueUnitPair{

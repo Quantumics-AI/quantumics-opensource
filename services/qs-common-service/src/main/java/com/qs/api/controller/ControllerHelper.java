@@ -58,8 +58,8 @@ public class ControllerHelper {
   private final FileService fileService;
 
   public ControllerHelper(DbSessionUtil dbUtilCi, ProjectService projectServiceCi,
-                          EngFlowEventService engFlowEventService, RestTemplate restTemplate,
-                          MetadataHelper metadataHelper, FileService fileService) {
+      EngFlowEventService engFlowEventService, RestTemplate restTemplate,
+      MetadataHelper metadataHelper, FileService fileService) {
     this.dbUtil = dbUtilCi;
     this.projectService = projectServiceCi;
     this.engFlowEventService = engFlowEventService;
@@ -69,7 +69,7 @@ public class ControllerHelper {
   }
 
   public HashMap<String, Object> createSuccessMessage(final int code, final String message,
-                                                      Object result) {
+      Object result) {
     final HashMap<String, Object> success = new HashMap<>();
     success.put(QsConstants.CODE_STR, code);
     success.put(QsConstants.RESULT, result);
@@ -78,7 +78,7 @@ public class ControllerHelper {
   }
 
   public HashMap<String, Object> createSuccessMessage(final int code, final String message,
-                                                      Object result, Object metadata) {
+      Object result, Object metadata) {
     final HashMap<String, Object> success = new HashMap<>();
     success.put(QsConstants.CODE_STR, code);
     success.put(QsConstants.RESULT, result);
@@ -101,23 +101,23 @@ public class ControllerHelper {
     dbUtil.changeSchema(project.getDbSchemaName());
     return project.getDbSchemaName();
   }
-
+  
   public void swtichToPublicSchema() throws SchemaChangeException {
-    dbUtil.changeSchema(QsConstants.PUBLIC);
+	    dbUtil.changeSchema(QsConstants.PUBLIC);
   }
 
   public EngFlowEvent getEventForJoinAction(JoinOperationRequest wsJoinRequest) throws SQLException {
     getProjectAndChangeSchema(wsJoinRequest.getProjectId());
     final EngFlowEvent flowEvent =
-            createFlowEvent(wsJoinRequest, wsJoinRequest.getEngFlowId(), JOIN, null);
+        createFlowEvent(wsJoinRequest, wsJoinRequest.getEngFlowId(), JOIN, null);
     return flowEvent;
   }
-
+  
   public EngFlowEvent getEventForUdfAction(UdfOperationRequest wsUdfRequest) throws SQLException {
-    getProjectAndChangeSchema(wsUdfRequest.getProjectId());
-    final EngFlowEvent flowEvent =
-            createFlowEvent(wsUdfRequest, wsUdfRequest.getEngFlowId(), UDF, null);
-    return flowEvent;
+	    getProjectAndChangeSchema(wsUdfRequest.getProjectId());
+	    final EngFlowEvent flowEvent =
+	        createFlowEvent(wsUdfRequest, wsUdfRequest.getEngFlowId(), UDF, null); 
+	    return flowEvent;
   }
 
   public Projects getProjects(int projectId) throws SchemaChangeException {
@@ -133,16 +133,16 @@ public class ControllerHelper {
     EngFlowEvent flowEvent = createFlowEvent(wsRequest, wsRequest.getEngFlowId(), FILE_OP, wsRequest.getFileType());
     return flowEvent;
   }
-
+  
   public EngFlowEvent getEngFlowEvent(EngFileOperationRequest engFileRequest) throws SQLException {
-    getProjectAndChangeSchema(engFileRequest.getProjectId());
-    EngFlowEvent flowEvent = null;
-    if ("udf".equals(engFileRequest.getFileType())) {
-      flowEvent = createFlowEvent(engFileRequest, engFileRequest.getEngFlowId(), UDF, engFileRequest.getFileType());
-    } else {
-      flowEvent = createFlowEvent(engFileRequest, engFileRequest.getEngFlowId(), ENG_OP, engFileRequest.getFileType());
-    }
-    return flowEvent;
+	  getProjectAndChangeSchema(engFileRequest.getProjectId());
+	  EngFlowEvent flowEvent = null;
+	  if("udf".equals(engFileRequest.getFileType())) {
+		   flowEvent = createFlowEvent(engFileRequest, engFileRequest.getEngFlowId(), UDF, engFileRequest.getFileType());
+	  }else {
+		   flowEvent = createFlowEvent(engFileRequest, engFileRequest.getEngFlowId(), ENG_OP, engFileRequest.getFileType());
+	  }
+	  return flowEvent;
   }
 
   @Async("qsThreadPool")
@@ -185,7 +185,7 @@ public class ControllerHelper {
       log.error("Exception: establishing a session {}", e.getMessage());
     }
   }
-
+  
   @Async("qsThreadPool")
   public void updateFlowEventWithJoinResults(JoinOperationRequest wsJoinRequest) {
     ResponseEntity<String> postForEntity = null;
@@ -223,7 +223,7 @@ public class ControllerHelper {
       log.error("Exception: establishing a session {}", e.getMessage());
     }
   }
-
+  
   @Async("qsThreadPool")
   public void updateFlowEventWithEngFileData(EngFileOperationRequest engFileRequest) {
     ResponseEntity<String> postForEntity = null;
@@ -245,7 +245,7 @@ public class ControllerHelper {
   }
 
   private EngFlowEvent createFlowEvent(final Object wsRequest, final int engFlowId,
-                                       final String type, final String fileType) throws SQLException {
+      final String type, final String fileType) throws SQLException {
 
     final String requestConfig = getGson(wsRequest);
     log.info("========>Create Event request is received for the input: {}", requestConfig);
@@ -254,17 +254,17 @@ public class ControllerHelper {
     flowEvent.setEngFlowConfig(requestConfig);
     flowEvent.setEngFlowId(engFlowId);
     flowEvent.setFileType(fileType);
-
+    
     if (type.equals(JOIN)) {
       flowEvent.setEventType(JOIN);
     } else if (type.equals(FILE_OP)) {
       flowEvent.setEventType(FILE_OP);
-    } else if (type.equals(AGG_OP)) {
+    } else if(type.equals(AGG_OP)){
       flowEvent.setEventType(AGG_OP);
-    } else if (type.equals(ENG_OP)) {
+    } else if(type.equals(ENG_OP)) {
       flowEvent.setEventType(ENG_OP);
-    } else if (type.equals(UDF)) {
-      flowEvent.setEventType(UDF);
+    }else if (type.equals(UDF)) {
+        flowEvent.setEventType(UDF);
     }
 
     log.info("Processing the Create Event request for the input: {}", requestConfig);
@@ -284,7 +284,7 @@ public class ControllerHelper {
       // Event Id will be zero in case user performs drag and drop of file in Engineering Screen.
       // If the request is coming from Automation Run screen, it will be non-zero.
       flowEvent.setAutoConfigEventId(
-              tmpFileReq.getEventId() == 0 ? currentEventId : tmpFileReq.getEventId());
+          tmpFileReq.getEventId() == 0 ? currentEventId : tmpFileReq.getEventId());
       tmpFileReq.setEventId(currentEventId);
       flowEvent.setEngFlowConfig(getGson(tmpFileReq));
       flowEvent.setProjectId(tmpFileReq.getProjectId());
@@ -292,7 +292,7 @@ public class ControllerHelper {
       flowEvent.setFileId(tmpFileReq.getFileId());
       flowEvent.setUserId(tmpFileReq.getUserId());
       flowEvent.setCreationDate(now);
-
+      
     } else if (wsRequest instanceof JoinOperationRequest) {
       tmpJoinReq = (JoinOperationRequest) wsRequest;
 
@@ -300,11 +300,11 @@ public class ControllerHelper {
       // Event Id will be zero in case user performs drag and drop of join in Engineering Screen.
       // If the request is coming from Automation Run screen, it will be non-zero.
       flowEvent.setAutoConfigEventId(
-              tmpJoinReq.getEventId() == 0 ? currentEventId : tmpJoinReq.getEventId());
+          tmpJoinReq.getEventId() == 0 ? currentEventId : tmpJoinReq.getEventId());
       tmpJoinReq.setAutoConfigEventId(
-              tmpJoinReq.getEventId() == 0 ? currentEventId : tmpJoinReq.getEventId());
+          tmpJoinReq.getEventId() == 0 ? currentEventId : tmpJoinReq.getEventId());
       tmpJoinReq.setEventId(currentEventId);
-
+      
       flowEvent.setEngFlowConfig(getGson(tmpJoinReq));
     } else if (wsRequest instanceof AggregateRequest) {
       tmpAggReq = (AggregateRequest) wsRequest;
@@ -313,62 +313,62 @@ public class ControllerHelper {
       // Event Id will be zero in case user performs drag and drop of join in Engineering Screen.
       // If the request is coming from Automation Run screen, it will be non-zero.
       flowEvent.setAutoConfigEventId(
-              tmpAggReq.getEventId() == 0 ? currentEventId : tmpAggReq.getEventId());
+          tmpAggReq.getEventId() == 0 ? currentEventId : tmpAggReq.getEventId());
       tmpAggReq.setAutoConfigEventId(tmpAggReq.getEventId() == 0 ? currentEventId : tmpAggReq.getEventId());
       tmpAggReq.setEventId(currentEventId);
-
+      
       flowEvent.setEngFlowConfig(getGson(tmpAggReq));
     } else if (wsRequest instanceof EngFileOperationRequest) {
       tmpEngFileReq = (EngFileOperationRequest) wsRequest;
-
+      
       flowEvent.setProjectId(tmpEngFileReq.getProjectId());
       flowEvent.setFileId(tmpEngFileReq.getFileId());
       flowEvent.setAutoConfigEventId(
-              tmpEngFileReq.getEventId() == 0 ? currentEventId : tmpEngFileReq.getEventId());
+          tmpEngFileReq.getEventId() == 0 ? currentEventId : tmpEngFileReq.getEventId());
       tmpEngFileReq.setEventId(currentEventId);
       tmpEngFileReq.setParentEventId(tmpEngFileReq.getParentEventId() == 0 ? currentEventId : tmpEngFileReq.getParentEventId());
       flowEvent.setEngFlowConfig(getGson(tmpEngFileReq));
     } else if (wsRequest instanceof UdfOperationRequest) {
-      tmpUdfReq = (UdfOperationRequest) wsRequest;
-      Map<String, Integer> eventIds = tmpUdfReq.getEventIds();
-      int eventId = eventIds.get("eventId");
-      // First set the AutoConfigEventId...
-      // Event Id will be zero in case user performs drag and drop of join in Engineering Screen.
-      // If the request is coming from Automation Run screen, it will be non-zero.
-      flowEvent.setAutoConfigEventId(
-              eventId == 0 ? currentEventId : eventId);
-      tmpUdfReq.setAutoConfigEventId(
-              eventId == 0 ? currentEventId : eventId);
-      //tmpUdfReq.setEventId(currentEventId);
-      eventIds.put("eventId", currentEventId);
-      tmpUdfReq.setEventIds(eventIds);
-      flowEvent.setEngFlowConfig(getGson(tmpUdfReq));
-    }
+    	tmpUdfReq = (UdfOperationRequest) wsRequest;
+    	Map<String, Integer> eventIds = tmpUdfReq.getEventIds();
+    	int eventId = eventIds.get("eventId");
+        // First set the AutoConfigEventId...
+        // Event Id will be zero in case user performs drag and drop of join in Engineering Screen.
+        // If the request is coming from Automation Run screen, it will be non-zero.
+        flowEvent.setAutoConfigEventId(
+        		eventId == 0 ? currentEventId : eventId);
+        tmpUdfReq.setAutoConfigEventId(
+        		eventId == 0 ? currentEventId : eventId);
+        //tmpUdfReq.setEventId(currentEventId);
+        eventIds.put("eventId", currentEventId);
+        tmpUdfReq.setEventIds(eventIds);
+        flowEvent.setEngFlowConfig(getGson(tmpUdfReq));
+      }
 
     log.info("Updating the Event Instance with data: {}", flowEvent);
     flowEvent = engFlowEventService.save(flowEvent); // Invoking again to update the
-    // autoConfigEventId column
+                                                     // autoConfigEventId column
 
     return flowEvent;
   }
 
   public EngFlowConfigRequest processNewFilesForAutomation(
-          EngFlowConfigRequest origEngFlowConfigReq, List<DataFrameRequest> newFiles,
-          Map<Integer, EngFlowEvent> newFileEvents, Map<Integer, Integer> processedEventsMap) throws Exception {
+      EngFlowConfigRequest origEngFlowConfigReq, List<DataFrameRequest> newFiles,
+      Map<Integer, EngFlowEvent> newFileEvents, Map<Integer, Integer> processedEventsMap) throws Exception {
     getProjectAndChangeSchema(origEngFlowConfigReq.getProjectId());
-
+    
     List<JoinOperationRequest> joins = origEngFlowConfigReq.getSelectedJoins();
     if (joins != null && !joins.isEmpty()) {
       log.info(
-              "Started processing the joins to include newly selected files in the Original Run Config JSON...");
+          "Started processing the joins to include newly selected files in the Original Run Config JSON...");
 
       for (JoinOperationRequest join : joins) {
         int eventId = join.getEventId();
         int eventId1 = join.getEventId1();
         int eventId2 = join.getEventId2();
-
+        
         log.info("Event Id1: {} and Event Id2: {}", eventId1, eventId2);
-
+        
         // Now get the eventId1 and eventId2 type by fetching the record from backend...
         processEventIds(join, null, newFileEvents, eventId1, 1, 1, processedEventsMap);
         processEventIds(join, null, newFileEvents, eventId2, 2, 2, processedEventsMap);
@@ -387,7 +387,7 @@ public class ControllerHelper {
 
           if (file1Metadata == null || file1Metadata.isEmpty()) {
             log.info(
-                    "File1 Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
+                "File1 Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
             // This should not happen as the file metadata is processed when the file is cleansed.
             // Just to ensure things proceed further, below line is added as a fallback.
             file1Metadata = getFileMetadataFromParentFile(engFlowEvent1);
@@ -406,7 +406,7 @@ public class ControllerHelper {
 
           if (file2Metadata == null || file2Metadata.isEmpty()) {
             log.info(
-                    "File2 Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
+                "File2 Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
             // This should not happen as the file metadata is processed when the file is cleansed.
             // Just to ensure things proceed further, below line is added as a fallback.
             file2Metadata = getFileMetadataFromParentFile(engFlowEvent2);
@@ -415,7 +415,7 @@ public class ControllerHelper {
         }
 
         String joinMetadata = metadataHelper.getJoinMetadata(
-                newOrigJoinFlowEvent.getEngFlowEventId(), file1Metadata, file2Metadata);
+            newOrigJoinFlowEvent.getEngFlowEventId(), file1Metadata, file2Metadata);
         log.info("Join Metadata processed from the above two files is: {}", joinMetadata);
 
         newOrigJoinFlowEvent.setFileMetaData(joinMetadata);
@@ -430,67 +430,67 @@ public class ControllerHelper {
       }
       log.info("Completed processing the joins...");
     }
-
+    
     List<UdfOperationRequest> udfs = origEngFlowConfigReq.getSelectedUdfs();
     if (udfs != null && !udfs.isEmpty()) {
       log.info(
-              "Started processing the udf to include newly selected files in the Original Run Config JSON...");
+          "Started processing the udf to include newly selected files in the Original Run Config JSON...");
 
       for (UdfOperationRequest udf : udfs) {
-
+    	  
         //int eventId = udf.getEventId();
         //int eventId1 = udf.getEventId1();
         //int eventId2 = udf.getEventId2();
-
+        
         //log.info("Event Id1: {} and Event Id2: {}", eventId1, eventId2);
-
+        
         // Now get the eventId1 and eventId2 type by fetching the record from backend...
-        Map<String, Integer> eventIds = udf.getEventIds();
-        int eventId = eventIds.get("eventId");
-        int j = 1;
-        for (Map.Entry<String, Integer> entry : eventIds.entrySet()) {
-          if (!"eventId".equals(entry.getKey())) {
-            udfProcessEventIds(udf, newFileEvents, entry.getValue(), j, processedEventsMap);
-            j++;
-          }
-        }
-        log.info("=============================");
+    	Map<String, Integer> eventIds = udf.getEventIds();
+    	int eventId = eventIds.get("eventId");
+    	int j = 1;
+    	for(Map.Entry<String, Integer> entry : eventIds.entrySet()) {
+    		if(!"eventId".equals(entry.getKey())) {
+    			udfProcessEventIds(udf, newFileEvents, entry.getValue(), j, processedEventsMap);
+    			j++;
+    		}
+    	}
+    	log.info("=============================");
         //udfProcessEventIds(udf, newFileEvents, eventId1, 1);
         //udfProcessEventIds(udf, newFileEvents, eventId2, 2);
 
         EngFlowEvent newOrigUdfFlowEvent = createFlowEvent(udf, udf.getEngFlowId(), UDF, null);
         //udf.setEventId(newOrigUdfFlowEvent.getEngFlowEventId());
         eventIds.put("eventId", newOrigUdfFlowEvent.getEngFlowEventId());
-
+        
         List<Metadata> joinCols = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : eventIds.entrySet()) {
-          if (!"eventId".equals(entry.getKey())) {
-            Optional<EngFlowEvent> efe = engFlowEventService.getFlowEvent(entry.getValue());
-            EngFlowEvent engFlowEvent = null;
-            String fileMetadata = "";
-            if (efe.isPresent()) {
-              engFlowEvent = efe.get();
-              fileMetadata = engFlowEvent.getFileMetaData();
+        for(Map.Entry<String, Integer> entry : eventIds.entrySet()) {
+        	if(!"eventId".equals(entry.getKey())) {
+        		Optional<EngFlowEvent> efe = engFlowEventService.getFlowEvent(entry.getValue());
+        		EngFlowEvent engFlowEvent = null;
+        		String fileMetadata = "";
+        		if (efe.isPresent()) {
+        			engFlowEvent = efe.get();
+        			fileMetadata = engFlowEvent.getFileMetaData();
 
-              log.info("File Metadata retrieved from ENG_FLOW_EVENT table is: {}", fileMetadata);
+        			log.info("File Metadata retrieved from ENG_FLOW_EVENT table is: {}", fileMetadata);
 
-              if (fileMetadata == null || fileMetadata.isEmpty()) {
-                log.info(
-                        "File Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
-                // This should not happen as the file metadata is processed when the file is cleansed.
-                // Just to ensure things proceed further, below line is added as a fallback.
-                fileMetadata = getFileMetadataFromParentFile(engFlowEvent);
-                log.info("File Metadata retrieved from Parent enent is: {}", fileMetadata);
-              }
-            }
+        			if (fileMetadata == null || fileMetadata.isEmpty()) {
+        				log.info(
+        						"File Metadata retrieved from ENG_FLOW_EVENT table is empty or null processing further ");
+        				// This should not happen as the file metadata is processed when the file is cleansed.
+        				// Just to ensure things proceed further, below line is added as a fallback.
+        				fileMetadata = getFileMetadataFromParentFile(engFlowEvent);
+        				log.info("File Metadata retrieved from Parent enent is: {}", fileMetadata);
+        			}
+        		}
 
-            FileJoinColumnMetadata fileColumnMetadata = null;
-            if (fileMetadata != null && !fileMetadata.isEmpty()) {
-              fileColumnMetadata = gson.fromJson(fileMetadata, FileJoinColumnMetadata.class);
-              log.info("File Metadata Object parsing using GSON API: {}", fileColumnMetadata.getMetadata());
-              joinCols.addAll(fileColumnMetadata.getMetadata());
-            }
-          }
+        		FileJoinColumnMetadata fileColumnMetadata = null;
+        		if (fileMetadata != null && !fileMetadata.isEmpty()) {
+        			fileColumnMetadata = gson.fromJson(fileMetadata, FileJoinColumnMetadata.class);
+        			log.info("File Metadata Object parsing using GSON API: {}", fileColumnMetadata.getMetadata());
+        			joinCols.addAll(fileColumnMetadata.getMetadata());
+        		}
+        	}
         }
 
         FileJoinColumnMetadata joinMetadata = new FileJoinColumnMetadata();
@@ -521,7 +521,7 @@ public class ControllerHelper {
     List<AggregateRequest> aggregates = origEngFlowConfigReq.getSelectedAggregates();
     if (aggregates != null && !aggregates.isEmpty()) {
       log.info(
-              "Started processing the aggregates to include newly selected files in the Original Run Config JSON...");
+          "Started processing the aggregates to include newly selected files in the Original Run Config JSON...");
 
       for (AggregateRequest aggregate : aggregates) {
 
@@ -529,12 +529,12 @@ public class ControllerHelper {
 
         int eventId = aggregate.getEventId();
         int eventId1 = aggregate.getDataFrameEventId(); // TODO: I think we need to change this
-        // attribute to eventId1...
-
+                                                        // attribute to eventId1...
+        
         // Since this eventId1 represents either a File or Join eventId, it will be already
         // processed.
         EngFlowEvent newOrigAggFlowEvent =
-                createFlowEvent(aggregate, aggregate.getEngFlowId(), AGG_OP, null);
+            createFlowEvent(aggregate, aggregate.getEngFlowId(), AGG_OP,null);
 
         log.info("Updated Aggregate Event is: {}", newOrigAggFlowEvent);
 
@@ -546,22 +546,22 @@ public class ControllerHelper {
         newOrigAggFlowEvent = engFlowEventService.save(newOrigAggFlowEvent);
 
         log.info("Updated Aggregate Event after AutoConfigEventId update is: {}",
-                newOrigAggFlowEvent);
+            newOrigAggFlowEvent);
 
         log.info("Processed Events Map before is: {}", processedEventsMap);
         processedEventsMap.put(eventId, newOrigAggFlowEvent.getEngFlowEventId());
         log.info("Processed Events Map after is: {}", processedEventsMap);
-
+        
         // Get the processed eventId1 from processedEventsMap and set it to the current Aggregate
         // instance..
-
-        aggregate.setDataFrameEventId((processedEventsMap.get(eventId1) == null) ? 0 : processedEventsMap.get(eventId1));
-
+        
+        aggregate.setDataFrameEventId((processedEventsMap.get(eventId1)==null)?0: processedEventsMap.get(eventId1));
+        
         log.info("Aggregate instance is: {}", aggregate);
-
+        
         // Now process the columns list...
         processAggregateColumns(aggregate, processedEventsMap);
-
+        
         log.info("After processing Aggregate Columns.....");
       }
     }
@@ -574,8 +574,8 @@ public class ControllerHelper {
   }
 
   private void processEventIds(JoinOperationRequest originalJoin,
-                               JoinOperationRequest intermediateJoin, Map<Integer, EngFlowEvent> newFileEvents, int eventId,
-                               int origSeq, int seq, Map<Integer, Integer> processedEventsMap) throws SQLException {
+      JoinOperationRequest intermediateJoin, Map<Integer, EngFlowEvent> newFileEvents, int eventId,
+      int origSeq, int seq, Map<Integer, Integer> processedEventsMap) throws SQLException {
     Optional<EngFlowEvent> engFlowEventOp = engFlowEventService.getFlowEvent(eventId);
     if (engFlowEventOp.isPresent()) {
       // Process further
@@ -586,7 +586,7 @@ public class ControllerHelper {
           if (seq == 1) {
             int newEventId1 = getNewEventIdForFile(newFileEvents, eventId);
             String newFirstFileColumn =
-                    getNewColumnName(newEventId1, originalJoin.getFirstFileColumn());
+                getNewColumnName(newEventId1, originalJoin.getFirstFileColumn());
             intermediateJoin.setEventId1(newEventId1);
             intermediateJoin.setFirstFileColumn(newFirstFileColumn);
 
@@ -595,7 +595,7 @@ public class ControllerHelper {
           } else if (seq == 2) {
             int newEventId2 = getNewEventIdForFile(newFileEvents, eventId);
             String newSecondFileColumn =
-                    getNewColumnName(newEventId2, originalJoin.getSecondFileColumn());
+                getNewColumnName(newEventId2, originalJoin.getSecondFileColumn());
             intermediateJoin.setEventId2(newEventId2);
             intermediateJoin.setSecondFileColumn(newSecondFileColumn);
 
@@ -607,13 +607,13 @@ public class ControllerHelper {
           if (seq == 1) {
             int newEventId1 = getNewEventIdForFile(newFileEvents, eventId);
             String newFirstFileColumn =
-                    getNewColumnName(newEventId1, originalJoin.getFirstFileColumn());
+                getNewColumnName(newEventId1, originalJoin.getFirstFileColumn());
             originalJoin.setEventId1(newEventId1);
             originalJoin.setFirstFileColumn(newFirstFileColumn);
           } else if (seq == 2) {
             int newEventId2 = getNewEventIdForFile(newFileEvents, eventId);
             String newSecondFileColumn =
-                    getNewColumnName(newEventId2, originalJoin.getSecondFileColumn());
+                getNewColumnName(newEventId2, originalJoin.getSecondFileColumn());
             originalJoin.setEventId2(newEventId2);
             originalJoin.setSecondFileColumn(newSecondFileColumn);
           }
@@ -627,9 +627,9 @@ public class ControllerHelper {
           if (seq == 1) {
             String origFirstFileCol = originalJoin.getFirstFileColumn();
             int origEventId1 =
-                    Integer.parseInt(origFirstFileCol.substring(2, origFirstFileCol.indexOf('_', 2)));
+                Integer.parseInt(origFirstFileCol.substring(2, origFirstFileCol.indexOf('_', 2)));
             String newFirstFileColumn =
-                    getNewColumnName(processedEventsMap.get(origEventId1), origFirstFileCol);
+                getNewColumnName(processedEventsMap.get(origEventId1), origFirstFileCol);
             originalJoin.setFirstFileColumn(newFirstFileColumn);
 
             int newEventId1 = processedEventsMap.get(jor.getEventId());
@@ -637,9 +637,9 @@ public class ControllerHelper {
           } else if (seq == 2) {
             String origSecondFileCol = originalJoin.getSecondFileColumn();
             int origEventId1 =
-                    Integer.parseInt(origSecondFileCol.substring(2, origSecondFileCol.indexOf('_', 2)));
+                Integer.parseInt(origSecondFileCol.substring(2, origSecondFileCol.indexOf('_', 2)));
             String newSecondFileColumn =
-                    getNewColumnName(processedEventsMap.get(origEventId1), origSecondFileCol);
+                getNewColumnName(processedEventsMap.get(origEventId1), origSecondFileCol);
             originalJoin.setSecondFileColumn(newSecondFileColumn);
 
             int newEventId2 = processedEventsMap.get(jor.getEventId());
@@ -650,59 +650,59 @@ public class ControllerHelper {
         }
 
         processEventIds(originalJoin, jor, newFileEvents, jor.getEventId1(), origSeq, 1,
-                processedEventsMap);
+            processedEventsMap);
         processEventIds(originalJoin, jor, newFileEvents, jor.getEventId2(), origSeq, 2,
-                processedEventsMap);
+            processedEventsMap);
       }
     }
   }
-
-
-  private void udfProcessEventIds(UdfOperationRequest originalUdf, Map<Integer, EngFlowEvent> newFileEvents,
-                                  int eventId, int seq, Map<Integer, Integer> processedEventsMap) throws SQLException {
-    Optional<EngFlowEvent> engFlowEventOp = engFlowEventService.getFlowEvent(eventId);
-    if (engFlowEventOp.isPresent()) {
-      Map<String, Integer> eventIds = originalUdf.getEventIds();
-      // Process further
-      EngFlowEvent efe = engFlowEventOp.get();
-      String eventConfigStr = efe.getEngFlowConfig(); //-- eventIds null
-      if (FILE_OP.equals(efe.getEventType())) {
-        int newEventId = getNewEventIdForFile(newFileEvents, eventId);
-        eventIds.put("eventId" + seq, newEventId);
-        originalUdf.setEventIds(eventIds);
-      } else {
-        log.info("eventConfigStr :" + eventConfigStr);
-        UdfOperationRequest jor = gson.fromJson(eventConfigStr, UdfOperationRequest.class);
-        Map<String, Integer> ieventIds = jor.getEventIds();
-        if (ieventIds != null && ieventIds.size() != 0) {
-          int ieventId = ieventIds.get("eventId");
-          if (processedEventsMap.containsKey(ieventId)) {
-            int newEventId = processedEventsMap.get(ieventId);
-            eventIds.put("eventId" + seq, newEventId);
-            originalUdf.setEventIds(eventIds);
-            return;
-          }
-          udfProcessEventIds(originalUdf, newFileEvents, ieventIds.get("eventId" + seq), seq,
-                  processedEventsMap);
-        } else {
-          int ieventId = eventId;
-          if (processedEventsMap.containsKey(ieventId)) {
-            int newEventId = processedEventsMap.get(ieventId);
-            eventIds.put("eventId" + seq, newEventId);
-            originalUdf.setEventIds(eventIds);
-            return;
-          }
-          log.info("setting up the event ids==>" + (eventId + seq));
-          udfProcessEventIds(originalUdf, newFileEvents, eventId + seq, seq,
-                  processedEventsMap);
-        }
-
-      }
-    }
+  
+  
+  private void udfProcessEventIds(UdfOperationRequest originalUdf, Map<Integer, EngFlowEvent> newFileEvents, 
+		  int eventId, int seq, Map<Integer, Integer> processedEventsMap) throws SQLException {
+	  Optional<EngFlowEvent> engFlowEventOp = engFlowEventService.getFlowEvent(eventId);
+	  if (engFlowEventOp.isPresent()) {
+		  Map<String, Integer> eventIds = originalUdf.getEventIds();
+		  // Process further
+		  EngFlowEvent efe = engFlowEventOp.get();
+		  String eventConfigStr = efe.getEngFlowConfig(); //-- eventIds null
+		  if (FILE_OP.equals(efe.getEventType())) {
+			  int newEventId = getNewEventIdForFile(newFileEvents, eventId);
+			  eventIds.put("eventId"+seq, newEventId);
+			  originalUdf.setEventIds(eventIds);
+		  }else{
+			  log.info("eventConfigStr :"+eventConfigStr);
+			  UdfOperationRequest jor = gson.fromJson(eventConfigStr, UdfOperationRequest.class);
+			  Map<String, Integer> ieventIds = jor.getEventIds();
+			  if(ieventIds !=null && ieventIds.size() !=0) {
+				  int ieventId = ieventIds.get("eventId");
+				  if (processedEventsMap.containsKey(ieventId)) {
+					  int newEventId = processedEventsMap.get(ieventId);
+					  eventIds.put("eventId"+seq, newEventId);
+					  originalUdf.setEventIds(eventIds);
+					  return;
+				  }
+				  udfProcessEventIds(originalUdf, newFileEvents, ieventIds.get("eventId"+seq), seq,
+				            processedEventsMap);
+			  }else {
+				  int ieventId = eventId;
+				  if (processedEventsMap.containsKey(ieventId)) {
+					  int newEventId = processedEventsMap.get(ieventId);
+					  eventIds.put("eventId"+seq, newEventId);
+					  originalUdf.setEventIds(eventIds);
+					  return;
+				  }
+				  log.info("setting up the event ids==>"+(eventId+seq));
+				  udfProcessEventIds(originalUdf, newFileEvents, eventId+seq, seq,
+				            processedEventsMap);
+			  }
+			  
+		  }
+	  }
   }
 
   private void processAggregateColumns(AggregateRequest aggregate,
-                                       Map<Integer, Integer> processedEventsMap) {
+      Map<Integer, Integer> processedEventsMap) {
     log.info("Started processing the columns list for the aggregate: {}", aggregate.toString());
 
     List<String> groupByCols = aggregate.getGroupByColumns();
@@ -713,7 +713,7 @@ public class ControllerHelper {
       for (String groupByCol : groupByCols) {
         int grpByEventId = Integer.parseInt(groupByCol.substring(2, groupByCol.indexOf('_', 2)));
         String processedGrpByColName =
-                getNewColumnName(processedEventsMap.get(grpByEventId), groupByCol);
+            getNewColumnName(processedEventsMap.get(grpByEventId), groupByCol);
 
         tmpGrpByColList.add(processedGrpByColName);
       }
@@ -728,9 +728,9 @@ public class ControllerHelper {
       log.info("Started processing the Aggregate column(s): {}", aggColumns);
 
       for (AggReqColumn aggColumn : aggColumns) {
-
+        
         String aggColName = aggColumn.getColumnName(); // Column Name of the File or Join to which
-        // aggregate is linked...
+                                                       // aggregate is linked...
         // Replace the event id in the column name with the processed eventId of the File or Join.
         log.info("Column Name to process ---->>", aggColName);
         int eventId1 = Integer.parseInt(aggColName.substring(2, aggColName.indexOf('_', 2)));
@@ -751,8 +751,8 @@ public class ControllerHelper {
 
   private int getNewEventIdForFile(final Map<Integer, EngFlowEvent> newFileEvents, final int key) {
     if (newFileEvents != null && !newFileEvents.isEmpty()) {
-      for (Map.Entry<Integer, EngFlowEvent> me : newFileEvents.entrySet()) {
-        if (me.getKey() == key) {
+      for(Map.Entry<Integer, EngFlowEvent> me : newFileEvents.entrySet()) {
+        if(me.getKey() == key) {
           EngFlowEvent flowEvent = me.getValue();
           return flowEvent.getEngFlowEventId();
         }
@@ -813,14 +813,14 @@ public class ControllerHelper {
 
       // Get the metadata of this file...
       fileMetadata = metadataHelper.getFileMetadata(oldestFile.getQsMetaData(),
-              engFlowEvent.getEngFlowEventId());
+          engFlowEvent.getEngFlowEventId());
     }
 
     return fileMetadata;
   }
 
   private class MyHandler extends StompSessionHandlerAdapter {
-
+    
     @Override
     public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
       log.info("Now connected");
@@ -828,10 +828,10 @@ public class ControllerHelper {
   }
 
   public String getOriginalFileType(final List<DataFrameRequest> originalFiles,
-                                    final int origEventId) {
+      final int origEventId) {
     if (originalFiles != null && !originalFiles.isEmpty()) {
       Optional<DataFrameRequest> dfrOp =
-              originalFiles.stream().filter(dfr -> dfr.getEventId() == origEventId).findFirst();
+          originalFiles.stream().filter(dfr -> dfr.getEventId() == origEventId).findFirst();
       if (dfrOp.isPresent()) {
         return dfrOp.get().getFileType();
       }
@@ -839,7 +839,7 @@ public class ControllerHelper {
 
     return "";
   }
-
+  
   @Async("qsThreadPool")
   public void submitCleanseJobRequest(CleanseJobRequest cleanseJobRequest) {
     ResponseEntity<String> postForEntity = null;
@@ -858,7 +858,7 @@ public class ControllerHelper {
       log.error("Exception: establishing a session {}", e.getMessage());
     }
   }
-
+  
   public void invokeProjectCleanupOp() {
     ResponseEntity<String> postForEntity = null;
     HttpHeaders headers = new HttpHeaders();
@@ -876,13 +876,13 @@ public class ControllerHelper {
       log.error("Exception: establishing a session {}", e.getMessage());
     }
   }
-
+  
   @Async("qsThreadPool")
   public void startExecutePipeline(int projectId, int userId, int pipelineId) {
     // Invoke a HTTP Request to the Current Service by passing the wsRequest
     ResponseEntity<String> postForEntity = null;
     try {
-      URI url = new URI(qsServiceEndPointUrl + "/api/v1/pipeline/executepipeline/" + projectId + "/" + userId + "/" + pipelineId);
+      URI url = new URI(qsServiceEndPointUrl + "/api/v1/pipeline/executepipeline/"+projectId+"/"+userId+"/"+pipelineId);
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.setBearerAuth(QsConstants.BEARER_AUTH_TOKEN);
@@ -897,5 +897,5 @@ public class ControllerHelper {
       log.error("Exception: establishing a session {}", e.getMessage());
     }
   }
-
+  
 }

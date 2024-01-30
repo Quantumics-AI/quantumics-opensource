@@ -8,14 +8,13 @@
 
 package ai.quantumics.api.constants;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.TimeZone;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 public class QsConstants {
 
@@ -186,7 +185,7 @@ public class QsConstants {
   public static final String STRIPE_USER_PLAN_TAX = "tax";
   public static final String STRIPE_PRICE_ID = "priceId";
   public static final String STRIPE_SUBS_SUCCESS_PATH = "subscription-success";
-  public static final String STRIPE_SUBS_CANCELLED_PATH = "billing";
+  public static final String STRIPE_SUBS_CANCELLED_PATH = "workspace-setting/plans";
   
   public static final String DATETIME_PATTERN= "dd/MM/yyyy hh:mm:ss";
   public static final String TIME_PATTERN= "hh:mm:ss";

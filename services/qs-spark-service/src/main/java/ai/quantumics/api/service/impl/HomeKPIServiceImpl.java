@@ -19,17 +19,17 @@ import java.sql.SQLException;
 @Service
 public class HomeKPIServiceImpl implements HomeKPIService {
 
-    @Autowired
-    private HomeKPIRepository homeKPIRepository;
+	@Autowired
+	private HomeKPIRepository homeKPIRepository;
 
 
-    @Override
-    public QsHomeKPI updateHomeKPI(QsHomeKPI qsHomeKPI) throws SQLException {
-        return homeKPIRepository.saveAndFlush(qsHomeKPI);
-    }
+	@Override
+	public QsHomeKPI updateHomeKPI(QsHomeKPI qsHomeKPI) throws SQLException {
+		return homeKPIRepository.saveAndFlush(qsHomeKPI);
+	}
 
-    @Override
-    public QsHomeKPI getHomeKPIForUser(int userId) throws SQLException {
-        return homeKPIRepository.findByUserId(userId);
-    }
+	@Override
+	public QsHomeKPI getHomeKPIForUser(int userId) throws SQLException {
+		return homeKPIRepository.findByUserId(userId);
+	}
 }

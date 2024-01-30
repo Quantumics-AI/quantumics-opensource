@@ -17,27 +17,25 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema.Builder;
-import ai.quantumics.api.req.ApiIntegrationRequest;
 import ai.quantumics.api.vo.ApiIntegrationResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class ApiIntegrationUtils {
-  
+
   @Autowired
   private Environment applicationProperties;
-  
+
   public File processApiResponse(final String fileName, final String apiResponse) throws JsonMappingException, JsonProcessingException, IOException{
     JsonNode jsonTree = parseApiResponse(apiResponse);
-    
+
     JsonNode firstObject = jsonTree.elements().next();
-    
+
     CsvSchema csvSchema = generateSchema(firstObject);
-    
-    
+
     File csvFile = getCsv(fileName, jsonTree, csvSchema);
-    
+
     return csvFile;
   }
 
@@ -57,8 +55,8 @@ public class ApiIntegrationUtils {
     log.info("Temp file path: {}", tmpdir);
     File csvFile = new File(tmpdir+File.separator+fileName);
     csvMapper.writerFor(JsonNode.class)
-      .with(csvSchema)
-      .writeValue(csvFile, jsonTree);
+            .with(csvSchema)
+            .writeValue(csvFile, jsonTree);
     return csvFile;
   }
 
@@ -69,20 +67,20 @@ public class ApiIntegrationUtils {
    * @throws JsonMappingException
    */
   public JsonNode parseApiResponse(final String apiResponse)
-      throws JsonProcessingException, JsonMappingException {
+          throws JsonProcessingException, JsonMappingException {
     ObjectMapper mapper = new ObjectMapper();
     ApiIntegrationResponse response = mapper.readValue(apiResponse, ApiIntegrationResponse.class);
     List<Object> dataRecords = null;
     String dataRecordsStr = null;
-    
+
     if(response != null) {
       dataRecords = response.getData();
     }
-    
+
     // Converting the data into String for easy formatting...
     dataRecordsStr = mapper.writeValueAsString(dataRecords);
     log.info("Data records string: {}", dataRecordsStr);
-    
+
     JsonNode jsonTree = mapper.readTree(dataRecordsStr);
     return jsonTree;
   }
@@ -98,24 +96,48 @@ public class ApiIntegrationUtils {
     CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
     return csvSchema;
   }
-  
-  public File processHubSpotApiResponse(final String fileName, final String...pagingResponse) throws IOException {
+
+  public File oldProcessHubSpotApiResponse(final String fileName, final String...pagingResponse) throws IOException {
     ArrayNode results = (ArrayNode) getHubspotEntityList(pagingResponse[0], "results");
     JsonNode properties = results.get(0).at(applicationProperties.getProperty("hubsport.api.responsePath"));
     CsvSchema csvSchema = generateSchema(properties);
-    
+
     if(pagingResponse.length >1) {
       results.addAll((ArrayNode) getHubspotEntityList(pagingResponse[1], "results"));
-     }
+    }
+
+    List<JsonNode> data = new ArrayList<>();
+    results.elements().forEachRemaining((result) -> {
+      JsonNode propertiesLocal = result.get("properties");
+      data.add(propertiesLocal);
+    });
+    ArrayNode propertiesArray = new ArrayNode(JsonNodeFactory.instance, data);
+    File csvFile = getCsv(fileName, propertiesArray, csvSchema);
+
+    return csvFile;
+  }
+
+  public File processApiDatasourceResponse(final String contextPath, final String fileName, final String...pagingResponse) throws IOException {
+    JsonNode results = getApiDataSourceEntityList(pagingResponse[0], contextPath);
+    if(results != null && !results.isEmpty()) {
+      JsonNode properties = results;
+      if (results.isArray()) {
+        properties = results.get(0);
+      }
+
+      CsvSchema csvSchema = generateSchema(properties);
       List<JsonNode> data = new ArrayList<>();
       results.elements().forEachRemaining((result) -> {
-        JsonNode propertiesLocal = result.get("properties");
+        JsonNode propertiesLocal = result;
         data.add(propertiesLocal);
       });
       ArrayNode propertiesArray = new ArrayNode(JsonNodeFactory.instance, data);
       File csvFile = getCsv(fileName, propertiesArray, csvSchema);
-    
-    return csvFile;
+
+      return csvFile;
+    }
+
+    return null;
   }
 
   /**
@@ -125,15 +147,33 @@ public class ApiIntegrationUtils {
    * @throws JsonMappingException
    */
   public JsonNode getHubspotEntityList(final String apiResponse, String fieldName)
-      throws JsonProcessingException, JsonMappingException {
+          throws JsonProcessingException, JsonMappingException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonTree = objectMapper.readTree(apiResponse);
     JsonNode node = jsonTree.get(fieldName);
     JsonNode results = (node instanceof ArrayNode) ? (ArrayNode) jsonTree.get("results")
-                        : node;
+            : node;
     return results;
   }
-  
+
+  public JsonNode getApiDataSourceEntityList(final String apiResponse, String contextPath)
+          throws JsonProcessingException, JsonMappingException {
+
+    String[] jsonElements = contextPath.split("/");
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonTree = objectMapper.readTree(apiResponse);
+    JsonNode node = getChildNode(jsonTree, jsonElements);
+    return node;
+  }
+
+  private JsonNode getChildNode(JsonNode parent, String[] fieldNames){
+    JsonNode node = parent;
+    for(String element : fieldNames){
+      node = node.findValue(element);
+    }
+    return node;
+  }
+
   /*
    * public static void main(String args[]) throws JsonProcessingException, IOException {
    * ObjectMapper mapper = new ObjectMapper(); File file = new
@@ -141,26 +181,18 @@ public class ApiIntegrationUtils {
    * mapper.readTree(file); Builder csvSchemaBuilder = CsvSchema.builder(); ArrayNode results =
    * (ArrayNode) jsonTree.get("results"); JsonNode properties = results.get(0).at("/properties");
    * List<JsonNode> data = new ArrayList<>();
-   * 
+   *
    * results.elements().forEachRemaining((result) -> { JsonNode propertiesLocal =
    * result.get("properties"); data.add(propertiesLocal); });
    * properties.fieldNames().forEachRemaining((fieldName) -> {
    * {csvSchemaBuilder.addColumn(fieldName);} });
-   * 
+   *
    * ArrayNode propertiesArray = new ArrayNode(JsonNodeFactory.instance, data); CsvSchema csvSchema
    * = csvSchemaBuilder.build().withHeader(); CsvMapper csvMapper = new CsvMapper();
-   * 
+   *
    * csvMapper.writerFor(JsonNode.class) .with(csvSchema) .writeValue(new
    * File("src/main/resources/contacts.csv"), propertiesArray); }
    */
-  
-  public String resolveHubSpotApiParameters(ApiIntegrationRequest apiIntegrationRequest) {
-    
-    return String.format("%s/crm/v3/objects/%s?hapikey=%s&properties=%s&archived=false&limit=100", 
-        apiIntegrationRequest.getApiEndPoint(),apiIntegrationRequest.getEntity(),
-        apiIntegrationRequest.getApiKey(),applicationProperties.getProperty("hubsport.api.selectitems"));
-    
-  }
 
   public boolean hasNext(String responseBody) throws IOException {
     JsonNode paging = getHubspotEntityList(responseBody, "paging");

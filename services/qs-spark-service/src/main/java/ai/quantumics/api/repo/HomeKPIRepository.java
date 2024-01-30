@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HomeKPIRepository extends JpaRepository<QsHomeKPI, Integer> {
 
-    QsHomeKPI findByUserId(int userId);
+  QsHomeKPI findByUserId(int userId);
 
 }
