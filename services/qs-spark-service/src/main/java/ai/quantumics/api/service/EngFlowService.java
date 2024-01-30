@@ -9,6 +9,7 @@
 package ai.quantumics.api.service;
 
 import ai.quantumics.api.model.EngFlow;
+import ai.quantumics.api.model.EngFlowInfoView;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,4 +48,6 @@ public interface EngFlowService {
   void updateFlowStatus(int engFlowId) throws SQLException;
   
   boolean isExists(String engFlowName) throws SQLException;
+
+  List<EngFlowInfoView> getFlowNamesWithJobStatus(int projectId, int userId) throws SQLException;
 }

@@ -21,7 +21,8 @@ public class CleanseHistoryResponse {
   private int userId;
   private int projectId;
   private String status;
-  private Date createdDate;
+  private Date fileCreatedDate;
+  private Date jobExecutionDate;
   private int fileId;
   private String fileName;
   private int folderId;

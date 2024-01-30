@@ -9,9 +9,9 @@
 package ai.quantumics.api;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.athena.AmazonAthena;
 import com.amazonaws.services.athena.AmazonAthenaClient;
 import com.amazonaws.services.glue.AWSGlue;
@@ -33,6 +33,12 @@ public class AwsCustomConfiguration {
   @Value("${s3.credentials.secretKey}")
   private String s3SecretKey;
 
+  @Value("${glue.credentials.accessKey}")
+  private String glueAccessKey;
+
+  @Value("${glue.credentials.secretKey}")
+  private String glueSecretKey;
+
   @Value("${athena.credentials.accessKey}")
   private String athenaAccessKey;
 
@@ -44,12 +50,6 @@ public class AwsCustomConfiguration {
 
   @Value("${qs.file.max-size}")
   private long maxFileSize;
-
-  @Value("${glue.credentials.accessKey}")
-  private String glueAccessKey;
-
-  @Value("${glue.credentials.secretKey}")
-  private String glueSecretKey;
 
 
   @Bean
@@ -84,11 +84,10 @@ public class AwsCustomConfiguration {
   public AWSGlue glueClient() {
     final AWSCredentials awsGlueCredentials = new BasicAWSCredentials(glueAccessKey, glueSecretKey);
     return AWSGlueClientBuilder.standard()
-            .withRegion(cloudRegion)
-            .withCredentials(new AWSStaticCredentialsProvider(awsGlueCredentials))
-            .build();
+        .withRegion(cloudRegion)
+        .withCredentials(new AWSStaticCredentialsProvider(awsGlueCredentials))
+        .build();
   }
-
   @Bean(name = "multipartResolver")
   public CommonsMultipartResolver multipartResolver() {
     final CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();

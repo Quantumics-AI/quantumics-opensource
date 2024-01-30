@@ -19,7 +19,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({"folderId", "userId", "projectId", "folderName", "folderDisplayName","filesCount", "createdBy", "createDate", "modifiedDate", "latest"})
+@JsonPropertyOrder({"folderId", "userId", "projectId", "folderName", "folderDisplayName","filesCount", "createdBy", "createDate", "modifiedDate", "latest", "isPipeline"})
 public class CleanseFolderResponse {
   @JsonProperty private int folderId;
   @JsonProperty private int userId;
@@ -30,7 +30,7 @@ public class CleanseFolderResponse {
   @JsonProperty private Date createDate;
   @JsonProperty private Date modifiedDate;
   @JsonProperty private int filesCount;
-
+  @JsonProperty("isPipeline") private boolean isPipeline;
   @JsonProperty("latest")
   private String latestFileName;
 }

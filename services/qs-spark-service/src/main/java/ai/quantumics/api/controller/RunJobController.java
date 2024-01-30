@@ -84,13 +84,17 @@ import ai.quantumics.api.service.RunJobService;
 import ai.quantumics.api.util.DbSessionUtil;
 import ai.quantumics.api.util.QsUtil;
 import ai.quantumics.api.vo.CleanseJobRequest;
+import ai.quantumics.api.vo.CleansedFolderJob;
 import ai.quantumics.api.vo.QsFileContent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import springfox.documentation.spring.web.json.Json;
+
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -195,6 +199,50 @@ public class RunJobController {
       } else {
         response = helper.createSuccessMessage(200, "Run jobs retrieved", allJobs);
       }
+    } catch (final SQLException e) {
+      log.error("Error : {}", e.getMessage());
+      response = helper.failureMessage(404, e.getMessage());
+    }
+    return ResponseEntity.ok().body(response);
+  }
+
+  @ApiOperation(value = "Get Latest job's details per folder", response = Json.class)
+  @GetMapping("/latest/history/{userId}/{projectId}")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(code = 200, message = "join completed"),
+                  @ApiResponse(code = 204, message = "Zero Jobs Found!"),
+                  @ApiResponse(code = 404, message = "join completed")
+          })
+  public ResponseEntity<Object> getLatestRunJobs(
+          @PathVariable(value = "userId") final int userId,
+          @PathVariable(value = "projectId") final int projectId) {
+    List<RunJobStatus> allJobs;
+    Map<String, Object> response = new HashMap<>();
+    List<CleansedFolderJob> cleansedFolderJobs = new ArrayList<>();
+    try {
+      helper.getProjects(projectId);
+      allJobs = runJobService.findLatestRunJobStatusPerFolderForUserAndProjectId(userId, projectId);
+      if(CollectionUtils.isNotEmpty(allJobs)) {
+        allJobs.forEach(job -> {
+          QsFolders folder = folderService.getFolder(job.getFolderId());
+          if(folder != null) {
+            CleansedFolderJob cleansedFolderJob = new CleansedFolderJob();
+            cleansedFolderJob.setFolderId(job.getFolderId());
+            cleansedFolderJob.setFolderName(folder.getFolderDisplayName());
+            cleansedFolderJob.setFileId(job.getFileId());
+            cleansedFolderJob.setUserId(job.getUserId());
+            cleansedFolderJob.setProjectId(job.getProjectId());
+            cleansedFolderJob.setJobId(job.getRunJobId());
+            cleansedFolderJob.setLastJobStatus(job.getStatus());
+            cleansedFolderJob.setLastExecutionDate(job.getCreatedDate());
+            cleansedFolderJob.setCreatedDate(folder.getCreatedDate());
+            cleansedFolderJob.setDataOwner(folder.getDataOwner());
+            cleansedFolderJobs.add(cleansedFolderJob);
+          }
+        });
+      }
+      response = helper.createSuccessMessage(200, "Run jobs retrieved", cleansedFolderJobs);
     } catch (final SQLException e) {
       log.error("Error : {}", e.getMessage());
       response = helper.failureMessage(404, e.getMessage());
@@ -394,9 +442,10 @@ public class RunJobController {
     final String ruleInputValues5 = cleansingParam.getRuleInputValues5();
     final String ruleOutputValues = cleansingParam.getRuleOutputValues();
     String ruleImpactedCols2 = cleansingParam.getRuleImpactedCols();
-    if(ruleImpactedCols2 != null && !ruleImpactedCols2.isEmpty()) {
+    //commented for bug 1637
+    /*if(ruleImpactedCols2 != null && !ruleImpactedCols2.isEmpty()) {
       ruleImpactedCols2 = ruleImpactedCols2.toLowerCase();
-    }
+    }*/
     
     final String ruleInputNewcolumns = cleansingParam.getRuleInputNewcolumns();
     
@@ -688,6 +737,9 @@ public class RunJobController {
             break;
         }
         break;
+      case "rowId":
+        runJobHelper.qsRowIdColumnsCreate(cleanseRuleInvocation, ruleInputValues, ruleInputValues1, ruleInputValues2);
+        break;
       default:
         log.error("This {} not supported yet! ", ruleName);
         break;
@@ -788,7 +840,16 @@ public class RunJobController {
   }
 
   private void readLinesFromTemplate(StringBuilder fileContents) throws Exception {
-    File contentSource = ResourceUtils.getFile("./"+QS_LIVY_TEMPLATE_NAME);
+    //File contentSource = ResourceUtils.getFile("./"+QS_LIVY_TEMPLATE_NAME);
+    String osName = System.getProperty("os.name");
+    File contentSource = null;
+    if(osName.contains("Windows")) {
+      URL url = null;
+      url = getClass().getClassLoader().getResource(QS_LIVY_TEMPLATE_NAME);
+      contentSource = new File(url.toURI());
+    } else {
+      contentSource = ResourceUtils.getFile("./"+QS_LIVY_TEMPLATE_NAME);
+    }
     log.info("File in classpath Found {} : ", contentSource.exists());
     fileContents.append(new String(Files.readAllBytes(contentSource.toPath())));
   }

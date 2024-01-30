@@ -20,27 +20,27 @@ import java.util.List;
 @Service
 public class RedashDashboardServiceImpl implements RedashDashboardService {
 
-    @Autowired
-    private RedashDashboardRepository redashDashboardRepository;
+	@Autowired
+	private RedashDashboardRepository redashDashboardRepository;
 
 
-    @Override
-    public QsRedashDashboard saveDashboard(QsRedashDashboard qsRedashDashboard) throws SQLException {
-        return redashDashboardRepository.saveAndFlush(qsRedashDashboard);
-    }
+	@Override
+	public QsRedashDashboard saveDashboard(QsRedashDashboard qsRedashDashboard) throws SQLException {
+		return redashDashboardRepository.saveAndFlush(qsRedashDashboard);
+	}
 
-    @Override
-    public QsRedashDashboard getDashboardForDashboardIdAndRdKey(int dashboardId, String rdKey) throws SQLException {
-        return redashDashboardRepository.findByDashboardIdAndRdKeyAndActiveTrue(dashboardId, rdKey);
-    }
+	@Override
+	public QsRedashDashboard getDashboardForDashboardIdAndRdKey(int dashboardId, String rdKey) throws SQLException {
+		return redashDashboardRepository.findByDashboardIdAndRdKeyAndActiveTrue(dashboardId, rdKey);
+	}
 
-    @Override
-    public List<QsRedashDashboard> getAllDashboardsForUserRedashKey(String rdKey) throws SQLException {
-        return redashDashboardRepository.findByRdKeyAndActiveTrue(rdKey);
-    }
+	@Override
+	public List<QsRedashDashboard> getAllDashboardsForUserRedashKey(String rdKey) throws SQLException {
+		return redashDashboardRepository.findByRdKeyAndActiveTrue(rdKey);
+	}
 
-    @Override
-    public List<QsRedashDashboard> getAllDashboards() throws SQLException {
-        return redashDashboardRepository.findAllByActiveTrue();
-    }
+	@Override
+	public List<QsRedashDashboard> getAllDashboards() throws SQLException {
+		return redashDashboardRepository.findAllByActiveTrue();
+	}
 }

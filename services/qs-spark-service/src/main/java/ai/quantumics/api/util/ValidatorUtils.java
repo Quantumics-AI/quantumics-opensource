@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import ai.quantumics.api.model.QsFolders;
+import ai.quantumics.api.service.FolderService;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -58,6 +60,9 @@ public class ValidatorUtils {
 		dateFormatters.put("FORMATTER11", DateTimeFormat.forPattern(dateFormats.get("FORMAT11")));
 	}
 
+	@Autowired
+	private FolderService folderService;
+
 	public static boolean isDate(String str) {
 		boolean flag = false;
 		try {
@@ -90,6 +95,19 @@ public class ValidatorUtils {
 		if (userObj == null)
 			throw new QuantumsparkUserNotFound("User Not found");
 		return userObj;
+	}
+
+	public String returnUserName(int userId){
+		QsUserV2 user  = checkUser(userId);
+		String userName = user.getQsUserProfile().getUserFirstName()+" "+user.getQsUserProfile().getUserLastName();
+		return userName;
+	}
+
+	public void updateFolderDataOwner(int folderId, String userName) throws SQLException {
+		QsFolders folder = folderService.getFolder(folderId);
+		//update data owner when deleting the rule - fix for bug-6323
+		folder.setDataOwner(userName);
+		folderService.saveFolders(folder);
 	}
 
 	public Projects checkProject(int projectId) throws ProjectNotFoundException {

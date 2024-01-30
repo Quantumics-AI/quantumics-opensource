@@ -33,7 +33,6 @@ public interface FileMetaDataAwsRepository extends JpaRepository<FileMetaDataAws
   @Query(
       "select new ai.quantumics.api.req.PreparedDataset(re.athenaTable,re.tablePartition, re.fileType, re.fileMetaData, re.createdDate, re.createdBy, fi.fileId, fi.fileName, fl.folderId, fl.folderName,  fl.projectId) from  FileMetaDataAwsRef re "
           + "join QsFiles fi on fi.fileId = re.fileId join QsFolders fl on fl.folderId = fi.folderId "
-          + "join RunJobStatus run_job on re.fileId = cast(run_job.fileId As integer) "
           + "WHERE fl.projectId = :projectId and fl.active = True and fi.active = True")
   List<PreparedDataset> selectFilesList(@Param("projectId") int projectId);
   

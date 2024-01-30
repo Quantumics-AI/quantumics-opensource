@@ -17,9 +17,9 @@ import java.util.List;
 @Repository
 public interface RedashDashboardRepository extends JpaRepository<QsRedashDashboard, Integer> {
 
-    List<QsRedashDashboard> findAllByActiveTrue();
+  List<QsRedashDashboard> findAllByActiveTrue();
 
-    List<QsRedashDashboard> findByRdKeyAndActiveTrue(String rdKey);
+  List<QsRedashDashboard> findByRdKeyAndActiveTrue(String rdKey);
 
-    QsRedashDashboard findByDashboardIdAndRdKeyAndActiveTrue(int dashboardId, String rdKey);
+  QsRedashDashboard findByDashboardIdAndRdKeyAndActiveTrue(int dashboardId, String rdKey);
 }

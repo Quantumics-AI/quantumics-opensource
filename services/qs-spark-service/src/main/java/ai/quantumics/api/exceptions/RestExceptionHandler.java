@@ -96,9 +96,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<Object> genericException(Exception ex) {
-		log.error(ex.getLocalizedMessage());
 		ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-		apiError.setMessage(ex.getLocalizedMessage());
+		String errorMsg =ex.getLocalizedMessage();
+		if(ex.getLocalizedMessage() != null && ex.getLocalizedMessage().startsWith("Maximum upload size of")) {
+			String temp = errorMsg.substring(0, errorMsg.indexOf(";"));
+			String last = errorMsg.substring(errorMsg.indexOf("exceeds")+8,errorMsg.length());
+			errorMsg = temp + " " + last;
+
+		}
+		apiError.setMessage(errorMsg);
 		return buildResponseEntity(apiError);
 	}
 }

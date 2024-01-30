@@ -10,7 +10,13 @@ package ai.quantumics.api.util;
 
 import ai.quantumics.api.adapter.AwsResourceHandler;
 import ai.quantumics.api.constants.QsConstants;
-import ai.quantumics.api.model.*;
+import ai.quantumics.api.model.ProjectCumulativeSizeInfo;
+import ai.quantumics.api.model.ProjectSubscriptionDetails;
+import ai.quantumics.api.model.Projects;
+import ai.quantumics.api.model.QsFolders;
+import ai.quantumics.api.model.QsPartition;
+import ai.quantumics.api.model.QsSubscription;
+import ai.quantumics.api.model.QsUserV2;
 import ai.quantumics.api.service.FolderService;
 import ai.quantumics.api.service.PartitionService;
 import ai.quantumics.api.service.ProjectCumulativeSizeService;
@@ -34,21 +40,51 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.MonthDay;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -66,7 +102,7 @@ public class QsUtil {
 	private final ProjectCumulativeSizeService projectSizeService;
 	private static final String XLS = ".xls";
 	private static final String XLSX = ".xlsx";
-
+	  
 	// private static final TemporalField workWeek = WeekFields.of(DayOfWeek.MONDAY, 1).dayOfWeek();
 
 	public QsUtil(
@@ -161,7 +197,7 @@ public class QsUtil {
 	}
 
 	public Map<String, String> validateFileBeforeUpload(Object fileObj, QsFolders folder,
-														Projects project, QsUserV2 user, String action, String fileType) throws Exception {
+			Projects project, QsUserV2 user, String action, String fileType) throws Exception {
 		InputStream is = null;
 		long fileSize = 0l;
 		if (fileObj instanceof MultipartFile) {
@@ -178,7 +214,7 @@ public class QsUtil {
 			is = new FileInputStream(normalFile);
 		}
 
-
+		
 		// Check whether the column headers are having any duplicates...
 		StringBuilder sb = new StringBuilder();
 		Map<String, String> responseMsgMap = new HashMap<>();
@@ -186,11 +222,11 @@ public class QsUtil {
 		dbUtil.changeSchema("public");
 
 		// Check the file size based on the subscription before performing any other check or uploading the file.
-		ProjectSubscriptionDetails projSubDetails = subscriptionService.getProjectSubscriptionByStatus(project.getProjectId(),
-				(user.getUserParentId() == 0)?user.getUserId():user.getUserParentId(),
-				QsConstants.SUBSCRIPTION_STATUS_ACTIVE);
+		ProjectSubscriptionDetails projSubDetails = subscriptionService.getProjectSubscriptionByStatus(project.getProjectId(), 
+				(user.getUserParentId() == 0)?user.getUserId():user.getUserParentId(), 
+						QsConstants.SUBSCRIPTION_STATUS_ACTIVE);
 		if(projSubDetails != null) {
-			QsSubscription subscription = subscriptionService.getSubscriptionByNameAndPlanType(projSubDetails.getSubscriptionType(),
+			QsSubscription subscription = subscriptionService.getSubscriptionByNameAndPlanType(projSubDetails.getSubscriptionType(), 
 					projSubDetails.getSubscriptionPlanType());
 			if(subscription != null) {
 				log.info("Subsciption Type is: {} and Plan Type is: {}", subscription.getName(), subscription.getPlanType());
@@ -203,8 +239,8 @@ public class QsUtil {
 				long maxFilesizeBytes = Long.parseLong(maxFilesizeBytesStr);
 
 				if(fileSize > maxFilesizeBytes) {
-					sb.append("File size: ").append(fileSize).append(" bytes exceeds max allowed size: ").
-							append(maxFilesizeBytes).append(" bytes for the current subscription: ").append(subscription.getName()).append("\n");
+					sb.append("File size: ").append(convertBytesToLargestUnit(fileSize)).append(" exceeds max allowed size: ").
+					append(convertBytesToLargestUnit(maxFilesizeBytes)).append(" for the current subscription: ").append(subscription.getName()).append("\n");
 
 					responseMsgMap.put("ERROR_MSG", sb.toString());
 					return responseMsgMap;
@@ -220,8 +256,8 @@ public class QsUtil {
 					if(currentProjSize > cumulativeSizeBytes) {
 						sb.delete(0, sb.length());
 
-						sb.append("File cannot be uploaded as cumulative size of the project : ").append(currentProjSize).append(" bytes exceeded the allocated size of: ").
-								append(cumulativeSizeBytes).append(" bytes for the current subscription: ").append(subscription.getName()).append("\n");
+						sb.append("File cannot be uploaded as cumulative size of the project : ").append(convertBytesToLargestUnit(currentProjSize)).append(" exceeded the allocated size of: ").
+						append(convertBytesToLargestUnit(cumulativeSizeBytes)).append(" for the current subscription: ").append(subscription.getName()).append("\n");
 
 						responseMsgMap.put("ERROR_MSG", sb.toString());
 						return responseMsgMap;
@@ -230,12 +266,12 @@ public class QsUtil {
 			}
 		} else {
 			sb.append("File cannot be uploaded as Project Subscription is not found for the Project Id: ").append(project.getProjectId()).append(" and User Id: ").
-					append(user.getUserId()).append("\n");
+			append(user.getUserId()).append("\n");
 
 			responseMsgMap.put("ERROR_MSG", sb.toString());
 			return responseMsgMap;
 		}
-
+		
 		List<String> lines = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 			// Limiting to only reading two lines, with the assumption that
@@ -248,7 +284,17 @@ public class QsUtil {
 					log.info("File is empty, there are no column headers to validate.");
 					return Collections.emptyMap();
 				}
-
+				log.info("column string:"+columnHeadersStr);
+				//added empty column header check for 3245
+				String r = "^,.*|,{2,}|,\\s,|.*,$";
+				Pattern pattern = Pattern.compile(r);
+				Matcher matcher = pattern.matcher(columnHeadersStr);
+				if(matcher.find()){
+					sb.delete(0, sb.length());
+					sb.append("File has empty column headers and cannot be uploaded. ");
+					responseMsgMap.put("ERROR_MSG", sb.toString());
+					return responseMsgMap;
+				}
 				List<String> columnHeaders = null;
 				if (".csv".equalsIgnoreCase(fileType)) {
 					if (columnHeadersStr.indexOf(QsConstants.DELIMITER) != -1) {
@@ -298,7 +344,7 @@ public class QsUtil {
 					sb.delete(0, sb.length());
 					// Duplicate column headers are present...
 					sb.append(
-							"File has duplicate column headers and cannot be uplaoded. ");
+							"File has duplicate column headers and cannot be uploaded. ");
 					sb.append(" Column names are: ");
 
 					responseMsgMap.put("ERROR_MSG", sb.toString());
@@ -373,9 +419,9 @@ public class QsUtil {
 		return Collections.emptyMap();
 	}
 
-
+	
 	public Map<String, String> validateXlsxFileBeforeUpload(Object fileObj, QsFolders folder,
-															Projects project, QsUserV2 user, String action, String fileType) throws Exception {
+			Projects project, QsUserV2 user, String action, String fileType) throws Exception {
 		InputStream is = null;
 		long fileSize = 0l;
 		if (fileObj instanceof MultipartFile) {
@@ -392,7 +438,7 @@ public class QsUtil {
 			is = new FileInputStream(normalFile);
 		}
 
-
+		
 		// Check whether the column headers are having any duplicates...
 		StringBuilder sb = new StringBuilder();
 		Map<String, String> responseMsgMap = new HashMap<>();
@@ -400,11 +446,11 @@ public class QsUtil {
 		dbUtil.changeSchema("public");
 
 		// Check the file size based on the subscription before performing any other check or uploading the file.
-		ProjectSubscriptionDetails projSubDetails = subscriptionService.getProjectSubscriptionByStatus(project.getProjectId(),
-				(user.getUserParentId() == 0)?user.getUserId():user.getUserParentId(),
-				QsConstants.SUBSCRIPTION_STATUS_ACTIVE);
+		ProjectSubscriptionDetails projSubDetails = subscriptionService.getProjectSubscriptionByStatus(project.getProjectId(), 
+				(user.getUserParentId() == 0)?user.getUserId():user.getUserParentId(), 
+						QsConstants.SUBSCRIPTION_STATUS_ACTIVE);
 		if(projSubDetails != null) {
-			QsSubscription subscription = subscriptionService.getSubscriptionByNameAndPlanType(projSubDetails.getSubscriptionType(),
+			QsSubscription subscription = subscriptionService.getSubscriptionByNameAndPlanType(projSubDetails.getSubscriptionType(), 
 					projSubDetails.getSubscriptionPlanType());
 			if(subscription != null) {
 				log.info("Subsciption Type is: {} and Plan Type is: {}", subscription.getName(), subscription.getPlanType());
@@ -416,8 +462,8 @@ public class QsUtil {
 				String maxFilesizeBytesStr = settingsNode.get(QsConstants.SUBSCRIPTION_MAX_FILE_SIZE_BYTES_PROP).asText();
 				long maxFilesizeBytes = Long.parseLong(maxFilesizeBytesStr);
 				if(fileSize > maxFilesizeBytes) {
-					sb.append("File size: ").append(fileSize).append(" bytes exceeds max allowed size: ").
-							append(maxFilesizeBytes).append(" bytes for the current subscription: ").append(subscription.getName()).append("\n");
+					sb.append("File size: ").append(convertBytesToLargestUnit(fileSize)).append(" exceeds max allowed size: ").
+					append(convertBytesToLargestUnit(maxFilesizeBytes)).append(" for the current subscription: ").append(subscription.getName()).append("\n");
 
 					responseMsgMap.put("ERROR_MSG", sb.toString());
 					return responseMsgMap;
@@ -432,7 +478,7 @@ public class QsUtil {
 						sb.delete(0, sb.length());
 
 						sb.append("File cannot be uploaded as cumulative size of the project : ").append(currentProjSize).append(" bytes exceeded the allocated size of: ").
-								append(cumulativeSizeBytes).append(" bytes for the current subscription: ").append(subscription.getName()).append("\n");
+						append(cumulativeSizeBytes).append(" bytes for the current subscription: ").append(subscription.getName()).append("\n");
 
 						responseMsgMap.put("ERROR_MSG", sb.toString());
 						return responseMsgMap;
@@ -441,43 +487,55 @@ public class QsUtil {
 			}
 		} else {
 			sb.append("File cannot be uploaded as Project Subscription is not found for the Project Id: ").append(project.getProjectId()).append(" and User Id: ").
-					append(user.getUserId()).append("\n");
+			append(user.getUserId()).append("\n");
 
 			responseMsgMap.put("ERROR_MSG", sb.toString());
 			return responseMsgMap;
 		}
-
+		
 		log.info("Validate xlsx file ====."+fileType);
-
+		
 		Workbook workbook = null;
-		if (XLSX.equalsIgnoreCase(fileType)) {
-			workbook = new XSSFWorkbook(is);
-		} else if (XLS.equalsIgnoreCase(fileType)) {
-			workbook = new HSSFWorkbook(is);
-		}else {
-			responseMsgMap.put("ERROR_MSG", "Invalid file type");
-			return responseMsgMap;
-		}
-
+        if (XLSX.equalsIgnoreCase(fileType)) {
+            workbook = new XSSFWorkbook(is);
+        } else if (XLS.equalsIgnoreCase(fileType)) {
+            workbook = new HSSFWorkbook(is);
+        }else {
+        	responseMsgMap.put("ERROR_MSG", "Invalid file type");
+        	return responseMsgMap;
+        }
+        
 		try  {
 			log.info("Validate xlsx file.");
 			Sheet sheet = workbook.getSheetAt(0);
+			boolean emptyHeader = false;
 			// Limiting to only reading two lines, with the assumption that
 			// the first line is a header line, followed by data line.
 			if (sheet.getLastRowNum()+1 >= 2) {
 				//get xlsx file headers
-				List<String> columnHeaders = new ArrayList<>();
-				for(int i=0;i< sheet.getLastRowNum()+1;) {
-					Row row = sheet.getRow(i);
-					for (int j = 0; j < row.getLastCellNum(); j++) {
-						Cell cell = row.getCell(j);
-						columnHeaders.add(cell.getStringCellValue());
-					}
-					break;
+		        List<String> columnHeaders = new ArrayList<>();
+		        for(int i=0;i< sheet.getLastRowNum()+1;) {
+		            Row row = sheet.getRow(i);
+		            for (int j = 0; j < row.getLastCellNum(); j++) {
+		                Cell cell = row.getCell(j);
+						if(StringUtils.isNotEmpty(cell.getStringCellValue()))
+		                	columnHeaders.add(cell.getStringCellValue());
+						else{
+							emptyHeader = true;
+							break;
+						}
+		            }
+		            break;
+		        }
+				//added empty header check for 3245
+		        if(emptyHeader){
+					sb.delete(0, sb.length());
+					sb.append("File has empty column headers and cannot be uploaded. ");
+					responseMsgMap.put("ERROR_MSG", sb.toString());
+					return responseMsgMap;
 				}
-
-				String dataRecord = getFirstRowOfxlsxFile(sheet);
-				log.info("dataRecord :"+dataRecord);
+		        String dataRecord = getFirstRowOfxlsxFile(sheet);
+		        log.info("dataRecord :"+dataRecord);
 				if (columnHeaders.isEmpty()) {
 					log.info("File is empty, there are no column headers to validate.");
 					return Collections.emptyMap();
@@ -497,6 +555,7 @@ public class QsUtil {
 					return responseMsgMap;
 				}
 
+
 				Set<String> duplicateCols = validateColHeadersForDups(columnHeaders);
 				if(duplicateCols != null && !duplicateCols.isEmpty()) {
 					String dcs = duplicateCols.toString();
@@ -505,7 +564,7 @@ public class QsUtil {
 					sb.delete(0, sb.length());
 					// Duplicate column headers are present...
 					sb.append(
-							"File has duplicate column headers and cannot be uplaoded. ");
+							"File has duplicate column headers and cannot be uploaded. ");
 					sb.append(" Column names are: ");
 
 					responseMsgMap.put("ERROR_MSG", sb.toString());
@@ -535,7 +594,7 @@ public class QsUtil {
 				//replace special char with _
 				List<String> columns = getColumn(columnHeaders);
 				List<String> replacedColumn = replaceWithSingleUnderscore(columns);
-
+				
 				// Validate the Column headers now....
 				String colHeadersStr = replacedColumn.toString();
 				colHeadersStr = colHeadersStr.substring(1, colHeadersStr.length()-1);
@@ -583,44 +642,44 @@ public class QsUtil {
 	}
 
 	private String getFirstRowOfxlsxFile(Sheet sheet) {
-		StringBuffer data = new StringBuffer();
-		for(int i=1;i< sheet.getLastRowNum()+1;i++){
-			Row row = sheet.getRow(i);
-			for(int j=0; j<row.getLastCellNum(); j++){
-				Cell cell = row.getCell(j);
-				System.out.println("column :"+cell.getCellType());
-				switch (cell.getCellType()) {
-					case BOOLEAN:
-						data.append(cell.getBooleanCellValue()).append(",");
-						break;
-					case NUMERIC:
-						if(HSSFDateUtil.isCellDateFormatted(cell.getRow().getCell(j))){
-							if(cell.getRow().getCell(j).getCellStyle().getDataFormatString().length()==11){
-								SimpleDateFormat sdfs = new SimpleDateFormat(cell.getRow().getCell(j).getCellStyle().getDataFormatString()+":ss");
-								data.append(sdfs.format(cell.getDateCellValue())).append(",");
-							}else{
-								SimpleDateFormat sdfs = new SimpleDateFormat(cell.getRow().getCell(j).getCellStyle().getDataFormatString());
-								data.append(sdfs.format(cell.getDateCellValue())).append(",");
-							}
-						}else{
-							data.append(cell.getNumericCellValue()).append(",");
-						}
-						break;
-					case STRING:
-						data.append(cell.getStringCellValue()).append(",");
-						break;
-					case BLANK:
-						data.append("" + ",");
-						break;
-					default:
-						data.append(cell).append(",");
-				}
-			}
-			break;
-		}
-		return data.toString();
+        StringBuffer data = new StringBuffer();
+        for(int i=1;i< sheet.getLastRowNum()+1;i++){
+            Row row = sheet.getRow(i);
+            for(int j=0; j<row.getLastCellNum(); j++){
+                Cell cell = row.getCell(j);
+                System.out.println("column :"+cell.getCellType());
+                switch (cell.getCellType()) {
+                    case BOOLEAN:
+                        data.append(cell.getBooleanCellValue()).append(",");
+                        break;
+                    case NUMERIC:
+                        if(HSSFDateUtil.isCellDateFormatted(cell.getRow().getCell(j))){
+                            if(cell.getRow().getCell(j).getCellStyle().getDataFormatString().length()==11){
+                                SimpleDateFormat sdfs = new SimpleDateFormat(cell.getRow().getCell(j).getCellStyle().getDataFormatString()+":ss");
+                                data.append(sdfs.format(cell.getDateCellValue())).append(",");
+                            }else{
+                                SimpleDateFormat sdfs = new SimpleDateFormat(cell.getRow().getCell(j).getCellStyle().getDataFormatString());
+                                data.append(sdfs.format(cell.getDateCellValue())).append(",");
+                            }    
+                        }else{
+                            data.append(cell.getNumericCellValue()).append(",");
+                        }
+                        break;
+                    case STRING:
+                        data.append(cell.getStringCellValue()).append(",");
+                        break;
+                    case BLANK:
+                        data.append("" + ",");
+                        break;
+                    default:
+                        data.append(cell).append(",");
+                }
+            }
+            break;
+        }
+        return data.toString();
 	}
-
+	
 	public String checkPiiColumnsInFile(Object fileObj, int projectId, int userId, int folderId, String fileType) throws IOException{
 
 		File tmpCsvFile = null;
@@ -636,7 +695,7 @@ public class QsUtil {
 			MultipartFile multipartFile = null;
 			boolean bNormalFile = true;
 			if (fileObj instanceof MultipartFile) {
-				multipartFile = (MultipartFile) fileObj;
+				 multipartFile = (MultipartFile) fileObj;
 				is = multipartFile.getInputStream();
 				log.info("File is a MultipartFile Instance with name: {}", multipartFile.getOriginalFilename());
 				fileNameWithoutExt = multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf("."));
@@ -733,7 +792,7 @@ public class QsUtil {
 		        readAllLines = csvMapper.readerFor(Map.class).with(csvSchema).readValues(is).readAll();			
 			}
 			*/
-
+			
 			String op = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(readAllLines);
 			String tmpFilePath = String.format("%s/%s/%s/%s/%s.json", tmpdir, projectId, userId, folderId, fileNameWithoutExt);
 			tmpJsonFile = new File(tmpFilePath);
@@ -762,7 +821,7 @@ public class QsUtil {
 		return tmpJsonFile.getAbsolutePath();
 	}
 
-
+	
 	public String checkPiiColumnsInXlsxFile(Object fileObj, int projectId, int userId, int folderId, String fileType) throws IOException{
 
 		File tmpXlsxFile = null;
@@ -783,7 +842,7 @@ public class QsUtil {
 			MultipartFile multipartFile = null;
 			boolean bNormalFile = true;
 			if (fileObj instanceof MultipartFile) {
-				multipartFile = (MultipartFile) fileObj;
+				 multipartFile = (MultipartFile) fileObj;
 				is = multipartFile.getInputStream();
 				log.info("File is a MultipartFile Instance with name: {}", multipartFile.getOriginalFilename());
 				fileNameWithoutExt = multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf("."));
@@ -808,17 +867,17 @@ public class QsUtil {
 				}
 				//StringBuffer data = new StringBuffer();
 				fos = new FileOutputStream(tmpXlsxFile);
-
+	            
 				//write xlsx file as is then read it from python and convert to csv and replace column
 				//then delete the xlsx file
 				int ch = 0;
-				while ((ch = is.read()) != -1) {
-					fos.write(ch);
-				}
-				fos.flush();
-				fos.close();
-				log.info("Write xlsx into temp done!. service going to call python service to convert xlsx to csv."+tmpXlsxFilePath);
-				try {
+	            while ((ch = is.read()) != -1) {
+	            	fos.write(ch);
+	            }
+	            fos.flush();
+	            fos.close();
+	            log.info("Write xlsx into temp done!. service going to call python service to convert xlsx to csv."+tmpXlsxFilePath);
+	            try {
 					result = writeXlsxFileIntoCsv(tmpXlsxFilePath);
 				} catch (Exception e) {
 					log.error("Exception while writing xlsx file into csv.{}",e);
@@ -833,9 +892,9 @@ public class QsUtil {
 				final ObjectMapper mapper = new ObjectMapper();
 				CsvSchema csvSchema = CsvSchema.builder().setUseHeader(true).build();
 				CsvMapper csvMapper = new CsvMapper();
-
+				
 				List<Object> readAllLines =  csvMapper.readerFor(Map.class).with(csvSchema).readValues(csv).readAll();
-
+				
 				String op = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(readAllLines);
 				String tmpFilePath = String.format("%s/%s/%s/%s/%s.json", tmpdir, projectId, userId, folderId, fileNameWithoutExt);
 				tmpJsonFile = new File(tmpFilePath);
@@ -850,7 +909,7 @@ public class QsUtil {
 				bwJson.flush();
 				csv.close();
 			}
-
+			
 		}catch(IOException ioe) {
 			log.info("Exception occurred while processing the PII Columns check.", ioe.getMessage());
 		}finally{
@@ -887,7 +946,7 @@ public class QsUtil {
 			MultipartFile multipartFile = null;
 			boolean bNormalFile = true;
 			if (fileObj instanceof MultipartFile) {
-				multipartFile = (MultipartFile) fileObj;
+				 multipartFile = (MultipartFile) fileObj;
 				is = multipartFile.getInputStream();
 				log.info("File is a MultipartFile Instance with name: {}", multipartFile.getOriginalFilename());
 				fileNameWithoutExt = multipartFile.getOriginalFilename().substring(0, multipartFile.getOriginalFilename().lastIndexOf("."));
@@ -911,23 +970,23 @@ public class QsUtil {
 					tmpXlsxFile.getParentFile().mkdirs();
 				}
 				fos = new FileOutputStream(tmpXlsxFile);
-				//write xlsx file as is then read it from python and convert to csv and replace column
+	            //write xlsx file as is then read it from python and convert to csv and replace column
 				//then delete the xlsx file
 				int ch = 0;
-				while ((ch = is.read()) != -1) {
-					fos.write(ch);
-				}
-				fos.flush();
-				fos.close();
-				log.info("Write xlsx into temp done!. service going to call python service to convert xlsx to csv."+tmpXlsxFilePath);
-				try {
+	            while ((ch = is.read()) != -1) {
+	            	fos.write(ch);
+	            }
+	            fos.flush();
+	            fos.close();
+	            log.info("Write xlsx into temp done!. service going to call python service to convert xlsx to csv."+tmpXlsxFilePath);
+	            try {
 					writeXlsxFileIntoCsv(tmpXlsxFilePath);
 				} catch (Exception e) {
 					log.error("Exception while writing xlsx file into csv.{}",e);
 					e.printStackTrace();
 				}
 			}
-
+			
 		}catch(IOException ioe) {
 			log.info("Exception occurred while processing the PII Columns check.", ioe.getMessage());
 		}finally{
@@ -949,7 +1008,7 @@ public class QsUtil {
 		//URL url = getClass().getClassLoader().getResource(QsConstants.SAVE_XLSX_FILE_PYTHON_SCRIPT_REL_LOC);
 
 		String detectionPyFile = "./"+QsConstants.SAVE_XLSX_FILE_PYTHON_SCRIPT_REL_LOC;
-
+		
 		List<String> commands = new ArrayList<>();
 
 		if(isWindows()) {
@@ -1039,8 +1098,8 @@ public class QsUtil {
 
 	private List<String> getColumn(List<String> columnHeaders){
 		return columnHeaders.stream()
-				.map(column -> column.replaceAll("\\W", "_"))
-				.collect(Collectors.toList());
+		.map(column -> column.replaceAll("\\W", "_"))
+		.collect(Collectors.toList());
 	}
 
 	private List<String> replaceWithSingleUnderscore(List<String> columnHeaders){
@@ -1064,8 +1123,8 @@ public class QsUtil {
 	public static Date findDateTimeByDays(int noOfDays) {
 		//DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime then = now.minusDays(noOfDays);
-		return convertToDateViaInstantTime(then);
+		LocalDateTime then = now.minusDays(noOfDays);  
+		return convertToDateViaInstantTime(then);  
 	}
 
 	public static LocalDate findDateByDays(int noOfDays, String beforeOrAfter) {
@@ -1073,11 +1132,11 @@ public class QsUtil {
 		LocalDate now = LocalDate.now();
 		LocalDate then = null;
 		if("+".equals(beforeOrAfter)) {
-			then = now.plusDays(noOfDays);
+			then = now.plusDays(noOfDays);  
 		} else {
-			then = now.minusDays(noOfDays);
+			then = now.minusDays(noOfDays);  
 		}
-		return then;
+		return then;  
 	}
 
 	public static Date convertToDateViaInstantTime(LocalDateTime dateToConvert) {
@@ -1118,7 +1177,7 @@ public class QsUtil {
 	}
 
 	/*
-	 *
+	 * 
 	 */
 	public static int findNumberOfBusinessDaysInAWeek(LocalDate projectDate) {
 		int inclusive = 1;
@@ -1167,7 +1226,7 @@ public class QsUtil {
 		MonthDay startDate = MonthDay.of(datasetCreatedDate.getMonthValue(), 1);
 		if(YearMonth.from(projectStartDate).equals(YearMonth.from(datasetCreatedDate))) {
 			startDate = MonthDay.of(projectStartDate.getMonthValue(), projectStartDate.getDayOfMonth());
-		}
+		} 
 		return startDate;
 	}
 
@@ -1176,7 +1235,7 @@ public class QsUtil {
 		LocalDate startDate = projectDate;
 		if(currentDate.getYear() > projectDate.getYear()) {
 			startDate = LocalDate.of(currentDate.getYear(), Month.JANUARY.getValue(), 1);
-		}
+		} 
 		return getBusinessDays(startDate, currentDate, false).size();
 	}
 
@@ -1204,7 +1263,7 @@ public class QsUtil {
 
 	}
 
-	public static long calculateDays(LocalDate startDate, LocalDate endDate) {
+	public static long calculateDays(LocalDate startDate, LocalDate endDate) {	  
 		final int startW = startDate.getDayOfWeek().getValue();
 		final int endW = endDate.getDayOfWeek().getValue();
 		final long days = ChronoUnit.DAYS.between(startDate, endDate);
@@ -1265,7 +1324,7 @@ public class QsUtil {
 			valueUnitPair.setValue(new BigDecimal(size_gb).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
 			valueUnitPair.setUnit("GB");
 
-		}
+		}	
 
 		return valueUnitPair;
 
@@ -1282,8 +1341,8 @@ public class QsUtil {
 		LocalDate start = LocalDate.now().withDayOfMonth(1);
 		LocalDate end = LocalDate.now().plusMonths(1).withDayOfMonth(1);
 		Map<String, Long> ovarAllDaysOfMonth = IntStream.range(1, (Stream.iterate(start, date -> date.plusDays(1))
-						.limit(ChronoUnit.DAYS.between(start, end))
-						.collect(Collectors.toList()).size()+1))
+				.limit(ChronoUnit.DAYS.between(start, end))
+				.collect(Collectors.toList()).size()+1))
 				.collect(LinkedHashMap<String, Long>::new, (m, v) -> m.put(String.valueOf(v), 0L), (m, m2) -> {});
 		ovarAllDaysOfMonth.putAll(existingDaysOfMonth);
 		return ovarAllDaysOfMonth;
@@ -1295,11 +1354,41 @@ public class QsUtil {
 		OverAllMonthsOfYear.putAll(existingMonthsOfYear);
 		return OverAllMonthsOfYear;
 	}
-
+	public String writeTxtToCsv(final MultipartFile file,int projectId,int userId, int folderId, String fileType) throws java.io.IOException {
+		String tmpdir = System.getProperty("java.io.tmpdir");
+		checkPiiColumnsInFile(file, projectId, userId, folderId, fileType);
+		String fileNameWithoutExt = file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf("."));
+		return String.format("%s/%s/%s/%s/%s.csv", tmpdir, projectId, userId, folderId, fileNameWithoutExt);
+	}
 	public static void main(String...args) {
 		LocalDate projectDate = LocalDate.of(2021, 11, 29);
 		System.out.println(isWithInWeeklyWindow(projectDate));
 		System.out.print(RegexUtils.isAlphaNumeric("_@dfdff98"));
 
 	}
+
+	private static String formatUnit(double value, String unit) {
+		String formattedValue = String.format("%.2f", value);
+		if (formattedValue.endsWith(".00")) {
+			return (int) value + " " + unit;
+		} else {
+			return formattedValue + " " + unit;
+		}
+	}
+
+	public static String convertBytesToLargestUnit(long bytes) {
+		if (bytes < 1024) {
+			return bytes + " bytes";
+		} else if (bytes < 1024 * 1024) {
+			double kb = (double) bytes / 1024;
+			return formatUnit(kb, "KB");
+		} else if (bytes < 1024 * 1024 * 1024) {
+			double mb = (double) bytes / (1024 * 1024);
+			return formatUnit(mb, "MB");
+		} else {
+			double gb = (double) bytes / (1024 * 1024 * 1024);
+			return formatUnit(gb, "GB");
+		}
+	}
+
 }
