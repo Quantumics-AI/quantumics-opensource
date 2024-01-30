@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { NgbNavModule, NgbAccordionModule, NgbTooltipModule, NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbAccordionModule, NgbTooltipModule, NgbPopoverModule, NgbPaginationModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { EngineeringRoutingModule } from './engineering-routing.module';
 import { EngineeringComponent } from './engineering.component';
@@ -26,6 +26,7 @@ import { UdfContainerComponent } from './components/udf-container/udf-container.
 import { UdfListComponent } from './components/udf-list/udf-list.component';
 import { CreateUpdateUdfComponent } from './components/create-update-udf/create-update-udf.component';
 import { EditFlowComponent } from './components/edit-flow/edit-flow.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,10 @@ import { EditFlowComponent } from './components/edit-flow/edit-flow.component';
     ConfirmationDialogModule,
     NgbTooltipModule,
     FilterPipeModule,
-    NgbPopoverModule
+    NgbPopoverModule,
+    NgbPaginationModule,
+    NgbDropdownModule,
+    NgSelectModule
   ]
 })
 export class EngineeringModule { }

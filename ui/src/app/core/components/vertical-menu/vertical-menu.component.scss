@@ -29,7 +29,6 @@ a:focus {
     margin-left: 0px;
     padding-right: 12px;
     li {
-     
       font-family: 'Inter';
       font-style: normal;
       font-weight: 500;
@@ -71,6 +70,41 @@ a:focus {
         }
         i {
           margin-top: -4px;
+        }
+      }
+
+      .share-icon {
+        position: absolute;
+        right: 18px;
+        top: 165px;
+        a {
+          &:hover {
+            background-color: transparent;
+          }
+        }
+      }
+
+      .share-icon-container {
+        position: absolute;
+        right: -122px;
+        width: 123px;
+        height: 43px;
+        background: inherit;
+        background-color: white;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #00977C;
+        border-radius: 10px;
+        box-shadow: none;
+        padding-left: 4px;
+        padding-top: 3px;
+
+        .close-icon {
+          position: absolute;
+          top: -19px;
+          right: 0px;
+          background-color: transparent;
         }
       }
     }
@@ -178,4 +212,8 @@ a:focus {
 
 .pd-l-40 {
   padding-left: 40px !important;
+}
+
+.d-content {
+  display: contents !important;
 }

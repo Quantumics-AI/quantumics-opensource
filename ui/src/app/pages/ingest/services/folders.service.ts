@@ -56,6 +56,10 @@ export class FoldersService {
     return this.http.post(`/QuantumSparkServiceAPI/api/v1/uploadapidataasfile`, data);
   }
 
+  testDownloadAPIFiles(data: any): Observable<any> {
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/uploadapidataasfile?testConn=true`, data);
+  }
+
   validateFileUpload(formData: File, projectId: number, userId: number, folderId: number): Observable<any> {
     const form = new FormData();
     form.append('file', new Blob([formData], { type: 'text/csv;charset=utf-8;' }), formData.name);
@@ -80,7 +84,28 @@ export class FoldersService {
     return this.http.get(`/QuantumSparkServiceAPI/api/v1/folders/${projectId}/${userId}`);
   }
 
-  saveChatAi(data: any): Observable<any> {
+  sendChatAi(data: any): Observable<any> {
     return this.http.post(`/QuantumSparkServiceAPI/api/v1/jarvis`, data);
   }
+
+  saveQuery(data: any): Observable<any> {
+    return this.http.post(`/QuantumSparkServiceAPI/api/v1/jarvis/queries`, data);
+  }
+
+  //List Queries for project
+  listQuery(projectId: number, userId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/jarvis/queries/${projectId}/${userId}`);
+  }
+  // NOTE : QueryId returned in this will be used to fetch query as well as to delete.
+
+  // Fetch Query 
+  fetchQuery(projectId: number, queryId: number): Observable<any> {
+    return this.http.get(`/QuantumSparkServiceAPI/api/v1/jarvis/queries/${projectId}/${queryId}`);
+  }
+
+  // Delete Query 
+  deleteQuery(projectId: number, queryId: number): Observable<any> {
+    return this.http.delete(`/QuantumSparkServiceAPI/api/v1/jarvis/queries/${projectId}/${queryId}`);
+  }
+
 }

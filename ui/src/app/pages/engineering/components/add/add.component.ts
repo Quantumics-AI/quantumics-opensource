@@ -14,7 +14,7 @@ export class AddComponent {
     public modal: NgbActiveModal,
     private fb: FormBuilder) {
     this.fg = this.fb.group({
-      flowName: ['', [Validators.required, Validators.maxLength(30), Validators.pattern(/^([A-Za-z0-9_]).([A-Za-z0-9_]+\s)*[A-Za-z0-9_]+$/)]],
+      flowName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^([A-Za-z0-9_]).([A-Za-z0-9_]+\s)*[A-Za-z0-9_]+$/)]],
       description: ['', Validators.max(255)]
     });
   }

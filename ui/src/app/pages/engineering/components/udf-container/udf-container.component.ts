@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-udf-container',
   templateUrl: './udf-container.component.html',
   styleUrls: ['./udf-container.component.scss']
 })
-export class UdfContainerComponent implements OnInit {
+export class UdfContainerComponent {
 
-  constructor() { }
+  public projectId: number;
+  public projectName: string;
 
-  ngOnInit(): void {
+  constructor(private activatedRoute: ActivatedRoute) {
+    this.projectId = +this.activatedRoute.snapshot.paramMap.get('projectId');
+    this.projectName = localStorage.getItem('projectname');
   }
-
 }

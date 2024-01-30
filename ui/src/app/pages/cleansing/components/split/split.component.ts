@@ -28,12 +28,13 @@ export class SplitComponent implements OnInit, OnChanges {
   public submitted = false;
 
   splitOptions = [
-    { text: 'By delimiter', value: SplitRuleTypes.ByDelimiter },
-    { text: 'Between delimiter', value: SplitRuleTypes.BetweenDelimiter },
+    { text: 'On delimiter', value: SplitRuleTypes.ByDelimiter, labelDescription: 'Column to split from*' },
+    {
+      text: 'Between two delimiter', value: SplitRuleTypes.BetweenDelimiter, labelDescription: 'Column to extract from*' },
     // { text: 'Multiple delimiter', value: SplitRuleTypes.MultipleDelimiter },
-    { text: 'By positions', value: SplitRuleTypes.ByPositions },
+    { text: 'At positions', value: SplitRuleTypes.ByPositions, labelDescription: 'Column*' },
     // { text: 'At regular intervals', value: SplitRuleTypes.AtRegularIntervals },
-    { text: 'Between two positions', value: SplitRuleTypes.BetweenTwoPositions }
+    { text: 'Between positions', value: SplitRuleTypes.BetweenTwoPositions, labelDescription: 'Column*' }
 
   ];
 

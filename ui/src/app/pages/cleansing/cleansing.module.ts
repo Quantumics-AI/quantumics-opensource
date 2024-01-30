@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CleansingRoutingModule } from './cleansing-routing.module';
 import { CleansingComponent } from './cleansing.component';
@@ -33,6 +33,12 @@ import { StandardizeComponent } from './components/standardize/standardize.compo
 import { DeleteComfirmationComponent } from './components/delete-comfirmation/delete-comfirmation.component';
 import { QsMaxLengthDirective, PositiveNumberOnlyDirective } from './directives/qs-max-length.directive';
 import { FilterPipeModule } from 'ngx-filter-pipe';
+import { CleansedFilesComponent } from './components/cleansed-files/cleansed-files.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { ColumnAnalysisComponent } from './components/column-analysis/column-analysis.component';
+import { RowIdComponent } from './components/row-id/row-id.component';
+
 
 @NgModule({
   declarations: [
@@ -59,7 +65,10 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
     StandardizeComponent,
     DeleteComfirmationComponent,
     QsMaxLengthDirective,
-    PositiveNumberOnlyDirective
+    PositiveNumberOnlyDirective,
+    CleansedFilesComponent,
+    ColumnAnalysisComponent,
+    RowIdComponent
   ],
   imports: [
     CommonModule,
@@ -74,8 +83,11 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
     NgSelectModule,
     LoaderModule,
     GraphModule,
-    FilterPipeModule
-  ]
+    FilterPipeModule,
+    MatMenuModule,
+    MatDividerModule
+  ],
+  schemas: [NO_ERRORS_SCHEMA]
 })
 
 export class CleansingModule { }

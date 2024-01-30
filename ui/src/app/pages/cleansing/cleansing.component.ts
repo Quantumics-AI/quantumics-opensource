@@ -34,6 +34,7 @@ export class CleansingComponent implements OnInit, OnDestroy {
   graphData = [];
   files = [];
   newColumns = [];
+  public columnName: string;
 
   public piiColumns: Array<string>;
 
@@ -46,16 +47,30 @@ export class CleansingComponent implements OnInit, OnDestroy {
   certificateData: Certificate;
   projectParam: ProjectParam;
   folderName: string;
+  selectedRuleText: string;
 
   private unsubscribe: Subject<void> = new Subject();
   uniqueDatatypes: number;
   public editorComponent: any;
   public ruleInputLogic1: string;
-  public hasRulesCatalogue: boolean = false;
+  public appliedRuleCount: number;
 
   showPreview: boolean;
   projectName: string;
   showFullView = true;
+
+  public uniqueTypes: Array<string> = [];
+  public startIndex: number = 0;
+  public pageSize: number = 100;
+  public endIndex: number = this.pageSize;
+
+  public highlightedColumnIndex: number = -1;
+  public page = 1;
+  public totalPages: number;
+  public userId: number;
+  public resetMenuTopbarColor: boolean;
+
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private quantumFacade: Quantumfacade,
@@ -73,6 +88,7 @@ export class CleansingComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(certificate => {
         this.certificateData = certificate;
+        this.userId = +this.certificateData.user_id;
       });
 
 
@@ -187,7 +203,6 @@ export class CleansingComponent implements OnInit, OnDestroy {
     this.piiColumns = temp ? temp : [];
     this.originalContent = data.map(r => ({ ...r }));
     this.columnsMetadata = metadata.map(r => ({ ...r }));
-
     const columnsMetadata = metadata;
     if (this.rules && this.rules?.length > 0) {
       const res = this.cleansingService.apply(this.rules, data, columnsMetadata);
@@ -197,18 +212,24 @@ export class CleansingComponent implements OnInit, OnDestroy {
       this.data = data;
       this.newColumns = metadata;
     }
+    this.newColumns.forEach(obj => {
+      if (!this.uniqueTypes.includes(obj.data_type)) {
+        this.uniqueTypes.push(obj.data_type);
+      }
+    })
 
     this.columnLength = this.newColumns.length;
     this.rowLength = this.data.length;
+    this.totalPages = Math.ceil(this.data.length / this.pageSize);
   }
 
   parseRulesData(response): void {
     if (response?.code === 200) {
       this.rules = response.result;
-      this.hasRulesCatalogue = true;
+      this.appliedRuleCount = this.rules?.length;
     } else {
       this.rules = [];
-      this.hasRulesCatalogue = false;
+      this.appliedRuleCount = this.rules?.length;
     }
 
     this.updateView();
@@ -219,8 +240,10 @@ export class CleansingComponent implements OnInit, OnDestroy {
     this.selectedRule = undefined;
     this.editorComponent = d.editorComponent;
     this.ruleInputLogic1 = d.ruleInputLogic1;
+    this.highlightedColumnIndex = -1;
 
     if (this.editorComponent === 'standardize') {
+      this.showFullView = true;
       this.openStandardizeModal();
     }
   }
@@ -245,9 +268,12 @@ export class CleansingComponent implements OnInit, OnDestroy {
     }
 
     modalRef.result.then((r) => {
+      this.editorComponent = '';
+      this.showFullView = true;
       this.addRule(r);
     }, (reason) => {
       // when modal is dismissed -> modal.dismiss
+      this.resetMenuTopbarColor = !this.resetMenuTopbarColor;
       this.updateView();
       console.log(reason);
     });
@@ -304,16 +330,18 @@ export class CleansingComponent implements OnInit, OnDestroy {
     rule.cleansingParamId = rule.cleansingParamId ? rule.cleansingParamId : 0;
     rule.cleansingRuleId = 0;
     rule.userId = this.certificateData.user_id;
-
     const apiResponse = rule.update ? this.cleansingDataService.updateRules(rule) : this.cleansingDataService.addRules(rule);
 
     apiResponse.subscribe((response: any) => {
+      this.resetMenuTopbarColor = !this.resetMenuTopbarColor;
       if (response.code === 200) {
         this.getRules();
         this.snackBar.open(response.message);
       } else {
         this.snackBar.open(response.message);
       }
+    }, () => {
+      this.resetMenuTopbarColor = !this.resetMenuTopbarColor;
     });
   }
 
@@ -344,7 +372,9 @@ export class CleansingComponent implements OnInit, OnDestroy {
   previewRuleNew(rule: any): void {
     this.removePreviewColumns();
 
-    rule.ruleImpactedCols = rule.ruleImpactedCols.join(',');
+    if(rule && rule.ruleImpactedCols && Array.isArray(rule.ruleImpactedCols)){
+      rule.ruleImpactedCols = rule.ruleImpactedCols.join(',');
+    }
     const res = this.cleansingService.preview(rule, this.data, this.newColumns);
 
     this.showPreview = true;
@@ -354,6 +384,7 @@ export class CleansingComponent implements OnInit, OnDestroy {
   }
 
   cancelPreview(reapplyRules: boolean): void {
+    this.resetMenuTopbarColor = !this.resetMenuTopbarColor;
     this.showPreview = false;
     this.updateView();
     this.removePreviewColumns();
@@ -366,6 +397,12 @@ export class CleansingComponent implements OnInit, OnDestroy {
     } else {
       return '';
     }
+  }
+
+  public onColumnSelect(columnName: string): void {
+    this.editorComponent = 'columnAnalysis';
+    this.columnName = columnName;
+    this.showFullView = false;
   }
 
   private removePreviewColumns(): void {
@@ -383,8 +420,8 @@ export class CleansingComponent implements OnInit, OnDestroy {
 
   private updateView(): void {
     if (this.rules.length > 0) {
-      this.editorComponent = 'rules';
-      this.showFullView = false;
+      // this.editorComponent = 'rules';
+      this.showFullView = true;
     } else {
       this.editorComponent = undefined;
       this.showFullView = true;
@@ -397,5 +434,20 @@ export class CleansingComponent implements OnInit, OnDestroy {
 
   public isPIIColumn(columnName: string): boolean {
     return this.piiColumns.includes(columnName);
+  }
+
+  public onPageChange(currentPage: number): void {
+    this.startIndex = (currentPage - 1) * this.pageSize;
+    this.endIndex = this.startIndex + this.pageSize;
+  }
+
+  public highlightColumn(index: number) {
+    this.highlightedColumnIndex = index;
+  }
+
+  public getRange(): string {
+    const startIndex = (this.page - 1) * this.pageSize + 1;
+    const endIndex = Math.min(this.page * this.pageSize, this.rowLength);
+    return `${startIndex}-${endIndex} of ${this.rowLength}`;
   }
 }

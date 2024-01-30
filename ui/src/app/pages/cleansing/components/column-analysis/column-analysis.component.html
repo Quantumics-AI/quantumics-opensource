@@ -1,0 +1,143 @@
+<app-loader [loading]="loading">
+    <div class="preparation-heading">
+        <h6 class="p2">Column: <strong>{{column}}</strong></h6>
+        <p class="p1 mr-b-0">Selected column basic count and statistical analysis.</p>
+        <hr class="cleansing-divider">
+
+        <ng-container *ngIf="attributeCount else noRecords">
+            <p class="p2">Total Rows: {{recordCount}}</p>
+
+            <div class="progress h-8 br-0">
+                <div class="progress-bar bl-back" role="progressbar"
+                    [ngStyle]="{'width': attributeCount?.notNull / recordCount * 100 + '%'}"
+                    aria-valuenow="{{(attributeCount?.notNull / recordCount * 100).toFixed(2)}}" aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+                <div class="progress-bar l-bl-back" role="progressbar"
+                    [ngStyle]="{'width': attributeCount?.null / recordCount * 100 + '%'}"
+                    aria-valuenow="{{(attributeCount?.null / recordCount * 100).toFixed(2)}}" aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+            <div class="p1 mr-t-16">
+                <div class="bl"></div><span>Valid values</span>
+                <div class="float-right">
+                    <div class="l-bl"></div> <span>Missing values</span>
+                </div>
+            </div>
+            <div>
+                <div class="ib">
+                    <span class="value-count-text">{{attributeCount?.notNull}}</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.notNull.toString().split('.')[0] !== 0">({{(attributeCount?.notNull /
+                        recordCount * 100).toFixed(2)}} %)</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.notNull.toString().split('.')[0] && attributeCount?.notNull.toString().split('.')[1] == 0">({{(attributeCount?.notNull
+                        / recordCount * 100).toFixed(8)}} %)</span>
+                </div>
+                <div class="float-right mr-r-18">
+                    <span class="value-count-text">{{attributeCount?.null}}</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.null.toString().split('.')[0] !== 0">({{(attributeCount?.null /
+                        recordCount * 100).toFixed(2)}} %) </span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.null.toString().split('.')[0] && attributeCount?.null.toString().split('.')[1] == 0">({{(attributeCount?.null
+                        / recordCount * 100).toFixed(8)}} %) </span>
+                </div>
+            </div>
+
+            <div class="progress mr-t-24 h-8 br-0">
+                <div class="progress-bar pr-back" role="progressbar"
+                    [ngStyle]="{'width': attributeCount?.distinct / recordCount * 100 + '%'}"
+                    aria-valuenow="{{(attributeCount?.distinct / recordCount * 100).toFixed(2)}}" aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+                <div class="progress-bar l-pr-back" role="progressbar"
+                    [ngStyle]="{'width': attributeCount?.duplicate / recordCount * 100 + '%'}"
+                    aria-valuenow="{{(attributeCount?.duplicate / recordCount * 100).toFixed(2)}}" aria-valuemin="0"
+                    aria-valuemax="100">
+                </div>
+            </div>
+
+            <div class="p1 mr-t-16">
+                <div class="pr"></div><span>Unique values</span>
+                <div class="float-right">
+                    <div class="l-pr"></div> <span>Repeating values</span>
+                </div>
+            </div>
+            <div>
+                <div class="ib">
+                    <span class="value-count-text">{{attributeCount?.distinct}}</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.distinct.toString().split('.')[0] !== 0">({{(attributeCount?.distinct /
+                        recordCount * 100).toFixed(2)}} %)</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.distinct.toString().split('.')[0] && attributeCount?.distinct.toString().split('.')[1] == 0">({{(attributeCount?.distinct
+                        / recordCount * 100).toFixed(8)}} %)</span>
+                </div>
+                <div class="float-right mr-r-18">
+                    <span class="value-count-text">{{attributeCount?.duplicate}}</span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.duplicate.toString().split('.')[0] !== 0">({{(attributeCount?.duplicate /
+                        recordCount * 100).toFixed(2)}} %) </span>
+                    <span class="p1"
+                        *ngIf="attributeCount?.duplicate.toString().split('.')[0] && attributeCount?.duplicate.toString().split('.')[1] == 0">({{(attributeCount?.duplicate
+                        / recordCount * 100).toFixed(8)}} %) </span>
+                </div>
+            </div>
+
+            <hr class="cleansing-divider">
+            <p class="statistics-text">Numerical Statistics</p>
+
+            <div class="row mr-0">
+                <ng-container>
+                    <div class="col-md-6 mb-2">
+                        <p class="mr-0 p1">Minimum</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.min)">
+                            {{formatNumber(statisticsResponse?.min)}}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mr-0 p1">Maximum</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.max)">
+                            {{formatNumber(statisticsResponse?.max)}}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mr-0 p1">Median</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.median)">
+                            {{formatNumber(statisticsResponse?.median)}}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mr-0 p1">Mean</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.mean)">
+                            {{formatNumber(statisticsResponse?.mean)}}</p>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <p class="mr-0 p1">Variance</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.variance)">
+                            {{formatNumber(statisticsResponse?.variance)}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mr-0 p1">S.Darivation</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.std)">
+                            {{formatNumber(statisticsResponse?.std)}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mr-0 p1">Sum</p>
+                        <p class="mr-0 bt text-container" [ngbTooltip]="formatNumber(statisticsResponse?.sum)">
+                            {{formatNumber(statisticsResponse?.sum)}}</p>
+                    </div>
+                </ng-container>
+
+                <ng-template #noRecords>
+                    <h6 class="p-3">No data found for Statistical Analysis</h6>
+                </ng-template>
+
+            </div>
+
+        </ng-container>
+
+        <ng-template #noRecords>
+            <h6 class="p1" *ngIf="!loading">Data Analysis will not be available for newly created columns</h6>
+        </ng-template>
+    </div>
+</app-loader>

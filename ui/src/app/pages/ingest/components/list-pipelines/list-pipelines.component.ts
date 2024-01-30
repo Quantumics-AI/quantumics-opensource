@@ -1,16 +1,17 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ImportLocalFileComponent } from '../import-local-file/import-local-file.component';
 import { Observable, Subject } from 'rxjs';
 import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
-import { retry, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { DbConnectorService } from '../../services/db-connector.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { UpdatePipelineComponent } from "../update-pipeline/update-pipeline.component"
 import { PipelineHistoryComponent } from "../pipeline-history/pipeline-history.component";
 import { PipelineConfirmationComponent } from '../pipeline-confirmation/pipeline-confirmation.component';
+import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 @Component({
   selector: 'app-list-pipelines',
@@ -26,6 +27,7 @@ export class ListPipelinesComponent implements OnInit {
   private unsubscribe: Subject<void> = new Subject();
   private certificateData: Certificate;
   pipelines: any;
+  originalPipelines: any;
   pipeLineFolders: any;
   total_pipeline_length: number;
   searchTerm: any = { pipelineName: '' };
@@ -36,21 +38,24 @@ export class ListPipelinesComponent implements OnInit {
   public searchDiv: boolean = false;
   public searchString: string;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
-  // public currnetPage: number = 0;
-  // public totalPages: number;
-  // public pager: Array<Pager> = [];
+
   public page = 1;
+  public Jheader: boolean = true;
+  public Jfooter: boolean = false;
+
+  private currentPage: number;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private quantumFacade: Quantumfacade,
     private sourceDataService: DbConnectorService,
-    private snakbar: SnackbarService
+    private snakbar: SnackbarService,
+    private filterPipe: FilterPipe
   ) {
-    // this.projectId = this.activatedRoute.snapshot.paramMap.get('projectId');
     this.certificate$ = this.quantumFacade.certificate$;
     this.certificate$
       .pipe(takeUntil(this.unsubscribe))
@@ -63,7 +68,6 @@ export class ListPipelinesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // getPipelineData
     this.projectId = localStorage.getItem('project_id');
     this.pipelineList()
   }
@@ -74,48 +78,39 @@ export class ListPipelinesComponent implements OnInit {
       this.loading = false;
       if (res.code == 200) {
         this.pipelines = res.result;
-      if (this.pipelines.length > 0) {
-        this.showCard = false;
-      }
-      if (this.pipelines.length > 1) {
-        this.pipelines.map(t => {
-          t.isExpanded = false;
-        });
+        if (this.pipelines.length > 0) {
+          this.showCard = false;
+        }
+        if (this.pipelines.length > 1) {
+          this.pipelines.map(t => {
+            t.isExpanded = false;
+          });
 
-        this.pipelines.sort((val1, val2) => {
-          return (
-            (new Date(val2.createdDate) as any) -
-            (new Date(val1.createdDate) as any)
-          );
-        });
-      }
-      this.total_pipeline_length = this.pipelines.length;
-      // this.totalPages = this.pipelines.length / this.pageSize;
-      // this.totalPages = Math.ceil(this.totalPages);
-
-      // for (let index = 0; index < this.totalPages; index++) {
-      //   const page = {
-      //     index,
-      //     isActive: index == 0
-      //   } as Pager;
-
-      //   this.pager.push(page);
-      // }
+          this.pipelines.sort((val1, val2) => {
+            return (
+              (new Date(val2.createdDate) as any) -
+              (new Date(val1.createdDate) as any)
+            );
+          });
+        }
+        this.total_pipeline_length = this.pipelines.length;
       } else {
         this.pipelines = [];
       }
-      
+
+      this.originalPipelines = [...this.pipelines];
+
     }, (error) => {
       this.loading = false;
     });
   }
 
-  public refresh() : void {
+  public refresh(): void {
     this.pipelineList();
   }
 
   public getPipeLineFolderDetails(pipeline: any): void {
-    
+
     this.pipelines.map(t => {
       if (t.pipelineId != pipeline.pipelineId) {
         t.isExpanded = false;
@@ -136,15 +131,12 @@ export class ListPipelinesComponent implements OnInit {
   }
 
   public redirectToFolder(pipeline: any): void {
-    // this.router.navigate([`projects/${this.projectId}/ingest/source-data`], {
-    //   queryParams: { folderId: pipeline.qsFolders.folderId, name: pipeline.qsFolders.folderName, pipelineId: pipeline.pipelineId, dataSourceType: 'pipeline' }
-    // });
+
     localStorage.setItem('selectedFolderName', pipeline.qsFolders.folderName);
     this.router.navigate([`projects/${this.projectId}/ingest/pipelines/dataset/${pipeline.pipelineId}/${pipeline.qsFolders.folderId}`]);
   }
 
   openEditPipeline(pipe: any): void {
-    // this.folderId = job.folderId;
     const modalRef = this.modalService.open(UpdatePipelineComponent, { size: 'lg', windowClass: 'modal-size' });
     modalRef.componentInstance.projectId = this.projectId;
     modalRef.componentInstance.userId = this.userId;
@@ -152,28 +144,23 @@ export class ListPipelinesComponent implements OnInit {
     modalRef.componentInstance.pipeData = pipe;
 
     modalRef.result.then((result) => {
-      // this.pager = [];
       this.pipelineList();
       console.log(result);
     }, (reason) => {
-      // this.pager = [];
       console.log(reason);
       this.pipelineList();
     });
   }
-  // ImportDbComponent
-
   executePipeline(pipelineId: number): void {
     this.execute = true;
     this.executeId = pipelineId;
 
-    // this.loading = true;
     this.sourceDataService.getPipelineExecuteData(+this.projectId, +this.userId, pipelineId).subscribe((res) => {
       this.snakbar.open(res.message);
       this.execute = false;
       this.executeId = null;
       this.pipelineList();
-      
+
     });
   }
 
@@ -183,7 +170,6 @@ export class ListPipelinesComponent implements OnInit {
     modalRef.componentInstance.projectId = this.projectId;
     modalRef.componentInstance.userId = this.userId;
     modalRef.componentInstance.pipelineId = pipelineId;
-    // modalRef.componentInstance.id = job.folderId;
 
     modalRef.result.then((result) => {
       console.log(result);
@@ -193,20 +179,6 @@ export class ListPipelinesComponent implements OnInit {
   }
 
   deletePipeline(d: number): void {
-    // if (confirm("Are you sure to delete this pipeline")) {
-    //   this.loading = true;
-    //   this.sourceDataService.deletePipeline(+this.projectId, this.userId, d).subscribe((res) => {
-    //     this.loading = false;
-    //     if (res.code === 200) {
-    //       this.pipelineList();
-    //       this.snakbar.open(res.massage);
-    //     } else {
-    //       this.snakbar.open(res.message);
-    //     }
-
-    //   })
-    // }
-
     const modalRef = this.modalService.open(PipelineConfirmationComponent, { size: 'md modal-dialog-centered', scrollable: false });
     modalRef.componentInstance.userId = this.userId;
     modalRef.componentInstance.projectId = this.projectId;
@@ -214,23 +186,28 @@ export class ListPipelinesComponent implements OnInit {
 
     modalRef.result.then((result) => {
       this.loading = true;
+
       this.sourceDataService.deletePipeline(+this.projectId, this.userId, d).subscribe((response: any) => {
         this.loading = false;
         if (response.code === 200) {
           this.snakbar.open(response.massage);
           const idx = this.pipelines.findIndex(x => x.pipelineId === d);
           this.pipelines.splice(idx, 1);
-          this.pipelineList();
-          
+
+          const noOfPages = this.pipelines.length / this.pageSize;
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
         }
       }, (error) => {
         this.loading = false;
         this.snakbar.open(error);
       });
-    }, (reason) => {
-
-     });
-
+    }, (reason) => { 
+      this.loading = false;
+    });
   }
 
   select(pipe) {
@@ -247,52 +224,23 @@ export class ListPipelinesComponent implements OnInit {
       this.searchDiv = false;
     } else {
       this.searchDiv = true;
+      this.pipelines = this.filterPipe.transform(this.originalPipelines, { pipelineName: this.searchString });
+      this.startIndex = 0;
     }
   }
 
   clearSearhInput() {
     this.searchTerm = { pipelineName: '' };
     this.searchDiv = false;
+
+    this.pipelines = this.originalPipelines;
+    this.page = 1;
+    this.startIndex = 0;
+    this.endIndex = this.pageSize;
   }
 
-  // public previousPage(): void {
-  //   this.currnetPage--;
-  //   this.pager.map(t => t.isActive = false);
-
-  //   if (this.currnetPage == 0) {
-  //     this.currnetPage = 0;
-  //     this.startIndex = 0;
-  //     this.endIndex = this.pageSize;
-  //   } else {
-  //     this.startIndex = this.pageSize * this.currnetPage;
-  //     this.endIndex = this.startIndex + this.pageSize;
-  //   }
-
-  //   this.pager[this.currnetPage].isActive = true;
-  // }
-
-  // public nextPage(): void {
-  //   this.pager.map(t => t.isActive = false);
-
-  //   this.currnetPage++;
-
-  //   if (this.totalPages != this.currnetPage) {
-  //     this.startIndex = this.endIndex;
-  //     this.endIndex = this.startIndex + this.pageSize;
-  //   }
-
-  //   this.pager[this.currnetPage].isActive = true;
-  // }
-
-  // public redirectToPageIndex(pager: Pager): void {
-  //   this.pager.map(t => t.isActive = false);
-  //   pager.isActive = true;
-  //   this.currnetPage = pager.index;
-  //   this.startIndex = this.pageSize * this.currnetPage;
-  //   this.endIndex = this.startIndex + this.pageSize;
-  // }
-
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }
@@ -315,7 +263,5 @@ export class ListPipelinesComponent implements OnInit {
         return pipelineName_order;
       });
     }
-
   }
-
 }

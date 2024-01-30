@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
-import { Arguments, UdfRequestModel } from '../../models/udfRequestModel';
+import { UdfRequestModel } from '../../models/udfRequestModel';
 import { UdfService } from '../../services/udf.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class CreateUpdateUdfComponent implements OnInit {
 
   public udfForm: FormGroup;
   public isUploadLogic: boolean = false;
+  public loading: boolean;
 
   private unsubscribe: Subject<void> = new Subject<void>();
 
@@ -35,7 +36,6 @@ export class CreateUpdateUdfComponent implements OnInit {
       dataType: ['', Validators.required],
       udfSyntax: ['', Validators.required],
       udfscript: ['', Validators.required],
-      values: this.fb.array([])
     });
   }
 
@@ -46,56 +46,12 @@ export class CreateUpdateUdfComponent implements OnInit {
       this.udfForm.controls.dataType.setValue(this.udf.udfReturnvalue);
       this.udfForm.controls.udfSyntax.setValue(this.udf.udfSyntax);
       this.udfForm.controls.udfscript.setValue(this.udf.udfScript);
-
-      if (this.udf.arguments) {
-        for (const arg of this.udf.arguments) {
-          const form = this.newValues();
-          form.setValue(arg);
-          this.values().push(form);
-        }
-      }
     }
-    else if (!this.values().length) {
-      this.addNewValues();
-    }
-
-    console.log(this.udf);
-
-  }
-
-  newValues(): FormGroup {
-    return this.fb.group({
-      dataValue: [''],
-      options: [''],
-      dataType: [''],
-      parameter: ['']
-    });
-  }
-
-  values(): FormArray {
-    return this.udfForm.get("values") as FormArray;
-  }
-
-  addNewValues(): void {
-    this.values().push(this.newValues());
-  }
-
-  public remove(index: number): void {
-    this.values().removeAt(index);
   }
 
   public create(): void {
     if (this.udfForm.invalid) {
-      alert('Please fill the required fields');
-      return;
-    }
-
-    let udfArgument: Arguments[];
-    udfArgument = this.udfForm.controls.values.value;
-    const noOfArgs = udfArgument.filter(x => x.dataValue === 'Data Frame');
-
-    if (noOfArgs.length > 5) {
-      alert('Maximum 5 Data Frame is allowed');
+      this.snackbar.open('Please fill the required fields');
       return;
     }
 
@@ -103,7 +59,7 @@ export class CreateUpdateUdfComponent implements OnInit {
       projectId: this.projectId,
       userId: this.userId,
       udfName: this.udfForm.controls.udfName.value,
-      arguments: udfArgument,
+      arguments: [],
       udfReturnvalue: this.udfForm.controls.dataType.value,
       udfScriptLanguage: this.udfForm.controls.language.value,
       udfSyntax: this.udfForm.controls.udfSyntax.value,
@@ -115,27 +71,33 @@ export class CreateUpdateUdfComponent implements OnInit {
 
     } as UdfRequestModel;
 
+    this.loading = true;
+
     if (this.isUpdate) {
       this.udfService.update(request)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((response: any) => {
+          this.loading = false;
           if (response.code === 200) {
-            this.modal.close();
+            this.modal.close(true);
           }
           this.snackbar.open(`${response.message}`);
         }, (error) => {
+          this.loading = false;
           this.snackbar.open(`${error}`);
         })
     } else {
       this.udfService.save(request)
         .pipe(takeUntil(this.unsubscribe))
         .subscribe((response: any) => {
+          this.loading = false;
           if (response.code === 200) {
-            this.modal.close();
+            this.modal.close(true);
           }
 
           this.snackbar.open(`${response.message}`);
         }, (error) => {
+          this.loading = false;
           this.snackbar.open(`${error}`);
         });
     }
@@ -144,5 +106,4 @@ export class CreateUpdateUdfComponent implements OnInit {
   checkValue(event: any) {
     console.log(event);
   }
-
 }

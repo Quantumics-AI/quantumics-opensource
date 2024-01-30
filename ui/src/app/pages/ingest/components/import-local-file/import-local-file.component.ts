@@ -150,7 +150,17 @@ export class ImportLocalFileComponent implements OnInit {
       } else if (error.hasOwnProperty('INVALID_COLS')) {
         this.duplicateFileColumns = error?.INVALID_COLS.split(',');
       } else {
-        this.snackBar.open(`${error}`);
+        if (error.includes("Athena Query Failed !HIVE_BAD_DATA:")){
+          // this.error = error;
+          const errorMessage = error;
+          const startIndex = errorMessage.indexOf("Error reading field value:");
+          const endIndex = errorMessage.indexOf("to a LONG value");
+          const extractedMessage = errorMessage.substring(startIndex, endIndex) + "to a LONG value";
+          this.error = extractedMessage;
+        } else {
+          this.error = error;
+        }
+        
       }
     });
   }

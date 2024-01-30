@@ -24,7 +24,7 @@
         </div>
 
         <p class="paragraph-medium data-menu pd-l-15">Data Menu</p>
-        
+
         <li routerLinkActive="active" #rlah="routerLinkActive">
             <img *ngIf="rlah.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
             <a [routerLink]="['projects', projectId, 'stats']" (click)="expandCollapseMenu('home')">
@@ -91,6 +91,40 @@
             </a>
         </li>
 
+        <!-- <li routerLinkActive="" #rlgovern="routerLinkActive">
+            <a (click)="expandCollapseMenu('governance')">
+                <span class="w-30px">
+                    <img src="assets/img/side-bar/new-govern.svg" alt="Governance">
+                </span>
+                <span>Governance</span>
+                <span style="position: absolute; right: 10%;">
+                    <img [src]="rlgovern.isActive ? 'assets/img/side-bar/up-arrow.svg' : 'assets/img/side-bar/down-arrow.svg'" alt="Governance">
+                </span>
+            </a>
+            <ul *ngIf="menus['governance'].collapse">
+                <li routerLinkActive="active" #rldq="routerLinkActive">
+                    <img *ngIf="rldq.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'govern', 'dashboard', 'data-quality']">
+                        <span class="w-30px">
+                            <img [src]="rldq.isActive ? 'assets/img/side-bar/active-dq.svg' : 'assets/img/side-bar/dq-c.svg'"
+                                alt="Home">
+                        </span>
+                        <span>Data quality</span>
+                    </a>
+                </li>
+                <li routerLinkActive="active" #rlbg="routerLinkActive">
+                    <img *ngIf="rlbg.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'govern', 'dashboard', 'list']">
+                        <span class="w-30px">
+                            <img [src]="rlbg.isActive ? 'assets/img/side-bar/active-bg.svg' : 'assets/img/side-bar/bg.svg'"
+                                alt="Home">
+                        </span>
+                        <span>Business glossary</span>
+                    </a>
+                </li>
+            </ul>
+        </li> -->
+
         <li routerLinkActive="active" #rlapr="routerLinkActive">
             <img *ngIf="rlapr.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
             <a [routerLink]="['projects',projectId,'cleansing']" (click)="expandCollapseMenu('preparation')">
@@ -102,18 +136,71 @@
             </a>
         </li>
 
-        <li routerLinkActive="active" #rlae="routerLinkActive">
-            <img *ngIf="rlae.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
-            <a [routerLink]="['projects',projectId,'engineering']" (click)="expandCollapseMenu('engineering')">
+        <li routerLinkActive="" #rlae="routerLinkActive">
+            <a (click)="expandCollapseMenu('engineering')">
                 <span class="w-30px">
-                    <img [src]="rlae.isActive ? 'assets/img/side-bar/engineering-active.svg' : 'assets/img/side-bar/new-eng.svg'"
-                        alt="Engineering">
+                    <img src="assets/img/side-bar/engineering.svg" alt="Engineering">
                 </span>
                 <span>Engineering</span>
+                <span style="position: absolute; right: 10%;">
+                    <img [src]="rlae.isActive ? 'assets/img/side-bar/up-arrow.svg' : 'assets/img/side-bar/down-arrow.svg'">
+                </span>
             </a>
+            <ul *ngIf="menus['engineering'].collapse">
+                <li routerLinkActive="active" #rldf="routerLinkActive">
+                    <img *ngIf="rldf.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'engineering', 'engineer']">
+                        <span class="w-30px">
+                            <img [src]="rldf.isActive ? 'assets/img/side-bar/dataflow-active.svg' : 'assets/img/side-bar/dataflow-inactive.svg'">
+                        </span>
+                        <span>Data flow</span>
+                    </a>
+                </li>
+                <li routerLinkActive="active" #rludf="routerLinkActive">
+                    <img *ngIf="rludf.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'engineering', 'udf']">
+                        <span class="w-30px">
+                            <img [src]="rludf.isActive ? 'assets/img/side-bar/udf-active.svg' : 'assets/img/side-bar/udf-inactive.svg'">
+                        </span>
+                        <span>UDF</span>
+                    </a>
+                </li>
+            </ul>
         </li>
 
-        <li routerLinkActive="active" #rlaj="routerLinkActive">
+        <li routerLinkActive="" #rlaj="routerLinkActive">
+            <a (click)="expandCollapseMenu('jobs')">
+                <span class="w-30px">
+                    <img src="assets/img/side-bar/new-jobs.svg" alt="Jobs">
+                </span>
+                <span>Jobs</span>
+                <span style="position: absolute; right: 10%;">
+                    <img [src]="rlaj.isActive ? 'assets/img/side-bar/up-arrow.svg' : 'assets/img/side-bar/down-arrow.svg'">
+                </span>
+            </a>
+            <ul *ngIf="menus['jobs'].collapse">
+                <li routerLinkActive="active" #rljob="routerLinkActive">
+                    <img *ngIf="rljob.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'automation', 'cleansing']">
+                        <span class="w-30px">
+                            <img [src]="rljob.isActive ? 'assets/img/side-bar/prepation-job-active.svg' : 'assets/img/side-bar/prepation-job-inactive.svg'">
+                        </span>
+                        <span>Preparation job</span>
+                    </a>
+                </li>
+                <li routerLinkActive="active" #rleng="routerLinkActive">
+                    <img *ngIf="rleng.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
+                    <a class="pd-l-40" [routerLink]="['projects', projectId, 'automation', 'engineering']">
+                        <span class="w-30px">
+                            <img [src]="rleng.isActive ? 'assets/img/side-bar/eng-job-active.svg' : 'assets/img/side-bar/eng-job-inactive.svg'">
+                        </span>
+                        <span>Engineering job</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- <li routerLinkActive="active" #rlaj="routerLinkActive">
             <img *ngIf="rlaj.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">
             <a [routerLink]="['projects',projectId,'automation']" (click)="expandCollapseMenu('jobs')">
                 <span class="w-30px">
@@ -122,7 +209,7 @@
                 </span>
                 <span>Jobs</span>
             </a>
-        </li>
+        </li> -->
 
         <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" #rladh="routerLinkActive">
             <img *ngIf="rladh.isActive" src="assets/img/side-bar/active-left-content.svg" class="active-link">

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Certificate } from 'src/app/models/certificate';
+import { GovernService } from 'src/app/pages/govern/services/govern.service';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { AutomationService } from '../../services/automation.service';
 

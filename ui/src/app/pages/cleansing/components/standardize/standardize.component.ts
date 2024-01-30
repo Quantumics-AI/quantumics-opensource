@@ -30,6 +30,7 @@ export class StandardizeComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject();
   public selectColumn = false;
   public selectNewValue = false;
+  public loading: boolean;
 
   constructor(public modal: NgbActiveModal, private cleansingDataService: CleansingDataService) { }
 
@@ -38,7 +39,7 @@ export class StandardizeComponent implements OnInit, OnDestroy {
   }
 
   public handleColumnSelection(columnName: string): void {
-    
+
     // this.selectColumn = columnName;
     // console.log(this.selectColumn);
     this.groupedRows.length = 0;
@@ -47,12 +48,18 @@ export class StandardizeComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.loading = true;
+
     // if(columnName == "undefined"){
     //   this.selectColumn = false;
-      
+
     // }else {
     //   this.selectColumn = true;
     // }
+
+    if (this.newValue) {
+      this.selectNewValue = true;
+    }
 
     this.cleansingDataService
       .getCountsForStandardizeRule(this.projectId, this.folderId, this.fileId, columnName)
@@ -60,50 +67,57 @@ export class StandardizeComponent implements OnInit, OnDestroy {
         map(res => res?.code === 200 ? res.result : [[]]),
         map(res => res[0])
       ).subscribe(res => {
+        this.loading = false;
         this.groupedRows = res;
         if (this.ruleInputValues1) {
           const colValues = this.ruleInputValues1.split('|');
           const selectedValues = this.groupedRows.filter(r => colValues.indexOf(r.column_value) >= 0);
+
+          if (selectedValues.length > 0) {
+            this.selectColumn = true;
+          }
           selectedValues.forEach(element => {
             element.selected = true;
           });
         }
+      }, () => {
+        this.loading = false;
       });
   }
 
   public selectAll(selected: boolean): void {
-    if(selected == true){
+    if (selected == true) {
       this.groupedRows.forEach(r => r.selected = selected);
       this.selectColumn = true;
 
     } else {
       this.groupedRows.forEach(r => r.selected = selected);
       this.selectColumn = false;
-      
+
     }
 
-    
+
   }
 
   public handleSelection(): void {
     this.selectedAll = this.groupedRows.length === this.groupedRows.filter(r => r.selected).length;
-    if(this.groupedRows.find(r => r.selected) != undefined){
+    if (this.groupedRows.find(r => r.selected) != undefined) {
       this.selectColumn = true;
-      
+
     } else {
       this.selectColumn = false;
     }
-    
+
   }
 
   modelChangedNewValue(obj) {
     if (obj != "") {
       this.selectNewValue = true;
-      
+
     } else {
       this.selectNewValue = false;
     }
-    
+
   }
 
   public apply(): void {

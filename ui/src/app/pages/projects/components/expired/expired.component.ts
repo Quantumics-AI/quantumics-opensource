@@ -19,4 +19,9 @@ export class ExpiredComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  public redirectToPlans(projectId: number): void {
+    localStorage.setItem('project_id', `${projectId}`);
+    this.router.navigate([`projects/${projectId}/workspace-setting/plans`]);
+  }
 }

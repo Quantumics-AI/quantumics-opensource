@@ -54,8 +54,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <ng-container *ngIf="files.length else noRecord">
-                                <tr class="td-text"*ngFor="let file of files | filterBy: searchTerm | slice:startIndex:endIndex; let isFirst = first; ">
+                            <ng-container *ngIf="files.length || searchTerm.fileName.length else noRecord">
+                                <tr class="td-text"*ngFor="let file of files | slice:startIndex:endIndex; let isFirst = first; ">
                                     <td class="text-left fn pipe-n cp" (click)="cleansing(file.fileName, file.fileId)" title="{{file.fileName}}">
                                         <span class="pd-r-12"><img src="assets/img/pipline/file.svg"></span>
                                         <a>{{file.fileName}}</a>
@@ -79,11 +79,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr  *ngIf="(files | filterBy: searchTerm).length > 15" style="background-color: white !important;" class="pg-tr">
+                                <tr  *ngIf="(files | filterBy: searchTerm).length > pageSize" style="background-color: white !important;" class="pg-tr">
                                     <td colspan="6" class="pg-pd">
                                         <div class="text-center">
                                             <!-- <span class="float-left">
-                                                <button type="button" class="btn nextBtn" [disabled]="currnetPage === 0"
+                                                <button type="button" class="btn nextBtn" [disabled]="currentPage  === 0"
                                                     (click)="previousPage();"><img
                                                         src="assets/img/govern/arrow-left.svg">Previous</button>
                                             </span>
@@ -92,7 +92,7 @@
                                                 [class.dot]="page.isActive">{{page.index + 1}}</span>&nbsp;
                                             <span class="float-right">
                                                 <button type="button" class="btn nextBtn"
-                                                    [disabled]="currnetPage === totalPages - 1 || totalPages == 1" (click)="nextPage();">Next
+                                                    [disabled]="currentPage  === totalPages - 1 || totalPages == 1" (click)="nextPage();">Next
                                                     <img src="assets/img/govern/arrow-right.svg"></button>
                                             </span> -->
                                             <ngb-pagination [collectionSize]="files.length" [(page)]="page" [pageSize]="pageSize" [maxSize]="5"

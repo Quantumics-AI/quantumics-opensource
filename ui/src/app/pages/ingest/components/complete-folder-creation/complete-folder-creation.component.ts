@@ -116,7 +116,17 @@ export class CompleteFolderCreationComponent implements OnInit, OnDestroy {
         }
       }, (error) => {
         this.loading = false;
-        this.snackBar.open(error);
+        // this.snackBar.open(error);
+        if (error.includes("Athena Query Failed !HIVE_BAD_DATA:")){
+          // this.error = error;
+          const errorMessage = error;
+          const startIndex = errorMessage.indexOf("Error reading field value:");
+          const endIndex = errorMessage.indexOf("to a LONG value");
+          const extractedMessage = errorMessage.substring(startIndex, endIndex) + "to a LONG value";
+          this.snackBar.open(extractedMessage);
+        } else {
+          this.snackBar.open(error);
+        }
       });
     }
   }

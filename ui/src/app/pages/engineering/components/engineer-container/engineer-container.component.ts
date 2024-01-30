@@ -74,7 +74,7 @@ export class EngineerContainerComponent implements OnInit {
           this.router.navigate([`projects/${this.projectId}/engineering/engineer/${flowId}/edit/${flowDisplayName}`]);
         }
         
-        this.getFlows();
+        // this.getFlows();
       });
   }
 

@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { Certificate } from 'src/app/models/certificate';
 import { Project } from 'src/app/models/project';
@@ -10,7 +10,7 @@ import { ProjectComponent } from 'src/app/pages/projects/components/project/proj
 import { ProjectParam } from 'src/app/pages/projects/models/project-param';
 import { ProjectsService } from 'src/app/pages/projects/services/projects.service';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
-import { NotificationService } from '../notification/services/notification.service';
+import { ProjectLimitComponent } from 'src/app/pages/projects/components/project-limit/project-limit.component';
 import { IMenu } from 'src/app/models/menu';
 
 declare let window: any;
@@ -41,6 +41,9 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   public isAdmin: boolean;
   public userType: boolean;
   public menus: { [name: string]: IMenu; } = {};
+
+  public isVisibleShareOptions: boolean = false;
+  public isVisbleShareIcon: boolean = false;
 
   constructor(
     private projectsService: ProjectsService,
@@ -93,12 +96,26 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (!event.url.endsWith('/jarvis')) {
+        // exclude the jarvis related url
+        this.isVisbleShareIcon = this.isVisibleShareOptions = false;
+      }
+    });
+
     this.projectsList();
   }
 
   private projectsList(projectId: number = null): void {
+
+    if (!this.userId) {
+      return;
+    }
+
     const param = {
-      userId: this.userId.toString(),
+      userId: this.userId?.toString(),
       folderId: '',
       folderName: '',
       projectId: '',
@@ -146,6 +163,7 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   public onWorkSpaceChange(workspaceId: string): void {
 
     if (workspaceId === 'Workspace') {
+      this.onProjectLimitReach();
     } else if (workspaceId == 'all' && this.isAdmin) {
       this.router.navigate([`workspaces`]);
     }
@@ -170,6 +188,32 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  public onProjectLimitReach(): void {
+    this.projectsService.getProjectuserinfo(0, this.userId).subscribe((res) => {
+      this.isCreateProject = res.result.createProject;
+      if (this.isCreateProject?.toLowerCase() === 'false') {
+        this.openProjectLimitModal();
+      } else {
+        this.onWorkSpaceCreate();
+      }
+    }, () => {
+      this.openProjectLimitModal();
+      this.projectsList();
+    })
+  }
+
+  public openProjectLimitModal(): void {
+    const modalRef = this.modalService.open(ProjectLimitComponent, { size: 'md modal-dialog-centered', scrollable: false });
+    modalRef.componentInstance.userId = this.userId;
+    modalRef.componentInstance.projectId = this.projectId;
+    modalRef.result.then((result) => {
+      console.log(result);
+    }, (reason) => {
+      console.log(reason);
+      this.projectsList();
+    });
   }
 
   public onWorkSpaceCreate(): void {
@@ -201,6 +245,15 @@ export class VerticalMenuComponent implements OnInit, OnDestroy {
   public initializeMenu(): void {
     // As of now only added nested menu
     this.menus['datasets'] = { collapse: false };
+    this.menus['governance'] = { collapse: false };
+    this.menus['engineering'] = { collapse: false };
+    this.menus['jobs'] = { collapse: false };
+  }
+
+  public disappearShareOptions(): void {
+    setTimeout(() => {
+      this.isVisbleShareIcon = this.isVisibleShareOptions = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

@@ -31,7 +31,7 @@ export class ReplaceMissingComponent implements OnInit, OnChanges {
   replaceOptions = [
     { text: 'Custom value', value: ReplaceMissingRuleTypes.CustomValue },
     { text: 'Fill down with last valid value', value: ReplaceMissingRuleTypes.LastValidValue },
-    { text: 'Null', value: ReplaceMissingRuleTypes.Null },
+    { text: 'NULL', value: ReplaceMissingRuleTypes.Null },
     { text: 'Average', value: ReplaceMissingRuleTypes.Average },
     { text: 'Mode', value: ReplaceMissingRuleTypes.Mod },
     { text: 'Sum', value: ReplaceMissingRuleTypes.Sum }

@@ -1,51 +1,147 @@
 <app-loader [loading]="loading">
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="count-eng-flows">
-                Total count of UDF ({{(udfList | filterBy:searchTerm)?.length}})
+    <ng-container *ngIf="hasFolders; else noFile">
+        <ng-container *ngIf="udfList.length || searchTerm.udfName.length else noUdfs">
+            <div class="card card-d">
+                <div class="card-header ch">
+                    <div class="di mr-t-6" *ngIf="!searchDiv">
+                        <p class="card-main-text">User defined functions</p>
+                        <p class="p1 mr-b-0">Modify the existing udf from the action menu or create a new one.</p>
+                    </div>
+                    <div class="di mr-t-6" *ngIf="searchDiv">
+                        <p class="card-main-text">Search result</p>
+                    </div>
+                    <div class="pull-right">
+                        <div class="input-group mr-t-10">
+                            <div class="input-group-prepend h36">
+                                <span class="input-group-text search-icon" id="basic-addon1">
+                                    <img src="assets/img/govern/search.svg">
+                                </span>
+                            </div>
+                            <input type="text" id="query" class="form-control search-input h36"
+                                [(ngModel)]="searchTerm.udfName" placeholder="Search UDF name"
+                                (ngModelChange)="searchInput($event)">
+                            <button type="button" class="btn btn-design mr-l-16" (click)="openCreateUDFModal();">Create
+                                UDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body pd-0">
+                    <div class="table-responsive br-r">
+                        <table class="table m-0 table-fixed table-striped">
+                            <thead class="thead-light">
+                                <tr class="fixed-th">
+                                    <th class="pd-l-24 text-left">UDF name <span> <img (click)="sortUDF();" class="cp"
+                                                src="assets/img/govern/down-arrow.svg"></span></th>
+                                    <th class="pd-l-24">Date created</th>
+                                    <th class="pd-l-24">Created by</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="td-text" *ngFor="let udf of udfList | slice:startIndex:endIndex">
+                                    <td class="fn">
+                                        <span class="mr-r-6"><img src="assets/img/engg/udf-icon.svg"></span>
+                                        {{udf.udfName}}
+                                    </td>
+                                    <td>{{udf.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td>{{(udf.createdBy).split(' ')[0]}}</td>
+                                    <td class="float-right">
+                                        <div ngbDropdown container="body">
+                                            <a ngbDropdownToggle class="menu-icon">
+                                                <img src="assets/img/project-stats/menu.svg" class="default-img">
+                                                <img src="assets/img/pipline/hover-menu.svg" class="hover-img">
+                                            </a>
+
+                                            <div ngbDropdownMenu class="dr-m">
+                                                <button ngbDropdownItem class="h-37" (click)="delete(udf)">Delete
+                                                    UDF</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr style="background-color: white !important;" class="pg-tr"
+                                    *ngIf="(udfList | filterBy: searchTerm)?.length > pageSize">
+                                    <td colspan="5" class="pg-pd">
+                                        <div class="text-center">
+                                            <ngb-pagination [collectionSize]="udfList?.length" [(page)]="page"
+                                                [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                <ng-template ngbPaginationPrevious><span class="btn nextBtn"><img
+                                                            src="assets/img/govern/arrow-left.svg">Previous</span></ng-template>
+                                                <ng-template ngbPaginationNext><span class="btn nextBtn">Next <img
+                                                            src="assets/img/govern/arrow-right.svg"></span></ng-template>
+                                            </ngb-pagination>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: white !important;"
+                                    *ngIf="(udfList | filterBy:searchTerm).length == 0">
+                                    <td colspan="5">
+                                        <div class="text-center s-div">
+                                            <img src="assets/img/govern/no-search.svg">
+                                            <p class="no-term">No udf found</p>
+                                            <p class="term-2">Your search “{{searchString}}” did not match any flow
+                                                name.
+                                                Please try again .</p>
+                                            <button type="button" class="btn saveBtn" (click)="clearSearhInput()">Clear
+                                                to
+                                                go back</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="custom-search txt-search">
-                <input type="text" id="searchTerm" [(ngModel)]="searchTerm.udfName" class="search-query mr-3"
-                    placeholder="Search...">
-                <button type="button" id="btnCreateFlow" class="btn btn-outline-success createBtn" (click)="openCreateUDFModal();"
-                    style="margin-top: -8px;">
-                    Create UDF</button>
+        </ng-container>
+        <ng-template #noUdfs>
+            <div class="connect-source-div" *ngIf="!loading">
+                <div class="card card-d mr-t-16">
+                    <div class="card-header ch pd-t-b-20">
+                        <p class="card-main-text fs-18">User defined function</p>
+                        <p class="p1 mr-b-0">Create custom functions that can be reused for different data flow.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="connect-s text-center">
+                            <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                            <p class="tp1 create-udf-text">Start by creating a UDF</p>
+                            <div class="menu-tets">
+                                <div class="text-container">
+                                    Custom udf allows you to write custom script related to your daily use case.
+                                    You can reuse it as a button in data flow.
+                                </div>
+                            </div>
+                            <button class="btn btn-design2 mt-3" (click)="openCreateUDFModal();">Create a UDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #noFile>
+        <div class="connect-source-div" *ngIf="!loading">
+            <div class="card card-d mr-t-16">
+                <div class="card-header ch">
+                    <div>
+                        <p class="card-main-text fs-18">User defined function</p>
+                        <p class="p1 mr-b-0">Create custom functions that can be reused for different data flow.</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="connect-s text-center">
+                        <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                        <p class="tp1 wm">Start by importing a dataset</p>
+                        <p class="tp2 mr-b-0 mr-t-8">Any dataset ingested locally will live here. </p>
+                        <p class="tp2 mr-b-24">Start creating by uploading your dataset.</p>
+                        <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']"
+                            class="btn btn-design mr-b-28">Import dataset</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="row gutters">
-        <div class="col-xl-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
-                    <thead class="thead-light">
-                        <tr class="fixed-th">
-                            <th scope="col">UDF Name</th>
-                            <th scope="col">Created By </th>
-                            <th scope="col">Created Date </th>
-                            <th scope="col">Modified Date</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let udf of udfList | filterBy:searchTerm" class="td-color">
-                            <td class="text-left">{{udf.udfName}} </td>
-                            <td>{{udf.createdBy}}</td>
-                            <td>{{udf.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                            <td>{{udf.modifiedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                            <td>
-                                <a id="lnkEdit" (click)="edit(udf)" placement="top" ngbTooltip="Edit">
-                                    <em><img src="assets/img/edit.svg" width="18" alt=""></em>
-                                </a> &nbsp;
-
-                                <a id="lnkDeleteFlow" (click)="delete(udf)" placement="top" ngbTooltip="Delete">
-                                    <em><img src="assets/img/delete.svg" width="18" alt=""></em>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    </ng-template>
 </app-loader>

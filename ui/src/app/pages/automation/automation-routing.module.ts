@@ -5,6 +5,9 @@ import { AutoRunSankeyComponent } from './components/auto-run-sankey/auto-run-sa
 import { CleansingJobsComponent } from './components/cleansing-jobs/cleansing-jobs.component';
 import { EngineeringJobsComponent } from './components/engineering-jobs/engineering-jobs.component';
 import { JobsLogsComponent } from './components/jobs-logs/jobs-logs.component';
+import { DatasetListComponent } from './components/dataset-list/dataset-list.component';
+import { EngineeringHistoryComponent } from './components/engineering-history/engineering-history.component';
+import { CleansingJobHistoryComponent } from './components/cleansing-job-history/cleansing-job-history.component';
 
 const routes: Routes = [
   {
@@ -18,11 +21,23 @@ const routes: Routes = [
       },
       {
         path: 'cleansing',
-        component: CleansingJobsComponent,
+        component: CleansingJobsComponent
+      },
+      {
+        path: 'cleansing/history/:jobId/:jobName',
+        component: CleansingJobHistoryComponent
       },
       {
         path: 'engineering',
-        component: EngineeringJobsComponent,
+        component: EngineeringJobsComponent
+      },
+      {
+        path: 'engineering/dataset',
+        component: DatasetListComponent
+      },
+      {
+        path: 'engineering/history',
+        component: EngineeringHistoryComponent
       }
     ]
   },

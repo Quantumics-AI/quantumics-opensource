@@ -17,14 +17,16 @@ export class ExtractColumnValuesComponent implements OnInit, OnChanges {
   @Input() rule: any;
 
   options = [
+    { text: 'text or pattern', value: ExtractRuleTypes.TextOrPattern },
     { text: 'Numbers', value: ExtractRuleTypes.Numbers },
-    { text: 'Type Mismatched', value: ExtractRuleTypes.TypeMismatched },
-    { text: 'First Characters', value: ExtractRuleTypes.FirstCharacters },
-    { text: 'Last Characters', value: ExtractRuleTypes.LastCharacters },
-    { text: 'Characters Between Positions', value: ExtractRuleTypes.CharactersBetweenPostions },
-    { text: 'Text Or Pattern', value: ExtractRuleTypes.TextOrPattern },
     { text: 'Query strings', value: ExtractRuleTypes.QueryStrings },
+    { text: 'Mismatched', value: ExtractRuleTypes.TypeMismatched },
+    { isSeparator: true },
     { text: 'Between Delimiters', value: ExtractRuleTypes.BetweenDelimiters },
+    { isSeparator: true },
+    { text: 'First characters', value: ExtractRuleTypes.FirstCharacters },
+    { text: 'Last characters', value: ExtractRuleTypes.LastCharacters },
+    { text: 'Characters between positions', value: ExtractRuleTypes.CharactersBetweenPostions },
   ];
 
   private controls: { [type: string]: Array<string>; } = {};

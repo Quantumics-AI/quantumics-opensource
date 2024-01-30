@@ -1,9 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import {  ActivatedRoute, Router } from '@angular/router';
 import { GovernService } from '../../services/govern.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { Certificate } from 'src/app/models/certificate';
+import { Quantumfacade } from 'src/app/state/quantum.facade';
 
 @Component({
   selector: 'app-business-glossary',
@@ -11,6 +15,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./business-glossary.component.scss']
 })
 export class BusinessGlossaryComponent implements OnInit {
+  private certificate$: Observable<Certificate>;
+  private unsubscribe: Subject<void> = new Subject();
+
   @Input() userId: number;
   @Input() projectId: number;
   fg: FormGroup;
@@ -22,14 +29,26 @@ export class BusinessGlossaryComponent implements OnInit {
   lengthBRMsg: boolean = false;
   lengthAcrMsg: boolean = false;
   lengthSTMsg: boolean = false;
+  public projectName: string;
+  public termname: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private governService: GovernService,
     private router: Router,
     private snakbar: SnackbarService,
-    public modal: NgbActiveModal
+    public modal: NgbActiveModal,
+    private quantumFacade: Quantumfacade,
+    private activatedRoute: ActivatedRoute,
   ) {
+    this.projectName = localStorage.getItem('projectname');
+    this.certificate$ = this.quantumFacade.certificate$;
+    this.certificate$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((certificate: Certificate) => {
+        this.userId = +certificate.user_id;
+      });
+    this.projectId = parseInt(this.activatedRoute.parent.snapshot.paramMap.get('projectId'), 10);
   }
 
   ngOnInit(): void {
@@ -97,17 +116,20 @@ export class BusinessGlossaryComponent implements OnInit {
 
     this.governService.create(this.userId, payload).subscribe((response) => {
       this.snakbar.open(response.message);
-      this.modal.close();
+      // this.modal.close();
       this.router.navigate([`projects/${this.projectId}/govern/dashboard/list`]);
-    }, () => {
-      this.snakbar.open('Error');
+    }, (reason) => {
+      if(reason == "Term already exists for glossary"){
+        this.termname = true;
+      }
+      this.snakbar.open(reason);
     });
 
     
   }
 
   modelChangeTerm(newObj) {
-
+    this.termname = false;
     if (newObj.length == 20) {
       this.lengthMsg = true
       setTimeout(() => {
@@ -177,5 +199,10 @@ export class BusinessGlossaryComponent implements OnInit {
     } else {
       this.lengthSTMsg = false
     }
+  }
+
+  public back(): void {
+    this.router.navigate([`projects/${this.projectId}/govern/dashboard/list`]);
+    // this.location.back();
   }
 }

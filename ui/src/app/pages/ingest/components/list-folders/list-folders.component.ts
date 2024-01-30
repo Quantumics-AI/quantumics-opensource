@@ -8,8 +8,11 @@ import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { takeUntil } from 'rxjs/operators';
 import { SourceDataService } from '../../services/source-data.service';
 import { SnackbarService } from 'src/app/core/services/snackbar.service';
+import { Pager } from 'src/app/pages/govern/models/pager';
 import { EditFolderComponent } from '../edit-folder/edit-folder.component';
 import { FolderConfirmationComponent } from '../folder-confirmation/folder-confirmation.component';
+import { FilterPipe } from 'ngx-filter-pipe';
+import { PAGE_SIZE } from 'src/app/core/const/pageSize';
 
 
 @Component({
@@ -20,6 +23,7 @@ import { FolderConfirmationComponent } from '../folder-confirmation/folder-confi
 export class ListFoldersComponent implements OnInit {
   // @Input() folders: any;
   folders: any;
+  originalFolders: any;
   @Output() edit: EventEmitter<any> = new EventEmitter<any>();
   projectId: string;
   projectName: string;
@@ -32,20 +36,23 @@ export class ListFoldersComponent implements OnInit {
   userId: number;
   loading: boolean;
   editFolder: boolean;
-  folder: any;
+  folder: Array<any>;
+  filteredData: Array<any>;
   showCard: boolean = true;
-  filteredData: any;
 
   public searchDiv: boolean = false;
   public searchString: string;
   public startIndex: number = 0;
-  public pageSize: number = 15;
+  public pageSize: number = PAGE_SIZE;
   public endIndex: number = this.pageSize;
-  // public currnetPage: number = 0;
+  // public currentPage: number = 0;
+  private currentPage: number;
   // public totalPages: number;
   // public pager: Array<Pager> = [];
 
   public page = 1;
+  public Jheader: boolean = true;
+  public Jfooter: boolean = false;
 
   constructor(
     private router: Router,
@@ -53,7 +60,8 @@ export class ListFoldersComponent implements OnInit {
     private modalService: NgbModal,
     private quantumFacade: Quantumfacade,
     private sourceDataService: SourceDataService,
-    private snakbar: SnackbarService
+    private snakbar: SnackbarService,
+    private filterPipe: FilterPipe
   ) {
     // this.projectId = this.activatedRoute.snapshot.paramMap.get('projectId');
     this.certificate$ = this.quantumFacade.certificate$;
@@ -94,6 +102,8 @@ export class ListFoldersComponent implements OnInit {
           );
         });
       }
+
+      this.originalFolders = [...this.folders];
       this.total_folder_length = this.folders.length;
       // this.totalPages = this.folders.length / this.pageSize;
       // this.totalPages = Math.ceil(this.totalPages);
@@ -155,16 +165,22 @@ export class ListFoldersComponent implements OnInit {
         if (response.code === 200) {
           const idx = this.folders.findIndex(x => x.folderId === folder.folderId);
           this.folders.splice(idx, 1);
-          this.foldersList()
+          const noOfPages = this.folders.length / this.pageSize;
+          if (Math.ceil(noOfPages) < this.currentPage) {
+            this.currentPage = this.currentPage - 1;
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            this.endIndex = this.startIndex + this.pageSize;
+          }
+          // this.foldersList()
         }
       }, (error) => {
         this.loading = false;
         this.snakbar.open(error);
       });
-      
+
     }, (result) => {
-      
-     });
+
+    });
 
   }
 
@@ -217,50 +233,57 @@ export class ListFoldersComponent implements OnInit {
     this.searchString = str;
     if (str.length == 0) {
       this.searchDiv = false;
+      this.folders = this.originalFolders;
     } else {
       this.searchDiv = true;
+      this.folders = this.filterPipe.transform(this.originalFolders, { folderName: this.searchString });
+      this.startIndex = 0;
     }
   }
 
   clearSearhInput() {
     this.searchTerm = { folderName: '' };
     this.searchDiv = false;
+    this.folders = this.originalFolders;
+    this.page = 1;
+    this.startIndex = 0;
+    this.endIndex = this.pageSize;
   }
 
   // public previousPage(): void {
-  //   this.currnetPage--;
+  //   this.currentPage--;
   //   this.pager.map(t => t.isActive = false);
 
-  //   if (this.currnetPage == 0) {
-  //     this.currnetPage = 0;
+  //   if (this.currentPage == 0) {
+  //     this.currentPage = 0;
   //     this.startIndex = 0;
   //     this.endIndex = this.pageSize;
   //   } else {
-  //     this.startIndex = this.pageSize * this.currnetPage;
+  //     this.startIndex = this.pageSize * this.currentPage;
   //     this.endIndex = this.startIndex + this.pageSize;
   //   }
 
-  //   this.pager[this.currnetPage].isActive = true;
+  //   this.pager[this.currentPage].isActive = true;
   // }
 
   // public nextPage(): void {
   //   this.pager.map(t => t.isActive = false);
 
-  //   this.currnetPage++;
+  //   this.currentPage++;
 
-  //   if (this.totalPages != this.currnetPage) {
+  //   if (this.totalPages != this.currentPage) {
   //     this.startIndex = this.endIndex;
   //     this.endIndex = this.startIndex + this.pageSize;
   //   }
 
-  //   this.pager[this.currnetPage].isActive = true;
+  //   this.pager[this.currentPage].isActive = true;
   // }
 
   // public redirectToPageIndex(pager: Pager): void {
   //   this.pager.map(t => t.isActive = false);
   //   pager.isActive = true;
-  //   this.currnetPage = pager.index;
-  //   this.startIndex = this.pageSize * this.currnetPage;
+  //   this.currentPage = pager.index;
+  //   this.startIndex = this.pageSize * this.currentPage;
   //   this.endIndex = this.startIndex + this.pageSize;
   // }
 
@@ -289,5 +312,10 @@ export class ListFoldersComponent implements OnInit {
   public onPageChange(currentPage: number): void {
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
+  }
+
+  public openChatContent(open: any): void {
+    this.Jheader = false;
+    this.Jfooter = open;
   }
 }

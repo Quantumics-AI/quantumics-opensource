@@ -1,58 +1,180 @@
-<div class="row">
-    <div class="col-xl-12">
-        <div class="custom-search pull-right">
-            <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderDisplayName" class="search-query absolute"
-                placeholder="Search...">
-        </div>
-    </div>
+<div class="page-header1">
+    <ol class="breadcrumb breadcrumb-top">
+        <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'stats']">{{projectName}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Preparation Job</li>
+    </ol>
 </div>
 
-<app-loader [loading]="loading">
-    <div class="row gutters">
-        <div class="col-xl-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
-                    <thead class="thead-light">
-                        <tr class="fixed-th">
-                            <th scope="col">Folder Name </th>
-                            <th scope="col">Created By </th>
-                            <th scope="col">Created Date </th>
-                            <th scope="col">Select Files to Run</th>
-                            <th scope="col">History</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngIf="cleansingJobs$ | async as cleansingJobs">
-                            <ng-container *ngIf="cleansingJobs?.length > 0; else noRecords">
-                                <tr class="td-color" *ngFor="let job of cleansingJobs | filterBy: searchTerm">
-                                    <td class="text-left">{{job.folderDisplayName}}</td>
-                                    <td>{{job.createdBy}}</td>
-                                    <td>{{job.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                                    <td>
-                                        <a id="lnkSelectCleanseFile" (click)="selectFiles(job)">
-                                            <em>
-                                                <img src="assets/img/file-icon.png" width="30" placement="top"
-                                                    ngbTooltip="File" alt="">
-                                            </em>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a id="lnkHistoryCleanseFile" (click)="openModal(job)">
-                                            <em>
-                                                <img src="assets/img/history-icon.svg" width="20" placement="top"
-                                                    ngbTooltip="History" alt="history">
-                                            </em>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </ng-container>
-                            <ng-template #noRecords>
-                                <h6>No result found</h6>
-                            </ng-template>
-                        </ng-container>
-                    </tbody>
-                </table>
+<div class="main-menu">
+    <app-loader [loading]="loading">
+        <ng-container *ngIf="hasFolders; else noFile">
+
+            <app-list-raw-data [projectId]="projectId" [reset]="reset"
+                (selectedDetails)="runJob($event)"></app-list-raw-data>
+
+            <ng-container *ngIf="cleansedRunedJob?.length > 0; else noRecords">
+                <div class="card card-d">
+                    <div class="card-header ch">
+                        <div class="di mr-t-6">
+                            <p class="card-main-text">Recent Jobs</p>
+                            <p class="p1 mr-b-0">All the recent jobs run are saved here based on folder/table name. Go
+                                to
+                                menu for job history.</p>
+                        </div>
+                        <div class="pull-right">
+                            <div class="input-group mr-t-10">
+                                <div class="input-group-prepend h36">
+                                    <span class="input-group-text search-icon" id="basic-addon1">
+                                        <img src="assets/img/govern/search.svg">
+                                    </span>
+                                </div>
+                                <input type="text" id="query" class="form-control search-input h36"
+                                    [(ngModel)]="searchTerm.folderDisplayName" placeholder="Search folder/table name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body pd-0">
+                        <div class="table-responsive br-r">
+                            <table class="table m-0 table-fixed table-striped">
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Folder/ Table name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                    (click)="sortByProperty(cleansedRunedJob, 'folderDisplayName', isFolderNameByDescending = !isFolderNameByDescending);"></span>
+                                        </th>
+                                        <th class="pd-l-24">
+                                            Last job status
+                                            <span><img class="cp" src="assets/img/jobs/refresh.svg" width="15"
+                                                    alt="refresh" (click)="getCleansingRunJobs()"></span>
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                    (click)="sortByProperty(cleansedRunedJob, 'jobStatus', isJobStatusByDescending = !isJobStatusByDescending);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Last executed</th>
+                                        <th class="pd-l-24">Date created</th>
+                                        <th class="pd-l-24">Data owner</th>
+                                        <th>Job history</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="td-text"
+                                        *ngFor="let job of cleansedRunedJob | slice:startIndex:endIndex | filterBy:searchTerm ">
+
+                                        <td class="fn">
+                                            <span><img
+                                                    [src]="job.external ? 'assets/img/pipline/pgsql.svg' : 'assets/img/project-stats/folder-i.svg'"></span>
+                                            {{job.folderDisplayName}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-completed"
+                                                *ngIf="job.jobStatus.toLowerCase() === 'succeeded'">
+                                                <img src="/assets/img/jobs/completed-dot.svg"
+                                                    class="align-unset mr-1 ml-1">
+                                                {{job.jobStatus}}
+                                            </span>
+                                            <span class="badge badge-danger"
+                                                *ngIf="job.jobStatus.toLowerCase() === 'failed'">
+                                                <img src="/assets/img/jobs/failure-dot.svg" class="align-unset mr-1">
+                                                {{job.jobStatus}}
+                                            </span>
+                                            <span class="badge badge-running"
+                                                *ngIf="job.jobStatus.toLowerCase() === 'running' || job.jobStatus.toLowerCase() === 'starting'">
+                                                <img src="/assets/img/jobs/running-dot.svg" class="align-unset mr-1">
+                                                {{job.jobStatus}}
+                                            </span>
+                                        </td>
+                                        <td>{{job.jobCreatedDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                        <td>{{job.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                        <td>{{job.dataOwner?.split(' ')[0]}}</td>
+                                        <td><a class="view" (click)="redirectToCleanseJobHistroy(job);">View</a></td>
+                                    </tr>
+
+                                    <tr style="background-color: white !important;" class="pg-tr"
+                                        *ngIf="(cleansedRunedJob | filterBy: searchTerm)?.length > pageSize">
+                                        <td colspan="6" class="pg-pd">
+                                            <div class="text-center">
+                                                <ngb-pagination [collectionSize]="cleansedRunedJob?.length"
+                                                    [(page)]="page" [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                    aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                    <ng-template ngbPaginationPrevious><span class="btn nextBtn"><img
+                                                                src="assets/img/govern/arrow-left.svg">Previous</span></ng-template>
+                                                    <ng-template ngbPaginationNext><span class="btn nextBtn">Next <img
+                                                                src="assets/img/govern/arrow-right.svg"></span></ng-template>
+                                                </ngb-pagination>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white" *ngIf="(cleansedRunedJob | filterBy:searchTerm)?.length == 0">
+                                        <td colspan="6" *ngIf="!loading">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="term-2">Your search “{{searchTerm.folderDisplayName}}” did not
+                                                    match. Please
+                                                    try again .</p>
+                                                <button type="button" class="btn saveBtn"
+                                                    (click)="searchTerm.folderDisplayName = '';">Clear to go
+                                                    back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </ng-container>
+            <ng-template #noRecords>
+                <div class="connect-source-div" *ngIf="!loading">
+                    <div class="card card-d mr-t-16">
+                        <div class="card-header ch pd-t-b-20">
+                            <p class="card-main-text fs-18">Preparation job</p>
+                            <p class="p1 mr-b-0">After applying preparation rules in preparation module. Automate it for
+                                new
+                                dataset.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="connect-s text-center mt-50">
+                                <img src="assets/img/jobs/no-jobs-run.svg" class="img-fluid">
+                                <p class="p4 mt-3">No jobs runned yet!</p>
+                                <div class="inner-text">
+                                    <div class="text-container">
+                                        Select folder/table and then respective dataset to run the pre defined rules
+                                        that
+                                        has
+                                        been applied in the data preparation.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+
+        <ng-template #noFile>
+            <div class="connect-source-div" *ngIf="!loading">
+                <div class="card card-d mr-t-16">
+                    <div class="card-header ch">
+                        <div>
+                            <p class="card-main-text">Preparation job</p>
+                            <p class="p1 mr-b-0">
+                                After applying preparation rules in preparation module.  Automate it for new dataset.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="connect-s text-center">
+                            <img src="assets/img/govern/no-dq.svg" class="img-fluid">
+                            <p class="tp1 wm">Start by importing a dataset</p>
+                            <p class="tp2 mr-b-0 mr-t-8">Any dataset ingested locally will live here. </p>
+                            <p class="tp2 mr-b-24">Start creating by uploading your dataset.</p>
+                            <a [routerLink]="['/projects', projectId, 'ingest', 'select-source-type']"
+                                class="btn btn-design mr-b-28">Connect to source</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</app-loader>
+        </ng-template>
+    </app-loader>
+</div>

@@ -61,6 +61,13 @@ export class ProjectsComponent implements OnInit {
     // this.sharedService.pushProjectId.emit();
     // localStorage.removeItem('expired');
     // localStorage.removeItem('project_id');
+
+    const reachedToProjectStats = localStorage.getItem('reachedToProjectStats');
+    const projectId = localStorage.getItem('project_id');
+    if (reachedToProjectStats) {
+      localStorage.removeItem('reachedToProjectStats');
+      this.router.navigate([`projects/${projectId}/stats`]);
+    }
   }
 
   projectsList(): void {

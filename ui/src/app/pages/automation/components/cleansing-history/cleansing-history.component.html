@@ -39,7 +39,7 @@
                                             [disableTooltip]="!isEllipsisActive(fileName)">{{h.fileName}}</label>
                                     </td>
 
-                                    <td>{{h.createdDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    <td>{{h.jobExecutionDate | date: 'dd-MM-yy, hh:mm a'}}</td>
                                     <td class="text-white" [class.bg-success]="h.status.toLowerCase() === 'succeeded'"
                                         [class.bg-danger]="h.status.toLowerCase() === 'failed'" [class.bg-warning]="h.status.toLowerCase() === 'running' || 
                                         h.status.toLowerCase() === 'starting' ">

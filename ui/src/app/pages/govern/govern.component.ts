@@ -1,30 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { Certificate } from 'src/app/models/certificate';
 import { GovernService } from './services/govern.service';
+import { FolderService } from '../file-profile/services/folder.service';
 
 @Component({
   selector: 'app-govern',
   templateUrl: './govern.component.html',
   styleUrls: ['./govern.component.scss']
 })
-export class GovernComponent implements OnInit {
+export class GovernComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject();
+  certificate$: Observable<Certificate>;
+
   projectId: number;
   loading: boolean;
   businessData$: Observable<any>;
   projectName: string;
   userId: number;
-  certificate$: Observable<Certificate>;
+  public hasFolders: boolean;
 
   constructor(
     private quantumFacade: Quantumfacade,
     private activatedRoute: ActivatedRoute,
     private governService: GovernService,
-    private router: Router) {
+    private router: Router,
+    private folderService: FolderService,) {
     this.projectId = +this.activatedRoute.snapshot.params['projectId'];
 
     this.certificate$ = this.quantumFacade.certificate$;
@@ -37,12 +41,32 @@ export class GovernComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectName = localStorage.getItem('projectname');
-    this.loadData();
+    this.foldersList();
+    // this.loadData();
+  }
+
+  foldersList() {
+    this.loading = true;
+    this.folderService.getFolders(this.projectId, this.userId)
+    .pipe(takeUntil(this.unsubscribe))
+    .subscribe((response: any) => {
+      this.hasFolders = response.result?.length;
+      console.log(response.result?.length);
+      this.loading = false;
+      if (this.hasFolders) {
+        // this.getProjectStats();
+        this.loadData();
+      }
+    }, () => {
+      this.hasFolders = false;
+    });
   }
 
   loadData(): void {
     this.loading = true;
-    this.businessData$ = this.governService.getGlossaryList(this.projectId, this.userId).pipe(
+    this.businessData$ = this.governService.getGlossaryList(this.projectId, this.userId)
+    .pipe(takeUntil(this.unsubscribe))
+    .pipe(
       map((res: any) => {
         this.loading = false;
         if (res?.result.length) {
@@ -61,5 +85,9 @@ export class GovernComponent implements OnInit {
       relativeTo: this.activatedRoute,
       queryParams: { isNew: 1 }
     });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe.unsubscribe();
   }
 }

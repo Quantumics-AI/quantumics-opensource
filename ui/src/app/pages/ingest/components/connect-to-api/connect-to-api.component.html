@@ -10,12 +10,12 @@
     <form [formGroup]="fg">
         <div class="modal-body">
             <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <div class="col-xl-12">
                     <div class="form-group">
                         <label>Choose Folder</label>
                         <select class="form-control" id="folderId" formControlName="folderId"
                             (change)="onFolderChange()">
-                            <option *ngFor="let folder of folders$ | async" [value]="folder.folderId">
+                            <option *ngFor="let folder of folders" [value]="folder.folderId">
                                 {{folder.folderName}}
                             </option>
                         </select>
@@ -26,88 +26,200 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="row">
+                <div class="col-xl-3">
                     <div class="form-group">
-                        <label>URL</label>
-                        <input type="text" class="form-control" id="apiEndPointUrl" placeholder="URL"
-                            formControlName="apiEndPointUrl">
-
-                        <div class="error"
-                            *ngIf="fg.get('apiEndPointUrl').hasError('required') && fg.get('apiEndPointUrl').touched">
-                            API EndPoint is required
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label>Entity</label>
-                        <select class="form-control" formControlName="entity">
-                            <option value="companies">Companies</option>
-                            <option value="contacts">Contacts</option>
+                        <label>Method</label>
+                        <select class="form-control" id="method" formControlName="httpMethodType">
+                            <option value="get">GET</option>
+                            <option value="post">POST</option>
                         </select>
 
-                        <div class="error" *ngIf="fg.get('entity').hasError('required') && fg.get('entity').touched">
-                            Entity is required
+                        <div class="error"
+                            *ngIf="fg.get('httpMethodType').hasError('required') && fg.get('httpMethodType').touched">
+                            Method type is required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9">
+                    <div class="form-group">
+                        <label>URL</label>
+                        <textarea class="form-control" id="url" placeholder="URL" formControlName="endpoint"
+                            maxlength="300" rows="5">
+
+                        </textarea>
+
+                        <div class="error"
+                            *ngIf="fg.get('endpoint').hasError('required') && fg.get('endpoint').touched">
+                            URL is required
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('endpoint').hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 3000 characters.
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('endpoint').hasError('pattern')">
+                            Please enter a valid URL.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label>Context Path</label>
+                        <input type="text" class="form-control" id="contextPath" placeholder="ContextPath"
+                            formControlName="contextPath" maxlength="100">
+
+                        <div class="error"
+                            *ngIf="fg.get('contextPath').hasError('required') && fg.get('contextPath').touched">
+                            Context path is required
+                        </div>
+
+                        <div class="error"
+                            *ngIf="fg.get('contextPath').hasError('pattern') && fg.get('contextPath').touched">
+                            Invalid characters. Only alphanumeric, hyphen, underscore, and forward slash are allowed.
+                        </div>
+
+                        <div *ngIf="fg.get('contextPath').hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 100 characters.
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label>Auth Type</label>
+                        <select class="form-control" id="method" formControlName="authType"
+                            (change)="onAuthTypeChange($event.target.value);">
+                            <option value="1">Bearer Token</option>
+                            <option value="2">API Key</option>
+                        </select>
+
+                        <div class="error"
+                            *ngIf="fg.get('authType').hasError('required') && fg.get('authType').touched">
+                            Auth Type is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="authTypEnum.BEARER_TOKEN === +fg.value.authType">
+                <div class="col-xl-12">
+                    <div class="form-group">
+                        <label>Token</label>
+                        <input type="text" class="form-control" id="token" placeholder="Bearer Token"
+                            formControlName="bearerToken" maxlength="300">
+
+                        <div class="error"
+                            *ngIf="fg.get('bearerToken').hasError('required') && fg.get('bearerToken').touched">
+                            Bearer Token is required
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('bearerToken').hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 300 characters.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="authTypEnum.API_KEY === +fg.value.authType">
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label>API Key</label>
                         <input type="text" class="form-control" id="apiKey" placeholder="API Key"
-                            formControlName="apiKey">
+                            formControlName="apiKey" maxlength="50">
 
                         <div class="error" *ngIf="fg.get('apiKey').hasError('required') && fg.get('apiKey').touched">
-                            API Key is required
+                            Api Key is required
                         </div>
+
+                        <div class="error" *ngIf="fg.get('apiKey').hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 50 characters.
+                        </div>
+
                     </div>
                 </div>
 
-                <div *ngIf="error" style="margin-top: 8px;">
-                    <div class="alert alert-danger" role="alert">
-                        {{error}}
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-6" align="center" *ngIf="originalFileColumns.length">
-                            <table>
-                                <tr class="first-child">
-                                    <th class="font-weight-400">Original Column Headers</th>
-                                </tr>
-                                <tr *ngFor="let column of originalFileColumns;">
-                                    <td>{{column}}</td>
-                                </tr>
-                            </table>
+                <div class="col-xl-6">
+                    <div class="form-group">
+                        <label>API Value</label>
+                        <input type="text" class="form-control" id="apiValue" placeholder="API Value"
+                            formControlName="apiValue" maxlength="300">
+
+                        <div class="error"
+                            *ngIf="fg.get('apiValue').hasError('required') && fg.get('apiValue').touched">
+                            API Value is required
                         </div>
-                        <div class="col-xl-6 text-center" *ngIf="currentFileColumns?.length">
-                            <table>
-                                <tr class="first-child">
-                                    <th class="font-weight-400">Current File Column Headers</th>
-                                </tr>
-                                <tr *ngFor="let column of currentFileColumns;">
-                                    <td>{{column}}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-xl-6 text-center" *ngIf="duplicateFileColumns?.length">
-                            <table>
-                                <tr class="first-child">
-                                    <th class="font-weight-400">Column Headers</th>
-                                </tr>
-                                <tr *ngFor="let column of duplicateFileColumns;">
-                                    <td>{{column}}</td>
-                                </tr>
-                            </table>
+
+                        <div class="error" *ngIf="fg.get('apiValue').hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 300 characters.
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <h6>Custom Headers</h6>
+
+            <div class="row">
+                <div class="col-5"><label>Key</label></div>
+                <div class="col-5"><label>Value</label></div>
+            </div>
+
+            <div class="row mb-1" *ngFor="let header of customHeaders; let i = index; let isFirst = first">
+                <div class="col-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" [formControlName]="'customHeaderKey' + header.rowIndex"
+                            placeholder="Header Key" maxlength="50">
+
+                        <div class="error"
+                            *ngIf="fg.get('customHeaderKey' + header.rowIndex).hasError('required') && fg.get('customHeaderKey' + header.rowIndex).touched">
+                            Header Key is required
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('customHeaderKey' + header.rowIndex).hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 50 characters.
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control"
+                            [formControlName]="'customHeaderValue' + header.rowIndex" placeholder="Header Value"
+                            maxlength="50">
+
+                        <div class="error"
+                            *ngIf="fg.get('customHeaderValue' + header.rowIndex).hasError('required') && fg.get('customHeaderValue' + header.rowIndex).touched">
+                            Header Value is required
+                        </div>
+
+                        <div class="error" *ngIf="fg.get('customHeaderValue' + header.rowIndex).hasError('maxlength')">
+                            Maximum length exceeded! Maximum allowed: 50 characters.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <a (click)="addCustomHeader()">
+                        <img src="assets/img/plus-icon.svg">
+                    </a>
+                    <a *ngIf="!isFirst" class="ml-2" (click)="removeCustomHeader(i)">
+                        <img src="assets/img/cross-icon.svg" width="15">
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" [disabled]="fg.invalid" (click)="download()">Download</button>
+            <button type="button" class="btn btn-primary" [disabled]="fg.invalid"
+                (click)="testConnectionOrDownload(apiTypeEnum.TEST_CONNECTION)">Test Connection</button>
+            <button type="button" class="btn btn-primary" [disabled]="!isTestConnectionSuccessfull"
+                (click)="testConnectionOrDownload(apiTypeEnum.DOWNLOAD)">Download</button>
         </div>
     </form>
 </app-loader>

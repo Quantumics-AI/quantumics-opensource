@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Workspace } from './models/workspace';
 import { ProjectComponent } from '../projects/components/project/project.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 // import { Project } from 'src/app/models/project';
 import { ProjectsService } from 'src/app/pages/projects/services/projects.service';
+import { ProjectLimitComponent } from '../projects/components/project-limit/project-limit.component';
 import { ProjectParam } from 'src/app/pages/projects/models/project-param';
 import { RenameWorkspaceComponent } from './components/rename-workspace/rename-workspace.component';
 import { ConfirmationModalComponent } from '../workspace-settings/components/confirmation-modal/confirmation-modal.component';
@@ -104,12 +105,26 @@ export class AllWorkspacesComponent implements OnInit {
     this.projectsService.getProjectuserinfo(0, this.userId).subscribe((res) => {
       this.isCreateProject = res.result.createProject;
       if (this.isCreateProject?.toLowerCase() === 'false') {
+        this.openProjectLimitModal();
       } else {
         this.onWorkSpaceCreate();
       }
     }, () => {
+      this.openProjectLimitModal();
       this.projectsList();
     })
+  }
+
+  public openProjectLimitModal(): void {
+    const modalRef = this.modalService.open(ProjectLimitComponent, { size: 'md modal-dialog-centered', scrollable: false });
+    modalRef.componentInstance.userId = this.userId;
+    modalRef.componentInstance.projectId = this.projectId;
+    modalRef.result.then((result) => {
+      console.log(result);
+    }, (reason) => {
+      console.log(reason);
+      this.projectsList();
+    });
   }
 
   public onWorkSpaceCreate(): void {

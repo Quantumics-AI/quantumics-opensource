@@ -26,7 +26,7 @@ export class ManageColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   public submitted = false;
   public options = [
-    { text: 'Add new column', value: ManageColumnRuleTypes.Create },
+    { text: 'Create column', value: ManageColumnRuleTypes.Create },
     // { text: 'Remove column', value: ManageColumnRuleTypes.Drop },
     { text: 'Clone column', value: ManageColumnRuleTypes.Clone },
     // { text: 'Rename column', value: ManageColumnRuleTypes.Rename },
@@ -44,6 +44,7 @@ export class ManageColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public ruleInputValues1: string;
 
   public ruletypes = ManageColumnRuleTypes;
+  public labelText: string;
 
   private certificate$: Observable<Certificate>;
   private certificateData: Certificate;
@@ -120,6 +121,19 @@ export class ManageColumnsComponent implements OnInit, OnChanges, OnDestroy {
       this.ruleInputValues = this.rule.ruleInputValues;
       this.ruleInputValues1 = this.rule.ruleInputValues1;
     }
+
+    switch (this.ruleInputLogic1) {
+      case ManageColumnRuleTypes.Create:
+        this.labelText = 'Column*';
+        break;
+      case ManageColumnRuleTypes.Clone:
+        this.labelText = 'Column to clone*';
+        break;
+      case ManageColumnRuleTypes.DataTypeCast:
+        this.labelText = 'Column*';
+        break;
+    }
+
   }
 
   get f() { return this.fg.controls; }

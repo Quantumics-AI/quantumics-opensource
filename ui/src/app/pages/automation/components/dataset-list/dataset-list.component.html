@@ -1,0 +1,321 @@
+<app-loader [loading]="loading">
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item"><a
+                        [routerLink]="['/projects', projectId, 'automation', 'engineering']">Jobs</a></li>
+                <li class="breadcrumb-item"><a [routerLink]="['/projects', projectId, 'automation', 'engineering']">Data
+                        flow</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{dataFlowName}}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="flow-dataset-div">
+        <div class="card card-d">
+            <div class="card-header ch">
+                <div class="di mr-t-6" *ngIf="searchTerm.folderDisplayName.length === 0">
+                    <a class="card-main-text mr-b-0" (click)="back()">
+                        <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                        {{dataFlowName}}
+                    </a>
+                </div>
+                <div class="di" *ngIf="searchTerm.folderDisplayName.length > 0">
+                    <p class="card-main-text">Search result</p>
+                </div>
+                <div class="pull-right">
+                    <div class="input-group">
+                        <div class="input-group-prepend h36">
+                            <span class="input-group-text search-icon" id="basic-addon1">
+                                <img src="assets/img/govern/search.svg">
+                            </span>
+                        </div>
+                        <input type="text" id="searchTerm" [(ngModel)]="searchTerm.folderDisplayName"
+                            class="form-control search-input h36" placeholder="Search dataset name"
+                            aria-label="Username" aria-describedby="basic-addon1" [class.pointer-events-none]="!isEngJobResultAvailable">
+                        <button type="button" [disabled]="!selectedFiles?.length" class="btn btn-design mr-l-16"
+                            (click)="runJob()">Run Job</button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body pd-0">
+                <div class="head-two">
+                    <p class="p1 mr-b-0">Select dataset from the three respective category based on the data flow
+                        design.</p>
+                </div>
+
+                <div class="tab-div">
+                    <div class="pd-16" (click)="activeTabs('raw')">
+                        <div class="text-and-line">
+                            <p class="p2 mr-b-0 cp" [ngClass]="{'disableTab': !rawTab}">
+                                Raw Dataset ( {{rawFilesSelected}} of {{rawFilesCount ?? 0}} )
+                            </p>
+                        </div>
+                        <div class="image-container" style="left: 1px;">
+                            <img *ngIf="rawTab" src="assets/img/engg/horizontal-line.svg" alt="Horizontal Line Image">
+                        </div>
+                    </div>
+                    <div class="pd-16" (click)="activeTabs('pre')">
+                        <div class="text-and-line">
+                            <p class="p2 mr-b-0 cp" [ngClass]="{'disableTab': !preTab}">Prepared Dataset ( {{cleansedFilesSelected}} of
+                                {{cleansedFilesCount ?? 0}})</p>
+                        </div>
+                        <div class="image-container">
+                            <img *ngIf="preTab" src="assets/img/engg/horizontal-line.svg">
+                        </div>
+                    </div>
+                    <div class="pd-16" (click)="activeTabs('eng')">
+                        <div class="text-and-line">
+                            <p class="p2 mr-b-0 cp" [ngClass]="{'disableTab': !engTab}">Engineered Dataset ( {{engFilesSelected}} of
+                                {{engFilesCount ?? 0}})</p>
+                        </div>
+                        <div class="image-container">
+                            <img *ngIf="engTab" style="top: 26.9%;" src="assets/img/engg/horizontal-line.svg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw dataset  -->
+                <ng-container *ngIf="rawTab">
+                    <div class="table-responsive br-r">
+                        <ng-container *ngIf="rawFiles?.length else noRecord">
+                            <table class="table m-0 table-fixed table-striped">
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Folder/ Table name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                    (click)="sortByProperty(rawFiles, 'folderDisplayName', isDescendingByFolderName = !isDescendingByFolderName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Dataset name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                (click)="sortByProperty(rawFiles, 'fileName', isDescendingByDatasetName = !isDescendingByDatasetName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Date created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="td-text"
+                                        *ngFor="let rfile of rawFiles | filterBy:searchTerm | slice:startIndex:endIndex">
+                                        <td class="text-left fn pipe-n">
+                                            <span class="pd-r-12">
+                                                <input type="checkbox" (change)="selectFile($event, rfile)" [(ngModel)]="rfile.ischecked">
+                                            </span>
+                                            <span class="pd-r-12"><img
+                                                    src="assets/img/project-stats/folder-i.svg"></span>
+                                            {{rfile.folderDisplayName}}
+                                        </td>
+                                        <td>{{rfile.fileName}}</td>
+                                        <td>{{rfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    </tr>
+                                    <tr *ngIf="(rawFiles | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
+                                        <td colspan="6" class="pg-pd">
+                                            <div class="text-center">
+                                                <ngb-pagination [collectionSize]="rawFiles?.length" [(page)]="page"
+                                                    [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                    aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                    <ng-template ngbPaginationPrevious>
+                                                        <span class="btn nextBtn">
+                                                            <img src="assets/img/govern/arrow-left.svg">Previous
+                                                        </span></ng-template>
+                                                    <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                            Next <img src="assets/img/govern/arrow-right.svg">
+                                                        </span></ng-template>
+                                                </ngb-pagination>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white" *ngIf="(rawFiles | filterBy:searchTerm)?.length == 0">
+                                        <td colspan="5">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="no-term">No flow found</p>
+                                                <p class="term-2">Your search “{{searchTerm.folderDisplayName}}” did not
+                                                    match any
+                                                    flow name.
+                                                    Please try again .</p>
+                                                <button type="button" class="btn saveBtn"
+                                                    (click)="clearSearhInput()">Clear to go back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </ng-container>
+                        <ng-template #noRecord>
+                            <div class="no-dataset" *ngIf="!loading">
+                                <div class="card shadow-n mr-b-0">
+                                    <div class="card-body">
+                                        <div class="no-content-div text-center">
+                                            <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                            <h5 class="summary-p1">No dataset found!</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </ng-container>
+
+                <!-- Prepared Datasets  -->
+                <ng-container *ngIf="preTab">
+                    <div class="table-responsive br-r">
+                        <ng-container *ngIf="cleansedFiles?.length else noRawRecord">
+                            <table class="table m-0 table-fixed table-striped">
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Folder/ Table name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                (click)="sortByProperty(cleansedFiles, 'folderDisplayName', isDescendingByFolderName = !isDescendingByFolderName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Dataset name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                (click)="sortByProperty(cleansedFiles, 'fileName', isDescendingByDatasetName = !isDescendingByDatasetName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Date created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="td-text"
+                                        *ngFor="let cfile of cleansedFiles | filterBy:searchTerm | slice:startIndex:endIndex">
+                                        <td class="text-left fn pipe-n">
+                                            <span class="pd-r-12">
+                                                <input type="checkbox" (change)="selectFile($event, cfile)" [(ngModel)]="cfile.ischecked">
+                                            </span>
+                                            <span class="pd-r-12"><img
+                                                    src="assets/img/project-stats/folder-i.svg"></span>
+                                            {{cfile.folderDisplayName}}
+                                        </td>
+                                        <td>{{cfile.fileName}}</td>
+                                        <td>{{cfile.creationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    </tr>
+                                    <tr *ngIf="(cleansedFiles | filterBy: searchTerm)?.length >= pageSize"
+                                        class="pg-tr" style="background-color: white !important;">
+                                        <td colspan="6" class="pg-pd">
+                                            <div class="text-center">
+                                                <ngb-pagination [collectionSize]="cleansedFiles?.length" [(page)]="page"
+                                                    [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                    aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                    <ng-template ngbPaginationPrevious>
+                                                        <span class="btn nextBtn">
+                                                            <img src="assets/img/govern/arrow-left.svg">Previous
+                                                        </span></ng-template>
+                                                    <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                            Next <img src="assets/img/govern/arrow-right.svg">
+                                                        </span></ng-template>
+                                                </ngb-pagination>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white" *ngIf="(cleansedFiles | filterBy:searchTerm)?.length == 0">
+                                        <td colspan="5">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="no-term">No flow found</p>
+                                                <p class="term-2">Your search “{{searchTerm.folderDisplayName}}” did not
+                                                    match any
+                                                    flow name.
+                                                    Please try again .</p>
+                                                <button type="button" class="btn saveBtn"
+                                                    (click)="clearSearhInput()">Clear to
+                                                    go back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </ng-container>
+                        <ng-template #noRawRecord>
+                            <div class="no-dataset" *ngIf="!loading">
+                                <div class="card shadow-n mr-b-0">
+                                    <div class="card-body">
+                                        <div class="no-content-div text-center">
+                                            <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                            <h5 class="summary-p1">No dataset found!</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </ng-container>
+
+                <!-- Engineering Tab  -->
+                <ng-container *ngIf="engTab">
+                    <div class="table-responsive br-r">
+                        <ng-container *ngIf="engFiles?.length else noEngRecord">
+                            <table class="table m-0 table-fixed table-striped">
+                                <thead class="thead-light">
+                                    <tr class="fixed-th">
+                                        <th class="pd-l-24">Flow name
+                                            <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                                (click)="sortByProperty(engFiles, 'folderDisplayName', isDescendingByFolderName = !isDescendingByFolderName);"></span>
+                                        </th>
+                                        <th class="pd-l-24">Date created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr class="td-text"
+                                        *ngFor="let efile of engFiles | filterBy:searchTerm | slice:startIndex:endIndex">
+                                        <td class="text-left fn pipe-n">
+                                            <span class="pd-r-12"> <input type="checkbox"
+                                                    (change)="selectFile($event, efile)" [(ngModel)]="efile.ischecked">
+                                            </span>
+                                            <span class="pd-r-12"><img
+                                                    src="assets/img/project-stats/folder-i.svg"></span>
+                                            {{efile.folderDisplayName}}
+                                        </td>
+                                        <td>{{efile.flowCreationDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                    </tr>
+                                    <tr *ngIf="(engFiles | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
+                                        <td colspan="2" class="pg-pd">
+                                            <div class="text-center">
+                                                <ngb-pagination [collectionSize]="engFiles?.length" [(page)]="page"
+                                                    [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                                    aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                                    <ng-template ngbPaginationPrevious>
+                                                        <span class="btn nextBtn">
+                                                            <img src="assets/img/govern/arrow-left.svg">Previous
+                                                        </span></ng-template>
+                                                    <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                            Next <img src="assets/img/govern/arrow-right.svg">
+                                                        </span></ng-template>
+                                                </ngb-pagination>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white" *ngIf="(engFiles | filterBy:searchTerm)?.length == 0">
+                                        <td colspan="2">
+                                            <div class="text-center s-div">
+                                                <img src="assets/img/govern/no-search.svg">
+                                                <p class="no-term">No flow found</p>
+                                                <p class="term-2">Your search “{{searchTerm.folderDisplayName}}” did not match any flow name. Please try again .</p>
+                                                <button type="button" class="btn saveBtn" (click)="clearSearhInput()">Clear to go back</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                        <ng-template #noEngRecord>
+                            <div class="no-dataset" *ngIf="!loading">
+                                <div class="card shadow-n mr-b-0">
+                                    <div class="card-body">
+                                        <div class="no-content-div text-center">
+                                            <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                            <h5 class="summary-p1">No dataset found!</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</app-loader>

@@ -13,3 +13,41 @@
 .rule-bg-error {
     background: #f7c5d0 !important;
 }
+
+.applied-rule-text {
+    padding-left: 35px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 23px;
+}
+
+.fz-12px {
+    font-size: 12px;
+}
+
+.form-check-input:checked::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background: #00977C;
+    color: #FFF;
+    border-radius: 4px;
+}
+
+.is-checked {
+    background: #F0F8F4;
+}
+
+.dynamic-height {
+    height: 70vh;
+    overflow-y: auto;
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: pointer;
+}

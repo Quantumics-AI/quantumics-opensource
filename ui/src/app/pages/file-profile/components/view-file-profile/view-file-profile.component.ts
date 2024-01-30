@@ -151,6 +151,7 @@ export class ViewFileProfileComponent implements OnInit {
         this.loading = false;
         if (response?.analytics) {
           try {
+            
             // temporary fix as per dicussion with Prakash
             let data = response?.analytics?.replace(/NaN/g, '0.0');
             data = JSON.parse(data);
@@ -159,6 +160,7 @@ export class ViewFileProfileComponent implements OnInit {
             // this.listData = data?.file1_stats[1].columnsStats;
             this.analysis.columns.map(t => t.selected = false);
             this.formatResponse(data);
+           
             const firstColumn = this.analysis.columns[0];
             this.columnDataType = firstColumn.dataType;
             this.columnsStats = this.analysis.columnsStats.find(x => x.column === firstColumn.column);

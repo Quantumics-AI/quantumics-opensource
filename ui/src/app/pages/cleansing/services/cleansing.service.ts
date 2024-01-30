@@ -13,6 +13,7 @@ import { MergeColumnsRule } from './merge-columns-rule';
 import { FilterDuplicateRowsRule } from './filter-duplicate-rows-rule';
 import { StandardizeRule } from './standardize-rule';
 import { CountMatchesRule } from './count-matches-rule';
+import { RowIdRule} from './rowId-rule';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,8 @@ export class CleansingService {
       case RuleTypes.CountMatch:
         ruleObj = new CountMatchesRule(rule, rows, columns);
         break;
+      case RuleTypes.RowId:
+        ruleObj = new RowIdRule(rule,rows,columns);
     }
 
     return ruleObj;

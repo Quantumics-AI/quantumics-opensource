@@ -23,6 +23,7 @@ import { EditComponent } from './components/edit/edit.component';
 import { DictionaryRuleComponent } from './components/dictionary-rule/dictionary-rule.component';
 import { GoogleSankeyChartComponent } from './components/google-sankey-chart/google-sankey-chart.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FilterPipeModule } from 'ngx-filter-pipe';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     LoaderModule,
     NgSelectModule,
     GoogleChartsModule,
-    SharedModule
+    SharedModule,
+    FilterPipeModule
   ],
   providers: [DatePipe, NgbActiveModal]
 })

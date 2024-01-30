@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { SnackbarService } from 'src/app/core/services/snackbar.service';
-import { DbConnectorService } from '../../services/db-connector.service';
 
 @Component({
   selector: 'app-pipeline-confirmation',
@@ -15,9 +13,7 @@ export class PipelineConfirmationComponent implements OnInit {
   @Input() pipelineId: number;
 
   constructor(
-    public modal: NgbActiveModal,
-    private sourceDataService: DbConnectorService,
-    private snakbar: SnackbarService,
+    public modal: NgbActiveModal
   ) { }
 
   ngOnInit(): void {
@@ -25,14 +21,6 @@ export class PipelineConfirmationComponent implements OnInit {
 
   public deleteFolder(): void {
     this.modal.close();
-    // this.sourceDataService.deletePipeline(this.projectId, this.userId, this.pipelineId).subscribe((response: any) => {
-    //   this.snakbar.open(response.massage);
-    //   if (response.code === 200) {
-    //     this.modal.close(response.result);
-    //   }
-    // }, (error) => {
-    //   this.snakbar.open(error);
-    // });
   }
 
 }

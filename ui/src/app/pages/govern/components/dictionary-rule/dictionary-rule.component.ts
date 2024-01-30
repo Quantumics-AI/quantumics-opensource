@@ -8,6 +8,7 @@ import { Certificate } from 'src/app/models/certificate';
 import { Quantumfacade } from 'src/app/state/quantum.facade';
 import { CommonRegexPatterns, Dictionary } from '../../models/dictionary';
 import { DataDictionaryService } from '../../services/data-dictionary.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-dictionary-rule',
@@ -18,12 +19,6 @@ export class DictionaryRuleComponent implements OnInit {
 
   private certificate$: Observable<Certificate>;
   private unsubscribe: Subject<void> = new Subject();
-
-  @Input() projectId: number;
-  @Input() folderId: number;
-  @Input() fileId: number;
-  @Input() dictionary: Dictionary;
-  @Input() onCreate: boolean;
 
   public subUsers: any = [];
   public columns: any = [];
@@ -37,6 +32,12 @@ export class DictionaryRuleComponent implements OnInit {
   public selectedDataType: string;
   public selectedRegularExpression: string;
   public example: any = 123;
+  public projectId: number;
+  public folderId: number;
+  public fileId: number;
+  public dictionary: Dictionary
+  private sourceType: string;
+  public projectName: string;
 
   dataTypes = [
     { text: 'String', value: 'string' },
@@ -50,7 +51,28 @@ export class DictionaryRuleComponent implements OnInit {
     private snakbar: SnackbarService,
     public modal: NgbActiveModal,
     private quantumFacade: Quantumfacade,
-    private dataDictionaryService: DataDictionaryService) { }
+    private dataDictionaryService: DataDictionaryService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,) {
+    this.projectName = localStorage.getItem('projectname');
+    this.projectId = +this.activatedRoute.parent.snapshot.paramMap.get('projectId');
+
+    this.certificate$ = this.quantumFacade.certificate$;
+    this.certificate$
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((certificate: Certificate) => {
+        if (certificate) {
+          this.userId = +certificate.user_id;
+        }
+      });
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      // this.id = +params.dataId;
+      this.folderId = +params.folderId;
+      this.fileId = +params.fileId;
+      this.sourceType = params.sourceType;
+    });
+  }
 
   ngOnInit(): void {
 
@@ -133,25 +155,21 @@ export class DictionaryRuleComponent implements OnInit {
       published: isPublished,
     };
 
-    if (this.onCreate) {
-      this.dataDictionaryService.save(this.projectId, this.userId, dictionary).subscribe((res) => {
-        this.loading = false;
-        this.modal.close();
-        this.snakbar.open(res.message);
-      }, (error) => {
-        this.loading = false;
-        this.snakbar.open(error);
+    this.dataDictionaryService.save(this.projectId, this.userId, dictionary).subscribe((res) => {
+      this.loading = false;
+      this.snakbar.open(res.message);
+      this.router.navigate([`projects/${this.projectId}/govern/dashboard/data-quality`], {
+        queryParams: {
+          folderId: this.folderId,
+          fileId: this.fileId,
+          sourceType: this.sourceType
+        }
       });
-    } else {
-      this.dataDictionaryService.update(this.projectId, this.userId, this.dictionary.id, dictionary).subscribe((res) => {
-        this.loading = false;
-        this.modal.close();
-        this.snakbar.open(res.message);
-      }, (error) => {
-        this.loading = false;
-        this.snakbar.open(error);
-      });
-    }
+    }, (error) => {
+      this.loading = false;
+      this.snakbar.open(error);
+    });
+
     this.getFileData();
   }
 
@@ -207,24 +225,39 @@ export class DictionaryRuleComponent implements OnInit {
   }
 
   public onSelectPDRegexCode(pdRegexCode: number): void {
-    const v = this.commonRegexPatterns.find(x => x.regexPatternId  === +pdRegexCode);
-    if(v.regexName  == "Line starts with numbe"){
-      this.example = 123;
+    const v = this.commonRegexPatterns.find(x => x.regexPatternId === +pdRegexCode);
+
+    switch (v.regexName) {
+      case 'Line starts with numbe':
+        this.example = 123;
+        break;
+      case 'Line starts with character (upper case)':
+        this.example = "Abcd";
+        break;
+      case 'Line starts with character (lower case)':
+        this.example = "abcd";
+        break;
+      case 'Line starts with character (case-insensitive)':
+        this.example = "aBcD";
+        break;
+      case 'Line starts with special character':
+        this.example = "$abc";
+        break;
     }
-    if(v.regexName == "Line starts with character (upper case)"){
-      this.example = "Abcd";
-    }
-    if(v.regexName == "Line starts with character (lower case)"){
-      this.example = "abcd";
-    }
-    if(v.regexName == "Line starts with character (case-insensitive)"){
-      this.example = "aBcD";
-    }
-    if(v.regexName == "Line starts with special character"){
-      this.example = "$abc";
-    }
+
     if (v) {
       this.fg.controls.regularExpression.setValue(v.regexCode);
     }
+  }
+
+  public back(): void {
+    this.router.navigate([`projects/${this.projectId}/govern/dashboard/data-quality`], {
+      queryParams: {
+        folderId: this.folderId,
+        fileId: this.fileId,
+        sourceType: this.sourceType
+      }
+    });
+    // this.location.back();
   }
 }

@@ -18,6 +18,7 @@ export class CountMatchesComponent implements OnInit, OnChanges {
   @Output() addRule = new EventEmitter<any>();
   @Input() columns: any;
   @Input() rule: any;
+  @Input() public ruleInputLogic1 = CountMatchRuleTypes.Text;
 
   public submitted = false;
 
@@ -27,8 +28,8 @@ export class CountMatchesComponent implements OnInit, OnChanges {
   public ruleInputValues: string;
   public ruleInputValues1: string;
   public ruleInputValues2: string;
-  public ruleInputLogic1 = CountMatchRuleTypes.Text;
   private controls: { [type: string]: Array<string>; } = {};
+  public labelText: string;
 
   constructor(private formBuilder: FormBuilder) {
     this.controls[CountMatchRuleTypes.Text] = ['ruleInputValues'];
@@ -81,6 +82,15 @@ export class CountMatchesComponent implements OnInit, OnChanges {
       this.ruleInputValues2 = this.rule.ruleInputValues2;
       this.ruleInputLogic1 = this.rule.ruleInputLogic1;
       this.ruleButtonLabel = 'Update';
+    }
+
+    switch (this.ruleInputLogic1) {
+      case CountMatchRuleTypes.Text:
+        this.labelText = 'Column to extract from*';
+        break;
+      case CountMatchRuleTypes.Delimiter:
+        this.labelText = 'Column*';
+        break;
     }
   }
 

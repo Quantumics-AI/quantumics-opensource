@@ -1,0 +1,8 @@
+.next-row{
+    display: flex;
+}
+.form-check-inline-container {
+    display: flex;
+    flex-direction: row; /* Align items in the same row */
+    align-items: center; /* Align items vertically in the middle */
+}

@@ -22,6 +22,7 @@ import { CreateUdfComponent } from './components/create-udf/create-udf.component
 import { EditUdfComponent } from './components/edit-udf/edit-udf.component';
 import { UpdateUdfComponent } from './components/update-udf/update-udf.component';
 import { ProjectComponent } from './components/project/project.component';
+import { ProjectLimitComponent } from './components/project-limit/project-limit.component';
 import { ProjectRestoredComponent } from './components/project-restored/project-restored.component';
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ProjectRestoredComponent } from './components/project-restored/project-
     EditUdfComponent,
     UpdateUdfComponent,
     ProjectComponent,
+    ProjectLimitComponent,
     ProjectRestoredComponent,
   ],
   imports: [

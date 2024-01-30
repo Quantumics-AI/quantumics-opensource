@@ -1,80 +1,144 @@
 <app-loader [loading]="loading">
-    <div class="modal-header">
-        <h5 class="modal-title">Engineering Flow History</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
+    <div class="page-header1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-top pd-l-0">
+                <li class="breadcrumb-item">Jobs</li>
+                <li class="breadcrumb-item active" aria-current="page">Engineering job</li>
+            </ol>
+        </nav>
     </div>
-    <div class="modal-body">
-        <div class="col-12">
-            <div class="table-responsive table-height">
-                <table class="table m-0 table-fixed">
-                    <thead class="thead-light">
-                        <tr class="fixed-th">
-                            <th>Flow name</th>
-                            <th>Job Run Date</th>
-                            <th>
-                                Status
-                                <em>
-                                    <a id="lnkRefresh" placement="top" container="body" ngbTooltip="Refresh">
-                                        <img src="assets/img/refresh.svg" width="18" (click)="refresh()" alt="refresh">
+    <div class="pd-mr">
+        <p class="p2 mr-b-8">Job History</p>
+        <p class="p1 mr-b-0">Every time you run a flow with dataset, each flow run will be saved with a version number.
+        </p>
+    </div>
+
+    <div class="card card-d">
+        <div class="card-header ch header-pd">
+            <div class="di mr-t-6" *ngIf="searchTerm.engFlowName?.length === 0">
+                <a class="card-main-text mr-b-0" (click)="back()">
+                    <span><img src="/assets/img/pipline/back-pipe.svg" class="cp"></span>
+                    {{dataFlowName}}
+                </a>
+            </div>
+            <div class="di" *ngIf="searchTerm.engFlowName?.length > 0">
+                <p class="card-main-text">Search result</p>
+            </div>
+            <div class="pull-right">
+                <div class="input-group">
+                    <div class="input-group-prepend h36">
+                        <span class="input-group-text search-icon" id="basic-addon1">
+                            <img src="assets/img/govern/search.svg">
+                        </span>
+                    </div>
+                    <input type="text" id="searchTerm" [(ngModel)]="searchTerm.engFlowName"
+                        class="form-control search-input h36" placeholder="Search job name"
+                        [class.pe-none]="!jobHistory?.length">
+                </div>
+
+            </div>
+        </div>
+        <div class="card-body pd-0">
+            <div class="table-responsive br-r">
+                <ng-container *ngIf="jobHistory?.length > 0; else noRecords">
+                    <table class="table m-0 table-fixed table-striped">
+                        <thead class="thead-light">
+                            <tr class="fixed-th">
+                                <th class="pd-l-24">S.No</th>
+                                <th class="pd-l-24">
+                                    Flow run number
+                                    <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                            (click)="sortByProperty(jobHistory, 'engFlowName', isDescendingByJobRun = !isDescendingByJobRun);"></span>
+                                </th>
+                                <th class="pd-l-24">
+                                    Job Status
+                                    <span> <img class="cp mr-1" src="assets/img/jobs/refresh.svg" width="15"
+                                            (click)="getEngineeringHistory();"></span>
+                                    <span> <img class="cp" src="assets/img/govern/down-arrow.svg"
+                                            (click)="sortByProperty(jobHistory, 'status', isDescendingByJobStatus = !isDescendingByJobStatus);"></span>
+                                </th>
+                                <th class="pd-l-24">Execution time</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="td-text"
+                                *ngFor="let h of jobHistory | filterBy:searchTerm | slice:startIndex:endIndex">
+                                <td>{{h.index}}</td>
+                                <td class="text-left fn pipe-n">{{h.engFlowName}}</td>
+                                <td>
+                                    <span class="badge badge-completed" *ngIf="h.status.toLowerCase() === 'succeeded'">
+                                        <img src="/assets/img/jobs/completed-dot.svg" class="align-unset mr-1 ml-1"> {{h.status}}
+                                    </span>
+                                    <span class="badge badge-danger" *ngIf="h.status.toLowerCase() === 'failed'">
+                                        <img src="/assets/img/jobs/failure-dot.svg" class="align-unset mr-1"> {{h.status}}
+                                        <img src="/assets/img/jobs/job-info.svg" (click)="viewLogs(h)" class="cp">
+                                    </span>
+                                    <span class="badge badge-running"
+                                        *ngIf="h.status.toLowerCase() === 'running' || h.status.toLowerCase() === 'starting'">
+                                        <img src="/assets/img/jobs/running-dot.svg" class="align-unset mr-1"> {{h.status}}
+                                    </span>
+                                </td>
+                                <td>{{h.runDate | date: 'dd-MM-yy, hh:mm a'}}</td>
+                                <td class="text-center">
+                                    <a (click)="reRun(h);" placement="top" ngbTooltip="Re-Run">
+                                        <img src="/assets/img/jobs/re-run.svg" class="mr-3">
                                     </a>
-                                </em>
-                            </th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngIf="history$ | async as history">
-                            <ng-container *ngIf="history?.length > 0; else noRecords">
-                                <tr class="td-color" *ngFor="let h of history">
-                                    <td>{{h.engFlowName}}</td>
-                                    <td>{{h.runDate | date: 'dd-MM-yy, hh:mm a'}}</td>
-                                    <td class="text-white" [class.bg-success]="h.status.toLowerCase() === 'succeeded'"
-                                        [class.bg-danger]="h.status.toLowerCase() === 'failed'"
-                                        [class.bg-warning]="h.status.toLowerCase() === 'running' || h.status.toLowerCase() === 'started' ">
-                                        {{h.status}}
-                                        <span (click)="viewLogs(h)" class="cursor-pointer">
-                                            <em class="fa fa-info-circle"></em>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <em>
-                                            <a id="lnkReRun" placement="top" ngbTooltip="Re-Run" (click)="reRun(h)">
-                                                <img src="assets/img/Re-Run.svg" width="18" alt="re-run">
-                                            </a>
-                                        </em> &nbsp;
-                                        <em>
-                                            <a id="lnkDownload"
-                                                [class.disabled]="h.status.toLowerCase() === 'started' || h.status.toLowerCase() === 'failed'"
-                                                (click)="getEngDownloadFile(h)" placement="top" ngbTooltip="Download">
-                                                <img src="assets/img/download.svg" width="18" alt="download">
-                                            </a>
-                                        </em>
-                                        &nbsp;
-                                        <em>
-                                            <a id="lnkViewEngFlow" placement="top" ngbTooltip="View Flow"
-                                                (click)="view(h.engFlowId, h.engFlowName)">
-                                                <img src="assets/img/view.svg" width="18" alt="view">
-                                            </a>
-                                        </em>
-                                        <!-- According to Shen, the data lineage option should be hidden for now -->
-                                        <!-- &nbsp;
-                                        <em>
-                                            <a *ngIf="h.status.toLowerCase() === 'succeeded'" id="lnkSankey" [routerLink]="['/projects', projectId, 'automation', h.engFlowId, 's-autorun' ]" target="_blank">
-                                                <img src="assets/img/new-pro-img.png" width="18" alt="">
-                                            </a>
-                                        </em> -->
-                                    </td>
-                                </tr>
-                            </ng-container>
-                            <ng-template #noRecords>
-                                <h6>No result found</h6>
-                            </ng-template>
-                        </ng-container>
-                    </tbody>
-                </table>
+                                    <a (click)="getEngDownloadFile(h);" placement="top" ngbTooltip="Download">
+                                        <img src="/assets/img/jobs/download.svg" class="mr-3">
+                                    </a>
+                                    <a (click)="view(h.engFlowId, h.engFlowName)" placement="top" ngbTooltip="View Flow">
+                                        <img src="/assets/img/jobs/engineering-flow.svg" class="mr-3">
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr *ngIf="(jobHistory | filterBy: searchTerm)?.length >= pageSize" class="pg-tr" style="background-color: white !important;">
+                                <td colspan="6" class="pg-pd">
+                                    <div class="text-center">
+                                        <ngb-pagination [collectionSize]="jobHistory?.length" [(page)]="page"
+                                            [pageSize]="pageSize" [maxSize]="5" [rotate]="true"
+                                            aria-label="Custom pagination" (pageChange)="onPageChange($event)">
+                                            <ng-template ngbPaginationPrevious>
+                                                <span class="btn nextBtn">
+                                                    <img src="assets/img/govern/arrow-left.svg">Previous
+                                                </span></ng-template>
+                                            <ng-template ngbPaginationNext><span class="btn nextBtn">
+                                                    Next <img src="assets/img/govern/arrow-right.svg">
+                                                </span></ng-template>
+                                        </ngb-pagination>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="bg-white" *ngIf="(jobHistory | filterBy:searchTerm)?.length == 0">
+                                <td colspan="5">
+                                    <div class="text-center s-div">
+                                        <img src="assets/img/govern/no-search.svg">
+                                        <p class="no-term">No flow found</p>
+                                        <p class="term-2">Your search “{{searchTerm.engFlowName}}” did not match any
+                                            flow name.
+                                            Please try again .</p>
+                                        <button type="button" class="btn saveBtn" (click)="clearSearhInput()">Clear to
+                                            go back</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </ng-container>
+                <ng-template #noRecords>
+                    <div class="no-dataset" *ngIf="!loading">
+                        <div class="card shadow-n mr-b-0">
+                            <div class="card-body">
+                                <div class="no-content-div text-center">
+                                    <img src="/assets/img/data-profile/no-datasets.svg" class="img-fluid mr-tb">
+                                    <h5 class="summary-p1">No job history!</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </div>

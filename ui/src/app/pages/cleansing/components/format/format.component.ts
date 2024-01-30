@@ -25,6 +25,8 @@ export class FormatComponent implements OnInit, OnChanges {
   @Input() ruleInputLogic1: string;
   public ruleInputValues: string;
   public ruleInputValues1: string;
+  public placeHolderText: string;
+  public labelText: string;
 
   ruleButtonLabel = 'Add';
 
@@ -47,6 +49,30 @@ export class FormatComponent implements OnInit, OnChanges {
       this.ruleInputValues = this.rule.ruleInputValues;
       this.ruleInputValues1 = this.rule.ruleInputValues1;
       this.ruleButtonLabel = 'Update';
+    }
+
+    switch (this.ruleInputLogic1) {
+      case this.formatRuletypes.AddPrefix:
+        this.placeHolderText = 'Enter text to add as prefix';
+        this.labelText = 'Column to format*';
+        break;
+      case this.formatRuletypes.AddSuffix:
+        this.placeHolderText = 'Enter text to add as suffix';
+        break;
+      case this.formatRuletypes.Upper:
+      case this.formatRuletypes.Lower:
+      case this.formatRuletypes.Proper:
+      case this.formatRuletypes.TrimWhitespace:
+      case this.formatRuletypes.TrimQuotes:
+      case this.formatRuletypes.RemoveSpecialCharacters:
+      case this.formatRuletypes.RemoveAccents:
+        this.labelText = 'Column to extract from*';
+        break;
+      case this.formatRuletypes.AddSuffix:
+      case this.formatRuletypes.PadWithLeadingCharacters:
+      case this.formatRuletypes.RemoveWhitespaces:
+        this.labelText = 'Column to format*';
+        break;
     }
   }
 

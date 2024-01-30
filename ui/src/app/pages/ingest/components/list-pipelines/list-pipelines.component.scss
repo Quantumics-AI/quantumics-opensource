@@ -493,3 +493,11 @@ line-height: 20px;
   padding-right: 8px;
   border-radius: 16px;
 }
+
+//Jarvis Footer
+.j-footer {
+  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+  width: -webkit-fill-available;
+}
