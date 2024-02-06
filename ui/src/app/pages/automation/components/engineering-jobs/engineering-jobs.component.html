@@ -106,7 +106,7 @@
                                         </tr>
                                     </ng-template>
 
-                                    <tr *ngIf="(engineeringJobs | filterBy: searchTerm)?.length >= pageSize" class="pg-tr"
+                                    <tr *ngIf="(engineeringJobs | filterBy: searchTerm)?.length > pageSize" class="pg-tr"
                                         style="background-color: white !important;">
                                         <td colspan="6" class="pg-pd">
                                             <div class="text-center">
