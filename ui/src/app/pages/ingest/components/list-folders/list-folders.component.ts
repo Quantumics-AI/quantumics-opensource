@@ -310,6 +310,7 @@ export class ListFoldersComponent implements OnInit {
   }
 
   public onPageChange(currentPage: number): void {
+    this.currentPage = currentPage;
     this.startIndex = (currentPage - 1) * this.pageSize;
     this.endIndex = this.startIndex + this.pageSize;
   }

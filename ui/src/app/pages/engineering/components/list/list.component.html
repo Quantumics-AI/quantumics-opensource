@@ -103,7 +103,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr *ngIf="(flowsData | filterBy: searchTerm).length >= pageSize"
+                                <tr *ngIf="(flowsData | filterBy: searchTerm)?.length > pageSize"
                                     style="background-color: white !important;" class="pg-tr">
                                     <td colspan="5" class="pg-pd">
                                         <div class="text-center">
